@@ -1,0 +1,3528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finances — Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --lilac: #EAC995;
+    --lilac-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --black: #0A0A0A;
+    --red: #C44A3A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip {
+    background: var(--green);
+    color: var(--paper);
+    padding: 11px 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .top-strip a {
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 1px;
+  }
+  .top-strip .arrow { display: inline-block; transition: transform 0.18s; margin-left: 4px; }
+  .top-strip a:hover .arrow { transform: translateX(3px); }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 8px 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: var(--shadow-soft);
+    max-width: 1100px;
+    width: 100%;
+    height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background 0.15s;
+  }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+
+  .nav-cta {
+    background: var(--lilac);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--lilac-deep); transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1380px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 460px; gap: 44px; align-items: end; }
+  .hero-eyebrow {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.8rem, 6.4vw, 5.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .soft {
+    color: var(--ink);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 72%, var(--lilac) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero h1 .bold { color: var(--ink); font-weight: 500; }
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  /* Phase chips */
+  .phase-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .phase-pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper-card);
+    transition: all 0.18s ease;
+    letter-spacing: -0.005em;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .phase-context {
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 580px;
+    font-style: normal;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+  }
+
+  /* View toggle */
+  .view-toggle {
+    display: inline-flex;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+  }
+  .view-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--ink-muted);
+    transition: all 0.15s ease;
+  }
+  .view-btn.active { background: var(--ink); color: var(--paper); }
+
+  /* Snap panel */
+  .snap-panel {
+    background: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 18px 50px rgba(10,10,10,0.18);
+    color: var(--paper);
+  }
+  .snap-panel-head {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+  .snap-bar {
+    height: 12px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    background: var(--paper);
+  }
+  .snap-bar-spent {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .snap-bar-legend {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 18px;
+    letter-spacing: 0.02em;
+  }
+  .snap-bar-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .snap-bar-legend-item strong { color: var(--paper); font-weight: 600; margin-left: 4px; }
+  .snap-bar-legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .snap-bar-legend-dot.dark { background: var(--ink); }
+  .snap-bar-legend-dot.light { background: var(--paper); border: 1px solid rgba(255,255,255,0.4); box-sizing: border-box; }
+  .snap-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .snap-stat {
+    background: var(--paper-card);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 14px;
+    padding: 16px 16px;
+  }
+  .snap-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .snap-stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .snap-stat-val.positive { color: var(--green); }
+  .snap-stat-val.negative { color: var(--coral); }
+  .snap-stat-val.warn { color: var(--lilac-deep); }
+  .snap-stat-val.purple { color: var(--lilac-deep); }
+  .snap-stat-sub { font-size: 12px; color: var(--ink-faded); margin-top: 2px; }
+  .snap-stat.hero {
+    grid-column: 1 / -1;
+    padding: 20px 22px 18px;
+    background: var(--paper);
+  }
+  .snap-stat.hero .snap-stat-label { font-size: 11px; }
+  .snap-stat.hero .snap-stat-val {
+    font-size: 2.6rem;
+    line-height: 1.05;
+    margin-top: 2px;
+  }
+  .snap-stat.hero .snap-stat-sub { font-size: 12px; margin-top: 6px; }
+
+  /* ── MASTHEAD GRID ── */
+  .masthead { display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start; padding-bottom: 56px; }
+
+  /* ── DOSSIER ── */
+  .dossier {
+    position: sticky;
+    top: 24px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 26px 22px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .dossier-title {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .dossier-phase {
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+
+  .dossier-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--paper-edge);
+    font-size: 13.5px;
+  }
+  .dossier-row:last-of-type { border-bottom: none; }
+  .dossier-row-label { color: var(--ink-muted); font-weight: 500; }
+  .dossier-row-val { font-weight: 600; color: var(--ink); }
+  .dossier-row-val.green { color: var(--green); }
+  .dossier-row-val.red { color: var(--coral); }
+  .dossier-row-val.accent { color: var(--green); }
+  .dossier-row-val.purple { color: var(--lilac-deep); }
+
+  .dossier-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 12px 0; }
+
+  /* Surplus bar */
+  .surplus-bar-wrap { margin-top: 6px; margin-bottom: 14px; }
+  .surplus-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--paper-warm);
+    overflow: hidden;
+  }
+  .surplus-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--green);
+    transition: width 0.4s ease;
+  }
+
+  /* CSA estimator in dossier */
+  .csa-section {
+    margin-top: 6px;
+    border-top: 1px solid var(--paper-edge);
+    padding-top: 18px;
+  }
+  .csa-title {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .csa-field { margin-bottom: 10px; }
+  .csa-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .csa-field input, .csa-field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .csa-field input:focus, .csa-field select:focus { border-color: var(--lilac-deep); }
+  .csa-result {
+    background: var(--lilac);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+  .csa-result-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .csa-result-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .csa-result-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+  .csa-result-footnote {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  .csa-result-footnote a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+  }
+  .csa-actions { display: flex; gap: 10px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+  .csa-apply-btn {
+    appearance: none;
+    border: none;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 9px 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .csa-apply-btn:hover { background: var(--green-deep); transform: translateY(-1px); }
+  .csa-sync-note { font-size: 12px; color: var(--ink-muted); }
+  .cs-estimate-note { font-size: 12.5px; color: var(--ink-soft); padding-top: 10px; line-height: 1.55; font-style: normal; }
+  .cs-mode-toggle {
+    display: inline-flex;
+    background: var(--paper-warm);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+  .cs-mode-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cs-mode-btn.active { background: var(--ink); color: var(--paper); }
+
+  /* ── CARDS ── */
+  .cards-col { display: flex; flex-direction: column; gap: 14px; }
+
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover { box-shadow: var(--shadow-soft); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+  .card-header:hover { background: var(--paper-warm); }
+  .card-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: var(--green); }
+  .dot-purple { background: var(--lilac-deep); }
+  .dot-teal { background: var(--sage); }
+  .dot-orange { background: var(--honey); }
+  .dot-red { background: var(--coral); }
+  .dot-blue { background: var(--ink-soft); }
+  .dot-yellow { background: var(--green-deep); }
+  .dot-pink { background: var(--lilac); }
+
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    letter-spacing: -0.005em;
+  }
+  .card-total {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+    font-weight: 500;
+    margin-left: auto;
+    letter-spacing: -0.02em;
+  }
+  .card-total.income-total { color: var(--green); }
+  .card-total.saving-total { color: var(--green-deep); }
+  .card-chevron {
+    width: 20px; height: 20px; flex-shrink: 0;
+    color: var(--ink-faded);
+    transition: transform 0.2s ease;
+  }
+  .card-chevron.open { transform: rotate(180deg); }
+
+  .card-body { display: none; padding: 0 24px 22px; }
+  .card-body.open { display: block; }
+
+  /* Slider rows */
+  .slider-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .slider-row:last-child { border-bottom: none; }
+  .slider-row-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .slider-row-label .badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--lilac);
+    color: var(--ink);
+  }
+  .slider-row-label .badge.priority { background: var(--honey); color: var(--ink); }
+  .slider-tools { display: flex; align-items: center; gap: 6px; }
+  .reorder-btn {
+    appearance: none;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    width: 26px;
+    height: 26px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reorder-btn:hover { background: var(--paper-warm); color: var(--ink); }
+  .reorder-btn:disabled { opacity: 0.35; cursor: default; }
+  .helper-btn {
+    appearance: none;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .helper-btn:hover { background: var(--paper-warm); color: var(--ink); }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--paper-warm);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    border: 2px solid var(--paper);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: 2px solid var(--paper);
+  }
+  .slider-val {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    text-align: right;
+    width: 96px;
+    flex: 0 0 96px;
+    box-sizing: border-box;
+    letter-spacing: -0.01em;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 6px;
+    cursor: text;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .slider-val:hover { background: var(--paper); border-color: var(--paper-edge); }
+  .slider-val:focus {
+    outline: none;
+    background: var(--paper);
+    border-color: var(--ink);
+  }
+  .remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-faded); font-size: 18px; padding: 0 0 0 6px;
+    line-height: 1; transition: color 0.15s ease;
+  }
+  .remove-btn:hover { color: var(--coral); }
+
+  /* Savings rows */
+  .savings-row { padding: 16px 0 18px; border-bottom: 1px solid var(--paper-edge); }
+  .savings-row:last-child { border-bottom: none; }
+  .savings-row-top { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .savings-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .savings-name .badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--honey);
+    color: var(--ink);
+  }
+  .savings-val {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--green-deep);
+    min-width: 72px;
+    text-align: right;
+    letter-spacing: -0.01em;
+  }
+  .savings-slider-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .savings-slider-meta {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .savings-slider-row input[type=range] { margin: 0; }
+  .savings-meta-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .savings-meta-item label {
+    display: inline;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .savings-meta-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .savings-meta-item input {
+    width: 100%;
+    padding: 3px 0 4px;
+    border: none;
+    border-bottom: 1px solid var(--paper-edge);
+    background: transparent;
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    outline: none;
+    letter-spacing: -0.01em;
+  }
+  .savings-meta-item input:focus { border-bottom-color: var(--ink); }
+  .savings-progress-line {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .savings-progress-line strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Net worth */
+  .nw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .nw-item label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .nw-item input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .nw-item input:focus { border-color: var(--ink); }
+  .nw-divider { grid-column: 1 / -1; border-top: 1px dashed var(--paper-edge); margin: 4px 0; }
+  .nw-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 18px; }
+  .nw-stat {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .nw-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .nw-stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .nw-stat-val.pos { color: var(--green); }
+  .nw-stat-val.neg { color: var(--coral); }
+
+  /* Add item button */
+  .add-item-row { padding: 14px 0 0; }
+  .add-item-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .add-item-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* Income card specifics */
+  .income-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .income-input-group { }
+  .income-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+  .income-input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .income-input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s ease;
+    letter-spacing: -0.01em;
+  }
+  .income-input-group input:focus { border-color: var(--green); }
+  .input-mode-toggle {
+    display: inline-flex;
+    background: var(--paper-warm);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .input-mode-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .input-mode-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .income-breakdown {
+    background: var(--lilac);
+    color: var(--ink);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .ib-item { }
+  .ib-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .ib-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  /* ── FLOW NOTE ── */
+  .flow-note {
+    background: var(--green);
+    color: var(--paper);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-top: 16px;
+  }
+  .flow-note-title {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--paper);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .flow-note span { color: rgba(255,255,255,0.85); }
+
+  /* ── FOOTER ── */
+  .footer-wordmark {
+    padding: 80px 0 56px;
+    text-align: center;
+    border-top: 1px solid var(--paper-edge);
+    margin-top: 24px;
+  }
+  .footer-wordmark svg {
+    width: 100%;
+    max-width: 1080px;
+    height: auto;
+    display: inline-block;
+  }
+  .footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0 32px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-meta a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    margin-left: 16px;
+    transition: color 0.15s;
+  }
+  .footer-meta a:hover { color: var(--ink); }
+
+  /* TRANSITION COSTS */
+  .tc-section {
+    margin: 32px 0 40px;
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 28px 28px 26px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .tc-section-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 18px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    padding-right: 44px;
+  }
+  .tc-section.collapsed .tc-section-head { margin-bottom: 0; }
+  .tc-section.collapsed .tc-section-body { display: none; }
+  .tc-section-toggle {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.2s ease;
+    z-index: 2;
+  }
+  .tc-section-toggle:hover { background: var(--paper); color: var(--ink); }
+  .tc-section.collapsed .tc-section-toggle { transform: rotate(180deg); }
+  .tc-section-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .tc-section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.65rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .tc-section-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    max-width: 540px;
+  }
+  .tc-section-totals {
+    text-align: right;
+    min-width: 220px;
+  }
+  .tc-totals-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .tc-totals-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .tc-totals-val .of { color: var(--ink-faded); font-weight: 400; font-size: 0.85em; }
+  .tc-totals-bar {
+    margin-top: 8px;
+    height: 6px;
+    background: rgba(10,10,10,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .tc-totals-bar-fill {
+    height: 100%;
+    background: var(--ink);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .tc-totals-bar-fill.over { background: var(--coral); }
+  .tc-rows { display: flex; flex-direction: column; gap: 10px; }
+  .tc-row {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 16px;
+    padding: 16px 18px;
+    transition: border-color 0.18s ease;
+  }
+  .tc-row:hover { border-color: var(--ink-faded); }
+  .tc-row-collapsed {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+  }
+  .tc-row-main { min-width: 0; }
+  .tc-row-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+  }
+  .tc-row-meta {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    color: var(--ink-faded);
+    letter-spacing: 0.01em;
+  }
+  .tc-row-meta .sep { margin: 0 6px; opacity: 0.4; }
+  .tc-row-numbers {
+    text-align: right;
+    font-family: 'Fraunces', serif;
+  }
+  .tc-row-spent {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .tc-row-spent.over { color: var(--coral); }
+  .tc-row-est {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-faded);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  button.tc-row-est.tc-set-est {
+    background: transparent;
+    border: 0;
+    padding: 2px 0 0 0;
+    cursor: pointer;
+    color: var(--lilac-deep);
+    text-decoration: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  button.tc-row-est.tc-set-est:hover { color: var(--ink); text-decoration: underline; }
+  .tc-row-actions { display: flex; gap: 6px; align-items: center; }
+  .tc-row-action-btn {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .tc-row-action-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tc-row-action-btn.icon { padding: 7px 9px; }
+  .tc-row-bar {
+    margin-top: 12px;
+    height: 5px;
+    background: rgba(10,10,10,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .tc-row-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .tc-row-bar-fill.over { background: var(--coral); }
+  .tc-row-bar-fill.no-est {
+    background: repeating-linear-gradient(
+      135deg,
+      var(--honey) 0,
+      var(--honey) 6px,
+      rgba(255,255,255,0.55) 6px,
+      rgba(255,255,255,0.55) 10px
+    );
+  }
+  .tc-totals-bar-fill.no-est {
+    background: repeating-linear-gradient(
+      135deg,
+      var(--honey) 0,
+      var(--honey) 6px,
+      rgba(255,255,255,0.55) 6px,
+      rgba(255,255,255,0.55) 10px
+    );
+  }
+
+  .tc-row-expanded {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--paper-edge);
+    display: none;
+  }
+  .tc-row.open .tc-row-expanded { display: block; }
+  .tc-row-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .tc-row-fields.tc-fields-trackonly {
+    grid-template-columns: 1fr;
+    max-width: 240px;
+  }
+  .tc-trackonly-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tc-trackonly-cb {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--ink);
+    cursor: pointer;
+    margin: 0;
+  }
+  .tc-trackonly-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+  }
+  .tc-field-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .tc-field-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .tc-field-val.green { color: var(--green); }
+  .tc-field-val.red { color: var(--coral); }
+  .tc-field-input {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .tc-field-input:focus { border-color: var(--ink); }
+
+  .tc-payments-head {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .tc-payments-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .tc-payment-row {
+    display: grid;
+    grid-template-columns: 92px 96px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--paper-card);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .tc-payment-date {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+  .tc-payment-amount {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .tc-payment-note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tc-payment-note.empty { color: var(--ink-faded); font-style: normal; }
+  .tc-payment-actions { display: flex; gap: 6px; }
+  .tc-payment-x {
+    background: transparent;
+    border: none;
+    color: var(--ink-faded);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .tc-payment-x:hover { color: var(--coral); background: rgba(199,84,68,0.08); }
+  .tc-payments-empty {
+    font-size: 12px;
+    color: var(--ink-faded);
+    padding: 8px 10px;
+  }
+  .tc-row-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tc-row-buttons-left { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tc-row-buttons-right { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .tc-add-row-btn {
+    margin-top: 14px;
+    background: transparent;
+    border: 1px dashed var(--ink-faded);
+    border-radius: 16px;
+    padding: 14px 18px;
+    width: 100%;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+    transition: all 0.18s ease;
+  }
+  .tc-add-row-btn:hover {
+    background: var(--paper-card);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .tc-row.archived { opacity: 0.55; }
+  .tc-row.archived .tc-row-title::after {
+    content: ' · archived';
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faded);
+    font-weight: 400;
+  }
+
+  .tc-empty {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--ink-faded);
+    font-size: 14px;
+  }
+
+  /* TRANSITION COSTS — modal */
+  .tc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+  }
+  .tc-modal-overlay.open { display: flex; }
+  .tc-modal {
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 24px 70px rgba(10,10,10,0.3);
+  }
+  .tc-modal-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .tc-modal-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .tc-modal-field { margin-bottom: 14px; }
+  .tc-modal-field-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .tc-modal-input {
+    width: 100%;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .tc-modal-input:focus { border-color: var(--ink); }
+  .tc-modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+  .tc-modal-btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper-card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tc-modal-btn:hover { background: var(--paper-warm); }
+  .tc-modal-btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tc-modal-btn.primary:hover { background: #000; }
+  .tc-modal-btn.danger { color: var(--coral); }
+  .tc-modal-btn.danger:hover { background: rgba(199,84,68,0.08); }
+
+  /* Responsive */
+  @media (max-width: 1120px) {
+    .hero-grid, .masthead { grid-template-columns: 1fr; gap: 28px; }
+    .dossier { position: static; }
+  }
+  @media (max-width: 760px) {
+    .hero { padding: 36px 0 24px; }
+    .hero h1 { font-size: 2.4rem; }
+    .income-inputs { grid-template-columns: 1fr; }
+    .nw-grid { grid-template-columns: 1fr; }
+    .nw-summary { grid-template-columns: 1fr 1fr; }
+    .snap-panel { padding: 20px 18px; border-radius: 22px; }
+    .snap-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .snap-stat { min-width: 0; padding: 14px 12px; }
+    .snap-stat-val { font-size: 1.2rem; overflow-wrap: break-word; }
+    .snap-stat.hero { padding: 18px 16px 16px; }
+    .snap-stat.hero .snap-stat-val { font-size: 2rem; }
+    .snap-stat-sub { font-size: 11px; }
+    .footer-wordmark { padding: 48px 0 32px; }
+    .footer-meta { flex-direction: column; align-items: flex-start; }
+    .footer-meta a { margin-left: 0; margin-right: 16px; }
+    .tc-section-head { grid-template-columns: 1fr; }
+    .tc-section-totals { text-align: left; min-width: 0; }
+    .tc-row-collapsed { grid-template-columns: 1fr; gap: 10px; }
+    .tc-row-numbers { text-align: left; }
+    .tc-row-actions { justify-content: flex-start; }
+    .tc-row-fields { grid-template-columns: 1fr; }
+    .tc-payment-row { grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
+    .tc-payment-note { grid-column: 1 / -1; }
+    .tc-payment-actions { grid-column: 1 / -1; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="top-strip">
+  Atlas is private. Everything stays on your device.
+  <a href="./index.html#privacy">How it works <span class="arrow">→</span></a>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html" class="active">Finances</a></li>
+      <li><a href="./kids-week.html">Kids Week</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+    </ul>
+    <a href="#start" class="nav-cta">Start mapping</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html" class="active">Finances</a>
+  <a href="./kids-week.html">Kids Week</a>
+  <a href="./goals.html">Goals</a>
+</div>
+
+<div class="page-wrap">
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">Atlas — Finances</div>
+          <h1>
+            <span class="soft">Your money,</span><br>
+            <span class="bold">rebuilt.</span>
+          </h1>
+          <p class="hero-sub">The clearest place to start after separation. Map income, child support, kids costs, legal pressure, housing, and savings so you can see what stability actually looks like.</p>
+
+          <div class="phase-row" id="hero-phase-row">
+            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
+            <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
+            <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
+          </div>
+
+          <div class="phase-context" id="phase-context-text">Don't optimise yet — just get clear. Map every dollar in and out so you know exactly what you're working with before making any decisions.</div>
+
+          <div class="view-toggle">
+            <button class="view-btn active" id="btn-monthly" onclick="setView('monthly')">Monthly</button>
+            <button class="view-btn" id="btn-annual" onclick="setView('annual')">Annual</button>
+          </div>
+        </div>
+
+        <div class="snap-panel" id="snap-panel">
+          <div class="snap-panel-head">This month at a glance</div>
+          <div class="snap-bar" id="snap-bar">
+            <div class="snap-bar-spent" id="bar-spent"></div>
+          </div>
+          <div class="snap-bar-legend">
+            <span class="snap-bar-legend-item"><span class="snap-bar-legend-dot dark"></span>Spent <strong id="bar-spent-pct">0%</strong></span>
+            <span class="snap-bar-legend-item"><span class="snap-bar-legend-dot light"></span>Surplus <strong id="bar-surplus-pct">0%</strong></span>
+          </div>
+          <div class="snap-stats">
+            <div class="snap-stat hero">
+              <div class="snap-stat-label" id="ss-hero-label">Surplus</div>
+              <div class="snap-stat-val" id="ss-hero-val">—</div>
+              <div class="snap-stat-sub" id="ss-hero-sub">after everything</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t1-label">Take-Home</div>
+              <div class="snap-stat-val" id="ss-t1-val">—</div>
+              <div class="snap-stat-sub" id="ss-t1-sub">after tax &amp; super</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t2-label">Total Out</div>
+              <div class="snap-stat-val" id="ss-t2-val">—</div>
+              <div class="snap-stat-sub" id="ss-t2-sub">all expenses &amp; CS</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t3-label">Separation Load</div>
+              <div class="snap-stat-val" id="ss-t3-val">—</div>
+              <div class="snap-stat-sub" id="ss-t3-sub">CS + kids monthly</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t4-label">Runway</div>
+              <div class="snap-stat-val" id="ss-t4-val">—</div>
+              <div class="snap-stat-sub" id="ss-t4-sub">if income stopped</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSITION COSTS -->
+    <div class="container">
+      <section class="tc-section" id="tc-section">
+        <div class="tc-section-head" id="tc-section-head" onclick="toggleTCSection()">
+          <div>
+            <div class="tc-section-kicker">Transition costs</div>
+            <div class="tc-section-title" id="tc-title">One-off separation costs</div>
+            <div class="tc-section-sub" id="tc-sub">Lump-sum payments — legal, mediation, setting up the new place. Tracked separately from your monthly budget so they don't distort cash flow.</div>
+          </div>
+          <div class="tc-section-totals">
+            <div class="tc-totals-label" id="tc-totals-label">Spent so far</div>
+            <div class="tc-totals-val">
+              <span id="tc-spent-total">$0</span>
+              <span class="of" id="tc-of-suffix"> / <span id="tc-est-total">$0</span> budgeted</span>
+            </div>
+            <div class="tc-totals-bar"><div class="tc-totals-bar-fill" id="tc-totals-bar-fill" style="width:0%"></div></div>
+          </div>
+          <button class="tc-section-toggle" id="tc-section-toggle" type="button" aria-expanded="true" title="Collapse / expand" onclick="event.stopPropagation(); toggleTCSection()">&#9650;</button>
+        </div>
+        <div class="tc-section-body" id="tc-section-body">
+          <div class="tc-rows" id="tc-rows"></div>
+          <button class="tc-add-row-btn" type="button" onclick="openTCAddRow()">+ Add transition cost</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- TC ADD ROW MODAL -->
+    <div class="tc-modal-overlay" id="tc-row-modal" onclick="if(event.target===this)closeTCRowModal()">
+      <div class="tc-modal">
+        <div class="tc-modal-title" id="tc-row-modal-title">Add transition cost</div>
+        <div class="tc-modal-sub">A category for tracking lump-sum, irregular costs.</div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-row-label">Label</label>
+          <input type="text" class="tc-modal-input" id="tc-row-label" placeholder="e.g. Therapy block, Court fees" />
+        </div>
+        <label class="tc-trackonly-row" style="margin-bottom: 12px;">
+          <input type="checkbox" class="tc-trackonly-cb" id="tc-row-trackonly" checked />
+          <span class="tc-trackonly-text">Just track what I spend (no budget for this)</span>
+        </label>
+        <div class="tc-modal-field" id="tc-row-est-field" style="display:none;">
+          <label class="tc-modal-field-label" for="tc-row-est">Budget ($) — optional</label>
+          <input type="number" class="tc-modal-input" id="tc-row-est" min="0" step="100" placeholder="0" />
+        </div>
+        <div class="tc-modal-buttons">
+          <button class="tc-modal-btn" type="button" onclick="closeTCRowModal()">Cancel</button>
+          <button class="tc-modal-btn primary" type="button" onclick="saveTCRow()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TC ADD/EDIT PAYMENT MODAL -->
+    <div class="tc-modal-overlay" id="tc-pay-modal" onclick="if(event.target===this)closeTCPayModal()">
+      <div class="tc-modal">
+        <div class="tc-modal-title" id="tc-pay-modal-title">Add payment</div>
+        <div class="tc-modal-sub" id="tc-pay-modal-sub">Log a payment against this category.</div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-pay-date">Date</label>
+          <input type="date" class="tc-modal-input" id="tc-pay-date" />
+        </div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-pay-amount">Amount ($)</label>
+          <input type="number" class="tc-modal-input" id="tc-pay-amount" min="0" step="0.01" placeholder="0" />
+        </div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-pay-note">Note (optional)</label>
+          <input type="text" class="tc-modal-input" id="tc-pay-note" placeholder="e.g. Mediation prep, retainer top-up" />
+        </div>
+        <div class="tc-modal-buttons">
+          <button class="tc-modal-btn danger" type="button" id="tc-pay-delete" onclick="deleteTCPayment()" style="display:none;margin-right:auto;">Delete</button>
+          <button class="tc-modal-btn" type="button" onclick="closeTCPayModal()">Cancel</button>
+          <button class="tc-modal-btn primary" type="button" onclick="saveTCPayment()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MASTHEAD: CARDS + DOSSIER -->
+    <div class="masthead" id="start">
+      <div class="cards-col" id="cards-col"></div>
+
+      <div>
+        <!-- DOSSIER -->
+        <div class="dossier">
+          <div class="dossier-title">Financial position</div>
+          <div class="dossier-phase" id="dossier-phase">Stabilise</div>
+
+          <div class="dossier-row">
+            <span class="dossier-row-label">Gross Salary</span>
+            <span class="dossier-row-val" id="d-gross">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label" id="d-ftb-label">FTB / Other Income</span>
+            <span class="dossier-row-val accent" id="d-ftb">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Tax &amp; Medicare</span>
+            <span class="dossier-row-val red" id="d-tax">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Super (SGC 12%)</span>
+            <span class="dossier-row-val" id="d-super">—</span>
+          </div>
+          <hr class="dossier-divider">
+          <div class="dossier-row">
+            <span class="dossier-row-label">Take-Home Pay</span>
+            <span class="dossier-row-val green" id="d-takehome">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label" id="d-cs-label">Child Support Out</span>
+            <span class="dossier-row-val purple" id="d-cs">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Kids Costs</span>
+            <span class="dossier-row-val accent" id="d-kids">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Housing &amp; Fixed</span>
+            <span class="dossier-row-val" id="d-housing">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Personal &amp; Subs</span>
+            <span class="dossier-row-val" id="d-personal">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Savings</span>
+            <span class="dossier-row-val accent" id="d-savings">—</span>
+          </div>
+          <hr class="dossier-divider">
+          <div class="dossier-row">
+            <span class="dossier-row-label" style="font-weight:700">Surplus</span>
+            <span class="dossier-row-val" id="d-surplus" style="font-size:1rem">—</span>
+          </div>
+          <div class="surplus-bar-wrap">
+            <div class="surplus-bar"><div class="surplus-bar-fill" id="d-surplus-bar" style="width:0%"></div></div>
+          </div>
+
+          <!-- CSA ESTIMATOR -->
+          <div class="csa-section">
+            <div class="csa-title">CSA estimator</div>
+            <div class="csa-field">
+              <label>Your gross income (annual)</label>
+              <input type="number" id="csa-my-income" value="95000" oninput="calcCSA()">
+            </div>
+            <div class="csa-field">
+              <label>Other parent's income (annual)</label>
+              <input type="number" id="csa-other-income" value="70000" oninput="calcCSA()">
+            </div>
+            <div class="csa-field">
+              <label>Number of children</label>
+              <select id="csa-children" onchange="calcCSA()">
+                <option value="1">1 child</option>
+                <option value="2" selected>2 children</option>
+                <option value="3">3 children</option>
+                <option value="4">4+ children</option>
+              </select>
+            </div>
+            <div class="csa-field">
+              <label>Your nights per fortnight</label>
+              <select id="csa-nights" onchange="calcCSA()">
+                <option value="0">0 nights (0%)</option>
+                <option value="1">1–2 nights (~10%)</option>
+                <option value="2">2 nights (~14%)</option>
+                <option value="3">3 nights (~21%)</option>
+                <option value="4">4 nights (~29%)</option>
+                <option value="5">5 nights (~36%)</option>
+                <option value="6">6 nights (~43%)</option>
+                <option value="7" selected>7 nights (50%)</option>
+                <option value="8">8 nights (~57%)</option>
+                <option value="9">9 nights (~64%)</option>
+                <option value="10">10 nights (~71%)</option>
+                <option value="11">11 nights (~79%)</option>
+                <option value="12">12 nights (~86%)</option>
+                <option value="13">13 nights (~93%)</option>
+                <option value="14">14 nights (100%)</option>
+              </select>
+            </div>
+            <div class="csa-result">
+              <div class="csa-result-label">Estimated child support</div>
+              <div class="csa-result-val" id="csa-result-val">$0/mo</div>
+              <div class="csa-result-sub" id="csa-result-sub">Estimate will show whether you pay or receive.</div>
+              <div class="csa-result-footnote">This is an estimate based on a simplified model. Your actual assessment may differ based on your specific circumstances. Always verify your figure using the official <a href="https://www.servicesaustralia.gov.au/child-support-estimator" target="_blank" rel="noopener noreferrer">Services Australia child support calculator</a> or speak to a CSA-registered adviser.</div>
+              <div class="csa-actions">
+                <button type="button" class="csa-apply-btn" onclick="applyCSAEstimate()">Use estimate for budget</button>
+                <span class="csa-sync-note">Estimator stays editable for scenario testing.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLOW NOTE -->
+        <div class="flow-note">
+          <div class="flow-note-title">Phase guide</div>
+          <span id="flow-note-text">Set your phase above to see guidance for where you are in the journey.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER WORDMARK -->
+    <div class="footer-wordmark">
+      <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg" aria-label="Atlas">
+        <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="210" cy="88" r="14" fill="#D97757"/>
+        <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
+      </svg>
+    </div>
+
+    <div class="footer-meta">
+      <div>© Atlas — A private tool for life after separation.</div>
+      <div>
+        <a href="./index.html">Home</a>
+        <a href="./budget.html">Finances</a>
+        <a href="./kids-week.html">Kids Week</a>
+        <a href="./goals.html">Goals</a>
+        <a href="./index.html#privacy">Privacy</a>
+        <a href="./index.html#phase-model">Phase model</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── UTILITIES ──
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + Math.round(n).toLocaleString('en-AU');
+
+let viewMode = 'monthly';
+function fmtView(monthly) {
+  return viewMode === 'annual' ? fmt(monthly * 12) + '/yr' : fmt(monthly) + '/mo';
+}
+
+// ── PHASE ──
+const phaseData = {
+  crisis: {
+    label: 'Crisis',
+    note: 'Survival mode. Priorities: somewhere safe to live, basic legal advice, cash flow positive. Don\'t optimise — just stabilise. Every dollar matters right now.',
+    heroText: 'Don\'t optimise yet — just get clear. Map every dollar in and out so you know exactly what you\'re working with before making any decisions.',
+  },
+  stabilise: {
+    label: 'Stabilise',
+    note: 'Housing is settled, kids routine is forming. Now: map every dollar, build a 1-month emergency buffer, get your legal situation clear. Savings come second.',
+    heroText: 'Cover essentials first: rent, food, kids costs, legal. Then build a $3–5k emergency buffer before anything else moves.',
+  },
+  rebuild: {
+    label: 'Rebuild',
+    note: 'Finances are mapped. Start building savings — emergency fund first, then housing deposit. Super catch-up becomes relevant. Look for income growth.',
+    heroText: 'The basics are covered. Now close the gaps — lift your savings rate, cut what\'s drifting, and set a real 12-month target.',
+  },
+  'new-chapter': {
+    label: 'New Chapter',
+    note: 'Thriving, not just surviving. Financial goals are active, investments are in motion. You\'re building a life you\'re proud to show your kids.',
+    heroText: 'You\'re out of recovery mode. Use this budget to build forward on your own terms.',
+  }
+};
+
+let currentPhase = 'stabilise';
+function setPhase(phase) {
+  currentPhase = phase;
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  const data = phaseData[phase];
+  $('dossier-phase').textContent = data.label;
+  $('flow-note-text').textContent = data.note;
+  $('phase-context-text').textContent = data.heroText;
+  try {
+    localStorage.setItem('atlas_phase', phase);
+    localStorage.setItem('dad_atlas_phase', phase);
+    localStorage.setItem('atlas_budget_phase', phase);
+    localStorage.setItem('dad_budget_phase', phase);
+  } catch(e) {}
+  // Re-render the snap panel for the new phase (skip during init — render() will fire it)
+  if (typeof updateTotals === 'function' && document.getElementById('total-income')) {
+    updateTotals();
+  }
+  // Re-render transition costs copy for the new phase
+  if (typeof renderTransitionCosts === 'function' && document.getElementById('tc-section')) {
+    renderTransitionCosts();
+  }
+}
+
+window.addEventListener('storage', e => {
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && phaseData[e.newValue]) {
+    setPhase(e.newValue);
+  }
+});
+
+// ── VIEW TOGGLE ──
+function setView(v) {
+  viewMode = v;
+  $('btn-monthly').classList.toggle('active', v === 'monthly');
+  $('btn-annual').classList.toggle('active', v === 'annual');
+  render();
+  try {
+    localStorage.setItem('atlas_budget_view', v);
+    localStorage.setItem('dad_budget_view', v);
+  } catch(e) {}
+}
+
+// ── AUSTRALIAN TAX ──
+function calcAusTax(gross) {
+  let tax = 0;
+  if (gross <= 18200) tax = 0;
+  else if (gross <= 45000) tax = (gross - 18200) * 0.16;
+  else if (gross <= 135000) tax = 4288 + (gross - 45000) * 0.30;
+  else if (gross <= 190000) tax = 31288 + (gross - 135000) * 0.37;
+  else tax = 51638 + (gross - 190000) * 0.45;
+  const lito = gross <= 37500 ? 700 : gross <= 45000 ? 700 - (gross - 37500) * 0.05 : gross <= 66667 ? 325 - (gross - 45000) * 0.015 : 0;
+  tax = Math.max(0, tax - lito);
+  const medicare = gross > 26000 ? gross * 0.02 : 0;
+  const totalTax = tax + medicare;
+  const netAnnual = gross - totalTax;
+  return { tax, medicare, totalTax, netAnnual, netMonthly: netAnnual / 12 };
+}
+
+// ── CSA CALCULATION ──
+function calcChildSupport(myGross, otherGross, numChildren, nightsPerFortnight) {
+  const SSA = 29446;
+  const MIN_RATE = 1638;
+  const myCSI = Math.max(0, myGross - SSA);
+  const otherCSI = Math.max(0, otherGross - SSA);
+  const combinedCSI = myCSI + otherCSI;
+  if (combinedCSI === 0) return { monthly: 0, annual: 0, paying: false, receiving: false };
+  const costPcts = [0, 0.17, 0.24, 0.27, 0.30];
+  const pct = costPcts[Math.min(numChildren, 4)];
+  const costOfChildren = combinedCSI * pct;
+  const myIncomeProportion = myCSI / combinedCSI;
+  const careFraction = nightsPerFortnight / 14;
+  const annual = costOfChildren * (myIncomeProportion - careFraction);
+  let absAnnual = Math.abs(annual);
+  if (absAnnual > 0 && absAnnual < MIN_RATE) absAnnual = MIN_RATE;
+  return {
+    annual: absAnnual,
+    monthly: absAnnual / 12,
+    paying: annual > 0,
+    receiving: annual < 0,
+  };
+}
+
+function calcCSA() {
+  const myIncomeField = $('csa-my-income');
+  const myIncome = parseFloat(myIncomeField.value) || 0;
+  const otherIncome = parseFloat($('csa-other-income').value) || 0;
+  const numKids = parseInt($('csa-children').value) || 2;
+  const nights = parseInt($('csa-nights').value) || 7;
+  const result = calcChildSupport(myIncome, otherIncome, numKids, nights);
+  $('csa-result-val').textContent = fmt(result.monthly) + '/mo';
+  $('csa-result-sub').textContent = result.paying
+    ? `You pay · ${fmt(result.annual)}/yr`
+    : result.receiving
+    ? `You receive · ${fmt(result.annual)}/yr`
+    : 'No child support liability';
+  updateCSAEstimateNote(result);
+  return result;
+}
+
+function syncCSAIncome() {
+  const gross = state.grossSalary || 0;
+  const csaIncomeField = $('csa-my-income');
+  if (!csaIncomeField) return;
+  csaIncomeField.value = gross;
+  calcCSA();
+}
+
+function getCurrentCSAEstimate() {
+  return calcChildSupport(
+    parseFloat($('csa-my-income')?.value) || 0,
+    parseFloat($('csa-other-income')?.value) || 0,
+    parseInt($('csa-children')?.value) || 2,
+    parseInt($('csa-nights')?.value) || 7
+  );
+}
+
+function getCSMode() {
+  if (state.csMode === 'receiving' || state.csMode === 'paying') return state.csMode;
+  return (state.csReceived || 0) > 0 && (state.csOut || 0) === 0 ? 'receiving' : 'paying';
+}
+
+function getCSBudgetAmount() {
+  return getCSMode() === 'receiving' ? (state.csReceived || 0) : (state.csOut || 0);
+}
+
+function setCSMode(mode) {
+  state.csMode = mode;
+  if (mode === 'receiving') state.csOut = 0;
+  if (mode === 'paying') state.csReceived = 0;
+  syncCSCardControls();
+  updateCSAEstimateNote(getCurrentCSAEstimate());
+  updateTotals();
+  scheduleSave();
+}
+
+function syncCSCardControls() {
+  const mode = getCSMode();
+  $('cs-mode-paying')?.classList.toggle('active', mode === 'paying');
+  $('cs-mode-receiving')?.classList.toggle('active', mode === 'receiving');
+  if ($('cs-direction-label')) $('cs-direction-label').textContent = mode === 'receiving' ? 'Child Support Received (monthly)' : 'Child Support Payment (monthly)';
+  const amount = getCSBudgetAmount();
+  if ($('cs-out-slider')) $('cs-out-slider').value = amount;
+  if ($('cs-out-val')) $('cs-out-val').textContent = fmtView(amount);
+}
+
+function applyCSAEstimate() {
+  const result = calcChildSupport(
+    parseFloat($('csa-my-income').value) || 0,
+    parseFloat($('csa-other-income').value) || 0,
+    parseInt($('csa-children').value) || 2,
+    parseInt($('csa-nights').value) || 7
+  );
+  const estimateMonthly = Math.round(result.monthly);
+  if (result.paying) {
+    state.csMode = 'paying';
+    state.csOut = estimateMonthly;
+    state.csReceived = 0;
+  } else if (result.receiving) {
+    state.csMode = 'receiving';
+    state.csReceived = estimateMonthly;
+    state.csOut = 0;
+  } else {
+    state.csOut = 0;
+    state.csReceived = 0;
+  }
+  syncCSCardControls();
+  updateCSAEstimateNote(result);
+  updateTotals();
+  scheduleSave();
+}
+
+function updateCSAEstimateNote(result) {
+  const noteEl = $('cs-estimate-note');
+  if (!noteEl) return;
+  const estimateMonthly = Math.round(result.monthly || 0);
+  if (!result.paying && !result.receiving) {
+    if ((state.csOut || 0) === 0 && (state.csReceived || 0) === 0) {
+      noteEl.textContent = 'No child support is estimated right now, and your budget is set to zero.';
+    } else {
+      noteEl.textContent = 'Estimator shows no child support right now, but your budget still has a manual child support amount.';
+    }
+    return;
+  }
+
+  if (result.paying) {
+    const diff = Math.round((state.csOut || 0) - estimateMonthly);
+    if (Math.abs(diff) < 5) {
+      noteEl.textContent = 'Budgeted child support payment matches the current estimate.';
+    } else if (diff > 0) {
+      noteEl.textContent = `Budgeted child support payment is ${fmt(diff)}/mo above the current estimate.`;
+    } else {
+      noteEl.textContent = `Budgeted child support payment is ${fmt(Math.abs(diff))}/mo below the current estimate.`;
+    }
+    return;
+  }
+
+  const diff = Math.round((state.csReceived || 0) - estimateMonthly);
+  if (Math.abs(diff) < 5) {
+    noteEl.textContent = 'Budgeted child support received matches the current estimate.';
+  } else if (diff > 0) {
+    noteEl.textContent = `Budgeted child support received is ${fmt(diff)}/mo above the current estimate.`;
+  } else {
+    noteEl.textContent = `Budgeted child support received is ${fmt(Math.abs(diff))}/mo below the current estimate.`;
+  }
+}
+
+// ── STATE ──
+const DEFAULTS = {
+  grossSalary: 95000,
+  salaryInputMode: 'annual',
+  salarySacrifice: 0,
+  ftbMonthly: 0,
+  csReceived: 0,
+  csOut: 800,
+  csMode: 'paying',
+
+  'kids-costs': [
+    { id: 'kids-food', name: 'Food / Groceries (kids weeks)', val: 400, min: 0, max: 1500 },
+    { id: 'kids-activities', name: 'Sports / Activities / Classes', val: 150, min: 0, max: 800 },
+    { id: 'kids-clothing', name: 'Clothing &amp; Shoes', val: 80, min: 0, max: 400 },
+    { id: 'kids-school', name: 'School Fees / Supplies', val: 120, min: 0, max: 600 },
+    { id: 'kids-medical', name: 'Medical / Dental', val: 60, min: 0, max: 400 },
+    { id: 'kids-pocket', name: 'Pocket Money', val: 40, min: 0, max: 200 },
+    { id: 'kids-transport', name: 'Transport / Pickup', val: 80, min: 0, max: 400 },
+    { id: 'kids-gifts', name: 'Birthdays / Christmas', val: 60, min: 0, max: 300 },
+  ],
+  'shared': [
+    { id: 'shared-health', name: 'Health Insurance (kids portion)', val: 80, min: 0, max: 400 },
+    { id: 'shared-extras', name: 'Shared Extras (agreed)', val: 0, min: 0, max: 500 },
+    { id: 'shared-holidays', name: 'Shared Holiday Costs', val: 0, min: 0, max: 500 },
+  ],
+  'housing': [
+    { id: 'rent', name: 'Rent / Mortgage', val: 2200, min: 500, max: 5000 },
+    { id: 'utilities', name: 'Utilities (elec/gas/water)', val: 200, min: 50, max: 600 },
+    { id: 'internet', name: 'Internet', val: 75, min: 0, max: 150 },
+    { id: 'phone', name: 'Phone', val: 60, min: 0, max: 150 },
+    { id: 'insurance-home', name: 'Home / Contents Insurance', val: 120, min: 0, max: 400 },
+    { id: 'car', name: 'Car Loan / Finance', val: 0, min: 0, max: 1500 },
+    { id: 'fuel', name: 'Fuel', val: 150, min: 0, max: 400 },
+    { id: 'car-insurance', name: 'Car Insurance / Rego', val: 120, min: 0, max: 300 },
+  ],
+  'personal': [
+    { id: 'groceries', name: 'Groceries (adult)', val: 350, min: 0, max: 1000 },
+    { id: 'gym', name: 'Gym / Fitness', val: 60, min: 0, max: 200 },
+    { id: 'dining', name: 'Dining &amp; Social', val: 200, min: 0, max: 600 },
+    { id: 'clothing-self', name: 'Clothing (self)', val: 80, min: 0, max: 400 },
+    { id: 'personal-health', name: 'Health / Appointments', val: 60, min: 0, max: 300 },
+    { id: 'therapy', name: 'Therapy / Counselling', val: 0, min: 0, max: 500 },
+  ],
+  'subs': [
+    { id: 'streaming1', name: 'Streaming (Netflix / Disney)', val: 25, min: 0, max: 60 },
+    { id: 'streaming2', name: 'Music (Spotify)', val: 13, min: 0, max: 30 },
+    { id: 'software', name: 'Software / Apps', val: 30, min: 0, max: 150 },
+    { id: 'news', name: 'News / Reading', val: 20, min: 0, max: 60 },
+    { id: 'cloud', name: 'Cloud Storage', val: 3, min: 0, max: 30 },
+    { id: 'other-sub', name: 'Other Subscriptions', val: 0, min: 0, max: 200 },
+  ],
+  'savings': [
+    { id: 'emergency', name: 'Emergency Fund', val: 300, min: 0, max: 3000, target: 15000, balance: 0, priority: true },
+    { id: 'housing-deposit', name: 'Housing Deposit', val: 0, min: 0, max: 5000, target: 80000, balance: 0 },
+    { id: 'super-catchup', name: 'Super Catch-up', val: 0, min: 0, max: 3000, target: 0, balance: 0 },
+    { id: 'kids-future', name: "Kids' Future Fund", val: 0, min: 0, max: 2000, target: 20000, balance: 0 },
+    { id: 'holiday-kids', name: 'Holiday with Kids', val: 0, min: 0, max: 1000, target: 5000, balance: 0 },
+    { id: 'general', name: 'General Savings', val: 100, min: 0, max: 3000, target: 0, balance: 0 },
+  ],
+  'networth': {
+    property: 0, superBal: 0, cashSavings: 0, investments: 0, otherAssets: 0,
+    mortgage: 0, carLoan: 0, otherDebt: 0, settlementDebt: 0,
+  }
+};
+
+// Saveable state groups
+const ARRAY_GROUPS = ['kids-costs','shared','legal','housing','personal','subs','savings'];
+let state = {};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('atlas_budget_state') || localStorage.getItem('dad_budget_state');
+    state = raw ? JSON.parse(raw) : deepClone(DEFAULTS);
+  } catch(e) { state = deepClone(DEFAULTS); }
+  // fill missing keys
+  for (const k in DEFAULTS) {
+    if (state[k] === undefined) state[k] = deepClone(DEFAULTS[k]);
+  }
+  if ((state.csReceived || 0) > 0 && (state.csOut || 0) === 0) state.csMode = 'receiving';
+  else if ((state.csOut || 0) > 0) state.csMode = 'paying';
+  mergeDefaultArrayMetadata();
+}
+
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function getSalaryInputMode() {
+  if (state.salaryInputMode === 'weekly') return 'weekly';
+  if (state.salaryInputMode === 'monthly') return 'monthly';
+  return 'annual';
+}
+
+function getGrossInputValue() {
+  const gross = state.grossSalary || 0;
+  const mode = getSalaryInputMode();
+  if (mode === 'weekly') return Math.round(gross / 52);
+  if (mode === 'monthly') return Math.round(gross / 12);
+  return Math.round(gross);
+}
+
+function setSalaryInputMode(mode) {
+  state.salaryInputMode = mode === 'weekly' ? 'weekly' : mode === 'monthly' ? 'monthly' : 'annual';
+  buildCard(sections.find(s => s.type === 'income'));
+  updateTotals();
+  syncCSAIncome();
+  scheduleSave();
+}
+
+function updateGrossFromInput(value) {
+  const parsed = parseFloat(value) || 0;
+  const mode = getSalaryInputMode();
+  state.grossSalary = mode === 'weekly' ? Math.round(parsed * 52) : mode === 'monthly' ? Math.round(parsed * 12) : Math.round(parsed);
+  updateTotals();
+  syncCSAIncome();
+  scheduleSave();
+}
+
+function mergeDefaultArrayMetadata() {
+  ARRAY_GROUPS.forEach(groupKey => {
+    if (!Array.isArray(state[groupKey]) || !Array.isArray(DEFAULTS[groupKey])) return;
+    const defaultsById = new Map(DEFAULTS[groupKey].map(item => [item.id, item]));
+    state[groupKey] = state[groupKey].map(item => {
+      const defaultItem = defaultsById.get(item.id);
+      return defaultItem ? { ...defaultItem, ...item } : item;
+    });
+  });
+}
+
+let saveTimer;
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 800);
+}
+function saveState() {
+  try {
+    const serialised = JSON.stringify(state);
+    localStorage.setItem('atlas_budget_state', serialised);
+    localStorage.setItem('dad_budget_state', serialised);
+  } catch(e) {}
+}
+
+// ── SECTIONS CONFIG ──
+const sections = [
+  { id: 'income',     title: 'Income',              dotClass: 'green',  type: 'income',     open: true  },
+  { id: 'cs-out',     title: 'Child Support',        dotClass: 'purple', type: 'cs-out',     open: true  },
+  { id: 'kids-costs', title: 'Kids Costs',           dotClass: 'teal',   type: 'kids-costs', open: true  },
+  { id: 'shared',     title: 'Shared Expenses',      dotClass: 'orange', type: 'shared',     open: false },
+  { id: 'housing',    title: 'Housing &amp; Fixed',      dotClass: 'blue',   type: 'housing',    open: true  },
+  { id: 'personal',   title: 'Personal',             dotClass: 'orange', type: 'personal',   open: false },
+  { id: 'subs',       title: 'Subscriptions',        dotClass: 'blue',   type: 'subs',       open: false },
+  { id: 'savings',    title: 'Savings &amp; Goals',      dotClass: 'yellow', type: 'savings',    open: true  },
+  { id: 'networth',   title: 'Net Worth',             dotClass: 'pink',   type: 'networth',   open: false },
+];
+
+let openCards = new Set(sections.filter(s => s.open).map(s => s.id));
+
+function canReorderGroup(groupKey) {
+  return ARRAY_GROUPS.includes(groupKey);
+}
+
+function moveArrayItem(groupKey, itemId, direction) {
+  const arr = state[groupKey];
+  if (!Array.isArray(arr)) return;
+  const idx = arr.findIndex(i => i.id === itemId);
+  if (idx === -1) return;
+  const nextIdx = idx + direction;
+  if (nextIdx < 0 || nextIdx >= arr.length) return;
+  const [item] = arr.splice(idx, 1);
+  arr.splice(nextIdx, 0, item);
+  scheduleSave();
+  buildCard(sections.find(s => s.type === groupKey));
+  updateTotals();
+}
+
+// ── BUILD CARDS ──
+function buildSliderRow(item, groupKey) {
+  const div = document.createElement('div');
+  div.className = 'slider-row';
+  div.id = 'row-' + item.id;
+
+  const left = document.createElement('div');
+  const labelDiv = document.createElement('div');
+  labelDiv.className = 'slider-row-label';
+  labelDiv.innerHTML = item.name
+    + (item.priority ? ' <span class="badge priority">Priority</span>' : '');
+
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = item.min ?? 0;
+  slider.max = item.max ?? 2000;
+  slider.value = item.val;
+
+  left.appendChild(labelDiv);
+  left.appendChild(slider);
+
+  const right = document.createElement('div');
+  right.className = 'slider-tools';
+
+  if (canReorderGroup(groupKey)) {
+    const arr = state[groupKey] || [];
+    const idx = arr.findIndex(i => i.id === item.id);
+
+    const upBtn = document.createElement('button');
+    upBtn.className = 'reorder-btn';
+    upBtn.type = 'button';
+    upBtn.textContent = '↑';
+    upBtn.title = 'Move up';
+    upBtn.disabled = idx <= 0;
+    upBtn.onclick = () => moveArrayItem(groupKey, item.id, -1);
+    right.appendChild(upBtn);
+
+    const downBtn = document.createElement('button');
+    downBtn.className = 'reorder-btn';
+    downBtn.type = 'button';
+    downBtn.textContent = '↓';
+    downBtn.title = 'Move down';
+    downBtn.disabled = idx === -1 || idx >= arr.length - 1;
+    downBtn.onclick = () => moveArrayItem(groupKey, item.id, 1);
+    right.appendChild(downBtn);
+  }
+
+  if (groupKey === 'kids-costs' || groupKey === 'shared') {
+    const halfBtn = document.createElement('button');
+    halfBtn.className = 'helper-btn';
+    halfBtn.textContent = 'Use half';
+    halfBtn.onclick = () => {
+      item.val = Math.round(item.val / 2);
+      if (item._updateDisplay) item._updateDisplay();
+      updateTotals();
+      scheduleSave();
+    };
+    right.appendChild(halfBtn);
+  }
+
+  const valSpan = document.createElement('input');
+  valSpan.type = 'text';
+  valSpan.className = 'slider-val';
+  valSpan.inputMode = 'numeric';
+  valSpan.value = fmtView(item.val);
+  valSpan.title = 'Click to type a value';
+
+  // Update slider oninput to also update the input field
+  slider.oninput = () => {
+    item.val = parseInt(slider.value);
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+
+  valSpan.addEventListener('focus', () => {
+    // Show raw monthly number for editing (regardless of view mode)
+    valSpan.value = String(item.val);
+    setTimeout(() => valSpan.select(), 0);
+  });
+
+  const commitVal = () => {
+    const raw = valSpan.value.replace(/[^0-9.]/g, '');
+    let n = parseFloat(raw);
+    if (isNaN(n) || n < 0) n = 0;
+    n = Math.round(n);
+    // Expand slider max if user typed a larger number
+    const sliderMax = parseInt(slider.max) || 2000;
+    if (n > sliderMax) {
+      slider.max = n;
+      item.max = n;
+    }
+    item.val = n;
+    slider.value = Math.min(n, parseInt(slider.max));
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+
+  valSpan.addEventListener('blur', commitVal);
+  valSpan.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); valSpan.blur(); }
+    if (e.key === 'Escape') { valSpan.value = fmtView(item.val); valSpan.blur(); }
+  });
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-btn';
+  removeBtn.innerHTML = '×';
+  removeBtn.title = 'Remove';
+  removeBtn.onclick = () => {
+    const arr = state[groupKey];
+    const idx = arr.findIndex(i => i.id === item.id);
+    if (idx > -1) { arr.splice(idx, 1); scheduleSave(); buildCard(sections.find(s => s.type === groupKey || s.id === groupKey)); updateTotals(); }
+  };
+
+  right.appendChild(valSpan);
+  right.appendChild(removeBtn);
+
+  div.appendChild(left);
+  div.appendChild(right);
+
+  // update slider val display on view change or external update (e.g. Use half)
+  item._updateDisplay = () => {
+    if (document.activeElement !== valSpan) valSpan.value = fmtView(item.val);
+    slider.value = Math.min(item.val, parseInt(slider.max) || 2000);
+  };
+
+  return div;
+}
+
+function buildSavingsRow(item) {
+  const div = document.createElement('div');
+  div.className = 'savings-row';
+  div.id = 'row-' + item.id;
+
+  const top = document.createElement('div');
+  top.className = 'savings-row-top';
+
+  const tools = document.createElement('div');
+  tools.className = 'slider-tools';
+  const arr = state['savings'] || [];
+  const idx = arr.findIndex(i => i.id === item.id);
+
+  const upBtn = document.createElement('button');
+  upBtn.className = 'reorder-btn';
+  upBtn.type = 'button';
+  upBtn.textContent = '↑';
+  upBtn.title = 'Move up';
+  upBtn.disabled = idx <= 0;
+  upBtn.onclick = () => moveArrayItem('savings', item.id, -1);
+  tools.appendChild(upBtn);
+
+  const downBtn = document.createElement('button');
+  downBtn.className = 'reorder-btn';
+  downBtn.type = 'button';
+  downBtn.textContent = '↓';
+  downBtn.title = 'Move down';
+  downBtn.disabled = idx === -1 || idx >= arr.length - 1;
+  downBtn.onclick = () => moveArrayItem('savings', item.id, 1);
+  tools.appendChild(downBtn);
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-btn';
+  removeBtn.type = 'button';
+  removeBtn.innerHTML = '×';
+  removeBtn.title = 'Remove goal';
+  removeBtn.onclick = () => {
+    const savings = state['savings'] || [];
+    const itemIdx = savings.findIndex(i => i.id === item.id);
+    if (itemIdx > -1) {
+      savings.splice(itemIdx, 1);
+      scheduleSave();
+      buildCard(sections.find(s => s.type === 'savings'));
+      updateTotals();
+    }
+  };
+  tools.appendChild(removeBtn);
+
+  const nameEl = document.createElement('div');
+  nameEl.className = 'savings-name';
+  nameEl.innerHTML = item.name + (item.priority ? ' <span class="badge">First</span>' : '');
+
+  const valSpan = document.createElement('div');
+  valSpan.className = 'savings-val';
+  valSpan.textContent = fmtView(item.val);
+
+  top.appendChild(nameEl);
+  top.appendChild(tools);
+
+  const metaCard = document.createElement('div');
+  metaCard.className = 'savings-meta-card';
+  metaCard.innerHTML = `
+    <div class="savings-meta-item">
+      <label>Goal</label>
+      <input type="number" id="goal-${item.id}" value="${item.target || 0}">
+    </div>
+    <div class="savings-meta-item">
+      <label>Balance</label>
+      <input type="number" id="balance-${item.id}" value="${item.balance || 0}">
+    </div>
+  `;
+
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = 0;
+  slider.max = item.max ?? 3000;
+  slider.value = item.val;
+  slider.oninput = () => {
+    item.val = parseInt(slider.value);
+    valSpan.textContent = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+
+  const sliderWrap = document.createElement('div');
+  sliderWrap.className = 'savings-slider-row';
+  sliderWrap.innerHTML = `<div><div class="savings-slider-meta">Monthly contribution</div></div>`;
+  sliderWrap.firstChild.appendChild(slider);
+  sliderWrap.appendChild(valSpan);
+
+  const progressLine = document.createElement('div');
+  progressLine.className = 'savings-progress-line';
+  progressLine.id = 'progress-' + item.id;
+
+  const goalInput = metaCard.querySelector('#goal-' + item.id);
+  const balanceInput = metaCard.querySelector('#balance-' + item.id);
+  goalInput.oninput = () => {
+    item.target = parseInt(goalInput.value) || 0;
+    updateSavingsRow(item, valSpan, progressLine, slider);
+    scheduleSave();
+  };
+  balanceInput.oninput = () => {
+    item.balance = parseInt(balanceInput.value) || 0;
+    updateSavingsRow(item, valSpan, progressLine, slider);
+    scheduleSave();
+  };
+
+  item._updateDisplay = () => updateSavingsRow(item, valSpan, progressLine, slider);
+
+  div.appendChild(top);
+  div.appendChild(sliderWrap);
+  div.appendChild(metaCard);
+  div.appendChild(progressLine);
+  updateSavingsRow(item, valSpan, progressLine, slider);
+  return div;
+}
+
+function updateSavingsRow(item, valSpan, progressLine, slider) {
+  const monthly = item.val || 0;
+  const target = item.target || 0;
+  const balance = item.balance || 0;
+  valSpan.textContent = fmtView(monthly);
+  slider.value = monthly;
+  const pct = target > 0 ? Math.min(100, Math.round((balance / target) * 100)) : 0;
+  const remaining = Math.max(0, target - balance);
+  if (target <= 0) {
+    progressLine.innerHTML = 'Add a goal amount to track progress and ETA.';
+    return;
+  }
+  if (remaining === 0) {
+    progressLine.innerHTML = `<strong>${pct}% funded</strong> — goal reached.`;
+    return;
+  }
+  if (monthly <= 0) {
+    progressLine.innerHTML = `<strong>${pct}% funded</strong> — ${fmt(remaining)} remaining — add a monthly contribution to project completion.`;
+    return;
+  }
+  const months = Math.ceil(remaining / monthly);
+  progressLine.innerHTML = `<strong>${pct}% funded</strong> — ${fmt(remaining)} to go — about ${months} month${months === 1 ? '' : 's'}.`;
+}
+
+function buildCard(section) {
+  const existing = document.getElementById('card-' + section.id);
+  const isOpen = openCards.has(section.id);
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.id = 'card-' + section.id;
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'card-header';
+  header.onclick = () => toggleCard(section.id);
+
+  const dot = document.createElement('div');
+  dot.className = 'card-dot dot-' + section.dotClass;
+
+  const title = document.createElement('div');
+  title.className = 'card-title';
+  title.innerHTML = section.title;
+
+  const total = document.createElement('div');
+  total.className = 'card-total';
+  if (section.type === 'income') total.classList.add('income-total');
+  if (section.type === 'savings') total.classList.add('saving-total');
+  total.id = 'total-' + section.id;
+  total.textContent = '—';
+
+  const chevron = document.createElement('div');
+  chevron.className = 'card-chevron' + (isOpen ? ' open' : '');
+  chevron.id = 'chev-' + section.id;
+  chevron.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+  header.appendChild(dot);
+  header.appendChild(title);
+  header.appendChild(total);
+  header.appendChild(chevron);
+  card.appendChild(header);
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'card-body' + (isOpen ? ' open' : '');
+  body.id = 'body-' + section.id;
+
+  if (section.type === 'income') buildIncomeBody(body);
+  else if (section.type === 'cs-out') buildCSOutBody(body);
+  else if (section.type === 'networth') buildNetWorthBody(body);
+  else if (section.type === 'savings') {
+    const items = state['savings'] || [];
+    items.forEach(item => body.appendChild(buildSavingsRow(item)));
+    body.appendChild(buildAddSavingsBtn());
+  } else {
+    const items = state[section.type] || [];
+    items.forEach(item => body.appendChild(buildSliderRow(item, section.type)));
+    body.appendChild(buildAddItemBtn(section.type));
+  }
+
+  card.appendChild(body);
+
+  if (existing) existing.replaceWith(card);
+  else document.getElementById('cards-col').appendChild(card);
+}
+
+function buildIncomeBody(body) {
+  const wrap = document.createElement('div');
+  const salaryMode = getSalaryInputMode();
+  wrap.innerHTML = `
+    <div class="income-inputs">
+      <div class="income-input-group">
+        <div class="income-label-row">
+          <label>Gross Salary (${salaryMode})</label>
+          <div class="input-mode-toggle">
+            <button type="button" class="input-mode-btn ${salaryMode === 'annual' ? 'active' : ''}" onclick="setSalaryInputMode('annual')">Annual</button>
+            <button type="button" class="input-mode-btn ${salaryMode === 'monthly' ? 'active' : ''}" onclick="setSalaryInputMode('monthly')">Monthly</button>
+            <button type="button" class="input-mode-btn ${salaryMode === 'weekly' ? 'active' : ''}" onclick="setSalaryInputMode('weekly')">Weekly</button>
+          </div>
+        </div>
+        <input type="number" id="inp-gross" value="${getGrossInputValue()}" oninput="updateGrossFromInput(this.value)">
+      </div>
+      <div class="income-input-group">
+        <label>Salary Sacrifice (monthly)</label>
+        <input type="number" id="inp-sacrifice" value="${state.salarySacrifice}" oninput="state.salarySacrifice=parseInt(this.value)||0;updateTotals();scheduleSave();">
+      </div>
+      <div class="income-input-group">
+        <label>FTB (Family Tax Benefit) / Other Income (monthly)</label>
+        <input type="number" id="inp-ftb" value="${state.ftbMonthly}" oninput="state.ftbMonthly=parseInt(this.value)||0;updateTotals();scheduleSave();">
+      </div>
+    </div>
+    <div class="income-breakdown" id="income-breakdown">
+      <div class="ib-item"><div class="ib-label">Tax + Medicare</div><div class="ib-val" id="ib-tax">—</div></div>
+      <div class="ib-item"><div class="ib-label">Super (SGC)</div><div class="ib-val" id="ib-super">—</div></div>
+      <div class="ib-item"><div class="ib-label">Take-Home/mo</div><div class="ib-val" id="ib-takehome">—</div></div>
+      <div class="ib-item"><div class="ib-label">Effective Rate</div><div class="ib-val" id="ib-rate">—</div></div>
+    </div>
+  `;
+  body.appendChild(wrap);
+}
+
+function buildCSOutBody(body) {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="cs-mode-toggle">
+      <button type="button" class="cs-mode-btn" id="cs-mode-paying" onclick="setCSMode('paying')">Paying</button>
+      <button type="button" class="cs-mode-btn" id="cs-mode-receiving" onclick="setCSMode('receiving')">Receiving</button>
+    </div>
+    <div class="slider-row">
+      <div>
+        <div class="slider-row-label"><span id="cs-direction-label">Child Support Payment (monthly)</span> <span class="badge">CSA</span></div>
+        <input type="range" id="cs-out-slider" min="0" max="3000" value="${getCSBudgetAmount()}" oninput="const val=parseInt(this.value)||0;if(getCSMode()==='receiving'){state.csReceived=val;state.csOut=0;}else{state.csOut=val;state.csReceived=0;}syncCSCardControls();updateCSAEstimateNote(getCurrentCSAEstimate());updateTotals();scheduleSave();">
+      </div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span class="slider-val" id="cs-out-val">${fmtView(getCSBudgetAmount())}</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-muted);padding-top:10px;line-height:1.6;">Use the <strong style="color:var(--ink)">CSA Estimator</strong> in the panel to calculate your assessment, then apply it here. Switch between <strong style="color:var(--ink)">paying</strong> and <strong style="color:var(--ink)">receiving</strong> so child support flows to the right side of the budget automatically.</p>
+    <div class="cs-estimate-note" id="cs-estimate-note">Budgeted child support matches the current estimate.</div>
+  `;
+  body.appendChild(wrap);
+  syncCSCardControls();
+}
+
+function buildNetWorthBody(body) {
+  const nw = state.networth;
+  body.innerHTML = `
+    <div class="nw-grid">
+      <div class="nw-item"><label>Property Value</label><input type="number" value="${nw.property}" oninput="state.networth.property=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Super Balance</label><input type="number" value="${nw.superBal}" oninput="state.networth.superBal=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Cash / Savings</label><input type="number" value="${nw.cashSavings}" oninput="state.networth.cashSavings=parseInt(this.value)||0;updateNetWorth();updateTotals();scheduleSave();"></div>
+      <div class="nw-item"><label>Investments</label><input type="number" value="${nw.investments}" oninput="state.networth.investments=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Other Assets</label><input type="number" value="${nw.otherAssets}" oninput="state.networth.otherAssets=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-divider"></div>
+      <div class="nw-item"><label>Mortgage / Rent Arrears</label><input type="number" value="${nw.mortgage}" oninput="state.networth.mortgage=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Settlement Debt</label><input type="number" value="${nw.settlementDebt}" oninput="state.networth.settlementDebt=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Car Loan</label><input type="number" value="${nw.carLoan}" oninput="state.networth.carLoan=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Other Debt</label><input type="number" value="${nw.otherDebt}" oninput="state.networth.otherDebt=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+    </div>
+    <div class="nw-summary">
+      <div class="nw-stat"><div class="nw-stat-label">Total Assets</div><div class="nw-stat-val pos" id="nw-assets">—</div></div>
+      <div class="nw-stat"><div class="nw-stat-label">Total Liabilities</div><div class="nw-stat-val neg" id="nw-liabilities">—</div></div>
+      <div class="nw-stat"><div class="nw-stat-label">Net Worth</div><div class="nw-stat-val" id="nw-total">—</div></div>
+    </div>
+  `;
+}
+
+function buildAddItemBtn(groupKey) {
+  const wrap = document.createElement('div');
+  wrap.className = 'add-item-row';
+  const btn = document.createElement('button');
+  btn.className = 'add-item-btn';
+  btn.innerHTML = '+ Add Item';
+  btn.onclick = () => {
+    const name = prompt('Item name:');
+    if (!name) return;
+    const id = groupKey + '-' + Date.now();
+    const newItem = {
+      id,
+      name,
+      val: 0,
+      min: 0,
+      max: 1000,
+    };
+    state[groupKey].push(newItem);
+    scheduleSave();
+    buildCard(sections.find(s => s.type === groupKey));
+    updateTotals();
+  };
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function buildAddSavingsBtn() {
+  const wrap = document.createElement('div');
+  wrap.className = 'add-item-row';
+  const btn = document.createElement('button');
+  btn.className = 'add-item-btn';
+  btn.innerHTML = '+ Add Goal';
+  btn.onclick = () => {
+    const name = prompt('Savings goal name:');
+    if (!name) return;
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+    state['savings'].push({
+      id: 'savings-' + Date.now(),
+      name: trimmedName,
+      val: 0,
+      min: 0,
+      max: 3000,
+      target: 0,
+      balance: 0,
+    });
+    scheduleSave();
+    buildCard(sections.find(s => s.type === 'savings'));
+    updateTotals();
+  };
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function toggleCard(id) {
+  const body = $('body-' + id);
+  const chev = $('chev-' + id);
+  const isOpen = openCards.has(id);
+  if (isOpen) { openCards.delete(id); body.classList.remove('open'); chev.classList.remove('open'); }
+  else { openCards.add(id); body.classList.add('open'); chev.classList.add('open'); }
+}
+
+// ── UPDATE FUNCTIONS ──
+function updateNetWorth() {
+  const nw = state.networth;
+  const assets = (nw.property||0) + (nw.superBal||0) + (nw.cashSavings||0) + (nw.investments||0) + (nw.otherAssets||0);
+  const liabilities = (nw.mortgage||0) + (nw.carLoan||0) + (nw.otherDebt||0) + (nw.settlementDebt||0);
+  const total = assets - liabilities;
+  if ($('nw-assets')) {
+    $('nw-assets').textContent = fmt(assets);
+    $('nw-liabilities').textContent = fmt(liabilities);
+    $('nw-total').textContent = fmt(total);
+    $('nw-total').className = 'nw-stat-val ' + (total >= 0 ? 'pos' : 'neg');
+  }
+}
+
+function sumGroup(groupKey) {
+  return (state[groupKey] || []).reduce((a, i) => a + (i.val || 0), 0);
+}
+
+// ── PHASE-AWARE SNAP PANEL ──
+function renderSnapPanel(m) {
+  const { takeHome, totalExpenses, surplus, savings, csOut, kids, shared, housing, personal, subs } = m;
+  const cash = (state.networth && state.networth.cashSavings) || 0;
+  const investments = ((state.networth && state.networth.investments) || 0) + ((state.networth && state.networth.superBal) || 0);
+  const nwAssets = (state.networth?.property||0) + (state.networth?.superBal||0) + (state.networth?.cashSavings||0) + (state.networth?.investments||0) + (state.networth?.otherAssets||0);
+  const nwLiab = (state.networth?.mortgage||0) + (state.networth?.carLoan||0) + (state.networth?.otherDebt||0) + (state.networth?.settlementDebt||0);
+  const netWorth = nwAssets - nwLiab;
+  const essentials = Math.max(0, housing + kids + shared + csOut + (personal + subs) * 0.5);
+  const runwayMo = (cash > 0 && essentials > 0) ? cash / essentials : 0;
+  const sepLoadPct = takeHome > 0 ? Math.round(((csOut + kids + shared) / takeHome) * 100) : 0;
+  const transitionSpent = getTCTotalSpent();
+  const transitionEst = getTCTotalEstimated();
+  const savingsRate = takeHome > 0 ? Math.round((savings / takeHome) * 100) : 0;
+  const annualSavings = savings * 12;
+
+  // Helpers
+  const setTile = (slot, label, val, sub, valClass) => {
+    const lbl = $('ss-' + slot + '-label');
+    const v = $('ss-' + slot + '-val');
+    const s = $('ss-' + slot + '-sub');
+    if (lbl) lbl.textContent = label;
+    if (v) {
+      v.textContent = val;
+      v.className = 'snap-stat-val' + (valClass ? ' ' + valClass : '');
+    }
+    if (s) s.textContent = sub;
+  };
+  const fmtRunway = () => {
+    if (cash <= 0) return ['—', 'add cash to net worth'];
+    if (essentials <= 0) return ['∞', 'no essentials mapped'];
+    return [(runwayMo >= 12 ? '12+' : runwayMo.toFixed(1)) + ' mo', 'if income stopped'];
+  };
+  const fmtNetWorth = () => netWorth === 0 ? ['—', 'set net worth'] : [fmt(netWorth), 'assets − liabilities'];
+
+  switch (currentPhase) {
+    case 'crisis': {
+      // Hero: Surplus (binary signal — bleeding or not)
+      const heroClass = surplus < 0 ? 'negative' : 'positive';
+      setTile('hero', 'Surplus', fmtView(surplus), surplus < 0 ? 'short this month' : 'this month', heroClass);
+      // Tile 1: Take-Home
+      setTile('t1', 'Take-Home', fmtView(takeHome), 'after tax & super');
+      // Tile 2: Essentials Out — must-pay floor
+      setTile('t2', 'Essentials Out', fmtView(essentials), 'must-pay floor');
+      // Tile 3: Transition burn — crisis cost meter
+      setTile('t3', 'Transition Burn', transitionSpent > 0 ? fmt(transitionSpent) : '—',
+        transitionEst > 0 ? 'of ' + fmt(transitionEst) + ' planned' : 'log lump-sum costs below');
+      // Tile 4: Runway
+      const [rwVal, rwSub] = fmtRunway();
+      setTile('t4', 'Runway', rwVal, rwSub);
+      break;
+    }
+    case 'rebuild': {
+      // Hero: Annual Savings
+      setTile('hero', 'Annual Savings', fmt(annualSavings) + '/yr', 'building wealth', annualSavings > 0 ? 'positive' : '');
+      // Tile 1: Savings Rate
+      setTile('t1', 'Savings Rate', savingsRate + '%', 'of take-home');
+      // Tile 2: Surplus / mo
+      setTile('t2', 'Surplus / mo', fmtView(surplus), 'after everything', surplus >= 0 ? 'positive' : 'negative');
+      // Tile 3: Net Worth
+      const [nwVal, nwSub] = fmtNetWorth();
+      setTile('t3', 'Net Worth', nwVal, nwSub);
+      // Tile 4: Separation Load
+      setTile('t4', 'Separation Load', sepLoadPct + '%', 'still the constraint?');
+      break;
+    }
+    case 'new-chapter': {
+      // Hero: Net Worth
+      const [nwVal, nwSub] = fmtNetWorth();
+      setTile('hero', 'Net Worth', nwVal, nwSub, netWorth > 0 ? 'positive' : (netWorth < 0 ? 'negative' : ''));
+      // Tile 1: Annual Savings
+      setTile('t1', 'Annual Savings', fmt(annualSavings) + '/yr', 'compounding');
+      // Tile 2: Savings Rate
+      setTile('t2', 'Savings Rate', savingsRate + '%', 'of take-home');
+      // Tile 3: Investments
+      setTile('t3', 'Investments', investments > 0 ? fmt(investments) : '—', investments > 0 ? 'super + invested' : 'set in net worth');
+      // Tile 4: Surplus / mo
+      setTile('t4', 'Surplus / mo', fmtView(surplus), 'after everything', surplus >= 0 ? 'positive' : 'negative');
+      break;
+    }
+    case 'stabilise':
+    default: {
+      // Hero: Surplus — amber threshold if drifting low (< $400 = under savings target)
+      let heroClass = 'positive';
+      if (surplus < 0) heroClass = 'negative';
+      else if (surplus < 400) heroClass = 'warn';
+      const heroSub = savings > 0
+        ? 'after everything · ' + fmtView(savings) + ' to savings'
+        : 'after everything';
+      setTile('hero', 'Surplus', fmtView(surplus), heroSub, heroClass);
+      // Tile 1: Take-Home
+      setTile('t1', 'Take-Home', fmtView(takeHome), 'after tax & super');
+      // Tile 2: Total Out
+      setTile('t2', 'Total Out', fmtView(totalExpenses), 'all expenses & CS');
+      // Tile 3: Separation Load
+      setTile('t3', 'Separation Load', sepLoadPct + '%', 'CS + kids monthly');
+      // Tile 4: Runway against 3-mo target
+      if (cash <= 0) {
+        setTile('t4', 'Runway', '—', 'add cash to net worth');
+      } else if (essentials <= 0) {
+        setTile('t4', 'Runway', '∞', 'no essentials mapped');
+      } else {
+        const cap = runwayMo >= 12 ? '12+' : runwayMo.toFixed(1);
+        setTile('t4', 'Runway', cap + ' / 3.0 mo', 'target: 3-month buffer');
+      }
+      break;
+    }
+  }
+}
+
+function updateTotals() {
+  const gross = state.grossSalary || 0;
+  const sacrifice = state.salarySacrifice || 0;
+  const taxable = gross - (sacrifice * 12);
+  const { tax, medicare, totalTax, netMonthly } = calcAusTax(Math.max(0, taxable));
+  const superMonthly = gross * 0.12 / 12;
+  const ftb = state.ftbMonthly || 0;
+  const csReceived = state.csReceived || 0;
+  const takeHome = netMonthly + ftb + csReceived;
+  const csOut = state.csOut || 0;
+  const csMode = getCSMode();
+  const csBudgetAmount = getCSBudgetAmount();
+  const kids = sumGroup('kids-costs');
+  const shared = sumGroup('shared');
+  const housing = sumGroup('housing');
+  const personal = sumGroup('personal');
+  const subs = sumGroup('subs');
+  const savings = sumGroup('savings');
+  const totalExpenses = csOut + kids + shared + housing + personal + subs + savings;
+  const surplus = takeHome - totalExpenses;
+
+  // Update income card breakdown
+  if ($('ib-tax')) {
+    $('ib-tax').textContent = fmtView(totalTax / 12);
+    $('ib-super').textContent = fmtView(superMonthly);
+    $('ib-takehome').textContent = fmt(netMonthly) + '/mo';
+    const effRate = gross > 0 ? Math.round(totalTax / gross * 100) : 0;
+    $('ib-rate').textContent = effRate + '%';
+  }
+
+  // Card totals
+  $('total-income').textContent = fmtView(takeHome);
+  $('total-cs-out').textContent = csMode === 'receiving' ? fmtView(csBudgetAmount) + ' in' : fmtView(csBudgetAmount);
+  $('total-kids-costs').textContent = fmtView(kids);
+  $('total-shared').textContent = fmtView(shared);
+  $('total-housing').textContent = fmtView(housing);
+  $('total-personal').textContent = fmtView(personal);
+  $('total-subs').textContent = fmtView(subs);
+  $('total-savings').textContent = fmtView(savings);
+
+  // Update cs-out slider display if view changed
+  syncCSCardControls();
+
+  // Update all slider display values on view change
+  ['kids-costs','shared','housing','personal','subs'].forEach(g => {
+    (state[g] || []).forEach(item => { if (item._updateDisplay) item._updateDisplay(); });
+  });
+  (state['savings'] || []).forEach(item => { if (item._updateDisplay) item._updateDisplay(); });
+
+  // Dossier
+  $('d-gross').textContent = fmt(gross) + '/yr';
+  if ($('d-ftb-label')) $('d-ftb-label').textContent = csMode === 'receiving' ? 'FTB / CS Received' : 'FTB / Other Income';
+  $('d-ftb').textContent = fmtView(ftb + (csMode === 'receiving' ? csReceived : 0));
+  $('d-tax').textContent = '-' + fmtView(totalTax / 12);
+  $('d-super').textContent = fmtView(superMonthly);
+  $('d-takehome').textContent = fmtView(takeHome);
+  if ($('d-cs-label')) $('d-cs-label').textContent = csMode === 'receiving' ? 'Child Support In' : 'Child Support Out';
+  $('d-cs').textContent = fmtView(csBudgetAmount);
+  $('d-kids').textContent = fmtView(kids + shared);
+  $('d-housing').textContent = fmtView(housing);
+  $('d-personal').textContent = fmtView(personal + subs);
+  $('d-savings').textContent = fmtView(savings);
+  const surplusEl = $('d-surplus');
+  surplusEl.textContent = fmtView(surplus);
+  surplusEl.className = 'dossier-row-val' + (surplus >= 0 ? ' green' : ' red');
+  surplusEl.style.fontSize = '1rem';
+  const surplusPct = takeHome > 0 ? Math.max(0, Math.min(100, surplus / takeHome * 100)) : 0;
+  $('d-surplus-bar').style.width = surplusPct + '%';
+  $('d-surplus-bar').style.background = surplus >= 0 ? 'var(--green)' : 'var(--coral)';
+
+  // Snap panel — phase-aware
+  renderSnapPanel({ takeHome, totalExpenses, surplus, savings, csOut, kids, shared, housing, personal, subs });
+
+  // Snap bar — Spent vs Surplus
+  if (takeHome > 0) {
+    const spentPct = Math.max(0, Math.min(100, Math.round((totalExpenses / takeHome) * 100)));
+    $('bar-spent').style.width = spentPct + '%';
+    $('bar-spent-pct').textContent = spentPct + '%';
+    $('bar-surplus-pct').textContent = Math.max(0, 100 - spentPct) + '%';
+  } else {
+    $('bar-spent').style.width = '0%';
+    $('bar-spent-pct').textContent = '0%';
+    $('bar-surplus-pct').textContent = '0%';
+  }
+
+  updateNetWorth();
+}
+
+// ── NAV ──
+function toggleNav() {
+  const nav = $('mobile-nav');
+  const ham = $('hamburger');
+  const open = nav.classList.toggle('open');
+  ham.classList.toggle('open', open);
+}
+document.addEventListener('click', e => {
+  const nav = $('mobile-nav');
+  const ham = $('hamburger');
+  if (!nav.contains(e.target) && !ham.contains(e.target)) {
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+  }
+});
+
+// ── TRANSITION COSTS ──
+const TC_DEFAULTS = [
+  { label: 'Legal / Solicitor', estimated: 0, trackOnly: true },
+  { label: 'Mediation', estimated: 0, trackOnly: true },
+  { label: 'Setting up new home', estimated: 0, trackOnly: true },
+  { label: 'Moving costs', estimated: 0, trackOnly: true },
+];
+const TC_PHASE_COPY = {
+  crisis: {
+    title: 'Costs of getting through this',
+    sub: "Lawyers, mediation, the new place. Lump-sum payments hit hard right now — track them here so they don't poison your monthly view.",
+    totals: 'Burn so far',
+  },
+  stabilise: {
+    title: 'One-off separation costs',
+    sub: 'Lump-sum payments — legal, mediation, setting up the new place. Tracked separately from your monthly budget so they don\'t distort cash flow.',
+    totals: 'Spent so far',
+  },
+  rebuild: {
+    title: 'Cost of the transition',
+    sub: 'The big lumps from getting separated and set up. Most of this is behind you now — keep logging until categories are settled.',
+    totals: 'Total invested',
+  },
+  'new-chapter': {
+    title: 'Closing the chapter',
+    sub: "What the separation cost in lump-sum terms. Archive categories as they're settled — this becomes a record of what you came through.",
+    totals: 'Lifetime total',
+  },
+};
+
+let transitionCosts = [];
+let editingTCRowId = null;
+let editingTCPaymentRowId = null;
+let editingTCPaymentId = null;
+
+function loadTC() {
+  try {
+    const raw = localStorage.getItem('atlas_transition_costs') || localStorage.getItem('dad_atlas_transition_costs');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        transitionCosts = parsed.map(r => ({
+          id: r.id || ('tc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)),
+          label: r.label || 'Untitled',
+          estimated: Number(r.estimated) || 0,
+          // trackOnly defaults to true for new rows; for legacy rows infer from estimated
+          trackOnly: typeof r.trackOnly === 'boolean' ? r.trackOnly : !(Number(r.estimated) > 0),
+          payments: Array.isArray(r.payments) ? r.payments.map(p => ({
+            id: p.id || ('p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)),
+            date: p.date || '',
+            amount: Number(p.amount) || 0,
+            note: p.note || '',
+          })) : [],
+          archived: !!r.archived,
+          open: !!r.open,
+        }));
+        return;
+      }
+    }
+  } catch(e) {}
+  // First load — seed with defaults
+  transitionCosts = TC_DEFAULTS.map((d, i) => ({
+    id: 'tc-default-' + i,
+    label: d.label,
+    estimated: d.estimated,
+    trackOnly: !!d.trackOnly,
+    payments: [],
+    archived: false,
+    open: false,
+  }));
+}
+
+function saveTC() {
+  try {
+    const persist = transitionCosts.map(r => ({
+      id: r.id, label: r.label, estimated: r.estimated, trackOnly: !!r.trackOnly, payments: r.payments, archived: r.archived, open: r.open,
+    }));
+    const s = JSON.stringify(persist);
+    localStorage.setItem('atlas_transition_costs', s);
+    localStorage.setItem('dad_atlas_transition_costs', s);
+  } catch(e) {}
+}
+
+function getTCRowSpent(row) {
+  return (row.payments || []).reduce((a, p) => a + (Number(p.amount) || 0), 0);
+}
+function getTCRowLastPayment(row) {
+  const sorted = (row.payments || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  return sorted[0] || null;
+}
+function getTCTotalSpent() {
+  return transitionCosts.filter(r => !r.archived).reduce((a, r) => a + getTCRowSpent(r), 0);
+}
+function getTCTotalEstimated() {
+  return transitionCosts.filter(r => !r.archived && !r.trackOnly).reduce((a, r) => a + (Number(r.estimated) || 0), 0);
+}
+function hasAnyTCBudget() {
+  return transitionCosts.some(r => !r.archived && !r.trackOnly && (Number(r.estimated) || 0) > 0);
+}
+
+function fmtTCDate(s) {
+  if (!s) return '—';
+  const d = new Date(s + 'T12:00:00');
+  if (isNaN(d.getTime())) return s;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()];
+}
+
+function renderTransitionCosts() {
+  const copy = TC_PHASE_COPY[currentPhase] || TC_PHASE_COPY.stabilise;
+  if ($('tc-title')) $('tc-title').textContent = copy.title;
+  if ($('tc-sub')) $('tc-sub').textContent = copy.sub;
+  if ($('tc-totals-label')) $('tc-totals-label').textContent = copy.totals;
+
+  const spent = getTCTotalSpent();
+  const est = getTCTotalEstimated();
+  const anyBudget = hasAnyTCBudget();
+  if ($('tc-spent-total')) $('tc-spent-total').textContent = fmt(spent);
+  if ($('tc-est-total')) $('tc-est-total').textContent = fmt(est);
+  if ($('tc-of-suffix')) $('tc-of-suffix').style.display = anyBudget ? '' : 'none';
+  const pct = est > 0 ? Math.min(100, Math.round((spent / est) * 100)) : (spent > 0 ? 100 : 0);
+  const totalsFill = $('tc-totals-bar-fill');
+  if (totalsFill) {
+    totalsFill.style.width = pct + '%';
+    totalsFill.classList.toggle('no-est', !anyBudget && spent > 0);
+    totalsFill.classList.toggle('over', anyBudget && spent > est);
+  }
+
+  const rowsEl = $('tc-rows');
+  if (!rowsEl) return;
+  rowsEl.innerHTML = '';
+
+  const active = transitionCosts.filter(r => !r.archived);
+  const archived = transitionCosts.filter(r => r.archived);
+
+  if (transitionCosts.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'tc-empty';
+    empty.textContent = 'No transition costs yet. Add one to start tracking.';
+    rowsEl.appendChild(empty);
+  } else {
+    active.forEach(row => rowsEl.appendChild(buildTCRow(row)));
+    archived.forEach(row => rowsEl.appendChild(buildTCRow(row)));
+  }
+}
+
+function buildTCRow(row) {
+  const spent = getTCRowSpent(row);
+  const est = Number(row.estimated) || 0;
+  const trackOnly = !!row.trackOnly;
+  const hasBudget = !trackOnly && est > 0;
+  const remaining = est - spent;
+  const last = getTCRowLastPayment(row);
+  const over = hasBudget && spent > est;
+  const barPct = hasBudget ? Math.min(100, (spent / est) * 100) : (spent > 0 ? 100 : 0);
+  const barClass = hasBudget ? (over ? 'over' : '') : 'no-est';
+
+  const el = document.createElement('div');
+  el.className = 'tc-row' + (row.open ? ' open' : '') + (row.archived ? ' archived' : '');
+  el.dataset.id = row.id;
+
+  // Collapsed
+  const collapsed = document.createElement('div');
+  collapsed.className = 'tc-row-collapsed';
+  collapsed.style.cursor = 'pointer';
+  collapsed.onclick = () => toggleTCRow(row.id);
+
+  const main = document.createElement('div');
+  main.className = 'tc-row-main';
+  const title = document.createElement('div');
+  title.className = 'tc-row-title';
+  title.textContent = row.label;
+  const meta = document.createElement('div');
+  meta.className = 'tc-row-meta';
+  meta.innerHTML = (row.payments || []).length === 0
+    ? 'No payments yet'
+    : (row.payments.length + (row.payments.length === 1 ? ' payment' : ' payments') +
+       (last ? '<span class="sep">·</span>last: ' + fmtTCDate(last.date) + ' — ' + fmt(last.amount) : ''));
+  main.appendChild(title);
+  main.appendChild(meta);
+
+  const numbers = document.createElement('div');
+  numbers.className = 'tc-row-numbers';
+  numbers.innerHTML = '<div class="tc-row-spent' + (over ? ' over' : '') + '">' + fmt(spent) + '</div>'
+    + (hasBudget
+        ? '<div class="tc-row-est">of ' + fmt(est) + ' budget</div>'
+        : (trackOnly
+            ? '<div class="tc-row-est">Tracking spend</div>'
+            : '<button class="tc-row-est tc-set-est" type="button" data-tc-setest="' + row.id + '">Set budget →</button>'));
+
+  const actions = document.createElement('div');
+  actions.className = 'tc-row-actions';
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tc-row-action-btn';
+  addBtn.type = 'button';
+  addBtn.textContent = '+ Payment';
+  addBtn.onclick = (e) => { e.stopPropagation(); openTCAddPayment(row.id); };
+  const expandBtn = document.createElement('button');
+  expandBtn.className = 'tc-row-action-btn icon';
+  expandBtn.type = 'button';
+  expandBtn.innerHTML = row.open ? '&#9650;' : '&#9660;';
+  expandBtn.onclick = (e) => { e.stopPropagation(); toggleTCRow(row.id); };
+  actions.appendChild(addBtn);
+  actions.appendChild(expandBtn);
+
+  collapsed.appendChild(main);
+  collapsed.appendChild(numbers);
+  collapsed.appendChild(actions);
+  el.appendChild(collapsed);
+
+  // Bar
+  const bar = document.createElement('div');
+  bar.className = 'tc-row-bar';
+  bar.innerHTML = '<div class="tc-row-bar-fill ' + barClass + '" style="width:' + barPct + '%"></div>';
+  el.appendChild(bar);
+
+  // Expanded
+  const expanded = document.createElement('div');
+  expanded.className = 'tc-row-expanded';
+
+  // Track-only toggle
+  const toggleWrap = document.createElement('label');
+  toggleWrap.className = 'tc-trackonly-row';
+  toggleWrap.innerHTML =
+    '<input type="checkbox" class="tc-trackonly-cb" data-tc-trackonly="' + row.id + '"' + (trackOnly ? ' checked' : '') + ' />' +
+    '<span class="tc-trackonly-text">Just track what I spend (no budget for this)</span>';
+  expanded.appendChild(toggleWrap);
+
+  // Fields row
+  const fields = document.createElement('div');
+  fields.className = 'tc-row-fields' + (trackOnly ? ' tc-fields-trackonly' : '');
+  if (trackOnly) {
+    fields.innerHTML =
+      '<div>' +
+        '<div class="tc-field-label">Spent to date</div>' +
+        '<div class="tc-field-val' + (spent > 0 ? ' green' : '') + '">' + fmt(spent) + '</div>' +
+      '</div>';
+  } else {
+    fields.innerHTML =
+      '<div>' +
+        '<div class="tc-field-label">Budget</div>' +
+        '<input type="number" min="0" step="100" class="tc-field-input" value="' + (est || 0) + '" data-tc-est="' + row.id + '" />' +
+      '</div>' +
+      '<div>' +
+        '<div class="tc-field-label">Spent</div>' +
+        '<div class="tc-field-val' + (spent > 0 ? ' green' : '') + '">' + fmt(spent) + '</div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="tc-field-label">Remaining</div>' +
+        '<div class="tc-field-val' + (remaining < 0 ? ' red' : '') + '">' + (est > 0 ? fmt(remaining) : '—') + '</div>' +
+      '</div>';
+  }
+  expanded.appendChild(fields);
+
+  // Payments
+  const paymentsHead = document.createElement('div');
+  paymentsHead.className = 'tc-payments-head';
+  paymentsHead.textContent = 'Payments (' + (row.payments || []).length + ')';
+  expanded.appendChild(paymentsHead);
+
+  const list = document.createElement('div');
+  list.className = 'tc-payments-list';
+  if ((row.payments || []).length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'tc-payments-empty';
+    empty.textContent = 'No payments logged yet.';
+    list.appendChild(empty);
+  } else {
+    const sorted = row.payments.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    sorted.forEach(p => {
+      const pr = document.createElement('div');
+      pr.className = 'tc-payment-row';
+      pr.style.cursor = 'pointer';
+      pr.onclick = () => openTCEditPayment(row.id, p.id);
+      pr.innerHTML =
+        '<div class="tc-payment-date">' + fmtTCDate(p.date) + '</div>' +
+        '<div class="tc-payment-amount">' + fmt(p.amount) + '</div>' +
+        '<div class="tc-payment-note' + (p.note ? '' : ' empty') + '">' + (p.note || 'no note') + '</div>' +
+        '<div class="tc-payment-actions"><button class="tc-payment-x" type="button" data-tc-pdel="' + row.id + ':' + p.id + '" title="Remove">×</button></div>';
+      list.appendChild(pr);
+    });
+  }
+  expanded.appendChild(list);
+
+  // Buttons
+  const buttons = document.createElement('div');
+  buttons.className = 'tc-row-buttons';
+  const left = document.createElement('div');
+  left.className = 'tc-row-buttons-left';
+  const addPay2 = document.createElement('button');
+  addPay2.className = 'tc-row-action-btn';
+  addPay2.type = 'button';
+  addPay2.textContent = '+ Add payment';
+  addPay2.onclick = () => openTCAddPayment(row.id);
+  left.appendChild(addPay2);
+  const right = document.createElement('div');
+  right.className = 'tc-row-buttons-right';
+  const archBtn = document.createElement('button');
+  archBtn.className = 'tc-row-action-btn';
+  archBtn.type = 'button';
+  archBtn.textContent = row.archived ? 'Unarchive' : 'Archive';
+  archBtn.onclick = () => toggleTCArchive(row.id);
+  const delBtn = document.createElement('button');
+  delBtn.className = 'tc-row-action-btn';
+  delBtn.type = 'button';
+  delBtn.textContent = 'Delete row';
+  delBtn.onclick = () => deleteTCRow(row.id);
+  right.appendChild(archBtn);
+  right.appendChild(delBtn);
+  buttons.appendChild(left);
+  buttons.appendChild(right);
+  expanded.appendChild(buttons);
+
+  el.appendChild(expanded);
+
+  // Wire estimate input
+  setTimeout(() => {
+    const estInput = el.querySelector('[data-tc-est="' + row.id + '"]');
+    if (estInput) {
+      const commit = () => {
+        const v = Math.max(0, Number(estInput.value) || 0);
+        const r = transitionCosts.find(x => x.id === row.id);
+        if (r) { r.estimated = v; saveTC(); renderTransitionCosts(); updateTotals(); }
+      };
+      estInput.addEventListener('blur', commit);
+      estInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); estInput.blur(); }});
+      estInput.addEventListener('click', e => e.stopPropagation());
+    }
+    el.querySelectorAll('[data-tc-pdel]').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const [rid, pid] = btn.dataset.tcPdel.split(':');
+        const r = transitionCosts.find(x => x.id === rid);
+        if (r) { r.payments = r.payments.filter(p => p.id !== pid); saveTC(); renderTransitionCosts(); updateTotals(); }
+      };
+    });
+    const setEstBtn = el.querySelector('[data-tc-setest="' + row.id + '"]');
+    if (setEstBtn) {
+      setEstBtn.onclick = (e) => {
+        e.stopPropagation();
+        const r = transitionCosts.find(x => x.id === row.id);
+        if (!r) return;
+        // Switching from "set budget" path implies the user wants a budget — flip trackOnly off
+        r.trackOnly = false;
+        if (!r.open) r.open = true;
+        saveTC();
+        renderTransitionCosts();
+        setTimeout(() => {
+          const card = document.querySelector('.tc-row[data-id="' + row.id + '"]');
+          const inp = card && card.querySelector('[data-tc-est="' + row.id + '"]');
+          if (inp) { inp.focus(); inp.select(); }
+        }, 30);
+      };
+    }
+    const trackCb = el.querySelector('[data-tc-trackonly="' + row.id + '"]');
+    if (trackCb) {
+      trackCb.onclick = (e) => e.stopPropagation();
+      trackCb.onchange = () => {
+        const r = transitionCosts.find(x => x.id === row.id);
+        if (!r) return;
+        r.trackOnly = trackCb.checked;
+        // If user just turned ON track-only, zero the budget so the maths stays clean
+        if (r.trackOnly) r.estimated = 0;
+        saveTC();
+        renderTransitionCosts();
+        updateTotals();
+      };
+    }
+  }, 0);
+
+  return el;
+}
+
+function toggleTCRow(id) {
+  const r = transitionCosts.find(x => x.id === id);
+  if (!r) return;
+  r.open = !r.open;
+  saveTC();
+  renderTransitionCosts();
+}
+
+function toggleTCSection() {
+  const sec = document.getElementById('tc-section');
+  const btn = document.getElementById('tc-section-toggle');
+  if (!sec) return;
+  const collapsed = sec.classList.toggle('collapsed');
+  if (btn) btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  try {
+    localStorage.setItem('atlas_tc_section_collapsed', collapsed ? '1' : '0');
+    localStorage.setItem('dad_atlas_tc_section_collapsed', collapsed ? '1' : '0');
+  } catch(e) {}
+}
+
+function applyTCSectionCollapse() {
+  const sec = document.getElementById('tc-section');
+  const btn = document.getElementById('tc-section-toggle');
+  if (!sec) return;
+  let collapsed = false;
+  try {
+    const v = localStorage.getItem('atlas_tc_section_collapsed') || localStorage.getItem('dad_atlas_tc_section_collapsed');
+    collapsed = v === '1';
+  } catch(e) {}
+  sec.classList.toggle('collapsed', collapsed);
+  if (btn) btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+}
+
+function toggleTCArchive(id) {
+  const r = transitionCosts.find(x => x.id === id);
+  if (!r) return;
+  r.archived = !r.archived;
+  if (r.archived) r.open = false;
+  saveTC();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+function deleteTCRow(id) {
+  const r = transitionCosts.find(x => x.id === id);
+  if (!r) return;
+  const pmt = (r.payments || []).length;
+  if (pmt > 0 && !confirm('Delete "' + r.label + '"? This will remove ' + pmt + ' logged payment' + (pmt === 1 ? '' : 's') + '.')) return;
+  if (pmt === 0 && !confirm('Delete "' + r.label + '"?')) return;
+  transitionCosts = transitionCosts.filter(x => x.id !== id);
+  saveTC();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+/* Add row modal */
+function openTCAddRow() {
+  editingTCRowId = null;
+  $('tc-row-modal-title').textContent = 'Add transition cost';
+  $('tc-row-label').value = '';
+  $('tc-row-est').value = '';
+  $('tc-row-trackonly').checked = true;
+  $('tc-row-est-field').style.display = 'none';
+  $('tc-row-modal').classList.add('open');
+  setTimeout(() => $('tc-row-label').focus(), 50);
+}
+function closeTCRowModal() {
+  $('tc-row-modal').classList.remove('open');
+  editingTCRowId = null;
+}
+function saveTCRow() {
+  const label = ($('tc-row-label').value || '').trim();
+  if (!label) { $('tc-row-label').focus(); return; }
+  const trackOnly = $('tc-row-trackonly').checked;
+  const est = trackOnly ? 0 : Math.max(0, Number($('tc-row-est').value) || 0);
+  transitionCosts.push({
+    id: 'tc-' + Date.now(),
+    label,
+    estimated: est,
+    trackOnly,
+    payments: [],
+    archived: false,
+    open: true,
+  });
+  saveTC();
+  closeTCRowModal();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+/* Add / Edit payment modal */
+function openTCAddPayment(rowId) {
+  editingTCPaymentRowId = rowId;
+  editingTCPaymentId = null;
+  const today = new Date();
+  const ymd = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  $('tc-pay-modal-title').textContent = 'Add payment';
+  const r = transitionCosts.find(x => x.id === rowId);
+  $('tc-pay-modal-sub').textContent = r ? 'Logged against ' + r.label + '.' : 'Log a payment.';
+  $('tc-pay-date').value = ymd;
+  $('tc-pay-amount').value = '';
+  $('tc-pay-note').value = '';
+  $('tc-pay-delete').style.display = 'none';
+  $('tc-pay-modal').classList.add('open');
+  setTimeout(() => $('tc-pay-amount').focus(), 50);
+}
+function openTCEditPayment(rowId, payId) {
+  const r = transitionCosts.find(x => x.id === rowId);
+  if (!r) return;
+  const p = (r.payments || []).find(x => x.id === payId);
+  if (!p) return;
+  editingTCPaymentRowId = rowId;
+  editingTCPaymentId = payId;
+  $('tc-pay-modal-title').textContent = 'Edit payment';
+  $('tc-pay-modal-sub').textContent = 'Logged against ' + r.label + '.';
+  $('tc-pay-date').value = p.date || '';
+  $('tc-pay-amount').value = p.amount || '';
+  $('tc-pay-note').value = p.note || '';
+  $('tc-pay-delete').style.display = 'inline-block';
+  $('tc-pay-modal').classList.add('open');
+  setTimeout(() => $('tc-pay-amount').focus(), 50);
+}
+function closeTCPayModal() {
+  $('tc-pay-modal').classList.remove('open');
+  editingTCPaymentRowId = null;
+  editingTCPaymentId = null;
+}
+function saveTCPayment() {
+  const r = transitionCosts.find(x => x.id === editingTCPaymentRowId);
+  if (!r) { closeTCPayModal(); return; }
+  const date = $('tc-pay-date').value || '';
+  const amount = Math.max(0, Number($('tc-pay-amount').value) || 0);
+  const note = ($('tc-pay-note').value || '').trim();
+  if (amount <= 0) { $('tc-pay-amount').focus(); return; }
+  if (editingTCPaymentId) {
+    const p = (r.payments || []).find(x => x.id === editingTCPaymentId);
+    if (p) { p.date = date; p.amount = amount; p.note = note; }
+  } else {
+    if (!Array.isArray(r.payments)) r.payments = [];
+    r.payments.push({
+      id: 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+      date, amount, note,
+    });
+  }
+  saveTC();
+  closeTCPayModal();
+  renderTransitionCosts();
+  updateTotals();
+}
+function deleteTCPayment() {
+  if (!editingTCPaymentRowId || !editingTCPaymentId) return;
+  const r = transitionCosts.find(x => x.id === editingTCPaymentRowId);
+  if (!r) return;
+  r.payments = (r.payments || []).filter(p => p.id !== editingTCPaymentId);
+  saveTC();
+  closeTCPayModal();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+window.addEventListener('storage', e => {
+  if ((e.key === 'atlas_transition_costs' || e.key === 'dad_atlas_transition_costs') && e.newValue) {
+    loadTC();
+    renderTransitionCosts();
+    updateTotals();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('tc-row-modal')?.classList.contains('open')) closeTCRowModal();
+  if (document.getElementById('tc-pay-modal')?.classList.contains('open')) closeTCPayModal();
+});
+
+// Add-row modal: show Budget field only when trackOnly is unchecked
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'tc-row-trackonly') {
+    const field = document.getElementById('tc-row-est-field');
+    if (field) field.style.display = e.target.checked ? 'none' : '';
+  }
+});
+
+// ── RENDER ──
+function render() {
+  const col = $('cards-col');
+  col.innerHTML = '';
+  sections.forEach(s => buildCard(s));
+  updateTotals();
+  updateNetWorth();
+  renderTransitionCosts();
+}
+
+// ── INIT ──
+(function init() {
+  loadState();
+  loadTC();
+  applyTCSectionCollapse();
+
+  // restore phase
+  try {
+    const savedPhase = localStorage.getItem('atlas_budget_phase') || localStorage.getItem('dad_budget_phase') || localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise';
+    setPhase(savedPhase);
+  } catch(e) { setPhase('stabilise'); }
+
+  // restore view
+  try {
+    const savedView = localStorage.getItem('atlas_budget_view') || localStorage.getItem('dad_budget_view') || 'monthly';
+    setView(savedView);
+  } catch(e) {}
+
+  render();
+  syncCSAIncome();
+  calcCSA();
+})();
+</script>
+</body>
+</html>

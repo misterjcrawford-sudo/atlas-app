@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goals — Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --lilac: #EAC995;
+    --lilac-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --black: #0A0A0A;
+    --red: #C44A3A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+
+    /* Category palette mapped to design tokens */
+    --cat-financial: var(--green);
+    --cat-financial-soft: var(--sage);
+    --cat-career: var(--ink-soft);
+    --cat-career-soft: var(--paper-warm);
+    --cat-parenting: var(--lilac-deep);
+    --cat-parenting-soft: var(--lilac);
+    --cat-fitness: var(--green-deep);
+    --cat-fitness-soft: var(--sage);
+    --cat-personal: var(--coral);
+    --cat-personal-soft: var(--honey);
+
+    /* Legacy aliases for inline JS */
+    --accent: var(--green);
+    --accent-soft: var(--sage);
+    --accent-mid: var(--green-deep);
+    --navy: var(--ink);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip {
+    background: var(--green);
+    color: var(--paper);
+    padding: 11px 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .top-strip a {
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 1px;
+  }
+  .top-strip .arrow { display: inline-block; transition: transform 0.18s; margin-left: 4px; }
+  .top-strip a:hover .arrow { transform: translateX(3px); }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 8px 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: var(--shadow-soft);
+    max-width: 1100px;
+    width: 100%;
+    height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background 0.15s;
+  }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+
+  .nav-cta {
+    background: var(--lilac);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .nav-cta:hover { background: var(--lilac-deep); transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1380px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 460px; gap: 56px; align-items: end; }
+  .hero-eyebrow {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.8rem, 6.4vw, 5.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .soft {
+    color: var(--ink);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 72%, var(--lilac) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero h1 .bold { color: var(--ink); font-weight: 500; }
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  /* Phase chips */
+  .phase-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .phase-pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper-card);
+    transition: all 0.18s ease;
+    letter-spacing: -0.005em;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .phase-context {
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 580px;
+    font-style: normal;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+  }
+
+  /* Snap panel — hero stats */
+  .snap-panel {
+    background: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 18px 50px rgba(10,10,10,0.18);
+    color: var(--paper);
+  }
+  .snap-bar {
+    height: 14px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .snap-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--paper);
+    transition: width 0.5s ease;
+  }
+  .snap-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .snap-stat {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .snap-stat.hero {
+    grid-column: 1 / -1;
+    padding: 18px 20px 16px;
+    background: var(--paper);
+  }
+  .snap-stat.hero .snap-stat-val {
+    font-size: 2.6rem;
+    line-height: 1.02;
+    color: var(--green-deep);
+  }
+  .snap-stat.hero .snap-stat-sub { font-size: 13px; margin-top: 4px; color: var(--ink-soft); }
+  .snap-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .snap-stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.55rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .snap-stat-val.green { color: var(--green); }
+  .snap-stat-val.purple { color: var(--lilac-deep); }
+  .snap-stat-val.warn { color: var(--red, #B83A2A); }
+  .snap-stat-sub { font-size: 12px; color: var(--ink-faded); margin-top: 2px; }
+  .snap-stat-sub.warn { color: var(--red, #B83A2A); }
+
+  /* Anchor card */
+  .anchor-card {
+    margin-top: 14px;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .anchor-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .anchor-input {
+    width: 100%;
+    min-height: 60px;
+    border: none;
+    background: transparent;
+    resize: vertical;
+    outline: none;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 300;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .anchor-input::placeholder { color: var(--ink-faded); }
+
+  /* MASTHEAD GRID */
+  .masthead { display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start; padding-bottom: 56px; }
+
+  /* DOSSIER */
+  .dossier {
+    position: sticky;
+    top: 24px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 26px 22px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .dossier-title {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .dossier-phase {
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+  .d-cat-row {
+    display: grid;
+    grid-template-columns: 12px 1fr auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--paper-edge);
+    font-size: 13.5px;
+  }
+  .d-cat-row:last-of-type { border-bottom: none; }
+  .d-cat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .d-cat-name { font-weight: 500; color: var(--ink-soft); }
+  .d-cat-bar { width: 56px; height: 5px; border-radius: 999px; background: var(--paper-warm); overflow: hidden; }
+  .d-cat-bar-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+  .d-cat-count { font-weight: 600; color: var(--ink); font-size: 13px; }
+  .dossier-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 14px 0 12px; }
+
+  /* Add goal area */
+  .add-goal-wrap { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .add-goal-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    color: var(--paper);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .add-goal-btn:hover { background: var(--green-deep); border-color: var(--green-deep); transform: translateY(-1px); }
+  .browse-goals-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .browse-goals-btn:hover { background: var(--paper-warm); color: var(--ink); }
+
+  /* Flow note in dossier */
+  .flow-note {
+    background: var(--green);
+    color: var(--paper);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-top: 14px;
+  }
+  .flow-note-title {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--paper);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .flow-note span { color: rgba(255,255,255,0.85); font-size: 13.5px; line-height: 1.55; }
+
+  /* SUGGESTED GOALS */
+  .suggested-panel {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 28px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .suggested-panel.hidden { display: none; }
+  .suggested-panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .suggested-panel-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .suggested-panel-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.65rem;
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .suggested-panel-title em {
+    font-style: normal;
+    color: var(--green);
+    font-weight: 400;
+  }
+  .suggested-panel-copy {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 640px;
+  }
+  .suggested-phase-copy {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-faded);
+    margin-bottom: 12px;
+  }
+  .suggested-phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .suggested-phase-row .phase-pill { font-size: 12px; padding: 7px 14px; }
+  .suggested-dismiss {
+    appearance: none;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .suggested-dismiss:hover { background: var(--paper-warm); color: var(--ink); }
+  .suggested-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .suggested-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 16px;
+    transition: all 0.18s ease;
+  }
+  .suggested-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+  .suggested-card.added {
+    opacity: 0.55;
+    background: var(--paper-warm);
+  }
+  .suggested-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.005em;
+  }
+  .suggested-tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .suggested-add-btn {
+    appearance: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .suggested-add-btn:hover { background: var(--green-deep); border-color: var(--green-deep); transform: translateY(-1px); }
+  .suggested-add-btn:disabled {
+    background: var(--paper-warm);
+    border-color: var(--paper-edge);
+    color: var(--ink-muted);
+    cursor: default;
+    transform: none;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: inline-flex;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+    margin-bottom: 20px;
+  }
+  .filter-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--ink-muted);
+    transition: all 0.15s ease;
+  }
+  .filter-btn:hover { color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: var(--paper); }
+
+  /* Goal category groups */
+  .goals-col { display: flex; flex-direction: column; gap: 14px; }
+  .goal-group {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+  .goal-group:hover { box-shadow: var(--shadow-soft); }
+  .goal-group-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+  .goal-group-header:hover { background: var(--paper-warm); }
+  .group-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .group-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    letter-spacing: -0.005em;
+  }
+  .group-pct {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .group-chevron {
+    width: 20px; height: 20px; flex-shrink: 0;
+    color: var(--ink-faded);
+    transition: transform 0.2s ease;
+  }
+  .group-chevron.open { transform: rotate(180deg); }
+  .goal-group-body { display: none; padding: 0 24px 22px; }
+  .goal-group-body.open { display: block; }
+
+  /* Goal card */
+  .goal-card { padding: 14px 0; border-bottom: 1px solid var(--paper-edge); }
+  .goal-card:last-child { border-bottom: none; }
+  .goal-card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .goal-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-faded);
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    margin-top: 1px;
+    background: var(--paper);
+  }
+  .goal-check:hover { border-color: var(--ink); }
+  .goal-check.done { background: var(--green); border-color: var(--green); }
+  .goal-check.done::after { content: '✓'; font-size: 12px; color: var(--paper); font-weight: 700; }
+  .goal-info { flex: 1; min-width: 0; }
+  .goal-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.005em;
+    line-height: 1.35;
+  }
+  .goal-title.done { text-decoration: line-through; color: var(--ink-faded); }
+  .goal-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .goal-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .goal-due {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+  .goal-due.overdue { color: var(--coral); font-weight: 600; }
+  .goal-actions { display: flex; gap: 6px; align-items: center; }
+  .goal-reorder-btn {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    cursor: pointer;
+    color: var(--ink-muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .goal-reorder-btn:hover {
+    background: var(--paper-warm);
+    color: var(--ink);
+  }
+  .goal-reorder-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    background: var(--paper);
+  }
+  .goal-edit-btn {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    cursor: pointer;
+    color: var(--ink-muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    transition: all 0.15s ease;
+  }
+  .goal-edit-btn:hover { background: var(--paper-warm); color: var(--ink); }
+  .goal-remove-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-faded);
+    font-size: 1.2rem;
+    padding: 0 4px;
+    transition: color 0.15s ease;
+    line-height: 1;
+  }
+  .goal-remove-btn:hover { color: var(--coral); }
+  .goal-progress-wrap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding-left: 34px;
+  }
+  .goal-bar {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--paper-warm);
+    overflow: hidden;
+  }
+  .goal-bar-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+  .goal-pct-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    min-width: 36px;
+    text-align: right;
+  }
+  .goal-note {
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    margin-top: 8px;
+    padding-left: 34px;
+  }
+
+  /* Add goal row */
+  .goal-add-row { padding: 12px 0 0; }
+  .goal-add-row-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .goal-add-row-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 64px 32px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+  }
+  .empty-state-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .empty-state-copy {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    width: 520px;
+    max-width: 94vw;
+    box-shadow: 0 24px 80px rgba(10,10,10,0.18);
+  }
+  .modal h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.7rem;
+    color: var(--ink);
+    margin-bottom: 22px;
+    letter-spacing: -0.02em;
+  }
+  .modal-field { margin-bottom: 16px; }
+  .modal-field label {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .modal-field input,
+  .modal-field select,
+  .modal-field textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper-card);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .modal-field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+  .modal-field input:focus,
+  .modal-field select:focus,
+  .modal-field textarea:focus { border-color: var(--ink); background: var(--paper); }
+  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+  .btn-cancel {
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-cancel:hover { background: var(--paper-warm); color: var(--ink); }
+  .btn-save {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--paper);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-save:hover { background: var(--green-deep); border-color: var(--green-deep); transform: translateY(-1px); }
+
+  .progress-slider-wrap { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--paper-warm);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: 2px solid var(--paper);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: 2px solid var(--paper);
+  }
+
+  /* FOOTER */
+  .footer-wordmark {
+    padding: 80px 0 56px;
+    text-align: center;
+    border-top: 1px solid var(--paper-edge);
+    margin-top: 24px;
+  }
+  .footer-wordmark svg {
+    width: 100%;
+    max-width: 1080px;
+    height: auto;
+    display: inline-block;
+  }
+  .footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0 32px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-meta a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    margin-left: 16px;
+    transition: color 0.15s;
+  }
+  .footer-meta a:hover { color: var(--ink); }
+
+  /* Responsive */
+  @media (max-width: 1120px) {
+    .hero-grid, .masthead { grid-template-columns: 1fr; gap: 28px; }
+    .dossier { position: static; }
+  }
+  @media (max-width: 760px) {
+    .hero { padding: 36px 0 24px; }
+    .hero h1 { font-size: 2.4rem; }
+    .snap-stats { grid-template-columns: 1fr 1fr; }
+    .suggested-grid { grid-template-columns: 1fr; }
+    .suggested-panel-head { flex-direction: column; }
+    .modal { padding: 26px 22px; }
+    .modal-row { grid-template-columns: 1fr; }
+    .footer-wordmark { padding: 48px 0 32px; }
+    .footer-meta { flex-direction: column; align-items: flex-start; }
+    .footer-meta a { margin-left: 0; margin-right: 16px; }
+    .goal-progress-wrap, .goal-note { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="top-strip">
+  Atlas is private. Everything stays on your device.
+  <a href="./index.html#privacy">How it works <span class="arrow">→</span></a>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Kids Week</a></li>
+      <li><a href="./goals.html" class="active">Goals</a></li>
+    </ul>
+    <button class="nav-cta" type="button" onclick="openModal()">Add a goal</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Kids Week</a>
+  <a href="./goals.html" class="active">Goals</a>
+</div>
+
+<div class="page-wrap">
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">Atlas — Goals</div>
+          <h1>
+            <span class="soft">What you're</span><br>
+            <span class="bold">building toward.</span>
+          </h1>
+          <p class="hero-sub">
+            Turn the rebuild into visible progress. Set practical targets across money, parenting, fitness, work, and personal life — so recovery becomes a sequence of achievable steps, not a vague hope.
+          </p>
+          <div class="phase-row" id="hero-phase-row">
+            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
+            <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
+            <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
+          </div>
+          <div class="phase-context" id="phase-context-text">
+            Pick the phase that matches where you are. Atlas tunes the suggested goals and guidance to match.
+          </div>
+        </div>
+        <div>
+          <div class="snap-panel">
+            <div class="snap-bar">
+              <div class="snap-bar-fill" id="hero-fill" style="width:0%"></div>
+            </div>
+            <div class="snap-stats">
+              <div class="snap-stat hero">
+                <div class="snap-stat-label" id="gs-hero-label">Overall progress</div>
+                <div class="snap-stat-val" id="gs-hero-val">0%</div>
+                <div class="snap-stat-sub" id="gs-hero-sub">Across all goals</div>
+              </div>
+              <div class="snap-stat">
+                <div class="snap-stat-label" id="gs-t1-label">Active</div>
+                <div class="snap-stat-val" id="gs-t1-val">0</div>
+                <div class="snap-stat-sub" id="gs-t1-sub">0 done · 0 total</div>
+              </div>
+              <div class="snap-stat">
+                <div class="snap-stat-label" id="gs-t2-label">Next focus</div>
+                <div class="snap-stat-val" id="gs-t2-val">—</div>
+                <div class="snap-stat-sub" id="gs-t2-sub">No deadlines yet</div>
+              </div>
+              <div class="snap-stat">
+                <div class="snap-stat-label" id="gs-t3-label">Top area</div>
+                <div class="snap-stat-val" id="gs-t3-val">—</div>
+                <div class="snap-stat-sub" id="gs-t3-sub">Add a goal</div>
+              </div>
+              <div class="snap-stat">
+                <div class="snap-stat-label" id="gs-t4-label">Cap</div>
+                <div class="snap-stat-val" id="gs-t4-val">0 / 3</div>
+                <div class="snap-stat-sub" id="gs-t4-sub">Stay focused</div>
+              </div>
+            </div>
+            <div class="anchor-card">
+              <div class="anchor-label">Anchor</div>
+              <textarea
+                id="hero-anchor"
+                class="anchor-input"
+                placeholder="A messy week still counts as progress."
+                oninput="scheduleSaveAnchor()"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MASTHEAD -->
+    <div class="masthead">
+      <div>
+        <!-- Suggested goals -->
+        <div class="suggested-panel hidden" id="suggested-panel">
+          <div class="suggested-panel-head">
+            <div>
+              <div class="suggested-panel-kicker">Suggested goals</div>
+              <div class="suggested-panel-title">A good place to <em>start</em> for this phase.</div>
+              <div class="suggested-panel-copy">Pick a few practical goals for where you are right now. Added goals start at 0% so you can shape them as you go.</div>
+            </div>
+            <button class="suggested-dismiss" type="button" onclick="dismissSuggestedGoals()">Dismiss</button>
+          </div>
+          <div class="suggested-phase-copy">Change phase to see a different set of suggestions.</div>
+          <div class="suggested-phase-row">
+            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
+            <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
+            <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
+          </div>
+          <div class="suggested-grid" id="suggested-grid"></div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar" id="filter-bar">
+          <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+          <button class="filter-btn" data-filter="active" onclick="setFilter('active')">Active</button>
+          <button class="filter-btn" data-filter="done" onclick="setFilter('done')">Completed</button>
+        </div>
+
+        <!-- Goal groups -->
+        <div class="goals-col" id="goals-col"></div>
+      </div>
+
+      <!-- DOSSIER -->
+      <div>
+        <div class="dossier">
+          <div class="dossier-title">Goals by area</div>
+          <div class="dossier-phase" id="dossier-phase">Stabilise</div>
+          <div id="dossier-cats"></div>
+          <hr class="dossier-divider">
+          <div style="font-size:13px;color:var(--ink-muted);line-height:1.55;" id="phase-tip"></div>
+          <div class="add-goal-wrap">
+            <button class="add-goal-btn" onclick="openModal()">+ Add a new goal</button>
+            <button class="browse-goals-btn" type="button" onclick="browseSuggestedGoals()">Browse suggested goals</button>
+          </div>
+          <div class="flow-note">
+            <div class="flow-note-title">Phase guide</div>
+            <span id="flow-note-text">Set your phase above to see guidance for where you are in the journey.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER WORDMARK -->
+    <div class="footer-wordmark">
+      <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg" aria-label="Atlas">
+        <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="210" cy="88" r="14" fill="#D97757"/>
+        <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
+      </svg>
+    </div>
+
+    <div class="footer-meta">
+      <div>© Atlas — A private tool for life after separation.</div>
+      <div>
+        <a href="./index.html">Home</a>
+        <a href="./budget.html">Finances</a>
+        <a href="./kids-week.html">Kids Week</a>
+        <a href="./goals.html">Goals</a>
+        <a href="./index.html#privacy">Privacy</a>
+        <a href="./index.html#phase-model">Phase model</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <h3 id="modal-title">Add goal</h3>
+    <div class="modal-field">
+      <label>Goal title</label>
+      <input type="text" id="m-title" placeholder="e.g. Move 4 times per week">
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Category</label>
+        <select id="m-cat">
+          <option value="financial">Financial</option>
+          <option value="career">Career &amp; Work</option>
+          <option value="parenting">Parenting</option>
+          <option value="fitness">Fitness</option>
+          <option value="personal">Personal</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Target date</label>
+        <input type="date" id="m-date">
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Progress (0–100%)</label>
+      <div class="progress-slider-wrap">
+        <input type="range" id="m-progress" min="0" max="100" value="0" oninput="$('m-progress-val').textContent=this.value+'%'">
+        <span id="m-progress-val" style="font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);min-width:42px;text-align:right">0%</span>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Note (optional)</label>
+      <textarea id="m-note" placeholder="Why this matters, how you'll do it..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveGoal()">Save goal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const CATS = {
+  financial: { label: 'Financial',     color: '#0F4A3F', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
+  career:    { label: 'Career & Work', color: '#2A2A2A', tag_bg: '#F0F0EA', tag_color: '#0A0A0A' },
+  parenting: { label: 'Parenting',     color: '#DCBD8F', tag_bg: '#EAC995', tag_color: '#0A0A0A' },
+  fitness:   { label: 'Fitness',       color: '#0A332B', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
+  personal:  { label: 'Personal',      color: '#E27B5A', tag_bg: '#F5D996', tag_color: '#0A0A0A' },
+};
+
+const PHASE_LABEL = { crisis:'Crisis', stabilise:'Stabilise', rebuild:'Rebuild', 'new-chapter':'New Chapter' };
+
+const PHASE_CONTEXT = {
+  crisis: 'Two or three goals max. Survival and stability first. Don\'t add more pressure right now.',
+  stabilise: 'One goal per area is enough. Lock in the basics: emergency fund, fitness routine, kids connection.',
+  rebuild: 'Routines hold. Add stretch goals in career and personal growth — progress compounds.',
+  'new-chapter': 'You can think long-term now. Investment goals, business ideas, real fitness targets — go for them.',
+};
+
+const PHASE_TIPS = {
+  crisis: 'Focus on 2–3 goals max. Survival and stability first. Don\'t add more pressure right now.',
+  stabilise: 'Pick 1 goal per area. Lock in basics: emergency fund, fitness routine, kids connection.',
+  rebuild: 'Now expand. Add stretch goals in career and personal growth. Progress compounds.',
+  'new-chapter': 'You can think long-term. Investment goals, business ideas, big fitness targets — go for it.',
+};
+
+const PHASE_FLOW = {
+  crisis: 'Be ruthless. Two goals only. Anything else is noise — write it down somewhere else and come back later.',
+  stabilise: 'Pick one goal per area and protect it. Repetition beats ambition right now.',
+  rebuild: 'Add a stretch goal in the area where you have the most energy. Let momentum carry the rest.',
+  'new-chapter': 'Set a longer horizon goal — 12 months or more. You\'ve earned the right to plan in years again.',
+};
+
+const SUGGESTED_GOALS = {
+  crisis: [
+    { title: 'Open a separate bank account in your name only', cat: 'financial', note: 'Do this first. Financial separation starts here.' },
+    { title: 'List every monthly expense and income source', cat: 'financial', note: 'No optimising yet — just map the real numbers.' },
+    { title: 'Book an initial legal consultation', cat: 'career', note: 'Understand your rights before making any commitments.' },
+    { title: 'Check beneficiaries on your super and life insurance', cat: 'financial', note: 'Update these as soon as you are separated.' },
+    { title: 'Establish a basic kids week routine', cat: 'parenting', note: 'Consistency matters more than perfection right now.' },
+    { title: 'Identify two people you can call at short notice', cat: 'social', note: 'You need a real support network, not just digital ones.' },
+    { title: 'Talk to one person you trust about what is happening', cat: 'social', note: 'Isolation makes everything harder. Start somewhere.' },
+    { title: 'Accept that sleep and focus will be disrupted — plan around it', cat: 'personal', note: 'Lower your expectations of output. Protect rest.' },
+  ],
+  stabilise: [
+    { title: 'Build a $3–5k emergency buffer', cat: 'financial', note: 'Nothing else matters until this is in place.' },
+    { title: 'Get child support payments formalised through CSA', cat: 'financial', note: 'Informal arrangements break down. Get it official.' },
+    { title: 'Create a written agreement on how shared kids costs are split', cat: 'financial', note: 'School fees, medical, extracurriculars — agree in writing.' },
+    { title: 'Build basic insurance cover: income protection, health, life', cat: 'financial', note: 'You are now a single-income household. Cover the downside.' },
+    { title: 'Finalise or file your parenting plan', cat: 'parenting', note: 'A clear plan reduces conflict and protects the kids.' },
+    { title: 'Establish a consistent school pickup and handover routine', cat: 'parenting', note: 'Predictability is what kids need most right now.' },
+    { title: 'Have one honest conversation with the kids about what has changed', cat: 'parenting', note: 'Age-appropriate, calm, and reassuring. They need to hear it from you.' },
+    { title: 'Move your body 3 times a week', cat: 'fitness', note: 'Whatever form that takes. Consistency over intensity.' },
+    { title: 'Book a GP appointment — a check-in, not a crisis visit', cat: 'fitness', note: 'Physical and mental health both need attention right now.' },
+    { title: 'Reconnect with one friendship you have let slide', cat: 'social', note: 'One real conversation. That is enough to start.' },
+  ],
+  rebuild: [
+    { title: 'Increase savings rate by at least 10%', cat: 'financial', note: 'The basics are covered. Now build momentum.' },
+    { title: 'Pay down high-interest debt before optimising savings', cat: 'financial', note: 'Credit card debt costs more than any investment returns.' },
+    { title: 'Review superannuation balance and contribution rate', cat: 'financial', note: 'You may have lost ground. Check where you stand.' },
+    { title: 'Update your will and beneficiaries', cat: 'financial', note: 'Your circumstances have changed. Your documents need to reflect that.' },
+    { title: 'Review housing situation and set a 12-month target', cat: 'financial', note: 'Renting vs buying — make a deliberate call, not a default one.' },
+    { title: 'Build a consistent kids week rhythm that feels genuinely calm', cat: 'parenting', note: 'Move from survival mode to something sustainable.' },
+    { title: 'Create at least one recurring tradition with the kids', cat: 'parenting', note: 'Something small and repeatable that they will remember.' },
+    { title: 'Build a fitness goal with a specific outcome', cat: 'fitness', note: 'Distance, event, habit — give it a concrete target.' },
+    { title: 'Start one new income stream or career development move', cat: 'career', note: 'One deliberate step toward more financial leverage.' },
+    { title: 'Do one thing that is purely for you', cat: 'personal', note: 'Not for the kids, not for work. Something that refills the tank.' },
+    { title: 'Define what you want your social life to look like and take one step toward it', cat: 'social', note: 'Your social world probably contracted. Rebuild it intentionally.' },
+  ],
+  'new-chapter': [
+    { title: 'Set a 3-year financial target and reverse-engineer the steps', cat: 'financial', note: 'You are out of recovery mode. Think in longer horizons now.' },
+    { title: 'Build a long-term wealth plan: super, property, investments', cat: 'financial', note: 'Get professional advice if needed. This is the rebuild that compounds.' },
+    { title: 'Set a goal around what you want to leave for your kids', cat: 'financial', note: 'Legacy thinking starts with a number and a timeframe.' },
+    { title: 'Plan a trip or experience with the kids', cat: 'parenting', note: 'Something they will talk about for years. Does not need to be expensive.' },
+    { title: 'Move the co-parenting relationship from functional to genuinely cooperative', cat: 'parenting', note: 'For their sake and yours. It is worth the effort.' },
+    { title: 'Invest in a skill, course, or capability you have been deferring', cat: 'career', note: 'The thing you kept saying you would do when life settled down.' },
+    { title: 'Build something: a project, a business, a creative practice', cat: 'career', note: 'You have capacity now. Use it on something that is yours.' },
+    { title: 'Define what a good life looks like now — and write it down', cat: 'personal', note: 'Not the old version. The new one you are actually building.' },
+    { title: 'Do something that felt impossible two years ago', cat: 'personal', note: 'A useful measuring stick for how far you have come.' },
+    { title: 'Decide what kind of relationship you want and act accordingly', cat: 'social', note: 'Knowing what you want is the prerequisite for getting it.' },
+  ],
+};
+
+const DEFAULTS = [
+  { id: 'g1', cat: 'financial', title: 'Get clear on your numbers', progress: 0, note: 'Start with one money goal that matches this phase.', due: '', done: false },
+  { id: 'g2', cat: 'career',    title: 'Define one work move for this phase', progress: 0, note: 'Keep it realistic. One useful step is enough to start.', due: '', done: false },
+  { id: 'g3', cat: 'parenting', title: 'Set one parenting priority', progress: 0, note: 'Choose the thing that would make this week calmer or steadier.', due: '', done: false },
+  { id: 'g4', cat: 'fitness',   title: 'Pick one movement goal', progress: 0, note: 'Consistency beats intensity right now.', due: '', done: false },
+  { id: 'g5', cat: 'personal',  title: 'Choose one thing that steadies you', progress: 0, note: 'Something small that helps life feel more manageable.', due: '', done: false },
+];
+
+const DEFAULT_ANCHOR = 'A messy week still counts as progress.';
+
+let goals = [];
+let editingId = null;
+let currentFilter = 'all';
+let currentPhase = 'stabilise';
+let openGroups = new Set(Object.keys(CATS));
+let anchorText = DEFAULT_ANCHOR;
+let suggestionsDismissed = false;
+let suggestionsForceVisible = false;
+
+function normalizeGoalCategory(cat) {
+  if (cat === 'social') return 'personal';
+  return CATS[cat] ? cat : 'personal';
+}
+
+function migrateGoals() {
+  goals = goals.map(goal => ({
+    ...goal,
+    cat: normalizeGoalCategory(goal.cat),
+  }));
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem('atlas_goals') || localStorage.getItem('dad_goals');
+    goals = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULTS));
+  } catch(e) { goals = JSON.parse(JSON.stringify(DEFAULTS)); }
+  migrateGoals();
+  try {
+    const savedAnchor = localStorage.getItem('atlas_goals_anchor') || localStorage.getItem('dad_goals_anchor');
+    if (savedAnchor && savedAnchor.trim()) anchorText = savedAnchor;
+  } catch(e) {}
+}
+
+function save() {
+  try {
+    const serialised = JSON.stringify(goals);
+    localStorage.setItem('atlas_goals', serialised);
+    localStorage.setItem('dad_goals', serialised);
+  } catch(e) {}
+}
+
+function loadAnchor() {
+  const el = $('hero-anchor');
+  if (el) el.value = anchorText || DEFAULT_ANCHOR;
+}
+
+let anchorTimer;
+function scheduleSaveAnchor() {
+  clearTimeout(anchorTimer);
+  anchorTimer = setTimeout(saveAnchor, 500);
+}
+
+function saveAnchor() {
+  anchorText = $('hero-anchor')?.value || DEFAULT_ANCHOR;
+  try {
+    localStorage.setItem('atlas_goals_anchor', anchorText);
+    localStorage.setItem('dad_goals_anchor', anchorText);
+  } catch(e) {}
+}
+
+function isSuggestionAdded(suggestion) {
+  const suggestionCat = normalizeGoalCategory(suggestion.cat);
+  return goals.some(goal => goal.title === suggestion.title && goal.cat === suggestionCat);
+}
+
+function shouldShowSuggestedGoals() {
+  if (suggestionsDismissed) return false;
+  return true;
+}
+
+function renderSuggestedGoals() {
+  const panel = $('suggested-panel');
+  const grid = $('suggested-grid');
+  if (!panel || !grid) return;
+
+  if (!shouldShowSuggestedGoals()) {
+    panel.classList.add('hidden');
+    grid.innerHTML = '';
+    return;
+  }
+
+  panel.classList.remove('hidden');
+  const suggestions = SUGGESTED_GOALS[currentPhase] || [];
+  grid.innerHTML = '';
+
+  suggestions.forEach(suggestion => {
+    const cat = CATS[normalizeGoalCategory(suggestion.cat)];
+    const added = isSuggestionAdded(suggestion);
+    const card = document.createElement('div');
+    card.className = 'suggested-card' + (added ? ' added' : '');
+    card.innerHTML = `
+      <div>
+        <div class="suggested-title">${suggestion.title}</div>
+        <span class="suggested-tag" style="background:${cat.tag_bg};color:${cat.tag_color}">${cat.label}</span>
+      </div>
+      <button type="button" class="suggested-add-btn" ${added ? 'disabled' : ''}>${added ? '✓' : '+'}</button>
+    `;
+    if (!added) {
+      card.querySelector('.suggested-add-btn').onclick = () => addSuggestedGoal(suggestion);
+    }
+    grid.appendChild(card);
+  });
+}
+
+function addSuggestedGoal(suggestion) {
+  if (isSuggestionAdded(suggestion)) return;
+  goals.push({
+    id: 'g' + Date.now(),
+    cat: normalizeGoalCategory(suggestion.cat),
+    title: suggestion.title,
+    progress: 0,
+    note: suggestion.note,
+    due: '',
+    done: false,
+  });
+  suggestionsForceVisible = true;
+  save();
+  render();
+}
+
+function dismissSuggestedGoals() {
+  suggestionsDismissed = true;
+  suggestionsForceVisible = false;
+  renderSuggestedGoals();
+}
+
+function browseSuggestedGoals() {
+  suggestionsDismissed = false;
+  suggestionsForceVisible = true;
+  renderSuggestedGoals();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setPhase(phase) {
+  if (!PHASE_LABEL[phase]) phase = 'stabilise';
+  currentPhase = phase;
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  if ($('dossier-phase')) $('dossier-phase').textContent = PHASE_LABEL[phase];
+  if ($('phase-tip')) $('phase-tip').textContent = PHASE_TIPS[phase];
+  if ($('phase-context-text')) $('phase-context-text').textContent = PHASE_CONTEXT[phase];
+  if ($('flow-note-text')) $('flow-note-text').textContent = PHASE_FLOW[phase];
+  suggestionsDismissed = false;
+  suggestionsForceVisible = true;
+  try {
+    localStorage.setItem('atlas_phase', phase);
+    localStorage.setItem('dad_atlas_phase', phase);
+  } catch(e) {}
+  renderSuggestedGoals();
+  if (typeof renderSnapPanel === 'function' && document.getElementById('gs-hero-val')) {
+    renderSnapPanel();
+  }
+}
+
+window.addEventListener('storage', e => {
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && PHASE_LABEL[e.newValue]) {
+    setPhase(e.newValue);
+  }
+});
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  render();
+}
+
+function filteredGoals() {
+  if (currentFilter === 'active') return goals.filter(g => !g.done);
+  if (currentFilter === 'done') return goals.filter(g => g.done);
+  return goals;
+}
+
+function render() {
+  const col = $('goals-col');
+  col.innerHTML = '';
+  const vis = filteredGoals();
+
+  let renderedAny = false;
+
+  Object.entries(CATS).forEach(([catKey, cat]) => {
+    const catGoals = vis.filter(g => g.cat === catKey);
+    if (catGoals.length === 0 && currentFilter !== 'all') return;
+    const allGoals = goals.filter(g => g.cat === catKey);
+    if (allGoals.length === 0 && currentFilter === 'all') return;
+
+    renderedAny = true;
+
+    const group = document.createElement('div');
+    group.className = 'goal-group';
+
+    const avgPct = catGoals.length > 0
+      ? Math.round(catGoals.reduce((a,g) => a + (g.done ? 100 : g.progress), 0) / catGoals.length)
+      : 0;
+
+    const header = document.createElement('div');
+    header.className = 'goal-group-header';
+    header.innerHTML = `
+      <div class="group-dot" style="background:${cat.color}"></div>
+      <div class="group-title">${cat.label}</div>
+      <div class="group-pct">${avgPct}%</div>
+      <div class="group-chevron ${openGroups.has(catKey) ? 'open' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>`;
+    header.onclick = () => {
+      openGroups.has(catKey) ? openGroups.delete(catKey) : openGroups.add(catKey);
+      render();
+    };
+
+    const body = document.createElement('div');
+    body.className = 'goal-group-body' + (openGroups.has(catKey) ? ' open' : '');
+
+    catGoals.forEach(goal => {
+      const card = buildGoalCard(goal, cat);
+      body.appendChild(card);
+    });
+
+    const addRow = document.createElement('div');
+    addRow.className = 'goal-add-row';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'goal-add-row-btn';
+    addBtn.textContent = '+ Add goal';
+    addBtn.onclick = () => openModal(catKey);
+    addRow.appendChild(addBtn);
+    body.appendChild(addRow);
+
+    group.appendChild(header);
+    group.appendChild(body);
+    col.appendChild(group);
+  });
+
+  if (!renderedAny) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `
+      <div class="empty-state-title">Nothing to show yet.</div>
+      <div class="empty-state-copy">Add a goal of your own, or browse suggested goals to start.</div>
+    `;
+    col.appendChild(empty);
+  }
+
+  updateStats();
+  updateDossier();
+  renderSuggestedGoals();
+}
+
+function getCategoryGoalIds(catKey) {
+  return goals.filter(goal => goal.cat === catKey).map(goal => goal.id);
+}
+
+function moveGoal(goalId, direction) {
+  const index = goals.findIndex(goal => goal.id === goalId);
+  if (index === -1) return;
+
+  const goal = goals[index];
+  const categoryIndices = goals
+    .map((item, itemIndex) => ({ item, itemIndex }))
+    .filter(entry => entry.item.cat === goal.cat)
+    .map(entry => entry.itemIndex);
+
+  const categoryPosition = categoryIndices.indexOf(index);
+  const swapWith = direction === 'up'
+    ? categoryIndices[categoryPosition - 1]
+    : categoryIndices[categoryPosition + 1];
+
+  if (swapWith == null) return;
+
+  [goals[index], goals[swapWith]] = [goals[swapWith], goals[index]];
+  save();
+  render();
+}
+
+function buildGoalCard(goal, cat) {
+  const pct = goal.done ? 100 : goal.progress;
+  const card = document.createElement('div');
+  card.className = 'goal-card';
+  card.id = 'gcard-' + goal.id;
+
+  const top = document.createElement('div');
+  top.className = 'goal-card-top';
+
+  const check = document.createElement('div');
+  check.className = 'goal-check' + (goal.done ? ' done' : '');
+  check.onclick = () => { goal.done = !goal.done; if (goal.done) goal.progress = 100; save(); render(); };
+
+  const info = document.createElement('div');
+  info.className = 'goal-info';
+
+  const title = document.createElement('div');
+  title.className = 'goal-title' + (goal.done ? ' done' : '');
+  title.textContent = goal.title;
+
+  const meta = document.createElement('div');
+  meta.className = 'goal-meta';
+  const tag = document.createElement('span');
+  tag.className = 'goal-tag';
+  tag.style.background = cat.tag_bg;
+  tag.style.color = cat.tag_color;
+  tag.textContent = cat.label;
+  meta.appendChild(tag);
+
+  if (goal.due) {
+    const due = document.createElement('span');
+    due.className = 'goal-due' + (isOverdue(goal.due) && !goal.done ? ' overdue' : '');
+    due.textContent = formatDue(goal.due);
+    meta.appendChild(due);
+  }
+
+  info.appendChild(title);
+  info.appendChild(meta);
+
+  const actions = document.createElement('div');
+  actions.className = 'goal-actions';
+  const categoryGoalIds = getCategoryGoalIds(goal.cat);
+  const categoryIndex = categoryGoalIds.indexOf(goal.id);
+  const moveUpBtn = document.createElement('button');
+  moveUpBtn.className = 'goal-reorder-btn';
+  moveUpBtn.type = 'button';
+  moveUpBtn.textContent = '↑';
+  moveUpBtn.title = 'Move up';
+  moveUpBtn.disabled = categoryIndex <= 0;
+  moveUpBtn.onclick = () => moveGoal(goal.id, 'up');
+  const moveDownBtn = document.createElement('button');
+  moveDownBtn.className = 'goal-reorder-btn';
+  moveDownBtn.type = 'button';
+  moveDownBtn.textContent = '↓';
+  moveDownBtn.title = 'Move down';
+  moveDownBtn.disabled = categoryIndex === -1 || categoryIndex >= categoryGoalIds.length - 1;
+  moveDownBtn.onclick = () => moveGoal(goal.id, 'down');
+  const editBtn = document.createElement('button');
+  editBtn.className = 'goal-edit-btn';
+  editBtn.textContent = 'Edit';
+  editBtn.onclick = () => openModal(goal.cat, goal.id);
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'goal-remove-btn';
+  removeBtn.innerHTML = '×';
+  removeBtn.title = 'Remove';
+  removeBtn.onclick = () => { if (confirm('Remove this goal?')) { goals = goals.filter(g => g.id !== goal.id); save(); render(); } };
+  actions.appendChild(moveUpBtn);
+  actions.appendChild(moveDownBtn);
+  actions.appendChild(editBtn);
+  actions.appendChild(removeBtn);
+
+  top.appendChild(check);
+  top.appendChild(info);
+  top.appendChild(actions);
+  card.appendChild(top);
+
+  const progWrap = document.createElement('div');
+  progWrap.className = 'goal-progress-wrap';
+  progWrap.innerHTML = `
+    <div class="goal-bar"><div class="goal-bar-fill" style="width:${pct}%;background:${cat.color}"></div></div>
+    <span class="goal-pct-label">${pct}%</span>`;
+  card.appendChild(progWrap);
+
+  if (goal.note) {
+    const note = document.createElement('div');
+    note.className = 'goal-note';
+    note.textContent = goal.note;
+    card.appendChild(note);
+  }
+
+  return card;
+}
+
+function isOverdue(dateStr) {
+  if (!dateStr) return false;
+  return new Date(dateStr) < new Date();
+}
+
+function formatDue(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return 'Due ' + d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/* SNAP PANEL HELPERS */
+function daysToDate(dueStr) {
+  if (!dueStr) return null;
+  const due = new Date(dueStr + 'T12:00:00');
+  if (isNaN(due.getTime())) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dueLocal = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+  return Math.round((dueLocal - today) / 86400000);
+}
+
+function getNextDueGoal() {
+  const upcoming = goals
+    .filter(g => !g.done && g.due)
+    .map(g => ({ goal: g, days: daysToDate(g.due) }))
+    .filter(x => x.days !== null && x.days >= 0)
+    .sort((a, b) => a.days - b.days);
+  return upcoming.length ? upcoming[0] : null;
+}
+
+function getOverdueCount() {
+  return goals.filter(g => {
+    if (g.done || !g.due) return false;
+    const d = daysToDate(g.due);
+    return d !== null && d < 0;
+  }).length;
+}
+
+function getTopCategory() {
+  let best = null;
+  Object.entries(CATS).forEach(([catKey, cat]) => {
+    const catGoals = goals.filter(g => g.cat === catKey);
+    if (catGoals.length === 0) return;
+    const done = catGoals.filter(g => g.done).length;
+    const pct = Math.round(catGoals.reduce((a,g) => a + (g.done ? 100 : g.progress), 0) / catGoals.length);
+    if (!best || catGoals.length > best.count || (catGoals.length === best.count && pct > best.pct)) {
+      best = { catKey, label: cat.label.split(' ')[0], count: catGoals.length, done, pct };
+    }
+  });
+  return best;
+}
+
+function getActiveAreaCount() {
+  const areas = new Set();
+  goals.filter(g => !g.done).forEach(g => areas.add(g.cat));
+  return areas.size;
+}
+
+function getOnTrackCount() {
+  return goals.filter(g => !g.done && g.progress >= 50).length;
+}
+
+function truncate(s, n) {
+  if (!s) return '—';
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
+
+function renderSnapPanel() {
+  const total = goals.length;
+  const done = goals.filter(g => g.done).length;
+  const active = total - done;
+  const avgPct = total > 0
+    ? Math.round(goals.reduce((a,g) => a + (g.done ? 100 : g.progress), 0) / total)
+    : 0;
+
+  /* HERO — overall progress, phase-flavoured sublabel */
+  $('hero-fill').style.width = avgPct + '%';
+  $('gs-hero-label').textContent = 'Overall progress';
+  $('gs-hero-val').textContent = avgPct + '%';
+  const heroSubByPhase = {
+    crisis: active > 0 ? 'Showing up · ' + active + ' active' : 'Pick 2–3 to start',
+    stabilise: 'Across all goals',
+    rebuild: 'Building momentum',
+    'new-chapter': 'Compounding wins',
+  };
+  $('gs-hero-sub').textContent = heroSubByPhase[currentPhase] || 'Across all goals';
+
+  /* TILE 1 — Active count */
+  $('gs-t1-label').textContent = 'Active';
+  $('gs-t1-val').textContent = active;
+  $('gs-t1-val').className = 'snap-stat-val';
+  $('gs-t1-sub').textContent = done + ' done · ' + total + ' total';
+  $('gs-t1-sub').className = 'snap-stat-sub';
+
+  /* TILE 2 — Next focus / Overdue */
+  const overdue = getOverdueCount();
+  const nextDue = getNextDueGoal();
+  $('gs-t2-val').className = 'snap-stat-val';
+  $('gs-t2-sub').className = 'snap-stat-sub';
+  if (overdue > 0) {
+    $('gs-t2-label').textContent = 'Overdue';
+    $('gs-t2-val').textContent = overdue;
+    $('gs-t2-val').className = 'snap-stat-val warn';
+    $('gs-t2-sub').textContent = overdue === 1 ? 'goal past due' : 'goals past due';
+    $('gs-t2-sub').className = 'snap-stat-sub warn';
+  } else if (nextDue) {
+    $('gs-t2-label').textContent = 'Next focus';
+    $('gs-t2-val').textContent = truncate(nextDue.goal.title, 22);
+    const dlabel = nextDue.days === 0 ? 'due today'
+                 : nextDue.days === 1 ? 'due tomorrow'
+                 : 'due in ' + nextDue.days + ' days';
+    $('gs-t2-sub').textContent = dlabel;
+  } else {
+    $('gs-t2-label').textContent = 'Next focus';
+    $('gs-t2-val').textContent = '—';
+    $('gs-t2-sub').textContent = total > 0 ? 'Set a deadline on one' : 'Add a goal';
+  }
+
+  /* TILE 3 — Top area */
+  const top = getTopCategory();
+  if (top) {
+    $('gs-t3-label').textContent = 'Top area';
+    $('gs-t3-val').textContent = top.label;
+    $('gs-t3-val').className = 'snap-stat-val';
+    $('gs-t3-sub').textContent = top.pct + '% · ' + top.done + '/' + top.count;
+  } else {
+    $('gs-t3-label').textContent = 'Top area';
+    $('gs-t3-val').textContent = '—';
+    $('gs-t3-val').className = 'snap-stat-val';
+    $('gs-t3-sub').textContent = 'Add a goal';
+  }
+
+  /* TILE 4 — Phase-specific */
+  $('gs-t4-val').className = 'snap-stat-val';
+  $('gs-t4-sub').className = 'snap-stat-sub';
+  if (currentPhase === 'crisis') {
+    $('gs-t4-label').textContent = 'Cap';
+    $('gs-t4-val').textContent = active + ' / 3';
+    if (active > 3) {
+      $('gs-t4-val').className = 'snap-stat-val warn';
+      $('gs-t4-sub').textContent = 'Drop ' + (active - 3) + ' for now';
+      $('gs-t4-sub').className = 'snap-stat-sub warn';
+    } else {
+      $('gs-t4-sub').textContent = 'Stay focused';
+    }
+  } else if (currentPhase === 'stabilise') {
+    const areas = getActiveAreaCount();
+    const totalAreas = Object.keys(CATS).length;
+    $('gs-t4-label').textContent = 'Areas covered';
+    $('gs-t4-val').textContent = areas + ' / ' + totalAreas;
+    $('gs-t4-sub').textContent = areas === totalAreas ? 'All areas active' : 'One per area';
+  } else if (currentPhase === 'rebuild') {
+    const onTrack = getOnTrackCount();
+    $('gs-t4-label').textContent = 'On track';
+    $('gs-t4-val').textContent = onTrack;
+    $('gs-t4-sub').textContent = onTrack === 1 ? 'goal at 50%+' : 'goals at 50%+';
+  } else {
+    $('gs-t4-label').textContent = 'Lifetime done';
+    $('gs-t4-val').textContent = done;
+    $('gs-t4-sub').textContent = done === 1 ? 'goal completed' : 'goals completed';
+  }
+}
+
+/* Back-compat shim — older call sites still call updateStats() */
+function updateStats() { renderSnapPanel(); }
+
+function updateDossier() {
+  const el = $('dossier-cats');
+  el.innerHTML = '';
+  Object.entries(CATS).forEach(([catKey, cat]) => {
+    const catGoals = goals.filter(g => g.cat === catKey);
+    if (catGoals.length === 0) return;
+    const done = catGoals.filter(g => g.done).length;
+    const avgPct = Math.round(catGoals.reduce((a,g) => a + (g.done ? 100 : g.progress), 0) / catGoals.length);
+    const row = document.createElement('div');
+    row.className = 'd-cat-row';
+    row.innerHTML = `
+      <div class="d-cat-dot" style="background:${cat.color}"></div>
+      <div class="d-cat-name">${cat.label.split(' ')[0]}</div>
+      <div class="d-cat-bar"><div class="d-cat-bar-fill" style="width:${avgPct}%;background:${cat.color}"></div></div>
+      <div class="d-cat-count">${done}/${catGoals.length}</div>`;
+    el.appendChild(row);
+  });
+  if (goals.length === 0) {
+    const row = document.createElement('div');
+    row.style.fontSize = '13px';
+    row.style.color = 'var(--ink-faded)';
+    row.style.padding = '8px 0';
+    row.textContent = 'No goals yet — add one to get started.';
+    el.appendChild(row);
+  }
+}
+
+/* MODAL */
+function openModal(catKey, editId) {
+  editingId = editId || null;
+  const goal = editId ? goals.find(g => g.id === editId) : null;
+  $('modal-title').textContent = editId ? 'Edit goal' : 'Add goal';
+  $('m-title').value = goal ? goal.title : '';
+  $('m-cat').value = goal ? goal.cat : (catKey || 'personal');
+  $('m-date').value = goal ? (goal.due || '') : '';
+  $('m-progress').value = goal ? goal.progress : 0;
+  $('m-progress-val').textContent = (goal ? goal.progress : 0) + '%';
+  $('m-note').value = goal ? (goal.note || '') : '';
+  $('modal-overlay').classList.add('open');
+  setTimeout(() => $('m-title').focus(), 50);
+}
+
+function closeModal() { $('modal-overlay').classList.remove('open'); editingId = null; }
+
+function handleOverlayClick(e) { if (e.target === $('modal-overlay')) closeModal(); }
+
+function saveGoal() {
+  const title = $('m-title').value.trim();
+  if (!title) { $('m-title').focus(); return; }
+  if (editingId) {
+    const goal = goals.find(g => g.id === editingId);
+    if (goal) {
+      goal.title = title;
+      goal.cat = $('m-cat').value;
+      goal.due = $('m-date').value;
+      goal.progress = parseInt($('m-progress').value);
+      goal.note = $('m-note').value.trim();
+      goal.done = goal.progress >= 100;
+    }
+  } else {
+    goals.push({
+      id: 'g' + Date.now(),
+      cat: $('m-cat').value,
+      title,
+      progress: parseInt($('m-progress').value),
+      note: $('m-note').value.trim(),
+      due: $('m-date').value,
+      done: false
+    });
+  }
+  save(); closeModal(); render();
+}
+
+function toggleNav() {
+  const nav = $('mobile-nav'); const ham = $('hamburger');
+  const open = nav.classList.toggle('open'); ham.classList.toggle('open', open);
+}
+
+document.addEventListener('click', e => {
+  const nav = $('mobile-nav'); const ham = $('hamburger');
+  if (!nav || !ham) return;
+  if (!nav.contains(e.target) && !ham.contains(e.target)) { nav.classList.remove('open'); ham.classList.remove('open'); }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('modal-overlay').classList.contains('open')) closeModal();
+});
+
+(function init() {
+  load();
+  loadAnchor();
+  try {
+    const p = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise';
+    setPhase(p);
+  } catch(e) { setPhase('stabilise'); }
+  render();
+})();
+</script>
+</body>
+</html>

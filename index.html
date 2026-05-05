@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas — Life After Separation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --lilac: #EAC995;
+    --lilac-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --black: #0A0A0A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip {
+    background: var(--green);
+    color: var(--paper);
+    padding: 11px 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+  }
+  .top-strip a {
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 1px;
+  }
+  .top-strip .arrow { display: inline-block; transition: transform 0.18s; margin-left: 4px; }
+  .top-strip a:hover .arrow { transform: translateX(3px); }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 8px 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 2px 8px rgba(15,74,63,0.05);
+    max-width: 1100px;
+    width: 100%;
+    height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background 0.15s;
+  }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+
+  .nav-cta {
+    background: var(--lilac);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--lilac-deep); transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .atlas-nav { padding: 6px 14px 6px 18px; height: 56px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1180px; margin: 0 auto; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 88px 0 72px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(3.2rem, 7.2vw, 6.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero h1 .soft {
+    color: var(--ink);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 72%, var(--lilac) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero h1 .bold { color: var(--ink); font-weight: 500; }
+  .hero p {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto 36px;
+    font-weight: 400;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    padding: 14px 24px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .btn-primary { background: var(--lilac); color: var(--ink); }
+  .btn-primary:hover { background: var(--lilac-deep); transform: translateY(-1px); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+  .hero-meta {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 18px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Decorative curved text in hero */
+  .hero-curve {
+    position: absolute;
+    left: -140px;
+    top: 30px;
+    width: 640px;
+    height: 560px;
+    pointer-events: none;
+    opacity: 0.42;
+    z-index: 1;
+  }
+  .hero-curve text {
+    fill: var(--ink-muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+  }
+  .hero-tag-pill {
+    position: absolute;
+    bottom: 30px;
+    right: -10px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 22px 12px 50px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    transform: rotate(-3deg);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+    pointer-events: none;
+    max-width: 460px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    opacity: 0.92;
+  }
+  .hero-tag-pill::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28' fill='none' stroke='%23FFFFFF' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='14' cy='14' rx='11.5' ry='6.5'/><ellipse cx='14' cy='14' rx='7.5' ry='3.8'/><circle cx='14' cy='14' r='1.4' fill='%23FFFFFF' stroke='none'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  /* TRUST STRIP */
+  .trust-strip {
+    background: var(--green);
+    color: var(--paper);
+    border-radius: var(--radius-xl);
+    padding: 56px 56px;
+    margin: 0 0 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.4vw, 2rem);
+    line-height: 1.32;
+    letter-spacing: -0.015em;
+    position: relative;
+    overflow: hidden;
+  }
+  .trust-strip em { font-style: normal; color: var(--lilac); font-weight: 400; }
+  .trust-strip-text { position: relative; z-index: 2; max-width: 1080px; }
+  .trust-strip::before, .trust-strip::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(234,201,149,0.14), transparent 60%);
+    z-index: 1;
+  }
+  .trust-strip::before { left: -60px; top: -60px; }
+  .trust-strip::after { right: -60px; bottom: -60px; }
+
+  /* SECTION */
+  .section { padding: 0 0 88px; }
+  .section-head { text-align: center; margin-bottom: 48px; }
+  .section-kicker {
+    display: inline-block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--ink-muted);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5vw, 4.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    max-width: 22ch;
+    margin: 0 auto;
+  }
+  .section-title .underline {
+    background: linear-gradient(180deg, transparent 72%, var(--lilac) 72%);
+    padding: 0 4px;
+  }
+
+  /* PROOF CARDS */
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .proof-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .proof-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .proof-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--lilac);
+    border-radius: 14px;
+    margin-bottom: 22px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .proof-card.b .proof-icon { background: var(--honey); }
+  .proof-card.c .proof-icon { background: var(--sage); }
+  .proof-card h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.65rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .proof-card p {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* PHASE SECTION */
+  .phase-section {
+    background: var(--black);
+    color: var(--paper);
+    border-radius: var(--radius-xl);
+    padding: 64px 56px;
+    margin: 0 0 88px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-section h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    color: var(--paper);
+    margin-bottom: 22px;
+  }
+  .phase-section h2 em { font-style: normal; color: var(--lilac); font-weight: 300; }
+  .phase-section .lead {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 28px;
+    max-width: 36ch;
+  }
+  .phase-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .phase-pill {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: transparent;
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .phase-pill:hover { border-color: var(--paper); }
+  .phase-pill.active {
+    background: var(--lilac);
+    color: var(--ink);
+    border-color: var(--lilac);
+    font-weight: 600;
+  }
+
+  .phase-card {
+    background: var(--green);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  }
+  .phase-card-eyebrow {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-size: 18px;
+    color: var(--lilac);
+    margin-bottom: 10px;
+  }
+  .phase-card-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.85rem;
+    line-height: 1.1;
+    color: var(--paper);
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .phase-card-text {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 26px;
+  }
+  .phase-card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(255,255,255,0.32);
+    padding: 13px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--paper); background: rgba(255,255,255,0.05); }
+
+  /* MODULE CARDS */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .module-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform 0.18s, box-shadow 0.18s;
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+  }
+  .module-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .module-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .module-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--lilac);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 1.9rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .module-card.kids .module-icon { background: var(--coral); }
+  .module-card.goals .module-icon { background: var(--sage); }
+  .module-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 2.1rem;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .module-desc {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .module-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px solid var(--paper-edge);
+    margin-top: auto;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .module-footer .arrow { transition: transform 0.18s; display: inline-block; }
+  .module-card:hover .module-footer .arrow { transform: translateX(4px); }
+
+  /* MANIFESTO */
+  .manifesto {
+    background: var(--black);
+    color: var(--paper);
+    border-radius: var(--radius-xl);
+    padding: 80px 56px;
+    margin-bottom: 88px;
+  }
+  .manifesto-head { text-align: center; margin-bottom: 48px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .manifesto-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 4.5vw, 4rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    color: var(--paper);
+    margin-bottom: 20px;
+  }
+  .manifesto-head h2 em { font-style: normal; color: var(--lilac); font-weight: 300; }
+  .manifesto-head p {
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.72);
+  }
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .principle {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .principle-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 2.8rem;
+    line-height: 0.9;
+    color: var(--green);
+    font-style: normal;
+  }
+  .principle-text strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .principle-text span {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* PRIVACY */
+  .privacy-block {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-xl);
+    padding: 64px 56px;
+    margin-bottom: 88px;
+  }
+  .privacy-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: end;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .privacy-head-text { max-width: 640px; }
+  .privacy-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .privacy-kicker svg { width: 26px; height: 18px; }
+  .privacy-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .privacy-head h2 em { font-style: normal; color: var(--green); font-weight: 400; }
+  .privacy-head p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .privacy-mark {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: var(--sage);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .privacy-mark svg { width: 56px; height: 36px; }
+  .privacy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .privacy-cell {
+    background: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: 26px 24px;
+  }
+  .privacy-cell-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+  .privacy-cell-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .privacy-cell-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .privacy-note {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  /* START HERE */
+  .start-here {
+    text-align: center;
+    padding: 24px 32px 100px;
+  }
+  .start-here h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 5.2vw, 4.8rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .start-here h2 .underline {
+    background: linear-gradient(180deg, transparent 72%, var(--lilac) 72%);
+  }
+  .start-here p {
+    font-size: 16.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .start-here-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--paper);
+    border-top: 1px solid var(--paper-edge);
+    padding: 64px 24px 0;
+  }
+  .footer-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 56px;
+  }
+  .footer-tagline {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.35;
+    color: var(--ink);
+    max-width: 24ch;
+    letter-spacing: -0.01em;
+  }
+  .footer-col h4 {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.15rem;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--green); }
+
+  .footer-mark {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 0 24px;
+    overflow: hidden;
+  }
+  .footer-mark svg { width: 100%; height: auto; display: block; }
+
+  .footer-bottom {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--paper-edge);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-bottom-links { display: flex; gap: 20px; }
+  .footer-bottom-links a { color: var(--ink-muted); text-decoration: none; }
+  .footer-bottom-links a:hover { color: var(--ink); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .proof-grid, .module-grid { grid-template-columns: 1fr; }
+    .principles { grid-template-columns: 1fr; }
+    .phase-section { grid-template-columns: 1fr; padding: 44px 32px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    .privacy-grid { grid-template-columns: 1fr; }
+    .privacy-head { grid-template-columns: 1fr; gap: 24px; }
+    .privacy-mark { order: -1; width: 72px; height: 72px; }
+    .privacy-mark svg { width: 44px; height: 28px; }
+  }
+  @media (max-width: 760px) {
+    .page-wrap { padding: 0 16px; }
+    .hero { padding: 56px 0 56px; }
+    .hero-curve { display: none; }
+    .hero-tag-pill { display: none; }
+    .trust-strip { padding: 28px 22px; margin-bottom: 56px; border-radius: var(--radius-lg); font-size: 1.05rem; }
+    .manifesto { padding: 52px 24px; border-radius: var(--radius-lg); }
+    .privacy-block { padding: 44px 22px; border-radius: var(--radius-lg); margin-bottom: 56px; }
+    .privacy-head { padding-bottom: 24px; margin-bottom: 28px; }
+    .phase-section { border-radius: var(--radius-lg); }
+    .top-strip { padding: 10px 16px; font-size: 12px; }
+    .top-strip a { display: block; margin: 4px 0 0; border-bottom: none; }
+    .principle { grid-template-columns: 48px 1fr; padding: 22px; }
+    .principle-num { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top announcement strip -->
+<div class="top-strip">
+  Atlas runs entirely in your browser — nothing leaves your device.
+  <a href="#start">Start with Finances<span class="arrow"> ›</span></a>
+</div>
+
+<!-- Floating pill nav -->
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html" class="active">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Kids Week</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+    </ul>
+    <a href="./budget.html" class="nav-cta">Open Finances</a>
+    <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html" class="active">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Kids Week</a>
+  <a href="./goals.html">Goals</a>
+</div>
+
+<div class="page-wrap">
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="hero-curve" viewBox="0 0 640 560" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <path id="curveTop" d="M 40 440 C 40 110 290 40 540 90" />
+    </defs>
+    <text>
+      <textPath href="#curveTop" startOffset="0">Two households, one income, kids on a custody cycle, a brain that won't stop running…</textPath>
+    </text>
+  </svg>
+
+  <h1>
+    <span class="soft">Rebuild.</span><br>
+    <span class="bold">One week at a time.</span>
+  </h1>
+  <p>Private tools for getting financially and practically stable after separation. See your real budget, organise kids week, and know what matters next.</p>
+  <div class="hero-actions">
+    <a href="./budget.html" class="btn btn-primary">Open Finances <span>›</span></a>
+    <a href="#start" class="btn btn-secondary">Start where you are</a>
+  </div>
+  <div class="hero-meta">No account · Runs in your browser · Australian context</div>
+
+  <div class="hero-tag-pill">simple tools to help you take the next step forward…</div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-strip-text">Built for separated parents who need <em>clarity</em>, not theory — and a place to think when the week is already loud.</div>
+</div>
+
+<!-- PHASE SELECTOR (Made for you) -->
+<section class="phase-section" id="phase-model">
+  <div>
+    <h2>Atlas is made <em>for the phase you're in.</em></h2>
+    <p class="lead">The right focus changes over time. Pick where you are right now and the guidance shifts to match — money, parenting, and planning move at different speeds.</p>
+    <div class="phase-pills">
+      <button class="phase-pill active" data-phase="crisis" onclick="setPhase('crisis')">Crisis · 0–6m</button>
+      <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise · 6–18m</button>
+      <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild · 18m–3y</button>
+      <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter · 3y+</button>
+    </div>
+  </div>
+  <div class="phase-card">
+    <div class="phase-card-eyebrow" id="guidance-phase">Crisis · 0–6 months</div>
+    <div class="phase-card-title" id="guidance-title">Just keep the wheels on.</div>
+    <div class="phase-card-text" id="guidance-text">Survival mode. Focus only on: somewhere to live, legal basics, kids seeing both parents, and not making major financial decisions under stress. One week at a time.</div>
+    <div class="phase-card-actions">
+      <a href="./budget.html" class="btn btn-primary">Open Finances</a>
+      <a href="./goals.html" class="btn-ghost">Set your goals</a>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-kicker">The modules</div>
+    <h2 class="section-title">Three tools that work the way separation actually <span class="underline">feels</span>.</h2>
+  </div>
+  <div class="module-grid">
+    <a class="module-card finances" href="./budget.html">
+      <div class="module-num">Module 01 · Finances</div>
+      <div class="module-icon">$</div>
+      <div class="module-title">See the real numbers.</div>
+      <div class="module-desc">Budget with separation-specific reality baked in: child support, legal costs, two-household pressure, savings, and the path back to breathing room.</div>
+      <div class="module-footer">Open Finances <span class="arrow">→</span></div>
+    </a>
+    <a class="module-card kids" href="./kids-week.html">
+      <div class="module-num">Module 02 · Kids Week</div>
+      <div class="module-icon">◐</div>
+      <div class="module-title">Run calmer kids weeks.</div>
+      <div class="module-desc">Keep the custody cycle, handover checklist, school logistics, and meals in one place so your time with the kids feels steadier and less reactive.</div>
+      <div class="module-footer">Open Kids Week <span class="arrow">→</span></div>
+    </a>
+    <a class="module-card goals" href="./goals.html">
+      <div class="module-num">Module 03 · Goals</div>
+      <div class="module-icon">◇</div>
+      <div class="module-title">Know what matters now.</div>
+      <div class="module-desc">Use the phase model to focus on the next right job, whether that's crisis triage, stabilising cash flow, rebuilding routines, or planning the next chapter.</div>
+      <div class="module-footer">Open Goals <span class="arrow">→</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto">
+  <div class="manifesto-head">
+    <h2>Built for the <em>messy middle.</em></h2>
+    <p>Most tools assume life is already organised. Separation is the opposite: one income, two households, moving parts with the kids, and zero spare headspace. Atlas starts from that reality and gives you a calmer place to make decisions.</p>
+  </div>
+  <div class="principles">
+    <div class="principle">
+      <div class="principle-num">1</div>
+      <div class="principle-text">
+        <strong>Concrete before inspirational</strong>
+        <span>Start with finances, kids week, and a small set of practical goals. Clarity comes before optimisation.</span>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">2</div>
+      <div class="principle-text">
+        <strong>Phase-aware, not generic</strong>
+        <span>The right focus changes over time. Crisis, stabilise, rebuild, and new chapter each call for different money, parenting, and planning decisions.</span>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">3</div>
+      <div class="principle-text">
+        <strong>Built around the custody cycle</strong>
+        <span>Kids Week is not side admin. Handover days, school logistics, meals, screen time, and reminders all change the shape of the week.</span>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-num">4</div>
+      <div class="principle-text">
+        <strong>Private by design</strong>
+        <span>Finances, Kids Week, and Goals all run privately in your browser. No account, no sync, and no data leaving your device.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRIVACY -->
+<section class="privacy-block" id="privacy">
+  <div class="privacy-head">
+    <div class="privacy-head-text">
+      <div class="privacy-kicker">
+        <svg viewBox="0 0 28 18" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#0F4A3F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="14" cy="9" rx="11.5" ry="6.5"/>
+          <ellipse cx="14" cy="9" rx="7.5" ry="3.8"/>
+          <circle cx="14" cy="9" r="1.4" fill="#0F4A3F" stroke="none"/>
+        </svg>
+        Privacy
+      </div>
+      <h2>Your data stays <em>yours.</em></h2>
+      <p>Atlas is a quiet page in your browser, not a service. Nothing you enter — your income, your kids' week, your goals — leaves your device. There's no account, no sync, no servers reading your numbers.</p>
+    </div>
+    <div class="privacy-mark" aria-hidden="true">
+      <svg viewBox="0 0 28 18" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#0F4A3F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="14" cy="9" rx="11.5" ry="6.5"/>
+        <ellipse cx="14" cy="9" rx="7.5" ry="3.8"/>
+        <circle cx="14" cy="9" r="1.4" fill="#0F4A3F" stroke="none"/>
+      </svg>
+    </div>
+  </div>
+  <div class="privacy-grid">
+    <div class="privacy-cell">
+      <div class="privacy-cell-label">In your browser</div>
+      <div class="privacy-cell-title">Local only.</div>
+      <div class="privacy-cell-text">Everything you enter is stored in your browser's local memory. Atlas never sends it anywhere — there's nowhere to send it.</div>
+    </div>
+    <div class="privacy-cell">
+      <div class="privacy-cell-label">No account</div>
+      <div class="privacy-cell-title">No sign‑up.</div>
+      <div class="privacy-cell-text">No login, no email, no password. Atlas doesn't know who you are, and doesn't need to.</div>
+    </div>
+    <div class="privacy-cell">
+      <div class="privacy-cell-label">You stay in control</div>
+      <div class="privacy-cell-title">Wipe it any time.</div>
+      <div class="privacy-cell-text">Clear your browser data and Atlas forgets — instantly. No copy on a server, no trail to chase.</div>
+    </div>
+  </div>
+  <div class="privacy-note">Atlas is a tool, not a business in your data. There's no tracking pixel, no analytics, no ad network sitting on top of your separation.</div>
+</section>
+
+<!-- START HERE -->
+<section class="start-here" id="start">
+  <div class="section-kicker">Start here</div>
+  <h2>Your first step is the <span class="underline">budget</span>.</h2>
+  <p>Atlas is free to use, private by default, and runs entirely in your browser. No account is required, and everything stays on your device while you work through the practical side of separation.</p>
+  <div class="start-here-actions">
+    <a class="btn btn-primary" href="./budget.html">Open Finances <span>›</span></a>
+    <a class="btn btn-secondary" href="./goals.html">Set Your Goals</a>
+  </div>
+</section>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-tagline">
+      Private tools for getting financially and practically stable after separation.
+    </div>
+    <div class="footer-col">
+      <h4>Modules</h4>
+      <a href="./budget.html">Finances</a>
+      <a href="./kids-week.html">Kids Week</a>
+      <a href="./goals.html">Goals</a>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <a href="#phase-model">Phase model</a>
+      <a href="#privacy">Privacy</a>
+      <a href="./index.html">How Atlas works</a>
+    </div>
+  </div>
+  <div class="footer-mark">
+    <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="210" cy="88" r="14" fill="#D97757"/>
+      <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
+    </svg>
+  </div>
+  <div class="footer-bottom">
+    <div>© Atlas 2026 · Life After Separation</div>
+    <div class="footer-bottom-links">
+      <a href="#privacy">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#phase-model">Phase model</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const phaseData = {
+  crisis: {
+    phase: 'Crisis · 0–6 months',
+    title: 'Just keep the wheels on.',
+    text: 'Survival mode. Focus only on: somewhere to live, legal basics, kids seeing both parents, and not making major financial decisions under stress. One week at a time.'
+  },
+  stabilise: {
+    phase: 'Stabilise · 6–18 months',
+    title: 'Get the numbers on the table.',
+    text: "Housing is settled. Kids routine is forming. Now map every dollar and build your emergency buffer. Don't try to optimise yet — just get stable."
+  },
+  rebuild: {
+    phase: 'Rebuild · 18 months – 3 years',
+    title: 'Build forward momentum.',
+    text: 'Finances are mapped. Start building savings, rebuilding super, and investing in fitness and social connection. Identity is clarifying. Momentum is possible.'
+  },
+  'new-chapter': {
+    phase: 'New Chapter · 3 years +',
+    title: 'Live the version you rebuilt.',
+    text: "Thriving, not just surviving. Strong relationship with the kids, financial foundation re-established, clear sense of who you are and where you're going."
+  }
+};
+
+function setPhase(phase) {
+  if (!phaseData[phase]) return;
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  document.getElementById('guidance-phase').textContent = phaseData[phase].phase;
+  document.getElementById('guidance-title').textContent = phaseData[phase].title;
+  document.getElementById('guidance-text').textContent = phaseData[phase].text;
+  try {
+    localStorage.setItem('atlas_phase', phase);
+    localStorage.setItem('dad_atlas_phase', phase);
+  } catch(e) {}
+}
+
+try {
+  const saved = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+  if (saved && phaseData[saved]) setPhase(saved);
+  else setPhase('crisis');
+} catch(e) { setPhase('crisis'); }
+
+window.addEventListener('storage', e => {
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && phaseData[e.newValue]) {
+    setPhase(e.newValue);
+  }
+});
+
+function toggleNav() {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  const open = nav.classList.toggle('open');
+  ham.classList.toggle('open', open);
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  if (!e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav') && !e.target.closest('.hamburger')) {
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
