@@ -956,35 +956,74 @@
   .flow-note span { color: rgba(255,255,255,0.85); }
 
   /* ── FOOTER ── */
-  .footer-wordmark {
-    padding: 80px 0 56px;
-    text-align: center;
+  .footer {
+    background: var(--paper);
     border-top: 1px solid var(--paper-edge);
+    padding: 64px 24px 0;
     margin-top: 24px;
   }
-  .footer-wordmark svg {
-    width: 100%;
-    max-width: 1080px;
-    height: auto;
-    display: inline-block;
+  .footer-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 56px;
   }
-  .footer-meta {
+  .footer-tagline {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.35;
+    color: var(--ink);
+    max-width: 24ch;
+    letter-spacing: -0.01em;
+  }
+  .footer-col h4 {
+    font-family: 'Fraunces', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.15rem;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--green); }
+  .footer-mark {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 0 24px;
+    overflow: hidden;
+  }
+  .footer-mark svg { width: 100%; height: auto; display: block; }
+  .footer-bottom {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px 0 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 0 32px;
     font-size: 13px;
     color: var(--ink-muted);
+    border-top: 1px solid var(--paper-edge);
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
   }
-  .footer-meta a {
-    color: var(--ink-muted);
-    text-decoration: none;
-    margin-left: 16px;
-    transition: color 0.15s;
+  .footer-bottom-links { display: flex; gap: 20px; }
+  .footer-bottom-links a { color: var(--ink-muted); text-decoration: none; }
+  .footer-bottom-links a:hover { color: var(--ink); }
+  @media (max-width: 1024px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
   }
-  .footer-meta a:hover { color: var(--ink); }
 
   /* TRANSITION COSTS */
   .tc-section {
@@ -1474,9 +1513,7 @@
     .snap-stat.hero { padding: 18px 16px 16px; }
     .snap-stat.hero .snap-stat-val { font-size: 2rem; }
     .snap-stat-sub { font-size: 11px; }
-    .footer-wordmark { padding: 48px 0 32px; }
-    .footer-meta { flex-direction: column; align-items: flex-start; }
-    .footer-meta a { margin-left: 0; margin-right: 16px; }
+    .footer { padding: 48px 16px 0; }
     .tc-section-head { grid-template-columns: 1fr; }
     .tc-section-totals { text-align: left; min-width: 0; }
     .tc-row-collapsed { grid-template-columns: 1fr; gap: 10px; }
@@ -1512,6 +1549,7 @@
       <li><a href="./budget.html" class="active">Finances</a></li>
       <li><a href="./kids-week.html">Kids Week</a></li>
       <li><a href="./goals.html">Goals</a></li>
+      <li><a href="https://get-atlas.com.au" class="nav-read">Read ↗</a></li>
     </ul>
     <a href="#start" class="nav-cta">Start mapping</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
@@ -1524,6 +1562,7 @@
   <a href="./budget.html" class="active">Finances</a>
   <a href="./kids-week.html">Kids Week</a>
   <a href="./goals.html">Goals</a>
+  <a href="https://get-atlas.com.au">Read ↗</a>
 </div>
 
 <div class="page-wrap">
@@ -1791,29 +1830,49 @@
       </div>
     </div>
 
-    <!-- FOOTER WORDMARK -->
-    <div class="footer-wordmark">
-      <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg" aria-label="Atlas">
-        <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="210" cy="88" r="14" fill="#D97757"/>
-        <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
-      </svg>
-    </div>
-
-    <div class="footer-meta">
-      <div>© Atlas — A private tool for life after separation.</div>
-      <div>
-        <a href="./index.html">Home</a>
-        <a href="./budget.html">Finances</a>
-        <a href="./kids-week.html">Kids Week</a>
-        <a href="./goals.html">Goals</a>
-        <a href="./index.html#privacy">Privacy</a>
-        <a href="./index.html#phase-model">Phase model</a>
-      </div>
-    </div>
-
   </div>
 </div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-tagline">
+      Private tools for getting financially and practically stable after separation.
+    </div>
+    <div class="footer-col">
+      <h4>Modules</h4>
+      <a href="./budget.html">Finances</a>
+      <a href="./kids-week.html">Kids Week</a>
+      <a href="./goals.html">Goals</a>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <a href="./index.html#phase-model">Phase model</a>
+      <a href="./index.html#privacy">Privacy</a>
+      <a href="./index.html#top">How Atlas works</a>
+    </div>
+    <div class="footer-col">
+      <h4>Reading</h4>
+      <a href="https://get-atlas.com.au">All articles</a>
+      <a href="https://get-atlas.com.au/#/portal/signup">The Sunday email</a>
+      <a href="https://get-atlas.com.au/about">About Johnnie</a>
+    </div>
+  </div>
+  <div class="footer-mark">
+    <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg" aria-label="Atlas">
+      <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="210" cy="88" r="14" fill="#D97757"/>
+      <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
+    </svg>
+  </div>
+  <div class="footer-bottom">
+    <div>© Atlas 2026 · Life After Separation</div>
+    <div class="footer-bottom-links">
+      <a href="./index.html#privacy">Privacy</a>
+      <a href="./terms.html">Terms</a>
+    </div>
+  </div>
+</footer>
 
 <script>
 // ── UTILITIES ──

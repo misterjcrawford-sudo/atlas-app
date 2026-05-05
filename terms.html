@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms — Atlas</title>
+<meta name="description" content="The terms of use for Atlas — a free, private, browser-based tool for separated parents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --lilac: #EAC995;
+    --lilac-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --black: #0A0A0A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip {
+    background: var(--green);
+    color: var(--paper);
+    padding: 11px 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+  }
+  .top-strip a {
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 1px;
+  }
+  .top-strip .arrow { display: inline-block; transition: transform 0.18s; margin-left: 4px; }
+  .top-strip a:hover .arrow { transform: translateX(3px); }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 8px 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 2px 8px rgba(15,74,63,0.05);
+    max-width: 1100px;
+    width: 100%;
+    height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background 0.15s;
+  }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+
+  .nav-cta {
+    background: var(--lilac);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--lilac-deep); transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .atlas-nav { padding: 6px 14px 6px 18px; height: 56px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1180px; margin: 0 auto; }
+
+  /* LEGAL PAGE */
+  .legal-hero {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 0 48px;
+  }
+  .legal-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .legal-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .legal-meta {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+
+  .legal-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 0 80px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .legal-body > p:first-child {
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .legal-body p { margin-bottom: 18px; }
+  .legal-body h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.6rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-top: 48px;
+    margin-bottom: 16px;
+  }
+  .legal-body a {
+    color: var(--green);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .legal-body a:hover { color: var(--green-deep); }
+  .legal-body strong { color: var(--ink); font-weight: 600; }
+  .legal-body em { font-style: italic; color: var(--ink-soft); }
+
+  .legal-signoff {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--paper-edge);
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  @media (max-width: 760px) {
+    .legal-hero { padding: 56px 0 36px; }
+    .legal-body { font-size: 16px; padding-bottom: 56px; }
+    .legal-body h2 { font-size: 1.35rem; margin-top: 40px; }
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--paper);
+    border-top: 1px solid var(--paper-edge);
+    padding: 64px 24px 0;
+  }
+  .footer-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 56px;
+  }
+  .footer-tagline {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.35;
+    color: var(--ink);
+    max-width: 24ch;
+    letter-spacing: -0.01em;
+  }
+  .footer-col h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.15rem;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--green); }
+
+  .footer-mark {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 0 24px;
+    overflow: hidden;
+  }
+  .footer-mark svg { width: 100%; height: auto; display: block; }
+
+  .footer-bottom {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--paper-edge);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-bottom-links { display: flex; gap: 20px; }
+  .footer-bottom-links a { color: var(--ink-muted); text-decoration: none; }
+  .footer-bottom-links a:hover { color: var(--ink); }
+
+  @media (max-width: 1024px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+  @media (max-width: 760px) {
+    .top-strip { padding: 10px 16px; font-size: 12px; }
+    .top-strip a { display: block; margin: 4px 0 0; border-bottom: none; }
+    .page-wrap { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="top-strip">
+  Atlas runs entirely in your browser — nothing leaves your device.
+  <a href="./index.html#privacy">How it works <span class="arrow">→</span></a>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Kids Week</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+      <li><a href="https://get-atlas.com.au" class="nav-read">Read ↗</a></li>
+    </ul>
+    <a href="./budget.html" class="nav-cta">Open Finances</a>
+    <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Kids Week</a>
+  <a href="./goals.html">Goals</a>
+  <a href="https://get-atlas.com.au">Read ↗</a>
+</div>
+
+<!-- LEGAL CONTENT -->
+<div class="page-wrap">
+  <div class="container">
+
+    <header class="legal-hero">
+      <div class="legal-kicker">Legal</div>
+      <h1>Terms</h1>
+      <div class="legal-meta">Last updated: May 2026</div>
+    </header>
+
+    <main class="legal-body">
+
+      <p>Atlas is a free, browser-based tool for separated parents. These terms are short on purpose. Read through before you use the tool.</p>
+
+      <h2>What Atlas is</h2>
+      <p>Atlas is a private dashboard that runs entirely in your web browser. It is provided by Johnnie Crawford as a personal project. There is no account, no login, no subscription, and no payment. Anyone can use it.</p>
+
+      <h2>Your data</h2>
+      <p>All data you enter — budgets, goals, kids week details, child support figures, anything — is stored locally in your own browser. It never leaves your device. There is no server reading your numbers, no analytics tracking your inputs, no third party receiving your information.</p>
+      <p>If you clear your browser data, switch devices, or use a private window, the information will not follow you. Atlas does not back up or sync your data. That is by design.</p>
+
+      <h2>What Atlas is not</h2>
+      <p>Atlas is <strong>not legal advice</strong>. It is <strong>not financial advice</strong>. It is <strong>not tax advice</strong>. It is <strong>not therapy or counselling</strong>.</p>
+      <p>The figures, frameworks, and suggestions in Atlas are a starting point for your own thinking. For decisions involving family law, taxation, child support assessment, separation agreements, mortgages, superannuation, mental health, or any other regulated matter, speak to a qualified professional in your jurisdiction.</p>
+      <p>The Australian Child Support calculations in Atlas use formulas published by Services Australia and are intended as estimates only. The official assessment from Services Australia is the only figure that legally applies to you.</p>
+
+      <h2>Use at your own risk</h2>
+      <p>Atlas is provided "as is", with no warranties of any kind. Johnnie Crawford and any contributors are not liable for any decision you make, action you take, or outcome that results from using the tool. You are responsible for verifying any number, plan, or assumption before acting on it.</p>
+
+      <h2>What you can and can't do</h2>
+      <p>You can use Atlas freely for personal purposes. You can share the URL with anyone you think it might help. You can quote articles from the Atlas blog with attribution.</p>
+      <p>You should not republish entire articles without permission, attempt to reverse-engineer or modify the tool's underlying code without permission, or use the Atlas brand or visual identity to suggest endorsement of another product or service.</p>
+
+      <h2>Changes to these terms</h2>
+      <p>These terms may change from time to time. The current version is always at this URL. Material changes will be flagged on the homepage for a reasonable period.</p>
+
+      <h2>Contact</h2>
+      <p>For anything terms-related: <a href="mailto:hello@get-atlas.com.au">hello@get-atlas.com.au</a></p>
+
+      <div class="legal-signoff">— Johnnie Crawford</div>
+
+    </main>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-tagline">
+      Private tools for getting financially and practically stable after separation.
+    </div>
+    <div class="footer-col">
+      <h4>Modules</h4>
+      <a href="./budget.html">Finances</a>
+      <a href="./kids-week.html">Kids Week</a>
+      <a href="./goals.html">Goals</a>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <a href="./index.html#phase-model">Phase model</a>
+      <a href="./index.html#privacy">Privacy</a>
+      <a href="./index.html#top">How Atlas works</a>
+    </div>
+    <div class="footer-col">
+      <h4>Reading</h4>
+      <a href="https://get-atlas.com.au">All articles</a>
+      <a href="https://get-atlas.com.au/#/portal/signup">The Sunday email</a>
+      <a href="https://get-atlas.com.au/about">About Johnnie</a>
+    </div>
+  </div>
+  <div class="footer-mark">
+    <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="210" cy="88" r="14" fill="#D97757"/>
+      <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
+    </svg>
+  </div>
+  <div class="footer-bottom">
+    <div>© Atlas 2026 · Life After Separation</div>
+    <div class="footer-bottom-links">
+      <a href="./index.html#privacy">Privacy</a>
+      <a href="./terms.html">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  const isOpen = nav.classList.toggle('open');
+  ham.classList.toggle('open', isOpen);
+}
+</script>
+
+</body>
+</html>

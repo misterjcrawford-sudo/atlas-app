@@ -743,7 +743,7 @@
     max-width: 1180px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
     gap: 40px;
     padding-bottom: 56px;
   }
@@ -852,6 +852,7 @@
       <li><a href="./budget.html">Finances</a></li>
       <li><a href="./kids-week.html">Kids Week</a></li>
       <li><a href="./goals.html">Goals</a></li>
+      <li><a href="https://get-atlas.com.au" class="nav-read">Read ↗</a></li>
     </ul>
     <a href="./budget.html" class="nav-cta">Open Finances</a>
     <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
@@ -864,13 +865,14 @@
   <a href="./budget.html">Finances</a>
   <a href="./kids-week.html">Kids Week</a>
   <a href="./goals.html">Goals</a>
+  <a href="https://get-atlas.com.au">Read ↗</a>
 </div>
 
 <div class="page-wrap">
 <div class="container">
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="top">
   <svg class="hero-curve" viewBox="0 0 640 560" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <path id="curveTop" d="M 40 440 C 40 110 290 40 540 90" />
@@ -1064,7 +1066,13 @@
       <h4>About</h4>
       <a href="#phase-model">Phase model</a>
       <a href="#privacy">Privacy</a>
-      <a href="./index.html">How Atlas works</a>
+      <a href="./index.html#top">How Atlas works</a>
+    </div>
+    <div class="footer-col">
+      <h4>Reading</h4>
+      <a href="https://get-atlas.com.au">All articles</a>
+      <a href="https://get-atlas.com.au/#/portal/signup">The Sunday email</a>
+      <a href="https://get-atlas.com.au/about">About Johnnie</a>
     </div>
   </div>
   <div class="footer-mark">
@@ -1078,8 +1086,7 @@
     <div>© Atlas 2026 · Life After Separation</div>
     <div class="footer-bottom-links">
       <a href="#privacy">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#phase-model">Phase model</a>
+      <a href="./terms.html">Terms</a>
     </div>
   </div>
 </footer>
