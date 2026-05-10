@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --amber: #E8A838;
+    --amber-deep: #D4962A;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip { background: var(--green); color: var(--paper); padding: 11px 24px; text-align: center; font-size: 13px; font-weight: 500; }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 8px 8px 22px; display: flex; align-items: center; gap: 24px;
+    box-shadow: var(--shadow-soft); max-width: 1100px; width: 100%; height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.45rem; color: var(--ink);
+    text-decoration: none; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 999px; transition: background 0.15s; }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+  .nav-cta { background: var(--amber); color: var(--ink); text-decoration: none; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
+  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 48px; }
+  .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
+  .hero h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
+  .hero-sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; }
+
+  /* PHASE ROW */
+  .phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 32px 0 10px; }
+  .phase-pill {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 9px 18px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper-card);
+    transition: all 0.18s ease; letter-spacing: -0.005em;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+
+  .phase-context { font-family: 'Fraunces', serif; font-weight: 300; font-size: 15px; line-height: 1.55; color: var(--ink-muted); margin-bottom: 36px; max-width: 58ch; }
+
+  /* OVERALL PROGRESS */
+  .overall-progress { background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+  .overall-progress-label { font-size: 13px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+  .overall-progress-bar { flex: 1; height: 8px; background: var(--paper-edge); border-radius: 999px; overflow: hidden; }
+  .overall-progress-fill { height: 100%; background: var(--green); border-radius: 999px; transition: width 0.4s ease; width: 0%; }
+  .overall-progress-count { font-size: 13px; font-weight: 600; color: var(--ink-muted); white-space: nowrap; }
+
+  /* CHECKLIST SECTIONS */
+  .checklist-section {
+    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: var(--radius-lg);
+    margin-bottom: 12px; overflow: hidden; transition: box-shadow 0.18s;
+  }
+  .checklist-section.priority { border-color: var(--green); }
+  .checklist-section.priority .cl-header { background: var(--green); color: var(--paper); }
+  .checklist-section.priority .cl-progress { color: rgba(255,255,255,0.7); }
+  .checklist-section.priority .cl-chevron { color: rgba(255,255,255,0.7); }
+
+  .cl-header {
+    width: 100%; display: flex; align-items: center; gap: 12px; padding: 18px 24px;
+    background: none; border: none; cursor: pointer; text-align: left;
+    font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink);
+    transition: background 0.15s;
+  }
+  .cl-header:hover { background: var(--paper-warm); }
+  .checklist-section.priority .cl-header:hover { background: var(--green-deep); }
+  .cl-title { flex: 1; }
+  .cl-progress { font-size: 13px; font-weight: 500; color: var(--ink-muted); white-space: nowrap; }
+  .cl-chevron { font-size: 12px; color: var(--ink-muted); transition: transform 0.2s; }
+  .cl-header.open .cl-chevron { transform: rotate(90deg); }
+  .cl-header.complete .cl-title::after { content: ' ✓'; color: var(--green); font-size: 13px; }
+  .checklist-section.priority .cl-header.complete .cl-title::after { color: var(--sage); }
+
+  .cl-body { display: none; border-top: 1px solid var(--paper-edge); padding: 8px 0; }
+  .cl-body.open { display: block; }
+
+  .cl-item { display: flex; align-items: flex-start; gap: 14px; padding: 14px 24px; transition: background 0.12s; }
+  .cl-item:hover { background: var(--paper-warm); }
+  .cl-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--green); flex-shrink: 0; margin-top: 2px; }
+  .cl-item label { cursor: pointer; flex: 1; }
+  .cl-item-title { display: block; font-size: 14.5px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .cl-item-note { display: block; font-size: 13px; color: var(--ink-muted); margin-top: 3px; line-height: 1.5; }
+  .cl-item input:checked ~ label .cl-item-title { text-decoration: line-through; color: var(--ink-muted); }
+
+  /* DE-EMPHASISED sections */
+  .checklist-section.muted { opacity: 0.65; }
+  .checklist-section.muted:hover { opacity: 1; }
+
+  /* SITE FOOTER */
+  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 64px; }
+  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
+  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
+  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
+  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
+  .footer-col-links a:hover { color: var(--ink); }
+  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
+  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-copy { font-size: 13px; color: var(--ink-faded); }
+  .footer-legal { display: flex; gap: 20px; }
+  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a:hover { color: var(--ink); }
+  @media (max-width: 760px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-tagline { grid-column: 1 / -1; }
+    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+  @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
+
+  @media (max-width: 760px) {
+    .page-wrap { padding: 0 16px; }
+    .hero { padding: 48px 0 32px; }
+    .overall-progress { flex-wrap: wrap; gap: 10px; }
+    .overall-progress-label { flex: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
+
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Week</a></li>
+      <li><a href="./admin.html" class="active">Admin</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+      <li><a href="./guides.html">Guides</a></li>
+    </ul>
+    <a href="./admin.html" class="nav-cta">Open Admin</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Week</a>
+  <a href="./admin.html" class="active">Admin</a>
+  <a href="./goals.html">Goals</a>
+  <a href="./guides.html">Guides</a>
+</div>
+
+<div class="page-wrap">
+<div class="container">
+
+  <section class="hero">
+    <div class="hero-eyebrow">Atlas — Admin</div>
+    <h1>Get the paperwork right, once.</h1>
+    <p class="hero-sub">Every item here is something you'll need to deal with. Work through it at your own pace — Atlas saves your progress automatically.</p>
+
+    <div class="phase-row" id="phase-row">
+      <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
+      <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+      <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
+      <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
+      <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
+    </div>
+    <div class="phase-context" id="phase-context"></div>
+  </section>
+
+  <div class="overall-progress">
+    <div class="overall-progress-label">Admin progress</div>
+    <div class="overall-progress-bar"><div class="overall-progress-fill" id="overall-fill"></div></div>
+    <div class="overall-progress-count" id="overall-count">0 of 0 done</div>
+  </div>
+
+  <!-- SECTION 1: First 30 Days -->
+  <div class="checklist-section" id="cl-first30" data-priority-phases="crisis">
+    <button class="cl-header" onclick="toggleSection('first30')">
+      <span class="cl-title">First 30 Days</span>
+      <span class="cl-progress" id="cl-first30-progress">0 / 12</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-first30-body">
+      <div class="cl-item"><input type="checkbox" id="item-f01" onchange="saveChecklists()"><label for="item-f01"><span class="cl-item-title">Find somewhere stable to live</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f02" onchange="saveChecklists()"><label for="item-f02"><span class="cl-item-title">Tell your employer your address has changed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f03" onchange="saveChecklists()"><label for="item-f03"><span class="cl-item-title">Open a personal bank account in your name only</span><span class="cl-item-note">If you don't already have one solely in your name.</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f04" onchange="saveChecklists()"><label for="item-f04"><span class="cl-item-title">Get a PO Box or update your mailing address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f05" onchange="saveChecklists()"><label for="item-f05"><span class="cl-item-title">Locate your important documents</span><span class="cl-item-note">Passport, birth certificate, tax file number.</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f06" onchange="saveChecklists()"><label for="item-f06"><span class="cl-item-title">Contact a family lawyer for an initial consultation</span><span class="cl-item-note">Many offer free first calls.</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f07" onchange="saveChecklists()"><label for="item-f07"><span class="cl-item-title">Notify your children's school of the separation and new contact details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f08" onchange="saveChecklists()"><label for="item-f08"><span class="cl-item-title">Register with a GP if you've moved suburb</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f09" onchange="saveChecklists()"><label for="item-f09"><span class="cl-item-title">Let Centrelink know if your income or living situation has changed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f10" onchange="saveChecklists()"><label for="item-f10"><span class="cl-item-title">Contact Services Australia about child support obligations</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f11" onchange="saveChecklists()"><label for="item-f11"><span class="cl-item-title">Set up a separate email address for legal and financial correspondence</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f12" onchange="saveChecklists()"><label for="item-f12"><span class="cl-item-title">Do not make major financial decisions in the first 30 days</span><span class="cl-item-note">If you can avoid it.</span></label></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Documents -->
+  <div class="checklist-section" id="cl-documents" data-priority-phases="waiting-room crisis">
+    <button class="cl-header" onclick="toggleSection('documents')">
+      <span class="cl-title">Documents</span>
+      <span class="cl-progress" id="cl-documents-progress">0 / 15</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-documents-body">
+      <div class="cl-item"><input type="checkbox" id="item-d01" onchange="saveChecklists()"><label for="item-d01"><span class="cl-item-title">Passport (yours)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d02" onchange="saveChecklists()"><label for="item-d02"><span class="cl-item-title">Passport (children's — know where it is)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d03" onchange="saveChecklists()"><label for="item-d03"><span class="cl-item-title">Birth certificates (yours and children's)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d04" onchange="saveChecklists()"><label for="item-d04"><span class="cl-item-title">Tax file number (TFN)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d05" onchange="saveChecklists()"><label for="item-d05"><span class="cl-item-title">Medicare card</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d06" onchange="saveChecklists()"><label for="item-d06"><span class="cl-item-title">Marriage certificate</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d07" onchange="saveChecklists()"><label for="item-d07"><span class="cl-item-title">Driver's licence (updated address)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d08" onchange="saveChecklists()"><label for="item-d08"><span class="cl-item-title">Will (update or create one)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d09" onchange="saveChecklists()"><label for="item-d09"><span class="cl-item-title">Power of attorney (consider setting up)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d10" onchange="saveChecklists()"><label for="item-d10"><span class="cl-item-title">Signed copies of any parenting agreements or orders</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d11" onchange="saveChecklists()"><label for="item-d11"><span class="cl-item-title">Property settlement documents</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d12" onchange="saveChecklists()"><label for="item-d12"><span class="cl-item-title">Separation agreement or consent orders</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d13" onchange="saveChecklists()"><label for="item-d13"><span class="cl-item-title">Insurance policies (home, car, life, income protection)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d14" onchange="saveChecklists()"><label for="item-d14"><span class="cl-item-title">Superannuation statements</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d15" onchange="saveChecklists()"><label for="item-d15"><span class="cl-item-title">Most recent tax return</span></label></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Bank, Super & Insurance -->
+  <div class="checklist-section" id="cl-bank" data-priority-phases="crisis stabilise">
+    <button class="cl-header" onclick="toggleSection('bank')">
+      <span class="cl-title">Bank, Super &amp; Insurance</span>
+      <span class="cl-progress" id="cl-bank-progress">0 / 10</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-bank-body">
+      <div class="cl-item"><input type="checkbox" id="item-b01" onchange="saveChecklists()"><label for="item-b01"><span class="cl-item-title">Open a bank account solely in your name</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b02" onchange="saveChecklists()"><label for="item-b02"><span class="cl-item-title">Update direct debits and salary payments to your new account</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b03" onchange="saveChecklists()"><label for="item-b03"><span class="cl-item-title">Remove ex-partner's access to joint accounts (or formally close them)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b04" onchange="saveChecklists()"><label for="item-b04"><span class="cl-item-title">Notify your super fund of your new address and beneficiary</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b05" onchange="saveChecklists()"><label for="item-b05"><span class="cl-item-title">Review your super beneficiary nomination — update if needed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b06" onchange="saveChecklists()"><label for="item-b06"><span class="cl-item-title">Check if your life insurance is through super or separate (and whether it's adequate)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b07" onchange="saveChecklists()"><label for="item-b07"><span class="cl-item-title">Set up income protection insurance if you don't have it</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b08" onchange="saveChecklists()"><label for="item-b08"><span class="cl-item-title">Review car insurance — is the policy still in the right name?</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b09" onchange="saveChecklists()"><label for="item-b09"><span class="cl-item-title">Update home/contents insurance for your new address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b10" onchange="saveChecklists()"><label for="item-b10"><span class="cl-item-title">Check if any accounts are still jointly held that shouldn't be</span></label></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Tax, Subscriptions & Utilities -->
+  <div class="checklist-section" id="cl-tax" data-priority-phases="stabilise rebuild">
+    <button class="cl-header" onclick="toggleSection('tax')">
+      <span class="cl-title">Tax, Subscriptions &amp; Utilities</span>
+      <span class="cl-progress" id="cl-tax-progress">0 / 10</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-tax-body">
+      <div class="cl-item"><input type="checkbox" id="item-t01" onchange="saveChecklists()"><label for="item-t01"><span class="cl-item-title">Notify the ATO of your new address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t02" onchange="saveChecklists()"><label for="item-t02"><span class="cl-item-title">Update your tax return status — single, with dependants</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t03" onchange="saveChecklists()"><label for="item-t03"><span class="cl-item-title">Check you're claiming the correct Medicare levy adjustment</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t04" onchange="saveChecklists()"><label for="item-t04"><span class="cl-item-title">Review all subscriptions — cancel anything still shared with ex-partner</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t05" onchange="saveChecklists()"><label for="item-t05"><span class="cl-item-title">Set up utilities in your name (electricity, gas, internet)</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t06" onchange="saveChecklists()"><label for="item-t06"><span class="cl-item-title">Update your address on all streaming/subscription services</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t07" onchange="saveChecklists()"><label for="item-t07"><span class="cl-item-title">Review phone plan — are you still on a family plan?</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t08" onchange="saveChecklists()"><label for="item-t08"><span class="cl-item-title">Notify your accountant or tax agent of change in circumstances</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t09" onchange="saveChecklists()"><label for="item-t09"><span class="cl-item-title">Check your HECS-HELP repayment status if applicable</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-t10" onchange="saveChecklists()"><label for="item-t10"><span class="cl-item-title">Lodge a tax return if you haven't</span><span class="cl-item-note">Child support is calculated on income.</span></label></div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Property, School & Medical -->
+  <div class="checklist-section" id="cl-property" data-priority-phases="rebuild new-chapter">
+    <button class="cl-header" onclick="toggleSection('property')">
+      <span class="cl-title">Property, School &amp; Medical</span>
+      <span class="cl-progress" id="cl-property-progress">0 / 10</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-property-body">
+      <div class="cl-item"><input type="checkbox" id="item-p01" onchange="saveChecklists()"><label for="item-p01"><span class="cl-item-title">Update school enrolment records with your new address and contact details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p02" onchange="saveChecklists()"><label for="item-p02"><span class="cl-item-title">Ensure both parents are listed on school emergency contact records</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p03" onchange="saveChecklists()"><label for="item-p03"><span class="cl-item-title">Register the children with a GP close to your home</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p04" onchange="saveChecklists()"><label for="item-p04"><span class="cl-item-title">Ensure both parents have access to children's Medicare records</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p05" onchange="saveChecklists()"><label for="item-p05"><span class="cl-item-title">Update children's dental and specialist records</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p06" onchange="saveChecklists()"><label for="item-p06"><span class="cl-item-title">Review any property settlement — is it documented and finalised?</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p07" onchange="saveChecklists()"><label for="item-p07"><span class="cl-item-title">Update your address on the electoral roll</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p08" onchange="saveChecklists()"><label for="item-p08"><span class="cl-item-title">If renting, make sure your lease is in your name and signed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p09" onchange="saveChecklists()"><label for="item-p09"><span class="cl-item-title">Review your contents insurance covers your new home</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-p10" onchange="saveChecklists()"><label for="item-p10"><span class="cl-item-title">Plan ahead for school holidays — have a schedule agreed</span></label></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
+    <div>
+      <div class="footer-col-heading">Modules</div>
+      <ul class="footer-col-links">
+        <li><a href="./budget.html">Finances</a></li>
+        <li><a href="./kids-week.html">Kids Week</a></li>
+        <li><a href="./goals.html">Goals</a></li>
+        <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./guides.html">Guides</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">About</div>
+      <ul class="footer-col-links">
+        <li><a href="./guides.html?phase=crisis">Phase model</a></li>
+        <li><a href="./terms.html">Privacy</a></li>
+        <li><a href="./sales.html#how">How Atlas works</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">Reading</div>
+      <ul class="footer-col-links">
+        <li><a href="./guides.html">All articles</a></li>
+        <li><a href="https://get-atlas.com.au" target="_blank" rel="noopener">The Sunday email</a></li>
+        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-mark">
+    <div class="footer-mark-inner">
+      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
+        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="58" cy="14" r="5" fill="#D97757"/>
+      </svg>
+      <div class="footer-mark-word">Atlas</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
+      <div class="footer-legal">
+        <a href="./terms.html">Privacy</a>
+        <a href="./terms.html">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const STORAGE_KEY = 'atlas_admin_checklists';
+
+const phaseContexts = {
+  'waiting-room': 'Now is the right time to get your documents in order — before legal processes make it harder.',
+  'crisis': 'Focus on the First 30 Days checklist first. Everything else can wait.',
+  'stabilise': 'First 30 days should be done. Now work through Documents, Bank and Super, and Utilities.',
+  'rebuild': 'Ongoing admin — property, school, medical, tax. Make sure nothing has slipped.',
+  'new-chapter': 'Periodic review. Check tax, insurance, and super are still optimised for your situation.'
+};
+
+const sectionPriorityMap = {
+  'first30': ['crisis'],
+  'documents': ['waiting-room', 'crisis'],
+  'bank': ['crisis', 'stabilise'],
+  'tax': ['stabilise', 'rebuild'],
+  'property': ['rebuild', 'new-chapter']
+};
+
+let currentPhase = 'crisis';
+
+function getCurrentPhase() {
+  return localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'crisis';
+}
+
+function setCurrentPhase(phase) {
+  localStorage.setItem('atlas_phase', phase);
+  localStorage.setItem('dad_atlas_phase', phase);
+  localStorage.setItem('atlas_budget_phase', phase);
+  localStorage.setItem('dad_budget_phase', phase);
+  window.dispatchEvent(new StorageEvent('storage', { key: 'atlas_phase', newValue: phase }));
+}
+
+function setPhase(phase) {
+  currentPhase = phase;
+  setCurrentPhase(phase);
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  document.getElementById('phase-context').textContent = phaseContexts[phase] || '';
+  applyPhaseStyling(phase);
+}
+
+function applyPhaseStyling(phase) {
+  const priorityPhases = sectionPriorityMap;
+  document.querySelectorAll('.checklist-section').forEach(section => {
+    const id = section.id.replace('cl-', '');
+    const isPriority = (priorityPhases[id] || []).includes(phase);
+    section.classList.toggle('priority', isPriority);
+    section.classList.toggle('muted', !isPriority);
+  });
+
+  // Sort sections: priority sections first
+  const container = document.querySelector('.container');
+  const sections = [...document.querySelectorAll('.checklist-section')];
+  const progressBar = document.querySelector('.overall-progress');
+
+  const priority = sections.filter(s => s.classList.contains('priority'));
+  const others = sections.filter(s => !s.classList.contains('priority'));
+
+  // Open priority sections, collapse others
+  priority.forEach(s => {
+    const id = s.id.replace('cl-', '');
+    const body = document.getElementById(`cl-${id}-body`);
+    const header = s.querySelector('.cl-header');
+    if (body) body.classList.add('open');
+    if (header) header.classList.add('open');
+  });
+  others.forEach(s => {
+    const id = s.id.replace('cl-', '');
+    const body = document.getElementById(`cl-${id}-body`);
+    const header = s.querySelector('.cl-header');
+    if (body) body.classList.remove('open');
+    if (header) header.classList.remove('open');
+  });
+
+  // Reorder in DOM: priority first
+  [...priority, ...others].forEach(s => container.appendChild(s));
+}
+
+function toggleSection(id) {
+  const body = document.getElementById(`cl-${id}-body`);
+  const header = document.querySelector(`#cl-${id} .cl-header`);
+  const isOpen = body.classList.toggle('open');
+  if (header) header.classList.toggle('open', isOpen);
+}
+
+function saveChecklists() {
+  const state = {};
+  document.querySelectorAll('.cl-item input[type="checkbox"]').forEach(cb => {
+    state[cb.id] = cb.checked;
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  updateAllProgress();
+}
+
+function loadChecklists() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const state = JSON.parse(raw);
+    Object.entries(state).forEach(([id, checked]) => {
+      const el = document.getElementById(id);
+      if (el) el.checked = checked;
+    });
+  } catch(e) {}
+  updateAllProgress();
+}
+
+function updateAllProgress() {
+  let totalDone = 0, totalAll = 0;
+  document.querySelectorAll('.checklist-section').forEach(section => {
+    const id = section.id.replace('cl-', '');
+    const checkboxes = section.querySelectorAll('input[type="checkbox"]');
+    const done = [...checkboxes].filter(cb => cb.checked).length;
+    const progressEl = document.getElementById(`cl-${id}-progress`);
+    if (progressEl) progressEl.textContent = `${done} / ${checkboxes.length}`;
+    const header = section.querySelector('.cl-header');
+    if (header) header.classList.toggle('complete', done === checkboxes.length && checkboxes.length > 0);
+    totalDone += done;
+    totalAll += checkboxes.length;
+  });
+
+  const fill = document.getElementById('overall-fill');
+  const count = document.getElementById('overall-count');
+  if (fill) fill.style.width = totalAll > 0 ? `${(totalDone / totalAll) * 100}%` : '0%';
+  if (count) count.textContent = `${totalDone} of ${totalAll} done`;
+}
+
+function toggleNav() {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  const open = nav.classList.toggle('open');
+  ham.classList.toggle('open', open);
+}
+
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  if (!e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav')) {
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+  }
+});
+
+window.addEventListener('storage', e => {
+  if (e.key === 'atlas_phase' && e.newValue) setPhase(e.newValue);
+});
+
+// Init
+const savedPhase = getCurrentPhase();
+setPhase(savedPhase);
+loadChecklists();
+</script>
+</body>
+</html>

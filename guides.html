@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guides — Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --amber: #E8A838;
+    --amber-deep: #D4962A;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip { background: var(--green); color: var(--paper); padding: 11px 24px; text-align: center; font-size: 13px; font-weight: 500; }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 8px 8px 22px; display: flex; align-items: center; gap: 24px;
+    box-shadow: var(--shadow-soft); max-width: 1100px; width: 100%; height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.45rem; color: var(--ink);
+    text-decoration: none; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 999px; transition: background 0.15s; }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+  .nav-cta { background: var(--amber); color: var(--ink); text-decoration: none; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
+  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 48px; }
+  .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
+  .hero h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
+  .hero-sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; }
+
+  /* PHASE FILTER */
+  .filter-section { margin-bottom: 12px; }
+  .filter-label { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 32px; }
+  .phase-pill {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 9px 18px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper-card);
+    transition: all 0.18s ease;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="all"].active { background: var(--ink); }
+  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+
+  /* CATEGORY TABS */
+  .cat-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 16px 0 40px; }
+  .cat-btn {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper);
+    transition: all 0.15s;
+  }
+  .cat-btn:hover { background: var(--paper-warm); }
+  .cat-btn.active { background: var(--paper-warm); border-color: var(--ink-faded); color: var(--ink); font-weight: 700; }
+
+  /* GUIDE GRID */
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 80px;
+  }
+  .guide-card {
+    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: var(--radius-lg);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .guide-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .guide-card-img { height: 180px; overflow: hidden; background: var(--paper-warm); }
+  .guide-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .guide-card-body { padding: 22px 24px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .guide-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .guide-phase-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-muted); background: var(--paper-warm); padding: 4px 10px; border-radius: 999px;
+  }
+  .guide-tool-tag {
+    font-size: 12px; font-weight: 600; color: var(--green); text-decoration: none;
+    border: 1px solid var(--sage); padding: 3px 10px; border-radius: 999px; transition: background 0.15s;
+  }
+  .guide-tool-tag:hover { background: var(--sage); }
+  .guide-card-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.2rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); }
+  .guide-card-excerpt { font-size: 14px; line-height: 1.6; color: var(--ink-soft); flex: 1; }
+  .guide-card-link {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600;
+    color: var(--green); text-decoration: none; margin-top: 8px; transition: gap 0.15s;
+  }
+  .guide-card-link:hover { gap: 10px; }
+  .guide-empty { color: var(--ink-muted); font-size: 15px; padding: 40px 0; text-align: center; grid-column: 1/-1; }
+
+  /* PHASE GUIDE SECTION */
+  .phase-guide-section { border-top: 1px solid var(--paper-edge); padding-top: 64px; margin-bottom: 64px; }
+  .phase-guide-section h2 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.04; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 14px; }
+  .phase-guide-section > p { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; margin-bottom: 36px; }
+  .phase-guide-panels { display: flex; flex-direction: column; gap: 10px; }
+  .phase-guide-panel { border: 1px solid var(--paper-edge); border-radius: var(--radius); overflow: hidden; }
+  .phase-guide-panel summary {
+    padding: 18px 24px; cursor: pointer; font-weight: 600; font-size: 15px;
+    list-style: none; display: flex; align-items: center; justify-content: space-between;
+    background: var(--paper-card); transition: background 0.15s;
+  }
+  .phase-guide-panel summary::-webkit-details-marker { display: none; }
+  .phase-guide-panel summary::after { content: '›'; font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+  .phase-guide-panel[open] summary::after { transform: rotate(90deg); }
+  .phase-guide-panel summary:hover { background: var(--paper-warm); }
+  .phase-guide-body { padding: 24px 28px 28px; border-top: 1px solid var(--paper-edge); }
+  .phase-guide-body p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 14px; }
+  .phase-guide-body p:last-child { margin-bottom: 0; }
+
+  /* SITE FOOTER */
+  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 64px; }
+  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
+  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
+  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
+  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
+  .footer-col-links a:hover { color: var(--ink); }
+  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
+  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-copy { font-size: 13px; color: var(--ink-faded); }
+  .footer-legal { display: flex; gap: 20px; }
+  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a:hover { color: var(--ink); }
+  @media (max-width: 760px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-tagline { grid-column: 1 / -1; }
+    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+  @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
+
+  @media (max-width: 1024px) { .guide-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .guide-grid { grid-template-columns: 1fr; } .page-wrap { padding: 0 16px; } .hero { padding: 48px 0 32px; } }
+</style>
+</head>
+<body>
+
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
+
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Week</a></li>
+      <li><a href="./admin.html">Admin</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+      <li><a href="./guides.html" class="active">Guides</a></li>
+    </ul>
+    <a href="./guides.html" class="nav-cta">Read Guides</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Week</a>
+  <a href="./admin.html">Admin</a>
+  <a href="./goals.html">Goals</a>
+  <a href="./guides.html" class="active">Guides</a>
+</div>
+
+<div class="page-wrap">
+<div class="container">
+
+  <section class="hero">
+    <div class="hero-eyebrow">Atlas — Guides</div>
+    <h1>Everything you need to understand where you are.</h1>
+    <p class="hero-sub">Articles, explainers, and phase guides written for separated Australian dads. Filter by where you are right now.</p>
+
+    <div class="phase-row">
+      <button class="phase-pill active" data-phase="all" onclick="filterGuides('all')">All</button>
+      <button class="phase-pill" data-phase="waiting-room" onclick="filterGuides('waiting-room')">Waiting Room</button>
+      <button class="phase-pill" data-phase="crisis" onclick="filterGuides('crisis')">Crisis</button>
+      <button class="phase-pill" data-phase="stabilise" onclick="filterGuides('stabilise')">Stabilise</button>
+      <button class="phase-pill" data-phase="rebuild" onclick="filterGuides('rebuild')">Rebuild</button>
+      <button class="phase-pill" data-phase="new-chapter" onclick="filterGuides('new-chapter')">New Chapter</button>
+    </div>
+  </section>
+
+  <div class="cat-row">
+    <button class="cat-btn active" data-cat="all" onclick="filterCategory('all')">All</button>
+    <button class="cat-btn" data-cat="getting-started" onclick="filterCategory('getting-started')">Getting Started</button>
+    <button class="cat-btn" data-cat="money" onclick="filterCategory('money')">Money</button>
+    <button class="cat-btn" data-cat="the-kids" onclick="filterCategory('the-kids')">The Kids</button>
+    <button class="cat-btn" data-cat="admin-legal" onclick="filterCategory('admin-legal')">Admin &amp; Legal</button>
+    <button class="cat-btn" data-cat="you" onclick="filterCategory('you')">You</button>
+  </div>
+
+  <div class="guide-grid" id="guide-grid"></div>
+
+  <!-- PHASE GUIDE SECTION -->
+  <section class="phase-guide-section">
+    <h2>Understanding your phase</h2>
+    <p>The phase model is Atlas's core framework. Here's what each phase means — and what it demands of you.</p>
+    <div class="phase-guide-panels">
+
+      <details class="phase-guide-panel">
+        <summary>Waiting Room — Before the decision</summary>
+        <div class="phase-guide-body">
+          <p>You're not separated yet, but you can see it coming. This phase is defined by uncertainty — and the temptation to either ignore the situation or overreact to it. Neither helps.</p>
+          <p>What you can do now: gather your documents, understand your financial position, and get a clear picture of what the legal process actually involves. Information is not commitment. Getting informed is not giving up.</p>
+          <p>What to avoid: making major financial decisions under emotional pressure, or assuming the worst before the process has started. Stay practical.</p>
+        </div>
+      </details>
+
+      <details class="phase-guide-panel">
+        <summary>Crisis — 0 to 6 months</summary>
+        <div class="phase-guide-body">
+          <p>Separation is official. The immediate priority is stability: somewhere to live, legal basics understood, kids seeing both parents regularly. That's it. Don't try to optimise — just survive.</p>
+          <p>Money decisions made in Crisis often look terrible in hindsight. The financial fog is real. If you can avoid major commitments for the first few months, do it. The one exception: get your budget mapped. You need to know what's actually coming in and going out.</p>
+          <p>This phase is harder than people expect and shorter than it feels. The fog lifts. Focus on keeping the wheels on.</p>
+        </div>
+      </details>
+
+      <details class="phase-guide-panel">
+        <summary>Stabilise — 6 to 18 months</summary>
+        <div class="phase-guide-body">
+          <p>Two households are running. The immediate chaos has passed. Now the job is to get your foundations right — budget mapped properly, routines established, legal documents sorted, admin caught up.</p>
+          <p>This is when most of the practical work happens. Bank accounts, super, insurance, tax — all the things you put off during Crisis. Work through them systematically. The admin checklist in Atlas covers most of it.</p>
+          <p>Stability also means building small habits: consistent kids week routines, a savings buffer, regular time for yourself. These compound. Don't underestimate them.</p>
+        </div>
+      </details>
+
+      <details class="phase-guide-panel">
+        <summary>Rebuild — 1 to 3 years</summary>
+        <div class="phase-guide-body">
+          <p>The hard stuff is largely behind you. Two households are running, the kids have a routine, and you have a clearer picture of your financial position. Now you build — deliberately.</p>
+          <p>Rebuild is when goals start to matter. Not vague aspirations — concrete targets. Savings goals. Fitness. Career. Identity. You've survived; now you decide what you're building toward.</p>
+          <p>This phase can stall if you're still in survival mode mentally. Watch for it. The circumstances have stabilised. The question is whether your thinking has caught up.</p>
+        </div>
+      </details>
+
+      <details class="phase-guide-panel">
+        <summary>New Chapter — 3 years and beyond</summary>
+        <div class="phase-guide-body">
+          <p>You've rebuilt. The post-separation identity crisis is resolved. You know who you are, what matters to you, and how your finances work. The kids are settled. The legal machinery is behind you.</p>
+          <p>This phase is about extension and optimisation — not starting over, but compounding what you've built. Super contributions, investment thinking, the next significant financial goals, deeper relationships with your kids as they grow.</p>
+          <p>It looks different for everyone. Some people arrive here in two years; others take five. What matters is that you get here — and Atlas is built to help you track the progress.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
+    <div>
+      <div class="footer-col-heading">Modules</div>
+      <ul class="footer-col-links">
+        <li><a href="./budget.html">Finances</a></li>
+        <li><a href="./kids-week.html">Kids Week</a></li>
+        <li><a href="./goals.html">Goals</a></li>
+        <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./guides.html">Guides</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">About</div>
+      <ul class="footer-col-links">
+        <li><a href="./guides.html?phase=crisis">Phase model</a></li>
+        <li><a href="./terms.html">Privacy</a></li>
+        <li><a href="./sales.html#how">How Atlas works</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">Reading</div>
+      <ul class="footer-col-links">
+        <li><a href="./guides.html">All articles</a></li>
+        <li><a href="https://get-atlas.com.au" target="_blank" rel="noopener">The Sunday email</a></li>
+        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-mark">
+    <div class="footer-mark-inner">
+      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
+        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="58" cy="14" r="5" fill="#D97757"/>
+      </svg>
+      <div class="footer-mark-word">Atlas</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
+      <div class="footer-legal">
+        <a href="./terms.html">Privacy</a>
+        <a href="./terms.html">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const articles = [
+  {
+    id: 'article-00',
+    title: 'The Waiting Room: Preparing before separation',
+    excerpt: "You're not there yet — but the decisions you make now will shape everything that comes after.",
+    image: './Articles/Atlas article 5.png',
+    phases: ['waiting-room'],
+    category: 'getting-started',
+    url: 'https://get-atlas.com.au/waiting-room'
+  },
+  {
+    id: 'article-01',
+    title: 'The first 30 days after separation: what to actually do',
+    excerpt: "The practical steps most people miss when everything feels like it's on fire.",
+    image: './Articles/Atlas Article 1.png',
+    phases: ['crisis'],
+    category: 'getting-started',
+    url: 'https://get-atlas.com.au/first-30-days'
+  },
+  {
+    id: 'article-02',
+    title: 'Seven things you forget about money when you separate',
+    excerpt: 'The financial blindspots that catch most people off guard.',
+    image: './Articles/Atlas Article 2.png',
+    phases: ['crisis', 'stabilise'],
+    category: 'money',
+    url: 'https://get-atlas.com.au/money',
+    toolLink: './budget.html',
+    toolLabel: 'Open Finances'
+  },
+  {
+    id: 'article-03',
+    title: 'Kids week on, kids week off: the logistics nobody warns you about',
+    excerpt: 'Making the custody rhythm actually work week to week.',
+    image: './Articles/Atlas article 3.png',
+    phases: ['crisis', 'stabilise'],
+    category: 'the-kids',
+    url: 'https://get-atlas.com.au/kids-week',
+    toolLink: './kids-week.html',
+    toolLabel: 'Open Week'
+  },
+  {
+    id: 'article-04',
+    title: "You don't need a routine. You need a structure.",
+    excerpt: 'Why routines fail separated dads — and what to build instead.',
+    image: './Articles/Atlas Article 4.png',
+    phases: ['stabilise', 'rebuild'],
+    category: 'you',
+    url: 'https://get-atlas.com.au/structure'
+  },
+  {
+    id: 'article-05',
+    title: 'The four phases of rebuilding after separation',
+    excerpt: 'Crisis, Stabilise, Rebuild, New Chapter — and how to know where you actually are.',
+    image: './Articles/Atlas article 5.png',
+    phases: ['waiting-room', 'crisis', 'stabilise', 'rebuild', 'new-chapter'],
+    category: 'getting-started',
+    url: 'https://get-atlas.com.au/four-phases'
+  },
+  {
+    id: 'article-06',
+    title: 'What child support actually costs you — and how the formula works',
+    excerpt: 'The CSA formula explained plainly, with what it means for your budget.',
+    image: './Articles/Atlas Article 6.png',
+    phases: ['crisis', 'stabilise'],
+    category: 'admin-legal',
+    url: 'https://get-atlas.com.au/child-support',
+    toolLink: './child-support-calculator.html',
+    toolLabel: 'Use Calculator'
+  },
+  {
+    id: 'article-07',
+    title: 'Your social life after separation: what disappears and why no one warns you',
+    excerpt: 'The social costs of separation nobody prepares you for.',
+    image: './Articles/Atlas Article 7.png',
+    phases: ['crisis', 'stabilise'],
+    category: 'you',
+    url: 'https://get-atlas.com.au/social-life'
+  },
+  {
+    id: 'article-08',
+    title: 'Setting up your place: how to make a rental work for you and the kids',
+    excerpt: 'Practical setup for a rental that feels like home for you and the kids.',
+    image: './Articles/Atlas Article 8.png',
+    phases: ['crisis', 'stabilise'],
+    category: 'the-kids',
+    url: 'https://get-atlas.com.au/setting-up',
+    toolLink: './budget.html',
+    toolLabel: 'Open Finances'
+  },
+  {
+    id: 'article-09',
+    title: "Who are you now? The identity question nobody prepares you for",
+    excerpt: 'Rebuilding a sense of self after everything that defined you has changed.',
+    image: './Articles/Atlas Article 9.png',
+    phases: ['stabilise', 'rebuild'],
+    category: 'you',
+    url: 'https://get-atlas.com.au/identity'
+  },
+  {
+    id: 'article-10',
+    title: 'The 2025 family law changes: what separated parents actually need to know',
+    excerpt: 'What changed in Australian family law and what it means for your situation.',
+    image: './Articles/Atlas Article 10.png',
+    phases: ['waiting-room', 'crisis', 'stabilise'],
+    category: 'admin-legal',
+    url: 'https://get-atlas.com.au/family-law-2025'
+  }
+];
+
+const categoryLabels = {
+  'getting-started': 'Getting Started',
+  'money': 'Money',
+  'the-kids': 'The Kids',
+  'admin-legal': 'Admin & Legal',
+  'you': 'You'
+};
+
+let activePhase = 'all';
+let activeCategory = 'all';
+
+function filterGuides(phase) {
+  activePhase = phase;
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  renderGuides();
+}
+
+function filterCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderGuides();
+}
+
+function renderGuides() {
+  const grid = document.getElementById('guide-grid');
+  const filtered = articles.filter(a => {
+    const phaseMatch = activePhase === 'all' || a.phases.includes(activePhase);
+    const catMatch = activeCategory === 'all' || a.category === activeCategory;
+    return phaseMatch && catMatch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p class="guide-empty">No guides match the current filters.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(a => `
+    <div class="guide-card">
+      <div class="guide-card-img">
+        <img src="${a.image}" alt="" loading="lazy" onerror="this.parentElement.style.background='var(--paper-warm)'">
+      </div>
+      <div class="guide-card-body">
+        <div class="guide-card-meta">
+          <span class="guide-phase-tag">${categoryLabels[a.category] || a.category}</span>
+          ${a.toolLink ? `<a href="${a.toolLink}" class="guide-tool-tag">${a.toolLabel} ›</a>` : ''}
+        </div>
+        <div class="guide-card-title">${a.title}</div>
+        <div class="guide-card-excerpt">${a.excerpt}</div>
+        <a href="${a.url}" class="guide-card-link" target="_blank" rel="noopener">Read →</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleNav() {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  const open = nav.classList.toggle('open');
+  ham.classList.toggle('open', open);
+}
+
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  if (!e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav')) {
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+  }
+});
+
+// Init
+renderGuides();
+</script>
+</body>
+</html>

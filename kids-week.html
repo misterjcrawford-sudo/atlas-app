@@ -19,8 +19,8 @@
     --ink-faded: #A8A8A0;
     --green: #0F4A3F;
     --green-deep: #0A332B;
-    --lilac: #EAC995;
-    --lilac-deep: #DCBD8F;
+    --amber: #E8A838;
+    --amber-deep: #D4962A;
     --honey: #F5D996;
     --sage: #C9E0B6;
     --coral: #E27B5A;
@@ -33,11 +33,11 @@
     --radius-xl: 40px;
 
     /* Aliases used by inline JS to keep behavior identical */
-    --kids-color: var(--lilac-deep);
+    --kids-color: var(--amber-deep);
     --accent: var(--green);
     --accent-soft: var(--sage);
     --gold: var(--honey);
-    --purple: var(--lilac-deep);
+    --purple: var(--amber-deep);
     --woody-color: #5C7AA6;
     --lumi-color: var(--coral);
     --ink-mid: var(--ink-soft);
@@ -117,7 +117,7 @@
   .nav-links a:hover { background: var(--paper-warm); }
   .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
   .nav-cta {
-    background: var(--lilac);
+    background: var(--amber);
     color: var(--ink);
     text-decoration: none;
     padding: 11px 18px;
@@ -128,7 +128,7 @@
     border: 1px solid rgba(0,0,0,0.05);
     white-space: nowrap;
   }
-  .nav-cta:hover { background: var(--lilac-deep); transform: translateY(-1px); }
+  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
   .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
   .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
   .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -172,7 +172,7 @@
   .hero h1 .soft {
     color: var(--ink);
     font-weight: 500;
-    background: linear-gradient(180deg, transparent 72%, var(--lilac) 72%);
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
     padding: 0 6px;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
@@ -299,8 +299,8 @@
     display: flex; flex-direction: column; justify-content: center;
   }
   .fort-day.kids {
-    background: var(--lilac);
-    border-color: var(--lilac-deep);
+    background: var(--amber);
+    border-color: var(--amber-deep);
     color: var(--ink);
   }
   .fort-day.empty { color: var(--ink-faded); }
@@ -384,7 +384,7 @@
     padding: 2px 9px;
     border-radius: 999px;
   }
-  .tomorrow-tag.kids { background: var(--lilac); color: var(--ink); }
+  .tomorrow-tag.kids { background: var(--amber); color: var(--ink); }
   .tomorrow-tag.solo { background: var(--paper-warm); color: var(--ink-muted); }
   .tomorrow-events {
     list-style: none;
@@ -428,7 +428,7 @@
     padding: 9px 11px;
     margin-bottom: 10px;
   }
-  .tomorrow-handover.packing { background: rgba(234,201,149,0.32); border-color: var(--lilac-deep); }
+  .tomorrow-handover.packing { background: rgba(234,201,149,0.32); border-color: var(--amber-deep); }
   .tomorrow-handover.returning { background: rgba(201,224,182,0.4); border-color: var(--sage); }
   .tomorrow-handover-label {
     font-size: 10.5px;
@@ -515,7 +515,7 @@
   .fort-day-flag.break { background: var(--coral); }
   .fort-day-flag.pupil-free { background: var(--green-deep); }
   .fort-day-flag.school { background: var(--green); }
-  .fort-day-flag.personal { background: var(--lilac-deep); }
+  .fort-day-flag.personal { background: var(--amber-deep); }
   /* Term break shading on grid */
   .fort-day.in-break.empty { background: rgba(226,123,90,0.06); border-color: rgba(226,123,90,0.2); }
   .fort-day.in-break.kids { background: rgba(234,201,149,0.85); }
@@ -553,7 +553,7 @@
     display: inline-block;
     margin-bottom: 18px;
     width: fit-content;
-    background: var(--lilac-deep);
+    background: var(--amber-deep);
   }
   .dossier-row {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -593,7 +593,7 @@
   }
   .card-header:hover { background: var(--paper-warm); }
   .card-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .dot-purple { background: var(--lilac-deep); }
+  .dot-purple { background: var(--amber-deep); }
   .dot-green { background: var(--green); }
   .dot-honey { background: var(--honey); }
   .dot-sage { background: var(--sage); }
@@ -688,7 +688,7 @@
   .day-block {
     background: var(--paper);
     border: 1px solid var(--paper-edge);
-    border-left: 3px solid var(--lilac-deep);
+    border-left: 3px solid var(--amber-deep);
     border-radius: 14px;
     padding: 14px 16px;
     margin-bottom: 10px;
@@ -728,7 +728,7 @@
     background: var(--paper-warm);
     color: var(--ink-muted);
   }
-  .event-chip.both { background: var(--lilac); color: var(--ink); }
+  .event-chip.both { background: var(--amber); color: var(--ink); }
   .event-chip.woody { background: rgba(92,122,166,0.15); color: var(--woody-color); }
   .event-chip.lumi { background: rgba(226,123,90,0.15); color: var(--coral); }
   .event-remove {
@@ -1145,8 +1145,8 @@
     transition: all 0.15s;
   }
   .pattern-day.mine {
-    background: var(--lilac);
-    border-color: var(--lilac-deep);
+    background: var(--amber);
+    border-color: var(--amber-deep);
   }
   .pattern-day-name {
     font-size: 10px;
@@ -1178,7 +1178,31 @@
   }
   .cycle-update-btn:hover { opacity: 0.9; }
 
-  /* FOOTER */
+  /* SITE FOOTER */
+  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 64px; }
+  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
+  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
+  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
+  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
+  .footer-col-links a:hover { color: var(--ink); }
+  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
+  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-copy { font-size: 13px; color: var(--ink-faded); }
+  .footer-legal { display: flex; gap: 20px; }
+  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a:hover { color: var(--ink); }
+  @media (max-width: 760px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-tagline { grid-column: 1 / -1; }
+    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+  @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
+
+  /* FOOTER (legacy) */
   .footer {
     background: var(--paper);
     border-top: 1px solid var(--paper-edge);
@@ -1296,11 +1320,12 @@
     <ul class="nav-links">
       <li><a href="./index.html">Home</a></li>
       <li><a href="./budget.html">Finances</a></li>
-      <li><a href="./kids-week.html" class="active">Kids Week</a></li>
+      <li><a href="./kids-week.html" class="active">Week</a></li>
+      <li><a href="./admin.html">Admin</a></li>
       <li><a href="./goals.html">Goals</a></li>
-      <li><a href="https://get-atlas.com.au" class="nav-read">Read ↗</a></li>
+      <li><a href="./guides.html">Guides</a></li>
     </ul>
-    <a href="#cycle" class="nav-cta">Set the cycle</a>
+    <a href="./kids-week.html" class="nav-cta">Plan Your Week</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
       <span></span><span></span><span></span>
     </button>
@@ -1309,9 +1334,10 @@
 <div class="mobile-nav" id="mobile-nav">
   <a href="./index.html">Home</a>
   <a href="./budget.html">Finances</a>
-  <a href="./kids-week.html" class="active">Kids Week</a>
+  <a href="./kids-week.html" class="active">Week</a>
+  <a href="./admin.html">Admin</a>
   <a href="./goals.html">Goals</a>
-  <a href="https://get-atlas.com.au">Read ↗</a>
+  <a href="./guides.html">Guides</a>
 </div>
 
 <div class="page-wrap">
@@ -1570,42 +1596,52 @@
 </div>
 
 <!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-grid">
-    <div class="footer-tagline">
-      Private tools for getting financially and practically stable after separation.
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
+    <div>
+      <div class="footer-col-heading">Modules</div>
+      <ul class="footer-col-links">
+        <li><a href="./budget.html">Finances</a></li>
+        <li><a href="./kids-week.html">Kids Week</a></li>
+        <li><a href="./goals.html">Goals</a></li>
+        <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./guides.html">Guides</a></li>
+      </ul>
     </div>
-    <div class="footer-col">
-      <h4>Modules</h4>
-      <a href="./budget.html">Finances</a>
-      <a href="./kids-week.html">Kids Week</a>
-      <a href="./goals.html">Goals</a>
+    <div>
+      <div class="footer-col-heading">About</div>
+      <ul class="footer-col-links">
+        <li><a href="./guides.html?phase=crisis">Phase model</a></li>
+        <li><a href="./terms.html">Privacy</a></li>
+        <li><a href="./sales.html#how">How Atlas works</a></li>
+      </ul>
     </div>
-    <div class="footer-col">
-      <h4>About</h4>
-      <a href="./index.html#phase-model">Phase model</a>
-      <a href="./index.html#privacy">Privacy</a>
-      <a href="./index.html#top">How Atlas works</a>
-    </div>
-    <div class="footer-col">
-      <h4>Reading</h4>
-      <a href="https://get-atlas.com.au">All articles</a>
-      <a href="https://get-atlas.com.au/#/portal/signup">The Sunday email</a>
-      <a href="https://get-atlas.com.au/about">About Johnnie</a>
+    <div>
+      <div class="footer-col-heading">Reading</div>
+      <ul class="footer-col-links">
+        <li><a href="./guides.html">All articles</a></li>
+        <li><a href="https://get-atlas.com.au" target="_blank" rel="noopener">The Sunday email</a></li>
+        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+      </ul>
     </div>
   </div>
   <div class="footer-mark">
-    <svg viewBox="0 0 1180 240" xmlns="http://www.w3.org/2000/svg" aria-label="Atlas">
-      <path d="M10 184 Q66 72 130 152 T210 88" fill="none" stroke="#D97757" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="210" cy="88" r="14" fill="#D97757"/>
-      <text x="245" y="210" font-family="Fraunces, serif" font-size="240" font-weight="500" fill="#0A0A0A" letter-spacing="-10">Atlas</text>
-    </svg>
+    <div class="footer-mark-inner">
+      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
+        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="58" cy="14" r="5" fill="#D97757"/>
+      </svg>
+      <div class="footer-mark-word">Atlas</div>
+    </div>
   </div>
   <div class="footer-bottom">
-    <div>© Atlas 2026 · Life After Separation</div>
-    <div class="footer-bottom-links">
-      <a href="./index.html#privacy">Privacy</a>
-      <a href="./terms.html">Terms</a>
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
+      <div class="footer-legal">
+        <a href="./terms.html">Privacy</a>
+        <a href="./terms.html">Terms</a>
+      </div>
     </div>
   </div>
 </footer>
@@ -1884,7 +1920,7 @@ function renderFortnight() {
         statusEl.innerHTML = '<strong>Kids with you.</strong> Handover ' + handoverDay + ' · ' + daysLeft + ' days.' + breakAddendum;
       }
     }
-    if ($('dossier-status')) { $('dossier-status').textContent = 'Kids with you'; $('dossier-status').style.background = 'var(--lilac-deep)'; }
+    if ($('dossier-status')) { $('dossier-status').textContent = 'Kids with you'; $('dossier-status').style.background = 'var(--amber-deep)'; }
     if ($('d-days-until')) $('d-days-until').textContent = 'Now (' + daysLeft + 'd left)';
     if ($('d-handover')) $('d-handover').textContent = handover.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
   } else {
@@ -2570,7 +2606,7 @@ const KID_COLORS = [
   { label: 'Blue', css: 'var(--woody-color)', bg: 'rgba(92,122,166,0.12)', avatar: '#5C7AA6' },
   { label: 'Coral', css: 'var(--coral)', bg: 'rgba(226,123,90,0.12)', avatar: '#E27B5A' },
   { label: 'Sage', css: 'var(--green)', bg: 'rgba(15,74,63,0.10)', avatar: '#0F4A3F' },
-  { label: 'Amber', css: 'var(--lilac-deep)', bg: 'rgba(220,189,143,0.18)', avatar: '#DCBD8F' },
+  { label: 'Amber', css: 'var(--amber-deep)', bg: 'rgba(220,189,143,0.18)', avatar: '#D4962A' },
 ];
 
 function getEventWhoLabel(who) {
