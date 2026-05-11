@@ -19,8 +19,8 @@
     --ink-faded: #A8A8A0;
     --green: #0F4A3F;
     --green-deep: #0A332B;
-    --amber: #E8A838;
-    --amber-deep: #D4962A;
+    --amber: #EAC995;
+    --amber-deep: #DCBD8F;
     --honey: #F5D996;
     --sage: #C9E0B6;
     --coral: #E27B5A;
@@ -87,6 +87,7 @@
   .hero { padding: 64px 0 48px; }
   .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
   .hero h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
+  .hero h1 .soft { background: linear-gradient(180deg, transparent 72%, var(--amber) 72%); padding: 0 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
   .hero-sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; }
 
   /* PHASE FILTER */
@@ -221,7 +222,7 @@
       <li><a href="./goals.html">Goals</a></li>
       <li><a href="./guides.html" class="active">Guides</a></li>
     </ul>
-    <a href="./guides.html" class="nav-cta">Read Guides</a>
+    <a href="https://www.get-atlas.com.au/tag/articles/" class="nav-cta" target="_blank" rel="noopener">Read Guides</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
       <span></span><span></span><span></span>
     </button>
@@ -241,7 +242,7 @@
 
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Guides</div>
-    <h1>Everything you need to understand where you are.</h1>
+    <h1><span class="soft">Everything you need</span><br>to understand where you are.</h1>
     <p class="hero-sub">Articles, explainers, and phase guides written for separated Australian dads. Filter by where you are right now.</p>
 
     <div class="phase-row">
@@ -378,28 +379,28 @@ const articles = [
     id: 'article-00',
     title: 'The Waiting Room: Preparing before separation',
     excerpt: "You're not there yet — but the decisions you make now will shape everything that comes after.",
-    image: './Articles/Atlas article 5.png',
+    image: './images/Atlas the watiing room.png',
     phases: ['waiting-room'],
     category: 'getting-started',
-    url: 'https://get-atlas.com.au/waiting-room'
+    url: 'https://get-atlas.com.au/the-waiting-room'
   },
   {
     id: 'article-01',
     title: 'The first 30 days after separation: what to actually do',
     excerpt: "The practical steps most people miss when everything feels like it's on fire.",
-    image: './Articles/Atlas Article 1.png',
+    image: './images/Atlas Article 1B.png',
     phases: ['crisis'],
     category: 'getting-started',
-    url: 'https://get-atlas.com.au/first-30-days'
+    url: 'https://get-atlas.com.au/the-first-30-days-after-separation-what-to-actually-do'
   },
   {
     id: 'article-02',
     title: 'Seven things you forget about money when you separate',
     excerpt: 'The financial blindspots that catch most people off guard.',
-    image: './Articles/Atlas Article 2.png',
+    image: './images/Atlas Article 2B.png',
     phases: ['crisis', 'stabilise'],
     category: 'money',
-    url: 'https://get-atlas.com.au/money',
+    url: 'https://get-atlas.com.au/seven-things-you-forget-about-money-when-you-separate',
     toolLink: './budget.html',
     toolLabel: 'Open Finances'
   },
@@ -407,10 +408,10 @@ const articles = [
     id: 'article-03',
     title: 'Kids week on, kids week off: the logistics nobody warns you about',
     excerpt: 'Making the custody rhythm actually work week to week.',
-    image: './Articles/Atlas article 3.png',
+    image: './images/Atlas article 3B.png',
     phases: ['crisis', 'stabilise'],
     category: 'the-kids',
-    url: 'https://get-atlas.com.au/kids-week',
+    url: 'https://get-atlas.com.au/kids-week-on-kids-week-off-the-logistics-nobody-warns-you-about',
     toolLink: './kids-week.html',
     toolLabel: 'Open Week'
   },
@@ -418,28 +419,28 @@ const articles = [
     id: 'article-04',
     title: "You don't need a routine. You need a structure.",
     excerpt: 'Why routines fail separated dads — and what to build instead.',
-    image: './Articles/Atlas Article 4.png',
+    image: './images/Atlas Article 4B.png',
     phases: ['stabilise', 'rebuild'],
     category: 'you',
-    url: 'https://get-atlas.com.au/structure'
+    url: 'https://get-atlas.com.au/you-dont-need-a-routine-you-need-a-structure'
   },
   {
     id: 'article-05',
     title: 'The four phases of rebuilding after separation',
     excerpt: 'Crisis, Stabilise, Rebuild, New Chapter — and how to know where you actually are.',
-    image: './Articles/Atlas article 5.png',
+    image: './images/Atlas article 5B.png',
     phases: ['waiting-room', 'crisis', 'stabilise', 'rebuild', 'new-chapter'],
     category: 'getting-started',
-    url: 'https://get-atlas.com.au/four-phases'
+    url: 'https://get-atlas.com.au/the-four-phases-of-rebuilding-after-separation'
   },
   {
     id: 'article-06',
     title: 'What child support actually costs you — and how the formula works',
     excerpt: 'The CSA formula explained plainly, with what it means for your budget.',
-    image: './Articles/Atlas Article 6.png',
+    image: './images/Atlas Article 6B.png',
     phases: ['crisis', 'stabilise'],
     category: 'admin-legal',
-    url: 'https://get-atlas.com.au/child-support',
+    url: 'https://get-atlas.com.au/what-child-support-actually-costs-you-and-how-the-formula-works',
     toolLink: './child-support-calculator.html',
     toolLabel: 'Use Calculator'
   },
@@ -447,19 +448,19 @@ const articles = [
     id: 'article-07',
     title: 'Your social life after separation: what disappears and why no one warns you',
     excerpt: 'The social costs of separation nobody prepares you for.',
-    image: './Articles/Atlas Article 7.png',
+    image: './images/Atlas Article 7B.png',
     phases: ['crisis', 'stabilise'],
     category: 'you',
-    url: 'https://get-atlas.com.au/social-life'
+    url: 'https://get-atlas.com.au/your-social-life-after-separation-what-disappears-and-why-no-one-warns-you'
   },
   {
     id: 'article-08',
     title: 'Setting up your place: how to make a rental work for you and the kids',
     excerpt: 'Practical setup for a rental that feels like home for you and the kids.',
-    image: './Articles/Atlas Article 8.png',
+    image: './images/Atlas Article 8B.png',
     phases: ['crisis', 'stabilise'],
     category: 'the-kids',
-    url: 'https://get-atlas.com.au/setting-up',
+    url: 'https://get-atlas.com.au/setting-up-your-place-how-to-make-a-rental-work-for-you-and-the-kids',
     toolLink: './budget.html',
     toolLabel: 'Open Finances'
   },
@@ -467,19 +468,19 @@ const articles = [
     id: 'article-09',
     title: "Who are you now? The identity question nobody prepares you for",
     excerpt: 'Rebuilding a sense of self after everything that defined you has changed.',
-    image: './Articles/Atlas Article 9.png',
+    image: './images/Atlas Article 9B.png',
     phases: ['stabilise', 'rebuild'],
     category: 'you',
-    url: 'https://get-atlas.com.au/identity'
+    url: 'https://get-atlas.com.au/who-are-you-now-the-identity-question-nobody-prepares-you-for'
   },
   {
     id: 'article-10',
     title: 'The 2025 family law changes: what separated parents actually need to know',
     excerpt: 'What changed in Australian family law and what it means for your situation.',
-    image: './Articles/Atlas Article 10.png',
+    image: './images/Atlas Article 10B.png',
     phases: ['waiting-room', 'crisis', 'stabilise'],
     category: 'admin-legal',
-    url: 'https://get-atlas.com.au/family-law-2025'
+    url: 'https://get-atlas.com.au/the-2025-family-law-changes-what-separated-parents-actually-need-to-know'
   }
 ];
 

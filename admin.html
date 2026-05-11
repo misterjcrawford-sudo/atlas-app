@@ -19,8 +19,8 @@
     --ink-faded: #A8A8A0;
     --green: #0F4A3F;
     --green-deep: #0A332B;
-    --amber: #E8A838;
-    --amber-deep: #D4962A;
+    --amber: #EAC995;
+    --amber-deep: #DCBD8F;
     --honey: #F5D996;
     --sage: #C9E0B6;
     --coral: #E27B5A;
@@ -87,6 +87,7 @@
   .hero { padding: 64px 0 48px; }
   .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
   .hero h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
+  .hero h1 .soft { background: linear-gradient(180deg, transparent 72%, var(--amber) 72%); padding: 0 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
   .hero-sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; }
 
   /* PHASE ROW */
@@ -206,7 +207,7 @@
       <li><a href="./goals.html">Goals</a></li>
       <li><a href="./guides.html">Guides</a></li>
     </ul>
-    <a href="./admin.html" class="nav-cta">Open Admin</a>
+    <a href="https://www.get-atlas.com.au/tag/articles/" class="nav-cta" target="_blank" rel="noopener">Read Guides</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
       <span></span><span></span><span></span>
     </button>
@@ -226,7 +227,7 @@
 
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Admin</div>
-    <h1>Get the paperwork right, once.</h1>
+    <h1><span class="soft">Get the paperwork right,</span><br>once.</h1>
     <p class="hero-sub">Every item here is something you'll need to deal with. Work through it at your own pace — Atlas saves your progress automatically.</p>
 
     <div class="phase-row" id="phase-row">
