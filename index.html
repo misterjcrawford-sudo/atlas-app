@@ -91,29 +91,27 @@
 
   /* PHASE BAR */
   .phase-bar {
-    background: var(--paper-card); border: 1px solid var(--paper-edge);
-    border-radius: var(--radius-xl); margin-bottom: 16px;
-    padding: 20px 28px;
+    background: none; border: none;
+    margin-bottom: 8px; padding: 0;
   }
   .phase-bar-heading {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--ink-muted); margin-bottom: 12px;
+    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500;
+    letter-spacing: -0.02em; color: var(--ink); margin-bottom: 14px;
   }
-  .phase-bar-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .phase-bar-pills { display: flex; gap: 8px; flex-wrap: wrap; }
   .phase-pill {
     font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
     padding: 9px 18px; border-radius: 999px; cursor: pointer;
-    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper);
+    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper-card);
     transition: all 0.18s ease;
   }
-  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); color: var(--ink); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
   .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
-  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="rebuild"].active { background: #4A6F8C; border-color: #3A5A78; color: var(--paper); }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
-  .phase-bar-label { font-size: 15px; font-weight: 500; color: var(--ink-soft); }
-  .phase-bar-label strong { color: var(--ink); font-weight: 600; }
 
   /* DASHBOARD GRID */
   .dash-grid {
@@ -428,7 +426,6 @@
       <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
       <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
     </div>
-    <div class="phase-bar-label" id="phase-bar-label">You're in: <strong>Crisis</strong> — 0–6 months. Just keep the wheels on.</div>
   </div>
 
   <div class="dash-grid" id="dash-grid">
@@ -605,7 +602,7 @@ const phases = {
     label: 'Waiting Room',
     subtitle: 'Before the decision is made.',
     tip: "You're not there yet — but you can start getting ready.",
-    cardLine: "You're not there yet, but you can start getting ready without setting the house on fire.",
+    cardLine: "Clarity before action. Preparation before disruption.",
     focus: ['Quiet preparation', 'Financial records', 'Private notes', 'Emotional clarity'],
     watchOut: ['Threatening before you\'re ready', 'Hiding from the numbers', 'Confusing clarity with action'],
     threshold: 'You move into Crisis when the decision becomes real and practical systems need to start.',
@@ -615,7 +612,7 @@ const phases = {
     label: 'Crisis',
     subtitle: '0–6 months. Just keep the wheels on.',
     tip: 'Survival mode. Focus only on shelter, legal basics, kids seeing both parents, and not making major financial decisions under stress.',
-    cardLine: 'Keep the wheels on. This is not the season for heroic reinvention.',
+    cardLine: 'This is not the season for heroic reinvention. Just survive it well.',
     focus: ['Shelter', 'Cash flow', 'Kids rhythm', 'Legal basics'],
     watchOut: ['Panic decisions', 'Revenge spending', 'Over-explaining', 'Big commitments'],
     threshold: 'You move into Stabilise when you know where you\'re living, what money is coming in, and what the week looks like.',
@@ -625,7 +622,7 @@ const phases = {
     label: 'Stabilise',
     subtitle: '6–18 months. Get the foundations right.',
     tip: 'Two households are running. Now make them run properly — budget, routines, legal docs, and breathing room.',
-    cardLine: 'Two households are running. Now make them run properly.',
+    cardLine: 'Stop patching. Start building systems that hold.',
     focus: ['Budget', 'Routines', 'Documents', 'Buffer', 'Co-parenting rhythm'],
     watchOut: ['Temporary calm', 'Messy subscriptions', 'Informal agreements', 'Admin drift'],
     threshold: 'You move into Rebuild when your month is predictable, your admin is mostly handled, and your kids\' routine is working.',
@@ -639,13 +636,13 @@ const phases = {
     focus: ['Goals', 'Health', 'Wealth', 'Identity', 'Social life'],
     watchOut: ['Living defensively', 'Under-planning', 'Dating as distraction', 'Staying in survival mode'],
     threshold: 'You move into New Chapter when life is no longer organised around the separation.',
-    style: { accent: '#0F4A3F', cardBg: '#0F4A3F', cardBorder: '#0A332B', cardFg: '#FFFFFF', cardFgMuted: 'rgba(255,255,255,0.65)' }
+    style: { accent: '#8BBAD8', cardBg: '#4A6F8C', cardBorder: '#3A5A78', cardFg: '#FFFFFF', cardFgMuted: 'rgba(255,255,255,0.65)' }
   },
   'new-chapter': {
     label: 'New Chapter',
     subtitle: '3+ years. Life on your own terms.',
     tip: "You've rebuilt. Now extend, invest, and optimise for what comes next.",
-    cardLine: "You've rebuilt. Now extend, invest, and choose what comes next.",
+    cardLine: "The separation is no longer the story. You are.",
     focus: ['Investing', 'Optimisation', 'Relationships', 'Meaning', 'Future plans'],
     watchOut: ['Drift', 'Over-optimising', 'Avoiding bigger dreams', 'Keeping old constraints alive'],
     threshold: 'No next phase. This is where Atlas becomes a life operating system.',
@@ -727,9 +724,6 @@ function setPhase(phase) {
 
   // Pills
   document.querySelectorAll('.phase-pill').forEach(el => el.classList.toggle('active', el.dataset.phase === phase));
-
-  // Phase bar label
-  document.getElementById('phase-bar-label').innerHTML = `You're in: <strong>${p.label}</strong> — ${p.subtitle}`;
 
   // Phase card content
   document.getElementById('phase-name').textContent = p.label;
