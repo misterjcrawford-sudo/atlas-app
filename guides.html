@@ -7,198 +7,879 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/atlas-tokens.css">
+<link rel="stylesheet" href="./assets/atlas-shell.css">
+<script src="./scripts-data.js"></script>
 <style>
-  :root {
-    --paper: #FFFFFF;
-    --paper-card: #FAFAF7;
-    --paper-warm: #F0F0EA;
-    --paper-edge: #E8E8E0;
-    --ink: #0A0A0A;
-    --ink-soft: #2A2A2A;
-    --ink-muted: #6E6E63;
-    --ink-faded: #A8A8A0;
-    --green: #0F4A3F;
-    --green-deep: #0A332B;
-    --amber: #EAC995;
-    --amber-deep: #DCBD8F;
-    --honey: #F5D996;
-    --sage: #C9E0B6;
-    --coral: #E27B5A;
-    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
-    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
-    --radius: 20px;
-    --radius-lg: 28px;
-    --radius-xl: 40px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  /* TOP STRIP */
-  .top-strip { background: var(--green); color: var(--paper); padding: 11px 24px; text-align: center; font-size: 13px; font-weight: 500; }
-
-  /* NAV */
-  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
-  .atlas-nav {
-    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: 999px;
-    padding: 8px 8px 8px 22px; display: flex; align-items: center; gap: 24px;
-    box-shadow: var(--shadow-soft); max-width: 1100px; width: 100%; height: 60px;
-  }
-  .nav-wordmark {
-    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.45rem; color: var(--ink);
-    text-decoration: none; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; white-space: nowrap;
-  }
-  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
-  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
-  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 999px; transition: background 0.15s; }
-  .nav-links a:hover { background: var(--paper-warm); }
-  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
-  .nav-cta { background: var(--amber); color: var(--ink); text-decoration: none; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
-  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
-  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
-  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
-  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
-  .mobile-nav.open { display: block; }
-  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
-  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
-  @media (max-width: 760px) {
-    .nav-links { display: none; }
-    .hamburger { display: flex; margin-left: auto; }
-    .nav-cta { display: none; }
-    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
-  }
-
-  /* PAGE */
   .page-wrap { padding: 0 24px; }
   .container { max-width: 1100px; margin: 0 auto; }
 
-  /* HERO */
-  .hero { padding: 64px 0 48px; }
-  .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
-  .hero h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
-  .hero h1 .soft { background: linear-gradient(180deg, transparent 72%, var(--amber) 72%); padding: 0 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-  .hero-sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; }
+  .hero { padding: 64px 0 40px; }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    margin-bottom: 18px;
+    max-width: 11ch;
+  }
+  .hero h1 .soft {
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero-sub {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
 
-  /* PHASE FILTER */
-  .filter-section { margin-bottom: 12px; }
-  .filter-label { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
-  .phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 32px; }
+  .content-tabs {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 28px;
+    padding: 6px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    background: var(--paper-card);
+  }
+  .content-tab {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .content-tab:hover { background: var(--paper-warm); }
+  .content-tab.active {
+    background: var(--amber);
+    color: var(--ink);
+  }
+
+  .content-panel { display: none; }
+  .content-panel.active { display: block; }
+
+  .articles-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .phase-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .phase-pill {
-    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
-    padding: 9px 18px; border-radius: 999px; cursor: pointer;
-    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper-card);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper-card);
     transition: all 0.18s ease;
   }
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-  .phase-pill[data-phase="all"].active { background: var(--ink); }
-  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
-  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
 
-  /* CATEGORY TABS */
-  .cat-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 16px 0 40px; }
+  .cat-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .cat-btn {
-    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
-    padding: 8px 16px; border-radius: 999px; cursor: pointer;
-    border: 1px solid var(--paper-edge); color: var(--ink-soft); background: var(--paper);
-    transition: all 0.15s;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper);
+    transition: all 0.15s ease;
   }
   .cat-btn:hover { background: var(--paper-warm); }
-  .cat-btn.active { background: var(--paper-warm); border-color: var(--ink-faded); color: var(--ink); font-weight: 700; }
+  .cat-btn.active {
+    background: var(--paper-warm);
+    border-color: var(--ink-faded);
+    color: var(--ink);
+  }
 
-  /* GUIDE GRID */
   .guide-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
     margin-bottom: 80px;
   }
   .guide-card {
-    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: var(--radius-lg);
-    overflow: hidden; display: flex; flex-direction: column;
-    transition: transform 0.18s, box-shadow 0.18s;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
   .guide-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
   .guide-card-img { height: 180px; overflow: hidden; background: var(--paper-warm); }
   .guide-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .guide-card-body { padding: 22px 24px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .guide-card-body {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
   .guide-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .guide-phase-tag {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--ink-muted); background: var(--paper-warm); padding: 4px 10px; border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    padding: 4px 10px;
+    border-radius: 999px;
   }
   .guide-tool-tag {
-    font-size: 12px; font-weight: 600; color: var(--green); text-decoration: none;
-    border: 1px solid var(--sage); padding: 3px 10px; border-radius: 999px; transition: background 0.15s;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    border: 1px solid var(--sage);
+    padding: 3px 10px;
+    border-radius: 999px;
+    transition: background 0.15s ease;
   }
   .guide-tool-tag:hover { background: var(--sage); }
-  .guide-card-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.2rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); }
-  .guide-card-excerpt { font-size: 14px; line-height: 1.6; color: var(--ink-soft); flex: 1; }
+  .guide-card-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .guide-card-excerpt {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    flex: 1;
+  }
   .guide-card-link {
-    display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600;
-    color: var(--green); text-decoration: none; margin-top: 8px; transition: gap 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    margin-top: 8px;
+    transition: gap 0.15s ease;
   }
   .guide-card-link:hover { gap: 10px; }
-  .guide-empty { color: var(--ink-muted); font-size: 15px; padding: 40px 0; text-align: center; grid-column: 1/-1; }
+  .guide-empty {
+    color: var(--ink-muted);
+    font-size: 15px;
+    padding: 40px 0;
+    text-align: center;
+    grid-column: 1 / -1;
+  }
 
-  /* PHASE GUIDE SECTION */
-  .phase-guide-section { border-top: 1px solid var(--paper-edge); padding-top: 64px; margin-bottom: 64px; }
-  .phase-guide-section h2 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.04; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 14px; }
-  .phase-guide-section > p { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; margin-bottom: 36px; }
+  .phase-guide-section {
+    border-top: 1px solid var(--paper-edge);
+    padding-top: 64px;
+    margin-bottom: 64px;
+  }
+  .phase-guide-section h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .phase-guide-section > p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin-bottom: 36px;
+  }
   .phase-guide-panels { display: flex; flex-direction: column; gap: 10px; }
   .phase-guide-panel { border: 1px solid var(--paper-edge); border-radius: var(--radius); overflow: hidden; }
   .phase-guide-panel summary {
-    padding: 18px 24px; cursor: pointer; font-weight: 600; font-size: 15px;
-    list-style: none; display: flex; align-items: center; justify-content: space-between;
-    background: var(--paper-card); transition: background 0.15s;
+    padding: 18px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--paper-card);
+    transition: background 0.15s ease;
   }
   .phase-guide-panel summary::-webkit-details-marker { display: none; }
-  .phase-guide-panel summary::after { content: '›'; font-size: 16px; color: var(--ink-muted); transition: transform 0.2s; }
+  .phase-guide-panel summary::after {
+    content: '›';
+    font-size: 16px;
+    color: var(--ink-muted);
+    transition: transform 0.2s ease;
+  }
   .phase-guide-panel[open] summary::after { transform: rotate(90deg); }
   .phase-guide-panel summary:hover { background: var(--paper-warm); }
-  .phase-guide-body { padding: 24px 28px 28px; border-top: 1px solid var(--paper-edge); }
-  .phase-guide-body p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 14px; }
+  .phase-guide-body {
+    padding: 24px 28px 28px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .phase-guide-body p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
   .phase-guide-body p:last-child { margin-bottom: 0; }
 
-  /* SITE FOOTER */
-  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 64px; }
-  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
-  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
-  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
+  .conv-panel {
+    padding-bottom: 64px;
+  }
+  .conv-hero {
+    margin-bottom: 28px;
+    max-width: 720px;
+  }
+  .conv-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .conv-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .conv-sub {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  .scripts-search-wrap {
+    position: relative;
+    max-width: 640px;
+    margin-bottom: 16px;
+  }
+  .scripts-search {
+    width: 100%;
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    background: var(--paper-card);
+    color: var(--ink);
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.4;
+    padding: 16px 20px 16px 48px;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .scripts-search:focus {
+    border-color: var(--ink);
+    background: var(--paper);
+  }
+  .scripts-search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
+  .scripts-meta {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    min-height: 20px;
+  }
+
+  .script-results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .script-result-card {
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    background: var(--paper-card);
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 14px;
+    align-items: start;
+  }
+  .script-result-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+  .script-result-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; grid-column: 1; }
+  .script-result-cat {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .script-result-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+  }
+  .script-result-title {
+    grid-column: 1;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .script-result-situation {
+    grid-column: 1;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .script-result-arrow {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+    font-size: 18px;
+    color: var(--green);
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .cat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 28px 28px 24px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 44px rgba(15,74,63,0.10);
+  }
+  .cat-card.active {
+    border-color: var(--green);
+    background: var(--paper);
+  }
+  .cat-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+  .cat-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .cat-card-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+    min-height: 4.65em;
+  }
+  .cat-card-meta {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+  }
+  .cat-card-arrow {
+    position: absolute;
+    right: 22px;
+    bottom: 20px;
+    color: var(--amber);
+    font-size: 18px;
+  }
+
+  .cat-accordion-wrap {
+    display: none;
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 32px 32px 40px;
+    margin: 32px 0;
+  }
+  .cat-acc-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 18px;
+    margin-bottom: 24px;
+  }
+  .cat-acc-kicker {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .cat-acc-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .cat-acc-desc {
+    grid-column: 1;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 56ch;
+  }
+  .cat-acc-close {
+    align-self: start;
+    border: none;
+    background: none;
+    color: var(--ink-muted);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .cat-acc-close:hover { color: var(--ink); }
+  .cat-acc-scripts { display: flex; flex-direction: column; gap: 8px; }
+
+  .script-acc-item {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .script-acc-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    border: none;
+    background: transparent;
+    padding: 18px 22px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .script-acc-header:hover { background: rgba(255,255,255,0.45); }
+  .script-acc-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+  }
+  .script-acc-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    line-height: 1.2;
+  }
+  .script-acc-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .script-acc-open,
+  .script-acc-full-link {
+    color: var(--green);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .script-acc-open:hover,
+  .script-acc-full-link:hover { text-decoration: underline; }
+  .script-acc-chevron {
+    color: var(--ink-faded);
+    font-size: 16px;
+    transition: transform 0.15s ease;
+  }
+  .script-acc-body {
+    display: none;
+    padding: 0 22px 22px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-acc-item.open .script-acc-body { display: block; }
+  .script-acc-item.open .script-acc-chevron { transform: rotate(90deg); }
+  .script-acc-situation {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    padding-top: 16px;
+  }
+  .script-acc-opening-label,
+  .script-opening-alt-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .script-acc-opening {
+    margin: 0 0 16px;
+    border-left: 3px solid var(--amber);
+    padding: 12px 16px;
+    background: var(--paper-warm);
+    border-radius: 0 8px 8px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .script-detail-section {
+    display: none;
+    margin-top: 40px;
+    padding-top: 48px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-breadcrumb {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+  }
+  .script-breadcrumb a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .script-breadcrumb a:hover { color: var(--ink); }
+  .script-hero {
+    max-width: 800px;
+    margin-bottom: 36px;
+  }
+  .script-hero-meta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .script-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .script-num {
+    font-size: 13px;
+    color: var(--ink-faded);
+  }
+  .script-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .script-situation {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 640px;
+  }
+  .script-body {
+    max-width: 720px;
+  }
+  .script-section {
+    padding: 22px 0 26px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 14px;
+  }
+  .script-before-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .script-before-list li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .script-before-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--amber);
+    font-weight: 700;
+  }
+  .script-opening-quote {
+    border-left: 4px solid var(--amber);
+    background: var(--paper-warm);
+    padding: 20px 24px;
+    border-radius: 0 12px 12px 0;
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+  .script-cover-items,
+  .script-sideways-items {
+    display: flex;
+    flex-direction: column;
+  }
+  .script-cover-item {
+    padding: 16px 0;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-cover-item:first-child { padding-top: 0; border-top: none; }
+  .script-cover-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .script-cover-example {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+    padding-left: 14px;
+    border-left: 2px solid var(--paper-edge);
+  }
+  .script-sideways-wrap {
+    background: var(--paper-warm);
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+  .script-sideways-items { gap: 16px; }
+  .script-sideways-trigger {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .script-sideways-response {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .script-close-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .script-nav-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 34px;
+  }
+  .script-nav-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 22px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .script-nav-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+  .script-nav-dir {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .script-nav-label {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .script-back-wrap {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .script-back-link,
+  .script-close-link {
+    border: none;
+    background: none;
+    padding: 0;
+    color: var(--green);
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .script-back-link:hover,
+  .script-close-link:hover { text-decoration: underline; }
+
+  .site-footer {
+    background: var(--paper);
+    border-top: 1px solid var(--paper-edge);
+    padding: 64px 24px 0;
+    margin-top: 64px;
+  }
+  .footer-top {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 64px;
+  }
+  .footer-tagline {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+  }
+  .footer-col-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
+    font-family: 'Fraunces', serif;
+  }
   .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
+  .footer-col-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.15s ease;
+  }
   .footer-col-links a:hover { color: var(--ink); }
   .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
   .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
-  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+  .footer-mark-word {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
   .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
-  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-bottom-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
   .footer-copy { font-size: 13px; color: var(--ink-faded); }
   .footer-legal { display: flex; gap: 20px; }
-  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a {
+    font-size: 13px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
   .footer-legal a:hover { color: var(--ink); }
-  @media (max-width: 760px) {
+
+  @media (max-width: 1024px) {
+    .guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
     .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
     .footer-tagline { grid-column: 1 / -1; }
-    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
   }
-  @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
-
-  @media (max-width: 1024px) { .guide-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .guide-grid { grid-template-columns: 1fr; } .page-wrap { padding: 0 16px; } .hero { padding: 48px 0 32px; } }
+  @media (max-width: 760px) {
+    .page-wrap { padding: 0 16px; }
+    .hero { padding: 48px 0 32px; }
+    .script-results-grid,
+    .guide-grid,
+    .category-grid,
+    .script-nav-row { grid-template-columns: 1fr; }
+    .script-acc-header {
+      grid-template-columns: 28px 1fr;
+      align-items: start;
+    }
+    .script-acc-actions {
+      grid-column: 2;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .cat-acc-header {
+      grid-template-columns: 1fr;
+    }
+    .footer-bottom-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+  @media (max-width: 480px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .content-tabs { width: 100%; justify-content: space-between; }
+    .content-tab { flex: 1; }
+  }
 </style>
 </head>
 <body>
@@ -222,7 +903,7 @@
       <li><a href="./goals.html">Goals</a></li>
       <li><a href="./guides.html" class="active">Guides</a></li>
     </ul>
-    <a href="https://www.get-atlas.com.au/tag/articles/" class="nav-cta" target="_blank" rel="noopener">Read Guides</a>
+    <a href="./guides.html?tab=conversations" class="nav-cta">Browse scripts</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
       <span></span><span></span><span></span>
     </button>
@@ -242,82 +923,116 @@
 
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Guides</div>
-    <h1><span class="soft">Everything you need</span><br>to understand where you are.</h1>
-    <p class="hero-sub">Articles, explainers, and phase guides written for separated Australian dads. Filter by where you are right now.</p>
+    <h1><span class="soft">Articles, phase guides,</span><br>and the scripts for the hard ones.</h1>
+    <p class="hero-sub">The practical reading side of Atlas. Articles for the bigger picture. Conversation scripts for the moments where you need words, not theory.</p>
 
-    <div class="phase-row">
-      <button class="phase-pill active" data-phase="all" onclick="filterGuides('all')">All</button>
-      <button class="phase-pill" data-phase="waiting-room" onclick="filterGuides('waiting-room')">Waiting Room</button>
-      <button class="phase-pill" data-phase="crisis" onclick="filterGuides('crisis')">Crisis</button>
-      <button class="phase-pill" data-phase="stabilise" onclick="filterGuides('stabilise')">Stabilise</button>
-      <button class="phase-pill" data-phase="rebuild" onclick="filterGuides('rebuild')">Rebuild</button>
-      <button class="phase-pill" data-phase="new-chapter" onclick="filterGuides('new-chapter')">New Chapter</button>
+    <div class="content-tabs" role="tablist" aria-label="Guides content">
+      <button class="content-tab active" id="tab-conversations" type="button" role="tab" aria-selected="true" onclick="setActiveTab('conversations')">Conversations</button>
+      <button class="content-tab" id="tab-articles" type="button" role="tab" aria-selected="false" onclick="setActiveTab('articles')">Guides</button>
     </div>
   </section>
 
-  <div class="cat-row">
-    <button class="cat-btn active" data-cat="all" onclick="filterCategory('all')">All</button>
-    <button class="cat-btn" data-cat="getting-started" onclick="filterCategory('getting-started')">Getting Started</button>
-    <button class="cat-btn" data-cat="money" onclick="filterCategory('money')">Money</button>
-    <button class="cat-btn" data-cat="the-kids" onclick="filterCategory('the-kids')">The Kids</button>
-    <button class="cat-btn" data-cat="admin-legal" onclick="filterCategory('admin-legal')">Admin &amp; Legal</button>
-    <button class="cat-btn" data-cat="you" onclick="filterCategory('you')">You</button>
-  </div>
+  <section id="articles-panel" class="content-panel" aria-labelledby="tab-articles">
+    <div class="articles-toolbar">
+      <div class="phase-row">
+        <button class="phase-pill active" data-phase="all" onclick="filterGuides('all')">All</button>
+        <button class="phase-pill" data-phase="waiting-room" onclick="filterGuides('waiting-room')">Waiting Room</button>
+        <button class="phase-pill" data-phase="crisis" onclick="filterGuides('crisis')">Crisis</button>
+        <button class="phase-pill" data-phase="stabilise" onclick="filterGuides('stabilise')">Stabilise</button>
+        <button class="phase-pill" data-phase="rebuild" onclick="filterGuides('rebuild')">Rebuild</button>
+        <button class="phase-pill" data-phase="new-chapter" onclick="filterGuides('new-chapter')">New Chapter</button>
+      </div>
 
-  <div class="guide-grid" id="guide-grid"></div>
-
-  <!-- PHASE GUIDE SECTION -->
-  <section class="phase-guide-section">
-    <h2>Understanding your phase</h2>
-    <p>The phase model is Atlas's core framework. Here's what each phase means — and what it demands of you.</p>
-    <div class="phase-guide-panels">
-
-      <details class="phase-guide-panel">
-        <summary>Waiting Room — Before the decision</summary>
-        <div class="phase-guide-body">
-          <p>You're not separated yet, but you can see it coming. This phase is defined by uncertainty — and the temptation to either ignore the situation or overreact to it. Neither helps.</p>
-          <p>What you can do now: gather your documents, understand your financial position, and get a clear picture of what the legal process actually involves. Information is not commitment. Getting informed is not giving up.</p>
-          <p>What to avoid: making major financial decisions under emotional pressure, or assuming the worst before the process has started. Stay practical.</p>
-        </div>
-      </details>
-
-      <details class="phase-guide-panel">
-        <summary>Crisis — 0 to 6 months</summary>
-        <div class="phase-guide-body">
-          <p>Separation is official. The immediate priority is stability: somewhere to live, legal basics understood, kids seeing both parents regularly. That's it. Don't try to optimise — just survive.</p>
-          <p>Money decisions made in Crisis often look terrible in hindsight. The financial fog is real. If you can avoid major commitments for the first few months, do it. The one exception: get your budget mapped. You need to know what's actually coming in and going out.</p>
-          <p>This phase is harder than people expect and shorter than it feels. The fog lifts. Focus on keeping the wheels on.</p>
-        </div>
-      </details>
-
-      <details class="phase-guide-panel">
-        <summary>Stabilise — 6 to 18 months</summary>
-        <div class="phase-guide-body">
-          <p>Two households are running. The immediate chaos has passed. Now the job is to get your foundations right — budget mapped properly, routines established, legal documents sorted, admin caught up.</p>
-          <p>This is when most of the practical work happens. Bank accounts, super, insurance, tax — all the things you put off during Crisis. Work through them systematically. The admin checklist in Atlas covers most of it.</p>
-          <p>Stability also means building small habits: consistent kids week routines, a savings buffer, regular time for yourself. These compound. Don't underestimate them.</p>
-        </div>
-      </details>
-
-      <details class="phase-guide-panel">
-        <summary>Rebuild — 1 to 3 years</summary>
-        <div class="phase-guide-body">
-          <p>The hard stuff is largely behind you. Two households are running, the kids have a routine, and you have a clearer picture of your financial position. Now you build — deliberately.</p>
-          <p>Rebuild is when goals start to matter. Not vague aspirations — concrete targets. Savings goals. Fitness. Career. Identity. You've survived; now you decide what you're building toward.</p>
-          <p>This phase can stall if you're still in survival mode mentally. Watch for it. The circumstances have stabilised. The question is whether your thinking has caught up.</p>
-        </div>
-      </details>
-
-      <details class="phase-guide-panel">
-        <summary>New Chapter — 3 years and beyond</summary>
-        <div class="phase-guide-body">
-          <p>You've rebuilt. The post-separation identity crisis is resolved. You know who you are, what matters to you, and how your finances work. The kids are settled. The legal machinery is behind you.</p>
-          <p>This phase is about extension and optimisation — not starting over, but compounding what you've built. Super contributions, investment thinking, the next significant financial goals, deeper relationships with your kids as they grow.</p>
-          <p>It looks different for everyone. Some people arrive here in two years; others take five. What matters is that you get here — and Atlas is built to help you track the progress.</p>
-        </div>
-      </details>
-
+      <div class="cat-row">
+        <button class="cat-btn active" data-cat="all" onclick="filterCategory('all')">All</button>
+        <button class="cat-btn" data-cat="getting-started" onclick="filterCategory('getting-started')">Getting Started</button>
+        <button class="cat-btn" data-cat="money" onclick="filterCategory('money')">Money</button>
+        <button class="cat-btn" data-cat="the-kids" onclick="filterCategory('the-kids')">The Kids</button>
+        <button class="cat-btn" data-cat="admin-legal" onclick="filterCategory('admin-legal')">Admin &amp; Legal</button>
+        <button class="cat-btn" data-cat="you" onclick="filterCategory('you')">You</button>
+      </div>
     </div>
+
+    <div class="guide-grid" id="guide-grid"></div>
+
+    <section class="phase-guide-section">
+      <h2>Understanding your phase</h2>
+      <p>The phase model is Atlas's core framework. Here's what each phase means — and what it demands of you.</p>
+      <div class="phase-guide-panels">
+
+        <details class="phase-guide-panel">
+          <summary>Waiting Room — Before the decision</summary>
+          <div class="phase-guide-body">
+            <p>You're not separated yet, but you can see it coming. This phase is defined by uncertainty — and the temptation to either ignore the situation or overreact to it. Neither helps.</p>
+            <p>What you can do now: gather your documents, understand your financial position, and get a clear picture of what the legal process actually involves. Information is not commitment. Getting informed is not giving up.</p>
+            <p>What to avoid: making major financial decisions under emotional pressure, or assuming the worst before the process has started. Stay practical.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>Crisis — 0 to 6 months</summary>
+          <div class="phase-guide-body">
+            <p>Separation is official. The immediate priority is stability: somewhere to live, legal basics understood, kids seeing both parents regularly. That's it. Don't try to optimise — just survive.</p>
+            <p>Money decisions made in Crisis often look terrible in hindsight. The financial fog is real. If you can avoid major commitments for the first few months, do it. The one exception: get your budget mapped. You need to know what's actually coming in and going out.</p>
+            <p>This phase is harder than people expect and shorter than it feels. The fog lifts. Focus on keeping the wheels on.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>Stabilise — 6 to 18 months</summary>
+          <div class="phase-guide-body">
+            <p>Two households are running. The immediate chaos has passed. Now the job is to get your foundations right — budget mapped properly, routines established, legal documents sorted, admin caught up.</p>
+            <p>This is when most of the practical work happens. Bank accounts, super, insurance, tax — all the things you put off during Crisis. Work through them systematically. The admin checklist in Atlas covers most of it.</p>
+            <p>Stability also means building small habits: consistent kids week routines, a savings buffer, regular time for yourself. These compound. Don't underestimate them.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>Rebuild — 1 to 3 years</summary>
+          <div class="phase-guide-body">
+            <p>The hard stuff is largely behind you. Two households are running, the kids have a routine, and you have a clearer picture of your financial position. Now you build — deliberately.</p>
+            <p>Rebuild is when goals start to matter. Not vague aspirations — concrete targets. Savings goals. Fitness. Career. Identity. You've survived; now you decide what you're building toward.</p>
+            <p>This phase can stall if you're still in survival mode mentally. Watch for it. The circumstances have stabilised. The question is whether your thinking has caught up.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>New Chapter — 3 years and beyond</summary>
+          <div class="phase-guide-body">
+            <p>You've rebuilt. The post-separation identity crisis is resolved. You know who you are, what matters to you, and how your finances work. The kids are settled. The legal machinery is behind you.</p>
+            <p>This phase is about extension and optimisation — not starting over, but compounding what you've built. Super contributions, investment thinking, the next significant financial goals, deeper relationships with your kids as they grow.</p>
+            <p>It looks different for everyone. Some people arrive here in two years; others take five. What matters is that you get here — and Atlas is built to help you track the progress.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+  </section>
+
+  <section id="conversations-panel" class="content-panel conv-panel active" aria-labelledby="tab-conversations">
+    <div class="conv-hero">
+      <div class="conv-kicker">CONVERSATION SCRIPTS</div>
+      <div class="conv-title">The scripts for the hard ones.</div>
+      <p class="conv-sub">68 scripts for the conversations you need to have — and don't know how to start. Use them as a scaffold. The opening is close to verbatim. The rest is yours.</p>
+    </div>
+
+    <div class="scripts-search-wrap">
+      <input
+        type="text"
+        id="scripts-search"
+        class="scripts-search"
+        placeholder="Search scripts — try 'employer', 'school', 'ex about money'…"
+        oninput="handleScriptsSearch(this.value)"
+        autocomplete="off"
+      >
+      <span class="scripts-search-icon">⌕</span>
+    </div>
+    <div class="scripts-meta" id="scripts-meta"></div>
+
+    <div class="script-results-grid" id="scripts-results-grid"></div>
+    <div class="category-grid" id="category-grid"></div>
+    <div class="cat-accordion-wrap" id="cat-accordion-wrap" data-open=""></div>
+    <section class="script-detail-section" id="script-detail-section"></section>
   </section>
 
 </div>
@@ -334,12 +1049,14 @@
         <li><a href="./goals.html">Goals</a></li>
         <li><a href="./admin.html">Admin</a></li>
         <li><a href="./guides.html">Guides</a></li>
+        <li><a href="./guides.html?tab=conversations">Conversations</a></li>
       </ul>
     </div>
     <div>
       <div class="footer-col-heading">About</div>
       <ul class="footer-col-links">
         <li><a href="./guides.html?phase=crisis">Phase model</a></li>
+        <li><a href="./guides.html?tab=conversations">Conversation scripts</a></li>
         <li><a href="./terms.html">Privacy</a></li>
         <li><a href="./sales.html#how">How Atlas works</a></li>
       </ul>
@@ -348,6 +1065,7 @@
       <div class="footer-col-heading">Reading</div>
       <ul class="footer-col-links">
         <li><a href="./guides.html">All articles</a></li>
+        <li><a href="./guides.html?tab=conversations">All scripts</a></li>
         <li><a href="https://get-atlas.com.au" target="_blank" rel="noopener">The Sunday email</a></li>
         <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
       </ul>
@@ -484,7 +1202,7 @@ const articles = [
   }
 ];
 
-const categoryLabels = {
+const articleCategoryLabels = {
   'getting-started': 'Getting Started',
   'money': 'Money',
   'the-kids': 'The Kids',
@@ -492,50 +1210,399 @@ const categoryLabels = {
   'you': 'You'
 };
 
+const categoryById = Object.fromEntries((window.ATLAS_CATEGORIES || []).map(category => [category.id, category]));
+const allScripts = (window.ATLAS_SCRIPTS || []).slice().sort((a, b) => a.number - b.number);
+
+let activeTab = 'conversations';
 let activePhase = 'all';
 let activeCategory = 'all';
+let scriptsSearchQuery = '';
+let openCategoryId = '';
+let openPreviewId = '';
+let activeScriptId = '';
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function firstSentence(text) {
+  const clean = String(text || '').trim();
+  const match = clean.match(/^.*?[.!?](?=\\s|$)/);
+  return match ? match[0].trim() : clean;
+}
+
+function truncate(text, maxLength) {
+  const clean = String(text || '').trim();
+  if (clean.length <= maxLength) return clean;
+  return clean.slice(0, maxLength - 1).trimEnd() + '…';
+}
+
+function getCategoryLabel(categoryId) {
+  return categoryById[categoryId]?.label || categoryId;
+}
+
+function getScriptById(scriptId) {
+  return allScripts.find(script => script.id === scriptId) || null;
+}
+
+function syncGuidesUrl() {
+  const params = new URLSearchParams();
+  if (activeTab === 'conversations') {
+    params.set('tab', 'conversations');
+    if (openCategoryId) params.set('cat', openCategoryId);
+    if (activeScriptId) params.set('script', activeScriptId);
+  } else {
+    if (activePhase !== 'all') params.set('phase', activePhase);
+    if (activeCategory !== 'all') params.set('category', activeCategory);
+  }
+  const next = params.toString() ? `?${params.toString()}` : './guides.html';
+  history.replaceState(null, '', next);
+}
+
+function setActiveTab(tab, options = {}) {
+  activeTab = tab === 'conversations' ? 'conversations' : 'articles';
+  document.getElementById('articles-panel').classList.toggle('active', activeTab === 'articles');
+  document.getElementById('conversations-panel').classList.toggle('active', activeTab === 'conversations');
+  document.getElementById('tab-articles').classList.toggle('active', activeTab === 'articles');
+  document.getElementById('tab-conversations').classList.toggle('active', activeTab === 'conversations');
+  document.getElementById('tab-articles').setAttribute('aria-selected', String(activeTab === 'articles'));
+  document.getElementById('tab-conversations').setAttribute('aria-selected', String(activeTab === 'conversations'));
+  if (!options.skipUrl) syncGuidesUrl();
+}
 
 function filterGuides(phase) {
   activePhase = phase;
-  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  document.querySelectorAll('.phase-pill').forEach(button => {
+    button.classList.toggle('active', button.dataset.phase === phase);
+  });
   renderGuides();
+  syncGuidesUrl();
 }
 
-function filterCategory(cat) {
-  activeCategory = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+function filterCategory(category) {
+  activeCategory = category;
+  document.querySelectorAll('.cat-btn').forEach(button => {
+    button.classList.toggle('active', button.dataset.cat === category);
+  });
   renderGuides();
+  syncGuidesUrl();
 }
 
 function renderGuides() {
   const grid = document.getElementById('guide-grid');
-  const filtered = articles.filter(a => {
-    const phaseMatch = activePhase === 'all' || a.phases.includes(activePhase);
-    const catMatch = activeCategory === 'all' || a.category === activeCategory;
-    return phaseMatch && catMatch;
+  const filtered = articles.filter(article => {
+    const phaseMatch = activePhase === 'all' || article.phases.includes(activePhase);
+    const categoryMatch = activeCategory === 'all' || article.category === activeCategory;
+    return phaseMatch && categoryMatch;
   });
 
-  if (filtered.length === 0) {
+  if (!filtered.length) {
     grid.innerHTML = '<p class="guide-empty">No guides match the current filters.</p>';
     return;
   }
 
-  grid.innerHTML = filtered.map(a => `
+  grid.innerHTML = filtered.map(article => `
     <div class="guide-card">
       <div class="guide-card-img">
-        <img src="${a.image}" alt="" loading="lazy" onerror="this.parentElement.style.background='var(--paper-warm)'">
+        <img src="${escapeHtml(article.image)}" alt="" loading="lazy" onerror="this.parentElement.style.background='var(--paper-warm)'">
       </div>
       <div class="guide-card-body">
         <div class="guide-card-meta">
-          <span class="guide-phase-tag">${categoryLabels[a.category] || a.category}</span>
-          ${a.toolLink ? `<a href="${a.toolLink}" class="guide-tool-tag">${a.toolLabel} ›</a>` : ''}
+          <span class="guide-phase-tag">${escapeHtml(articleCategoryLabels[article.category] || article.category)}</span>
+          ${article.toolLink ? `<a href="${escapeHtml(article.toolLink)}" class="guide-tool-tag">${escapeHtml(article.toolLabel)} ›</a>` : ''}
         </div>
-        <div class="guide-card-title">${a.title}</div>
-        <div class="guide-card-excerpt">${a.excerpt}</div>
-        <a href="${a.url}" class="guide-card-link" target="_blank" rel="noopener">Read →</a>
+        <div class="guide-card-title">${escapeHtml(article.title)}</div>
+        <div class="guide-card-excerpt">${escapeHtml(article.excerpt)}</div>
+        <a href="${escapeHtml(article.url)}" class="guide-card-link" target="_blank" rel="noopener">Read →</a>
       </div>
     </div>
   `).join('');
+}
+
+function handleScriptsSearch(value) {
+  scriptsSearchQuery = value.trim();
+  if (scriptsSearchQuery.length >= 2) {
+    openCategoryId = '';
+    openPreviewId = '';
+  }
+  renderConversationIndex();
+  syncGuidesUrl();
+}
+
+function searchScripts() {
+  const query = scriptsSearchQuery.trim().toLowerCase();
+  if (query.length < 2) return [];
+  return allScripts.filter(script => {
+    const haystack = [
+      script.title,
+      getCategoryLabel(script.category),
+      script.situation,
+      ...script.cover.map(item => item.heading)
+    ].join(' ').toLowerCase();
+    return haystack.includes(query);
+  });
+}
+
+function renderCategoryCards() {
+  const grid = document.getElementById('category-grid');
+  grid.innerHTML = window.ATLAS_CATEGORIES.map(category => `
+    <div class="cat-card${openCategoryId === category.id ? ' active' : ''}" onclick="showCategory('${escapeHtml(category.id)}')" id="cat-card-${escapeHtml(category.id)}">
+      <div class="cat-card-label">${escapeHtml(category.label.toUpperCase())}</div>
+      <div class="cat-card-title">${escapeHtml(category.label)}</div>
+      <div class="cat-card-desc">${escapeHtml(category.description)}</div>
+      <div class="cat-card-meta">${escapeHtml(String(category.count))} scripts</div>
+      <span class="cat-card-arrow">→</span>
+    </div>
+  `).join('');
+}
+
+function renderSearchResults(results) {
+  const grid = document.getElementById('scripts-results-grid');
+  if (!results.length) {
+    grid.innerHTML = '<div class="guide-empty">No scripts match that. Try a different word.</div>';
+    return;
+  }
+
+  grid.innerHTML = results.map(script => `
+    <div class="script-result-card" onclick="openScript('${escapeHtml(script.id)}')">
+      <div class="script-result-meta">
+        <span class="script-result-cat">${escapeHtml(getCategoryLabel(script.category))}</span>
+        <span class="script-result-num">${escapeHtml(String(script.number).padStart(2, '0'))}</span>
+      </div>
+      <div class="script-result-title">${escapeHtml(script.title)}</div>
+      <div class="script-result-situation">${escapeHtml(truncate(firstSentence(script.situation), 100))}</div>
+      <span class="script-result-arrow">→</span>
+    </div>
+  `).join('');
+}
+
+function renderScriptAccordion(script) {
+  const isOpen = openPreviewId === script.id;
+  return `
+    <div class="script-acc-item${isOpen ? ' open' : ''}" id="acc-${escapeHtml(script.id)}">
+      <button class="script-acc-header" type="button" onclick="toggleScriptPreview('${escapeHtml(script.id)}')">
+        <span class="script-acc-num">${escapeHtml(String(script.number).padStart(2, '0'))}</span>
+        <span class="script-acc-title">${escapeHtml(script.title)}</span>
+        <div class="script-acc-actions">
+          <a href="./guides.html?tab=conversations&cat=${escapeHtml(script.category)}&script=${escapeHtml(script.id)}" class="script-acc-open" onclick="event.stopPropagation(); openScript('${escapeHtml(script.id)}'); return false;">Open full script →</a>
+          <span class="script-acc-chevron">›</span>
+        </div>
+      </button>
+      <div class="script-acc-body">
+        <p class="script-acc-situation">${escapeHtml(script.situation)}</p>
+        <div class="script-acc-opening-label">How to open</div>
+        <blockquote class="script-acc-opening">&ldquo;${escapeHtml(script.opening)}&rdquo;</blockquote>
+        ${script.openingAlt ? `
+          <div class="script-opening-alt-label">${escapeHtml(script.openingAltLabel || 'Alternative opening')}</div>
+          <blockquote class="script-acc-opening">&ldquo;${escapeHtml(script.openingAlt)}&rdquo;</blockquote>
+        ` : ''}
+        <a href="./guides.html?tab=conversations&cat=${escapeHtml(script.category)}&script=${escapeHtml(script.id)}" class="script-acc-full-link" onclick="openScript('${escapeHtml(script.id)}'); return false;">Read full script →</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderOpenCategory() {
+  const wrap = document.getElementById('cat-accordion-wrap');
+  if (!openCategoryId) {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    wrap.dataset.open = '';
+    return;
+  }
+
+  const category = categoryById[openCategoryId];
+  const scripts = allScripts.filter(script => script.category === openCategoryId);
+  wrap.dataset.open = openCategoryId;
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="cat-acc-header">
+      <div class="cat-acc-kicker">Category</div>
+      <h2 class="cat-acc-title">${escapeHtml(category.label)}</h2>
+      <button class="cat-acc-close" type="button" onclick="closeCategory()">Close ×</button>
+      <p class="cat-acc-desc">${escapeHtml(category.description)}</p>
+    </div>
+    <div class="cat-acc-scripts">
+      ${scripts.map(renderScriptAccordion).join('')}
+    </div>
+  `;
+}
+
+function renderConversationIndex() {
+  const meta = document.getElementById('scripts-meta');
+  const resultsGrid = document.getElementById('scripts-results-grid');
+  const categoryGrid = document.getElementById('category-grid');
+  const results = searchScripts();
+
+  if (scriptsSearchQuery.trim().length >= 2) {
+    meta.textContent = results.length
+      ? `${results.length} ${results.length === 1 ? 'script matches' : 'scripts match'} "${scriptsSearchQuery}".`
+      : 'No scripts match that. Try a different word.';
+    resultsGrid.style.display = 'grid';
+    categoryGrid.style.display = 'none';
+    document.getElementById('cat-accordion-wrap').style.display = 'none';
+    renderSearchResults(results);
+    return;
+  }
+
+  meta.textContent = `${allScripts.length} scripts across ${window.ATLAS_CATEGORIES.length} categories. Search by person or situation.`;
+  resultsGrid.style.display = 'none';
+  resultsGrid.innerHTML = '';
+  categoryGrid.style.display = 'grid';
+  renderCategoryCards();
+  renderOpenCategory();
+}
+
+function showCategory(categoryId) {
+  setActiveTab('conversations', { skipUrl: true });
+  openCategoryId = openCategoryId === categoryId ? '' : categoryId;
+  openPreviewId = '';
+  renderConversationIndex();
+  syncGuidesUrl();
+  if (openCategoryId) {
+    requestAnimationFrame(() => {
+      document.getElementById('cat-accordion-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+}
+
+function closeCategory() {
+  openCategoryId = '';
+  openPreviewId = '';
+  renderConversationIndex();
+  syncGuidesUrl();
+}
+
+function toggleScriptPreview(scriptId) {
+  openPreviewId = openPreviewId === scriptId ? '' : scriptId;
+  renderOpenCategory();
+}
+
+function buildNavCard(script, direction) {
+  if (!script) return '';
+  return `
+    <a href="./guides.html?tab=conversations&cat=${escapeHtml(script.category)}&script=${escapeHtml(script.id)}" class="script-nav-card" onclick="openScript('${escapeHtml(script.id)}'); return false;">
+      <span class="script-nav-dir">${escapeHtml(direction)}</span>
+      <span class="script-nav-label">${escapeHtml(script.title)}</span>
+    </a>
+  `;
+}
+
+function renderScriptDetail(script) {
+  const section = document.getElementById('script-detail-section');
+  const index = allScripts.findIndex(item => item.id === script.id);
+  const prev = index > 0 ? allScripts[index - 1] : null;
+  const next = index < allScripts.length - 1 ? allScripts[index + 1] : null;
+
+  section.style.display = 'block';
+  section.innerHTML = `
+    <nav class="script-breadcrumb">
+      <a href="./guides.html?tab=conversations" onclick="setActiveTab('conversations'); closeScriptDetail(); return false;">Conversations</a>
+      <span>›</span>
+      <a href="./guides.html?tab=conversations&cat=${escapeHtml(script.category)}" onclick="openCategoryId='${escapeHtml(script.category)}'; activeScriptId=''; renderConversationIndex(); closeScriptDetail(false); syncGuidesUrl(); return false;">${escapeHtml(getCategoryLabel(script.category))}</a>
+      <span>›</span>
+      <span>${escapeHtml(script.title)}</span>
+    </nav>
+
+    <div class="script-hero">
+      <div class="script-hero-meta">
+        <span class="script-kicker">${escapeHtml(getCategoryLabel(script.category))}</span>
+        <span class="script-num">Script ${escapeHtml(String(script.number).padStart(2, '0'))} of ${escapeHtml(String(allScripts.length))}</span>
+      </div>
+      <h2 class="script-title">${escapeHtml(script.title)}</h2>
+      <p class="script-situation">${escapeHtml(script.situation)}</p>
+    </div>
+
+    <div class="script-body">
+      <section class="script-section">
+        <div class="script-section-label">Before you start</div>
+        <ul class="script-before-list">
+          ${script.before.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+        </ul>
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">How to open</div>
+        <blockquote class="script-opening-quote">&ldquo;${escapeHtml(script.opening)}&rdquo;</blockquote>
+        ${script.openingAlt ? `
+          <div class="script-opening-alt-label">${escapeHtml(script.openingAltLabel || 'Alternative opening')}</div>
+          <blockquote class="script-opening-quote">&ldquo;${escapeHtml(script.openingAlt)}&rdquo;</blockquote>
+        ` : ''}
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">What to cover</div>
+        <div class="script-cover-items">
+          ${script.cover.map(item => `
+            <div class="script-cover-item">
+              <div class="script-cover-heading">${escapeHtml(item.heading)}</div>
+              <div class="script-cover-example">&ldquo;${escapeHtml(item.example)}&rdquo;</div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">If it goes sideways</div>
+        <div class="script-sideways-wrap">
+          <div class="script-sideways-items">
+            ${script.sideways.map(item => `
+              <div class="script-sideways-item">
+                <div class="script-sideways-trigger">${escapeHtml(item.trigger)}:</div>
+                <div class="script-sideways-response">&ldquo;${escapeHtml(item.response)}&rdquo;</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">How to close</div>
+        <p class="script-close-text">${escapeHtml(script.close)}</p>
+      </section>
+
+      ${(prev || next) ? `
+        <div class="script-nav-row">
+          ${buildNavCard(prev, '← Previous')}
+          ${buildNavCard(next, 'Next →')}
+        </div>
+      ` : ''}
+
+      <div class="script-back-wrap">
+        <button type="button" class="script-back-link" onclick="openCategoryId='${escapeHtml(script.category)}'; activeScriptId=''; renderConversationIndex(); closeScriptDetail(false); syncGuidesUrl();">← Back to ${escapeHtml(getCategoryLabel(script.category))}</button>
+        <button type="button" class="script-close-link" onclick="closeScriptDetail()">Close script</button>
+      </div>
+    </div>
+  `;
+}
+
+function openScript(scriptId, options = {}) {
+  const script = getScriptById(scriptId);
+  if (!script) return;
+  setActiveTab('conversations', { skipUrl: true });
+  openCategoryId = script.category;
+  activeScriptId = script.id;
+  renderConversationIndex();
+  renderScriptDetail(script);
+  if (!options.skipUrl) syncGuidesUrl();
+  if (!options.skipScroll) {
+    requestAnimationFrame(() => {
+      document.getElementById('script-detail-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+}
+
+function closeScriptDetail(updateUrl = true) {
+  activeScriptId = '';
+  const section = document.getElementById('script-detail-section');
+  section.style.display = 'none';
+  section.innerHTML = '';
+  if (updateUrl) syncGuidesUrl();
 }
 
 function toggleNav() {
@@ -545,17 +1612,55 @@ function toggleNav() {
   ham.classList.toggle('open', open);
 }
 
-document.addEventListener('click', e => {
+document.addEventListener('click', event => {
   const nav = document.getElementById('mobile-nav');
   const ham = document.getElementById('hamburger');
-  if (!e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav')) {
+  if (!event.target.closest('.atlas-nav') && !event.target.closest('.mobile-nav')) {
     nav.classList.remove('open');
     ham.classList.remove('open');
   }
 });
 
-// Init
 renderGuides();
+renderConversationIndex();
+
+const params = new URLSearchParams(window.location.search);
+const requestedTab = params.get('tab');
+const requestedCategory = params.get('cat');
+const requestedScript = params.get('script');
+const requestedPhaseFilter = params.get('phase');
+const requestedArticleCategory = params.get('category');
+
+if (requestedPhaseFilter && document.querySelector(`.phase-pill[data-phase="${requestedPhaseFilter}"]`)) {
+  activePhase = requestedPhaseFilter;
+  document.querySelectorAll('.phase-pill').forEach(button => {
+    button.classList.toggle('active', button.dataset.phase === activePhase);
+  });
+}
+
+if (requestedArticleCategory && document.querySelector(`.cat-btn[data-cat="${requestedArticleCategory}"]`)) {
+  activeCategory = requestedArticleCategory;
+  document.querySelectorAll('.cat-btn').forEach(button => {
+    button.classList.toggle('active', button.dataset.cat === activeCategory);
+  });
+}
+
+if (requestedPhaseFilter || requestedArticleCategory) {
+  renderGuides();
+}
+
+if (requestedTab === 'conversations' || requestedCategory || requestedScript) {
+  setActiveTab('conversations', { skipUrl: true });
+}
+
+if (requestedCategory && categoryById[requestedCategory]) {
+  openCategoryId = requestedCategory;
+  renderConversationIndex();
+}
+
+if (requestedScript && getScriptById(requestedScript)) {
+  openScript(requestedScript, { skipUrl: true, skipScroll: true });
+}
 </script>
 </body>
 </html>
