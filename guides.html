@@ -1232,7 +1232,7 @@ function escapeHtml(value) {
 
 function firstSentence(text) {
   const clean = String(text || '').trim();
-  const match = clean.match(/^.*?[.!?](?=\\s|$)/);
+  const match = clean.match(/^.*?[.!?](?=\s|$)/);
   return match ? match[0].trim() : clean;
 }
 
@@ -1553,7 +1553,7 @@ function renderScriptDetail(script) {
           <div class="script-sideways-items">
             ${script.sideways.map(item => `
               <div class="script-sideways-item">
-                <div class="script-sideways-trigger">${escapeHtml(item.trigger)}:</div>
+                <div class="script-sideways-trigger">If ${escapeHtml(item.trigger)}:</div>
                 <div class="script-sideways-response">&ldquo;${escapeHtml(item.response)}&rdquo;</div>
               </div>
             `).join('')}
