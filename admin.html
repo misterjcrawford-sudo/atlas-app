@@ -222,12 +222,90 @@
   }
   .cl-item:hover .cl-item-delete { display: block; }
 
+  /* KEY DATES SECTION */
+  .kd-subheader {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 14px; color: var(--ink-muted); padding: 16px 24px 4px; line-height: 1.6;
+  }
+  .kd-subsection { padding: 18px 24px 8px; }
+  .kd-subsection-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-muted);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .key-date-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 24px; transition: background 0.12s;
+  }
+  .key-date-item:hover { background: var(--paper-warm); }
+  .kd-label {
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    min-width: 220px; padding-top: 9px; line-height: 1.4; flex-shrink: 0;
+  }
+  .kd-inputs { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .kd-date-input {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 10px;
+    padding: 7px 12px; outline: none; transition: border-color 0.15s; width: 180px;
+  }
+  .kd-date-input:focus { border-color: var(--ink-faded); }
+  .kd-inline-note {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--ink-soft);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 10px;
+    padding: 6px 12px; outline: none; transition: border-color 0.15s; width: 100%; max-width: 340px;
+  }
+  .kd-inline-note:focus { border-color: var(--ink-faded); }
+  .kd-inline-note::placeholder { color: var(--ink-faded); font-size: 12px; }
+  .key-note-item { padding: 10px 24px 14px; transition: background 0.12s; }
+  .key-note-item:hover { background: var(--paper-warm); }
+  .kd-note-label-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+  }
+  .kd-note-label { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .kd-textarea {
+    width: 100%; font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 12px;
+    padding: 10px 14px; outline: none; resize: vertical; min-height: 76px; line-height: 1.55;
+    transition: border-color 0.15s;
+  }
+  .kd-textarea:focus { border-color: var(--ink-faded); }
+  .kd-textarea::placeholder { color: var(--ink-faded); }
+  .kd-delete-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-faded); font-size: 16px; padding: 0 4px; line-height: 1; flex-shrink: 0;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .key-date-item:hover .kd-delete-btn,
+  .key-note-item:hover .kd-delete-btn { opacity: 1; }
+  .kd-add-row {
+    display: flex; align-items: center; gap: 8px; padding: 10px 24px 14px;
+    border-top: 1px solid var(--paper-edge); flex-wrap: wrap;
+  }
+  .kd-add-label { flex: 1; min-width: 140px; }
+  .kd-add-date {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 12px; outline: none; transition: border-color 0.15s; flex-shrink: 0;
+  }
+  .kd-add-date:focus { border-color: var(--ink-faded); }
+  .kd-add-note { flex: 1; min-width: 120px; }
+  .kd-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 4px 0 0; }
+  @media (max-width: 640px) {
+    .key-date-item { flex-wrap: wrap; }
+    .kd-label { min-width: unset; padding-top: 0; flex: 1; }
+    .kd-inputs { width: 100%; }
+    .kd-date-input { width: 100%; }
+    .kd-inline-note { max-width: 100%; }
+    .kd-add-row { gap: 8px; }
+    .kd-add-date, .kd-add-label, .kd-add-note { width: 100%; }
+  }
+
   /* PRINT STYLES */
   @media print {
     @page { margin: 20mm 18mm; size: A4; }
     body { font-size: 12px; background: white; color: #0A0A0A; }
     .top-strip, .nav-wrap, .mobile-nav, .phase-row, .phase-context,
-    .print-action-row, .site-footer, .cl-chevron, .cl-add-row, .cl-item-delete { display: none !important; }
+    .print-action-row, .site-footer, .cl-chevron, .cl-add-row, .cl-item-delete,
+    .kd-delete-btn, .kd-add-row { display: none !important; }
     .checklist-section.muted { opacity: 1 !important; }
     .cl-body { display: block !important; }
     .checklist-section { background: white; border: 1px solid #E8E8E0; box-shadow: none; break-inside: avoid; margin-bottom: 16px; }
@@ -241,6 +319,18 @@
     .overall-progress { font-size: 12px; color: #6E6E63; border: none; background: none; padding: 0 0 12px; margin-bottom: 16px; }
     #print-header { display: flex !important; justify-content: space-between; align-items: baseline; font-size: 13px; color: #6E6E63; border-bottom: 1px solid #E8E8E0; padding-bottom: 12px; margin-bottom: 24px; }
     #print-header .ph-wordmark { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; color: #0A0A0A; }
+    .kd-subheader { display: none; }
+    .key-date-item, .key-note-item { break-inside: avoid; padding: 8px 16px; }
+    .kd-label { font-size: 13px; }
+    .kd-date-input, .kd-inline-note {
+      border: none; border-bottom: 1px solid #E8E8E0; border-radius: 0;
+      padding: 2px 0; background: transparent; font-size: 12px;
+    }
+    .kd-textarea {
+      border: none; border-bottom: 1px solid #E8E8E0; border-radius: 0;
+      padding: 2px 0; background: transparent; font-size: 12px; resize: none;
+    }
+    .kd-note-label { font-size: 13px; }
   }
 </style>
 </head>
@@ -438,6 +528,35 @@
     </div>
   </div>
 
+  <!-- SECTION 6: Key Dates -->
+  <div class="checklist-section" id="cl-keydates">
+    <button class="cl-header" onclick="toggleSection('keydates')">
+      <span class="cl-title">Key Dates</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-keydates-body">
+      <p class="kd-subheader"><em>These aren't tasks. They're the dates and facts worth keeping — for yourself, for legal conversations, or just to remember where you started.</em></p>
+
+      <div class="kd-subsection">
+        <div class="kd-subsection-label">Your Timeline</div>
+      </div>
+      <div id="kd-timeline-items"></div>
+      <div class="kd-add-row">
+        <input type="text" class="cl-add-input kd-add-label" id="kd-new-label" placeholder="Name this date…" maxlength="80">
+        <input type="date" class="kd-add-date" id="kd-new-date">
+        <input type="text" class="cl-add-input kd-add-note" id="kd-new-note" placeholder="Optional note" maxlength="120">
+        <button class="cl-add-btn" onclick="addCustomDate()">Add</button>
+      </div>
+
+      <hr class="kd-divider">
+
+      <div class="kd-subsection">
+        <div class="kd-subsection-label">Key Notes</div>
+      </div>
+      <div id="kd-notes-items"></div>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -457,17 +576,15 @@
     <div>
       <div class="footer-col-heading">About</div>
       <ul class="footer-col-links">
-        <li><a href="./guides.html?phase=crisis">Phase model</a></li>
-        <li><a href="./terms.html">Privacy</a></li>
-        <li><a href="./sales.html#how">How Atlas works</a></li>
+        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+        <li><a href="https://www.get-atlas.com.au/terms/" target="_blank" rel="noopener">Terms</a></li>
       </ul>
     </div>
     <div>
       <div class="footer-col-heading">Reading</div>
       <ul class="footer-col-links">
-        <li><a href="./guides.html">All articles</a></li>
-        <li><a href="https://get-atlas.com.au" target="_blank" rel="noopener">The Sunday email</a></li>
-        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">All articles</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">The Sunday email</a></li>
       </ul>
     </div>
   </div>
@@ -533,18 +650,21 @@ function setPhase(phase) {
 }
 
 function applyPhaseStyling(phase) {
-  const priorityPhases = sectionPriorityMap;
+  const keydates = document.getElementById('cl-keydates');
   document.querySelectorAll('.checklist-section').forEach(section => {
+    if (section.id === 'cl-keydates') {
+      section.classList.remove('priority', 'muted');
+      return;
+    }
     const id = section.id.replace('cl-', '');
-    const isPriority = (priorityPhases[id] || []).includes(phase);
+    const isPriority = (sectionPriorityMap[id] || []).includes(phase);
     section.classList.toggle('priority', isPriority);
     section.classList.toggle('muted', !isPriority);
   });
 
-  // Sort sections: priority sections first
+  // Sort checklist sections: priority first; Key Dates always last
   const container = document.querySelector('.container');
-  const sections = [...document.querySelectorAll('.checklist-section')];
-  const progressBar = document.querySelector('.overall-progress');
+  const sections = [...document.querySelectorAll('.checklist-section:not(#cl-keydates)')];
 
   const priority = sections.filter(s => s.classList.contains('priority'));
   const others = sections.filter(s => !s.classList.contains('priority'));
@@ -565,8 +685,9 @@ function applyPhaseStyling(phase) {
     if (header) header.classList.remove('open');
   });
 
-  // Reorder in DOM: priority first
+  // Reorder: checklist sections first, Key Dates pinned last
   [...priority, ...others].forEach(s => container.appendChild(s));
+  if (keydates) container.appendChild(keydates);
 }
 
 function toggleSection(id) {
@@ -706,6 +827,8 @@ function resetPage() {
   localStorage.removeItem(HIDDEN_KEY);
   localStorage.removeItem(CUSTOM_KEY);
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(DATES_KEY);
+  localStorage.removeItem(NOTES_KEY);
   location.reload();
 }
 
@@ -774,6 +897,215 @@ function deleteCustomItem(sectionId, itemId) {
   updateAllProgress();
 }
 
+// ── KEY DATES ──────────────────────────────────────────────────────────────────
+const DATES_KEY = 'atlas_admin_dates';
+const NOTES_KEY = 'atlas_admin_notes';
+
+const BUILTIN_DATES = [
+  { id: 'date-separation',          label: 'Date of separation' },
+  { id: 'date-moved-out',           label: 'Date you moved out' },
+  { id: 'date-parenting-agreement', label: 'Date parenting agreement signed', notePlaceholder: 'e.g. Informal / Consent orders / Court orders' },
+  { id: 'date-property-settlement', label: 'Date property settlement finalised' },
+  { id: 'date-divorce-lodged',      label: 'Date divorce application lodged' },
+  { id: 'date-divorce-final',       label: 'Date divorce finalised' },
+  { id: 'date-own-place',           label: 'First night in your own place' },
+  { id: 'date-kids-week',           label: "First kids' week at your place" }
+];
+
+const BUILTIN_NOTES = [
+  { id: 'note-parenting',     label: 'Current parenting arrangement',     placeholder: 'e.g. Week on / week off, holiday schedule, drop-off arrangements' },
+  { id: 'note-child-support', label: 'Child support status',              placeholder: 'Self-managed / Services Australia / amount and review date' },
+  { id: 'note-property',      label: 'Property situation',                placeholder: 'Who has the family home, your rental details, settlement notes' },
+  { id: 'note-lawyer',        label: 'Your lawyer',                       placeholder: 'Name, firm, phone/email' },
+  { id: 'note-mediator',      label: 'Mediator or family dispute contact', placeholder: 'Name and contact details' },
+  { id: 'note-court',         label: 'Family court case number',          placeholder: 'If applicable' },
+  { id: 'note-memory',        label: 'One thing I want to remember about this time', placeholder: 'Private note — just for you' }
+];
+
+function getDatesData() {
+  try { return JSON.parse(localStorage.getItem(DATES_KEY) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch(e) { return { hidden: [], values: {}, custom: [] }; }
+}
+function saveDatesData(data) { localStorage.setItem(DATES_KEY, JSON.stringify(data)); }
+
+function getNotesData() {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{"hidden":[],"values":{}}'); }
+  catch(e) { return { hidden: [], values: {} }; }
+}
+function saveNotesData(data) { localStorage.setItem(NOTES_KEY, JSON.stringify(data)); }
+
+function makeDateItemEl(label, dateVal, noteVal, notePlaceholder, onDate, onNote, onDelete) {
+  const div = document.createElement('div');
+  div.className = 'key-date-item';
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'kd-label';
+  labelEl.textContent = label;
+
+  const inputs = document.createElement('div');
+  inputs.className = 'kd-inputs';
+
+  const dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.className = 'kd-date-input';
+  dateInput.value = dateVal || '';
+  dateInput.oninput = () => onDate(dateInput.value);
+
+  const noteInput = document.createElement('input');
+  noteInput.type = 'text';
+  noteInput.className = 'kd-inline-note';
+  noteInput.value = noteVal || '';
+  noteInput.placeholder = notePlaceholder || 'Optional note';
+  noteInput.maxLength = 120;
+  noteInput.oninput = () => onNote(noteInput.value);
+
+  inputs.appendChild(dateInput);
+  inputs.appendChild(noteInput);
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = onDelete;
+
+  div.appendChild(labelEl);
+  div.appendChild(inputs);
+  div.appendChild(del);
+  return div;
+}
+
+function renderBuiltinDate(entry, data) {
+  const val = data.values[entry.id] || {};
+  const el = makeDateItemEl(
+    entry.label, val.date, val.note, entry.notePlaceholder,
+    v => saveBuiltinDateValue(entry.id, 'date', v),
+    v => saveBuiltinDateValue(entry.id, 'note', v),
+    () => hideBuiltinDate(entry.id)
+  );
+  el.dataset.dateId = entry.id;
+  return el;
+}
+
+function renderCustomDate(item) {
+  const el = makeDateItemEl(
+    item.label, item.date, item.note, 'Optional note',
+    v => saveCustomDateValue(item.id, 'date', v),
+    v => saveCustomDateValue(item.id, 'note', v),
+    () => deleteCustomDate(item.id)
+  );
+  el.dataset.customDateId = item.id;
+  return el;
+}
+
+function renderBuiltinNote(entry, data) {
+  const val = data.values[entry.id] || '';
+  const div = document.createElement('div');
+  div.className = 'key-note-item';
+  div.dataset.noteId = entry.id;
+
+  const row = document.createElement('div');
+  row.className = 'kd-note-label-row';
+
+  const label = document.createElement('div');
+  label.className = 'kd-note-label';
+  label.textContent = entry.label;
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = () => hideBuiltinNote(entry.id);
+
+  row.appendChild(label);
+  row.appendChild(del);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'kd-textarea';
+  ta.rows = 3;
+  ta.placeholder = entry.placeholder;
+  ta.value = val;
+  ta.oninput = () => saveBuiltinNoteValue(entry.id, ta.value);
+
+  div.appendChild(row);
+  div.appendChild(ta);
+  return div;
+}
+
+function saveBuiltinDateValue(id, field, value) {
+  const data = getDatesData();
+  if (!data.values[id]) data.values[id] = {};
+  data.values[id][field] = value;
+  saveDatesData(data);
+}
+
+function saveCustomDateValue(id, field, value) {
+  const data = getDatesData();
+  const item = (data.custom || []).find(c => c.id === id);
+  if (item) { item[field] = value; saveDatesData(data); }
+}
+
+function saveBuiltinNoteValue(id, value) {
+  const data = getNotesData();
+  data.values[id] = value;
+  saveNotesData(data);
+}
+
+function hideBuiltinDate(id) {
+  const data = getDatesData();
+  if (!data.hidden.includes(id)) data.hidden.push(id);
+  saveDatesData(data);
+  document.querySelector(`.key-date-item[data-date-id="${id}"]`)?.remove();
+}
+
+function hideBuiltinNote(id) {
+  const data = getNotesData();
+  if (!data.hidden.includes(id)) data.hidden.push(id);
+  saveNotesData(data);
+  document.querySelector(`.key-note-item[data-note-id="${id}"]`)?.remove();
+}
+
+function deleteCustomDate(id) {
+  const data = getDatesData();
+  data.custom = (data.custom || []).filter(c => c.id !== id);
+  saveDatesData(data);
+  document.querySelector(`.key-date-item[data-custom-date-id="${id}"]`)?.remove();
+}
+
+function addCustomDate() {
+  const labelInput = document.getElementById('kd-new-label');
+  const dateInput  = document.getElementById('kd-new-date');
+  const noteInput  = document.getElementById('kd-new-note');
+  const label = labelInput.value.trim();
+  if (!label) return;
+  const data = getDatesData();
+  const item = { id: `custom-date-${Date.now()}`, label, date: dateInput.value, note: noteInput.value.trim() };
+  data.custom = data.custom || [];
+  data.custom.push(item);
+  saveDatesData(data);
+  document.getElementById('kd-timeline-items').appendChild(renderCustomDate(item));
+  labelInput.value = '';
+  dateInput.value  = '';
+  noteInput.value  = '';
+}
+
+function loadKeyDates() {
+  const datesData = getDatesData();
+  const notesData = getNotesData();
+  const timeline  = document.getElementById('kd-timeline-items');
+  const notes     = document.getElementById('kd-notes-items');
+
+  BUILTIN_DATES.forEach(entry => {
+    if (!datesData.hidden.includes(entry.id))
+      timeline.appendChild(renderBuiltinDate(entry, datesData));
+  });
+  (datesData.custom || []).forEach(item => timeline.appendChild(renderCustomDate(item)));
+
+  BUILTIN_NOTES.forEach(entry => {
+    if (!notesData.hidden.includes(entry.id))
+      notes.appendChild(renderBuiltinNote(entry, notesData));
+  });
+}
+
 function toggleNav() {
   const nav = document.getElementById('mobile-nav');
   const ham = document.getElementById('hamburger');
@@ -801,12 +1133,14 @@ loadChecklists();
 loadHiddenItems();
 initBuiltinDeleteButtons();
 loadCustomItems();
+loadKeyDates();
 
 document.querySelectorAll('.cl-add-input').forEach(input => {
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
-      const section = input.closest('.cl-add-row').dataset.section;
-      addCustomItem(section);
+      const row = input.closest('.cl-add-row');
+      if (row.dataset.section) addCustomItem(row.dataset.section);
+      else if (row.querySelector('#kd-new-label')) addCustomDate();
     }
   });
 });
