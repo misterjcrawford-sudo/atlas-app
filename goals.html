@@ -1093,14 +1093,12 @@
         <div>
           <div class="hero-eyebrow">Atlas — Goals</div>
           <h1>
-            <span class="soft">What you're</span><br>
-            <span class="bold">building toward.</span>
+            <span class="soft">Set your</span><br>
+            <span class="bold">next targets.</span>
           </h1>
-          <p class="hero-sub">
-            Turn the rebuild into visible progress. Set practical targets across money, parenting, fitness, work, and personal life — so recovery becomes a sequence of achievable steps, not a vague hope.
-          </p>
+          <p class="hero-sub">Choose practical goals for money, home, health, parenting, work and the life you're rebuilding.</p>
           <div class="phase-row" id="hero-phase-row">
-            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
             <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
@@ -1170,7 +1168,7 @@
           </div>
           <div class="suggested-phase-copy">Change phase to see a different set of suggestions.</div>
           <div class="suggested-phase-row">
-            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
             <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
@@ -1314,31 +1312,31 @@ const CATS = {
   personal:  { label: 'Personal',      color: '#E27B5A', tag_bg: '#F5D996', tag_color: '#0A0A0A' },
 };
 
-const PHASE_LABEL = { crisis:'Crisis', stabilise:'Stabilise', rebuild:'Rebuild', 'new-chapter':'New Chapter' };
+const PHASE_LABEL = { survive:'Survive', stabilise:'Stabilise', rebuild:'Rebuild', 'new-chapter':'New Chapter' };
 
 const PHASE_CONTEXT = {
-  crisis: 'Two or three goals max. Survival and stability first. Don\'t add more pressure right now.',
+  survive: 'Two or three goals max. Survival and stability first. Don\'t add more pressure right now.',
   stabilise: 'One goal per area is enough. Lock in the basics: emergency fund, fitness routine, kids connection.',
   rebuild: 'Routines hold. Add stretch goals in career and personal growth — progress compounds.',
   'new-chapter': 'You can think long-term now. Investment goals, business ideas, real fitness targets — go for them.',
 };
 
 const PHASE_TIPS = {
-  crisis: 'Focus on 2–3 goals max. Survival and stability first. Don\'t add more pressure right now.',
+  survive: 'Focus on 2–3 goals max. Survival and stability first. Don\'t add more pressure right now.',
   stabilise: 'Pick 1 goal per area. Lock in basics: emergency fund, fitness routine, kids connection.',
   rebuild: 'Now expand. Add stretch goals in career and personal growth. Progress compounds.',
   'new-chapter': 'You can think long-term. Investment goals, business ideas, big fitness targets — go for it.',
 };
 
 const PHASE_FLOW = {
-  crisis: 'Be ruthless. Two goals only. Anything else is noise — write it down somewhere else and come back later.',
+  survive: 'Be ruthless. Two goals only. Anything else is noise — write it down somewhere else and come back later.',
   stabilise: 'Pick one goal per area and protect it. Repetition beats ambition right now.',
   rebuild: 'Add a stretch goal in the area where you have the most energy. Let momentum carry the rest.',
   'new-chapter': 'Set a longer horizon goal — 12 months or more. You\'ve earned the right to plan in years again.',
 };
 
 const SUGGESTED_GOALS = {
-  crisis: [
+  survive: [
     { title: 'Open a separate bank account in your name only', cat: 'financial', note: 'Do this first. Financial separation starts here.' },
     { title: 'List every monthly expense and income source', cat: 'financial', note: 'No optimising yet — just map the real numbers.' },
     { title: 'Book an initial legal consultation', cat: 'career', note: 'Understand your rights before making any commitments.' },
@@ -1530,7 +1528,12 @@ function browseSuggestedGoals() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+
 function setPhase(phase) {
+  phase = normalisePhase(phase);
   if (!PHASE_LABEL[phase]) phase = 'stabilise';
   currentPhase = phase;
   document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
@@ -1551,8 +1554,9 @@ function setPhase(phase) {
 }
 
 window.addEventListener('storage', e => {
-  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && PHASE_LABEL[e.newValue]) {
-    setPhase(e.newValue);
+  const nextPhase = normalisePhase(e.newValue);
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && PHASE_LABEL[nextPhase]) {
+    setPhase(nextPhase);
   }
 });
 
@@ -1841,7 +1845,7 @@ function renderSnapPanel() {
   $('gs-hero-label').textContent = 'Overall progress';
   $('gs-hero-val').textContent = avgPct + '%';
   const heroSubByPhase = {
-    crisis: active > 0 ? 'Showing up · ' + active + ' active' : 'Pick 2–3 to start',
+    survive: active > 0 ? 'Showing up · ' + active + ' active' : 'Pick 2–3 to start',
     stabilise: 'Across all goals',
     rebuild: 'Building momentum',
     'new-chapter': 'Compounding wins',
@@ -1896,7 +1900,7 @@ function renderSnapPanel() {
   /* TILE 4 — Phase-specific */
   $('gs-t4-val').className = 'snap-stat-val';
   $('gs-t4-sub').className = 'snap-stat-sub';
-  if (currentPhase === 'crisis') {
+  if (currentPhase === 'survive') {
     $('gs-t4-label').textContent = 'Cap';
     $('gs-t4-val').textContent = active + ' / 3';
     if (active > 3) {
@@ -2019,7 +2023,7 @@ document.addEventListener('keydown', e => {
   load();
   loadAnchor();
   try {
-    const p = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise';
+    const p = normalisePhase(localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise');
     setPhase(p);
   } catch(e) { setPhase('stabilise'); }
   render();

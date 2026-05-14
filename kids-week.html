@@ -1349,13 +1349,13 @@
         <div>
           <div class="hero-eyebrow">Atlas — Kids Week</div>
           <h1>
-            <span class="soft">When they're</span><br>
-            <span class="bold">with you.</span>
+            <span class="soft">Plan the</span><br>
+            <span class="bold">kids' week.</span>
           </h1>
-          <p class="hero-sub">Plan the custody fortnight with less drag — your schedule, the handover checklist, the meals, and the small rituals that make the week steadier on everyone.</p>
+          <p class="hero-sub">Map handovers, school days, meals, routines, activities and the little things that keep the week steady.</p>
 
           <div class="phase-row" id="hero-phase-row">
-            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
             <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
@@ -2559,8 +2559,8 @@ document.addEventListener('click', e => {
 
 /* PHASE — synced with the rest of Atlas */
 const phaseData = {
-  crisis: {
-    label: 'Crisis',
+  survive: {
+    label: 'Survive',
     note: 'Just keep the wheels on. Get them fed, rested, and to school. Don\'t try to be perfect — you don\'t need to be right now.',
     heroText: 'Just keep the wheels on. Get them fed, rested, and to school. Don\'t try to be perfect — you don\'t need to be right now.',
   },
@@ -2580,8 +2580,13 @@ const phaseData = {
     heroText: 'You\'re past survival. Use this to keep the rhythm sustainable as the kids grow.',
   }
 };
-let currentPhase = 'crisis';
+let currentPhase = 'survive';
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+
 function setPhase(phase) {
+  phase = normalisePhase(phase);
   if (!phaseData[phase]) return;
   currentPhase = phase;
   document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
@@ -2594,8 +2599,9 @@ function setPhase(phase) {
   } catch(e) {}
 }
 window.addEventListener('storage', e => {
-  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && phaseData[e.newValue]) {
-    setPhase(e.newValue);
+  const nextPhase = normalisePhase(e.newValue);
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && phaseData[nextPhase]) {
+    setPhase(nextPhase);
   }
 });
 
@@ -2737,10 +2743,10 @@ function saveKids() {
   loadHeroReminder();
   // restore phase
   try {
-    const savedPhase = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+    const savedPhase = normalisePhase(localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase'));
     if (savedPhase && phaseData[savedPhase]) setPhase(savedPhase);
-    else setPhase('crisis');
-  } catch(e) { setPhase('crisis'); }
+    else setPhase('survive');
+  } catch(e) { setPhase('survive'); }
 })();
 </script>
 </body>

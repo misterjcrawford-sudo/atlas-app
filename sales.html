@@ -933,14 +933,14 @@
     <h2>Atlas is made <em>for the phase you're in.</em></h2>
     <p class="lead">The right focus changes over time. Pick where you are right now and the guidance shifts to match — money, parenting, and planning move at different speeds.</p>
     <div class="phase-pills">
-      <button class="phase-pill active" data-phase="crisis" onclick="setPhase('crisis')">Crisis · 0–6m</button>
+      <button class="phase-pill active" data-phase="survive" onclick="setPhase('survive')">Survive · 0–6m</button>
       <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise · 6–18m</button>
       <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild · 18m–3y</button>
       <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter · 3y+</button>
     </div>
   </div>
   <div class="phase-card">
-    <div class="phase-card-eyebrow" id="guidance-phase">Crisis · 0–6 months</div>
+    <div class="phase-card-eyebrow" id="guidance-phase">Survive · 0–6 months</div>
     <div class="phase-card-title" id="guidance-title">Just keep the wheels on.</div>
     <div class="phase-card-text" id="guidance-text">Survival mode. Focus only on: somewhere to live, legal basics, kids seeing both parents, and not making major financial decisions under stress. One week at a time.</div>
     <div class="phase-card-actions">
@@ -975,7 +975,7 @@
       <div class="module-num">Module 03 · Goals</div>
       <div class="module-icon">◇</div>
       <div class="module-title">Know what matters now.</div>
-      <div class="module-desc">Use the phase model to focus on the next right job, whether that's crisis triage, stabilising cash flow, rebuilding routines, or planning the next chapter.</div>
+      <div class="module-desc">Use the phase model to focus on the next right job, whether that's survival triage, stabilising cash flow, rebuilding routines, or planning the next chapter.</div>
       <div class="module-footer">Open Goals <span class="arrow">→</span></div>
     </a>
   </div>
@@ -999,7 +999,7 @@
       <div class="principle-num">2</div>
       <div class="principle-text">
         <strong>Phase-aware, not generic</strong>
-        <span>The right focus changes over time. Crisis, stabilise, rebuild, and new chapter each call for different money, parenting, and planning decisions.</span>
+        <span>The right focus changes over time. Survive, stabilise, rebuild, and new chapter each call for different money, parenting, and planning decisions.</span>
       </div>
     </div>
     <div class="principle">
@@ -1126,8 +1126,8 @@
 
 <script>
 const phaseData = {
-  crisis: {
-    phase: 'Crisis · 0–6 months',
+  survive: {
+    phase: 'Survive · 0–6 months',
     title: 'Just keep the wheels on.',
     text: 'Survival mode. Focus only on: somewhere to live, legal basics, kids seeing both parents, and not making major financial decisions under stress. One week at a time.'
   },
@@ -1148,7 +1148,12 @@ const phaseData = {
   }
 };
 
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+
 function setPhase(phase) {
+  phase = normalisePhase(phase);
   if (!phaseData[phase]) return;
   document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
   document.getElementById('guidance-phase').textContent = phaseData[phase].phase;
@@ -1161,14 +1166,15 @@ function setPhase(phase) {
 }
 
 try {
-  const saved = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+  const saved = normalisePhase(localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase'));
   if (saved && phaseData[saved]) setPhase(saved);
-  else setPhase('crisis');
-} catch(e) { setPhase('crisis'); }
+  else setPhase('survive');
+} catch(e) { setPhase('survive'); }
 
 window.addEventListener('storage', e => {
-  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && phaseData[e.newValue]) {
-    setPhase(e.newValue);
+  const nextPhase = normalisePhase(e.newValue);
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && phaseData[nextPhase]) {
+    setPhase(nextPhase);
   }
 });
 

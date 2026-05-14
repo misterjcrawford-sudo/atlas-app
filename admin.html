@@ -100,7 +100,7 @@
   }
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
   .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
@@ -375,12 +375,12 @@
 
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Admin</div>
-    <h1><span class="soft">Get the paperwork right,</span><br>once.</h1>
-    <p class="hero-sub">Every item here is something you'll need to deal with. Work through it at your own pace — Atlas saves your progress automatically.</p>
+    <h1><span class="soft">Get your paperwork</span><br>under control.</h1>
+    <p class="hero-sub">Track the documents, forms, accounts, passwords and records you'll need as things move forward.</p>
 
     <div class="phase-row" id="phase-row">
       <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
-      <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+      <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
       <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
       <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
       <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
@@ -408,7 +408,7 @@
   </div>
 
   <!-- SECTION 1: First 30 Days -->
-  <div class="checklist-section" id="cl-first30" data-priority-phases="crisis">
+  <div class="checklist-section" id="cl-first30" data-priority-phases="survive">
     <button class="cl-header" onclick="toggleSection('first30')">
       <span class="cl-title">First 30 Days</span>
       <span class="cl-progress" id="cl-first30-progress">0 / 12</span>
@@ -432,7 +432,7 @@
   </div>
 
   <!-- SECTION 2: Documents -->
-  <div class="checklist-section" id="cl-documents" data-priority-phases="waiting-room crisis">
+  <div class="checklist-section" id="cl-documents" data-priority-phases="waiting-room survive">
     <button class="cl-header" onclick="toggleSection('documents')">
       <span class="cl-title">Documents</span>
       <span class="cl-progress" id="cl-documents-progress">0 / 15</span>
@@ -459,7 +459,7 @@
   </div>
 
   <!-- SECTION 3: Bank, Super & Insurance -->
-  <div class="checklist-section" id="cl-bank" data-priority-phases="crisis stabilise">
+  <div class="checklist-section" id="cl-bank" data-priority-phases="survive stabilise">
     <button class="cl-header" onclick="toggleSection('bank')">
       <span class="cl-title">Bank, Super &amp; Insurance</span>
       <span class="cl-progress" id="cl-bank-progress">0 / 14</span>
@@ -613,27 +613,33 @@ const STORAGE_KEY = 'atlas_admin_checklists';
 
 const phaseContexts = {
   'waiting-room': 'Now is the right time to get your documents in order — before legal processes make it harder.',
-  'crisis': 'Focus on the First 30 Days checklist first. Everything else can wait.',
+  'survive': 'Focus on the First 30 Days checklist first. Everything else can wait.',
   'stabilise': 'First 30 days should be done. Now work through Documents, Bank and Super, and Utilities.',
   'rebuild': 'Ongoing admin — property, school, medical, tax. Make sure nothing has slipped.',
   'new-chapter': 'Periodic review. Check tax, insurance, and super are still optimised for your situation.'
 };
 
 const sectionPriorityMap = {
-  'first30': ['crisis'],
-  'documents': ['waiting-room', 'crisis'],
-  'bank': ['crisis', 'stabilise'],
+  'first30': ['survive'],
+  'documents': ['waiting-room', 'survive'],
+  'bank': ['survive', 'stabilise'],
   'tax': ['stabilise', 'rebuild'],
   'property': ['rebuild', 'new-chapter']
 };
 
-let currentPhase = 'crisis';
+let currentPhase = 'survive';
+
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
 
 function getCurrentPhase() {
-  return localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'crisis';
+  const savedPhase = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+  return normalisePhase(savedPhase || 'survive');
 }
 
 function setCurrentPhase(phase) {
+  phase = normalisePhase(phase);
   localStorage.setItem('atlas_phase', phase);
   localStorage.setItem('dad_atlas_phase', phase);
   localStorage.setItem('atlas_budget_phase', phase);
@@ -642,6 +648,7 @@ function setCurrentPhase(phase) {
 }
 
 function setPhase(phase) {
+  phase = normalisePhase(phase);
   currentPhase = phase;
   setCurrentPhase(phase);
   document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
@@ -1123,7 +1130,7 @@ document.addEventListener('click', e => {
 });
 
 window.addEventListener('storage', e => {
-  if (e.key === 'atlas_phase' && e.newValue) setPhase(e.newValue);
+  if (e.key === 'atlas_phase' && e.newValue) setPhase(normalisePhase(e.newValue));
 });
 
 // Init

@@ -96,7 +96,7 @@
   }
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
   .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
@@ -923,8 +923,8 @@
 
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Guides</div>
-    <h1><span class="soft">Articles, phase guides,</span><br>and the scripts for the hard ones.</h1>
-    <p class="hero-sub">The practical reading side of Atlas. Articles for the bigger picture. Conversation scripts for the moments where you need words, not theory.</p>
+    <h1><span class="soft">Find the right guide</span><br>for the moment.</h1>
+    <p class="hero-sub">Use articles, scripts and phase guides to handle the next decision, conversation or practical step.</p>
 
     <div class="content-tabs" role="tablist" aria-label="Guides content">
       <button class="content-tab active" id="tab-conversations" type="button" role="tab" aria-selected="true" onclick="setActiveTab('conversations')">Conversations</button>
@@ -937,7 +937,7 @@
       <div class="phase-row">
         <button class="phase-pill active" data-phase="all" onclick="filterGuides('all')">All</button>
         <button class="phase-pill" data-phase="waiting-room" onclick="filterGuides('waiting-room')">Waiting Room</button>
-        <button class="phase-pill" data-phase="crisis" onclick="filterGuides('crisis')">Crisis</button>
+        <button class="phase-pill" data-phase="survive" onclick="filterGuides('survive')">Survive</button>
         <button class="phase-pill" data-phase="stabilise" onclick="filterGuides('stabilise')">Stabilise</button>
         <button class="phase-pill" data-phase="rebuild" onclick="filterGuides('rebuild')">Rebuild</button>
         <button class="phase-pill" data-phase="new-chapter" onclick="filterGuides('new-chapter')">New Chapter</button>
@@ -970,10 +970,10 @@
         </details>
 
         <details class="phase-guide-panel">
-          <summary>Crisis — 0 to 6 months</summary>
+          <summary>Survive — 0 to 6 months</summary>
           <div class="phase-guide-body">
             <p>Separation is official. The immediate priority is stability: somewhere to live, legal basics understood, kids seeing both parents regularly. That's it. Don't try to optimise — just survive.</p>
-            <p>Money decisions made in Crisis often look terrible in hindsight. The financial fog is real. If you can avoid major commitments for the first few months, do it. The one exception: get your budget mapped. You need to know what's actually coming in and going out.</p>
+            <p>Money decisions made in the Survive phase often look terrible in hindsight. The financial fog is real. If you can avoid major commitments for the first few months, do it. The one exception: get your budget mapped. You need to know what's actually coming in and going out.</p>
             <p>This phase is harder than people expect and shorter than it feels. The fog lifts. Focus on keeping the wheels on.</p>
           </div>
         </details>
@@ -982,7 +982,7 @@
           <summary>Stabilise — 6 to 18 months</summary>
           <div class="phase-guide-body">
             <p>Two households are running. The immediate chaos has passed. Now the job is to get your foundations right — budget mapped properly, routines established, legal documents sorted, admin caught up.</p>
-            <p>This is when most of the practical work happens. Bank accounts, super, insurance, tax — all the things you put off during Crisis. Work through them systematically. The admin checklist in Atlas covers most of it.</p>
+            <p>This is when most of the practical work happens. Bank accounts, super, insurance, tax — all the things you put off during the Survive phase. Work through them systematically. The admin checklist in Atlas covers most of it.</p>
             <p>Stability also means building small habits: consistent kids week routines, a savings buffer, regular time for yourself. These compound. Don't underestimate them.</p>
           </div>
         </details>
@@ -1102,7 +1102,7 @@ const articles = [
     title: 'The first 30 days after separation: what to actually do',
     excerpt: "The practical steps most people miss when everything feels like it's on fire.",
     image: './images/Atlas Article 1B.png',
-    phases: ['crisis'],
+    phases: ['survive'],
     category: 'getting-started',
     url: 'https://get-atlas.com.au/the-first-30-days-after-separation-what-to-actually-do'
   },
@@ -1111,7 +1111,7 @@ const articles = [
     title: 'Seven things you forget about money when you separate',
     excerpt: 'The financial blindspots that catch most people off guard.',
     image: './images/Atlas Article 2B.png',
-    phases: ['crisis', 'stabilise'],
+    phases: ['survive', 'stabilise'],
     category: 'money',
     url: 'https://get-atlas.com.au/seven-things-you-forget-about-money-when-you-separate',
     toolLink: './budget.html',
@@ -1122,7 +1122,7 @@ const articles = [
     title: 'Kids week on, kids week off: the logistics nobody warns you about',
     excerpt: 'Making the custody rhythm actually work week to week.',
     image: './images/Atlas article 3B.png',
-    phases: ['crisis', 'stabilise'],
+    phases: ['survive', 'stabilise'],
     category: 'the-kids',
     url: 'https://get-atlas.com.au/kids-week-on-kids-week-off-the-logistics-nobody-warns-you-about',
     toolLink: './kids-week.html',
@@ -1140,9 +1140,9 @@ const articles = [
   {
     id: 'article-05',
     title: 'The four phases of rebuilding after separation',
-    excerpt: 'Crisis, Stabilise, Rebuild, New Chapter — and how to know where you actually are.',
+    excerpt: 'Survive, Stabilise, Rebuild, New Chapter — and how to know where you actually are.',
     image: './images/Atlas article 5B.png',
-    phases: ['waiting-room', 'crisis', 'stabilise', 'rebuild', 'new-chapter'],
+    phases: ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'],
     category: 'getting-started',
     url: 'https://get-atlas.com.au/the-four-phases-of-rebuilding-after-separation'
   },
@@ -1151,7 +1151,7 @@ const articles = [
     title: 'What child support actually costs you — and how the formula works',
     excerpt: 'The CSA formula explained plainly, with what it means for your budget.',
     image: './images/Atlas Article 6B.png',
-    phases: ['crisis', 'stabilise'],
+    phases: ['survive', 'stabilise'],
     category: 'admin-legal',
     url: 'https://get-atlas.com.au/what-child-support-actually-costs-you-and-how-the-formula-works',
     toolLink: './child-support-calculator.html',
@@ -1162,7 +1162,7 @@ const articles = [
     title: 'Your social life after separation: what disappears and why no one warns you',
     excerpt: 'The social costs of separation nobody prepares you for.',
     image: './images/Atlas Article 7B.png',
-    phases: ['crisis', 'stabilise'],
+    phases: ['survive', 'stabilise'],
     category: 'you',
     url: 'https://get-atlas.com.au/your-social-life-after-separation-what-disappears-and-why-no-one-warns-you'
   },
@@ -1171,7 +1171,7 @@ const articles = [
     title: 'Setting up your place: how to make a rental work for you and the kids',
     excerpt: 'Practical setup for a rental that feels like home for you and the kids.',
     image: './images/Atlas Article 8B.png',
-    phases: ['crisis', 'stabilise'],
+    phases: ['survive', 'stabilise'],
     category: 'the-kids',
     url: 'https://get-atlas.com.au/setting-up-your-place-how-to-make-a-rental-work-for-you-and-the-kids',
     toolLink: './budget.html',
@@ -1191,7 +1191,7 @@ const articles = [
     title: 'The 2025 family law changes: what separated parents actually need to know',
     excerpt: 'What changed in Australian family law and what it means for your situation.',
     image: './images/Atlas Article 10B.png',
-    phases: ['waiting-room', 'crisis', 'stabilise'],
+    phases: ['waiting-room', 'survive', 'stabilise'],
     category: 'admin-legal',
     url: 'https://get-atlas.com.au/the-2025-family-law-changes-what-separated-parents-actually-need-to-know'
   }
@@ -1623,7 +1623,7 @@ const params = new URLSearchParams(window.location.search);
 const requestedTab = params.get('tab');
 const requestedCategory = params.get('cat');
 const requestedScript = params.get('script');
-const requestedPhaseFilter = params.get('phase');
+const requestedPhaseFilter = params.get('phase') === 'crisis' ? 'survive' : params.get('phase');
 const requestedArticleCategory = params.get('category');
 
 if (requestedPhaseFilter && document.querySelector(`.phase-pill[data-phase="${requestedPhaseFilter}"]`)) {

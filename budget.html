@@ -1600,13 +1600,13 @@
         <div>
           <div class="hero-eyebrow">Atlas — Finances</div>
           <h1>
-            <span class="soft">Your money,</span><br>
-            <span class="bold">rebuilt.</span>
+            <span class="soft">See your</span><br>
+            <span class="bold">real numbers.</span>
           </h1>
-          <p class="hero-sub">The clearest place to start after separation. Map income, child support, kids costs, legal pressure, housing, and savings so you can see what stability actually looks like.</p>
+          <p class="hero-sub">No guessing. No spreadsheet panic. Track income, expenses, debts and what's left each week.</p>
 
           <div class="phase-row" id="hero-phase-row">
-            <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+            <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
             <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
@@ -1919,8 +1919,8 @@ function fmtView(monthly) {
 
 // ── PHASE ──
 const phaseData = {
-  crisis: {
-    label: 'Crisis',
+  survive: {
+    label: 'Survive',
     note: 'Survival mode. Priorities: somewhere safe to live, basic legal advice, cash flow positive. Don\'t optimise — just stabilise. Every dollar matters right now.',
     heroText: 'Don\'t optimise yet — just get clear. Map every dollar in and out so you know exactly what you\'re working with before making any decisions.',
   },
@@ -1942,7 +1942,13 @@ const phaseData = {
 };
 
 let currentPhase = 'stabilise';
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+
 function setPhase(phase) {
+  phase = normalisePhase(phase);
+  if (!phaseData[phase]) phase = 'stabilise';
   currentPhase = phase;
   document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
   const data = phaseData[phase];
@@ -1966,8 +1972,9 @@ function setPhase(phase) {
 }
 
 window.addEventListener('storage', e => {
-  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && e.newValue && phaseData[e.newValue]) {
-    setPhase(e.newValue);
+  const nextPhase = normalisePhase(e.newValue);
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && phaseData[nextPhase]) {
+    setPhase(nextPhase);
   }
 });
 
@@ -2850,7 +2857,7 @@ function renderSnapPanel(m) {
   const fmtNetWorth = () => netWorth === 0 ? ['—', 'set net worth'] : [fmt(netWorth), 'assets − liabilities'];
 
   switch (currentPhase) {
-    case 'crisis': {
+    case 'survive': {
       // Hero: Surplus (binary signal — bleeding or not)
       const heroClass = surplus < 0 ? 'negative' : 'positive';
       setTile('hero', 'Surplus', fmtView(surplus), surplus < 0 ? 'short this month' : 'this month', heroClass);
@@ -2858,7 +2865,7 @@ function renderSnapPanel(m) {
       setTile('t1', 'Take-Home', fmtView(takeHome), 'after tax & super');
       // Tile 2: Essentials Out — must-pay floor
       setTile('t2', 'Essentials Out', fmtView(essentials), 'must-pay floor');
-      // Tile 3: Transition burn — crisis cost meter
+      // Tile 3: Transition burn — survive cost meter
       setTile('t3', 'Transition Burn', transitionSpent > 0 ? fmt(transitionSpent) : '—',
         transitionEst > 0 ? 'of ' + fmt(transitionEst) + ' planned' : 'log lump-sum costs below');
       // Tile 4: Runway
@@ -3036,7 +3043,7 @@ const TC_DEFAULTS = [
   { label: 'Moving costs', estimated: 0, trackOnly: true },
 ];
 const TC_PHASE_COPY = {
-  crisis: {
+  survive: {
     title: 'Costs of getting through this',
     sub: "Lawyers, mediation, the new place. Lump-sum payments hit hard right now — track them here so they don't poison your monthly view.",
     totals: 'Burn so far',
@@ -3601,7 +3608,7 @@ function render() {
 
   // restore phase
   try {
-    const savedPhase = localStorage.getItem('atlas_budget_phase') || localStorage.getItem('dad_budget_phase') || localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise';
+    const savedPhase = normalisePhase(localStorage.getItem('atlas_budget_phase') || localStorage.getItem('dad_budget_phase') || localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise');
     setPhase(savedPhase);
   } catch(e) { setPhase('stabilise'); }
 

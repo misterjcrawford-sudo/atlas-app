@@ -108,7 +108,7 @@
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); color: var(--ink); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
   .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
-  .phase-pill[data-phase="crisis"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
   .phase-pill[data-phase="rebuild"].active { background: #4A6F8C; border-color: #3A5A78; color: var(--paper); }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
@@ -421,7 +421,7 @@
     <div class="phase-bar-heading">Select your phase</div>
     <div class="phase-bar-pills">
       <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
-      <button class="phase-pill" data-phase="crisis" onclick="setPhase('crisis')">Crisis</button>
+      <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
       <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
       <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
       <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
@@ -434,7 +434,7 @@
     <div class="dash-card card-phase" id="card-phase">
       <div class="dash-card-label">Your phase</div>
       <div class="dash-card-body">
-        <div class="card-phase-name" id="phase-name">Crisis</div>
+        <div class="card-phase-name" id="phase-name">Survive</div>
         <div class="card-phase-subtitle" id="phase-subtitle">0–6 months. Just keep the wheels on.</div>
         <div class="phase-journey" id="phase-journey"></div>
         <div class="card-phase-tip" id="phase-tip">Survival mode. Focus only on shelter, legal basics, kids seeing both parents, and not making major financial decisions under stress.</div>
@@ -454,7 +454,7 @@
           </div>
         </div>
       </div>
-      <a href="./guides.html" class="card-phase-guide" id="phase-guide-link">Read the Crisis guide →</a>
+      <a href="./guides.html" class="card-phase-guide" id="phase-guide-link">Read the Survive guide →</a>
     </div>
 
     <!-- CARD: MONEY SNAPSHOT -->
@@ -467,7 +467,7 @@
     </div>
 
     <!-- CARD: THIS WEEK -->
-    <div class="dash-card" id="card-week" data-phases="crisis stabilise rebuild new-chapter">
+    <div class="dash-card" id="card-week" data-phases="survive stabilise rebuild new-chapter">
       <div class="dash-card-label">This week</div>
       <div class="dash-card-body" id="week-body">
         <p class="dash-empty">Set your week type in the Week tool.</p>
@@ -476,7 +476,7 @@
     </div>
 
     <!-- CARD: ADMIN PRESSURE -->
-    <div class="dash-card" id="card-admin" data-phases="waiting-room crisis stabilise rebuild new-chapter">
+    <div class="dash-card" id="card-admin" data-phases="waiting-room survive stabilise rebuild new-chapter">
       <div class="dash-card-label">Admin</div>
       <div class="dash-card-body" id="admin-body">
         <p class="dash-empty">Start your admin checklist to track what needs doing.</p>
@@ -485,7 +485,7 @@
     </div>
 
     <!-- CARD: GOALS -->
-    <div class="dash-card" id="card-goals" data-phases="crisis stabilise rebuild new-chapter">
+    <div class="dash-card" id="card-goals" data-phases="survive stabilise rebuild new-chapter">
       <div class="dash-card-label">Goals</div>
       <div class="dash-card-body" id="goals-body">
         <p class="dash-empty">No goals set yet. Add goals to track what matters.</p>
@@ -603,11 +603,11 @@ const phases = {
     cardLine: "Clarity before action. Preparation before disruption.",
     focus: ['Quiet preparation', 'Financial records', 'Private notes', 'Emotional clarity'],
     watchOut: ['Threatening before you\'re ready', 'Hiding from the numbers', 'Confusing clarity with action'],
-    threshold: 'You move into Crisis when the decision becomes real and practical systems need to start.',
+    threshold: 'You move into Survive when the decision becomes real and practical systems need to start.',
     style: { accent: '#7B5EA7', cardBg: '#EDE6F5', cardBorder: '#D4C4E8', cardFg: '#2A1A40', cardFgMuted: '#7060A0' }
   },
-  'crisis': {
-    label: 'Crisis',
+  'survive': {
+    label: 'Survive',
     subtitle: '0–6 months. Just keep the wheels on.',
     tip: 'Survival mode. Focus only on shelter, legal basics, kids seeing both parents, and not making major financial decisions under stress.',
     cardLine: 'This is not the season for heroic reinvention. Just survive it well.',
@@ -648,11 +648,11 @@ const phases = {
   }
 };
 
-const phaseOrder = ['waiting-room', 'crisis', 'stabilise', 'rebuild', 'new-chapter'];
+const phaseOrder = ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'];
 
 const nextActions = {
   'waiting-room': { text: "Gather your financial records now — tax returns, super statements, bank accounts. It's harder once legal processes start.", link: './admin.html', linkText: 'Open Admin →' },
-  'crisis':       { text: "Open the budget tool and map every dollar in and out. Clarity here prevents bigger problems later.", link: './budget.html', linkText: 'Open Finances →' },
+  'survive':       { text: "Open the budget tool and map every dollar in and out. Clarity here prevents bigger problems later.", link: './budget.html', linkText: 'Open Finances →' },
   'stabilise':    { text: "Review your goals. Pick one financial and one personal target for the next 90 days.", link: './goals.html', linkText: 'Open Goals →' },
   'rebuild':      { text: "Check your savings goal. Are you on track? Adjust your budget if not.", link: './budget.html', linkText: 'Open Finances →' },
   'new-chapter':  { text: "Review your net worth and savings position. You've rebuilt — now extend.", link: './budget.html', linkText: 'Open Finances →' }
@@ -691,13 +691,19 @@ const itemLabels = {
 };
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-let currentPhase = 'crisis';
+let currentPhase = 'survive';
+
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
 
 function getCurrentPhase() {
-  return localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'crisis';
+  const savedPhase = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+  return normalisePhase(savedPhase || 'survive');
 }
 
 function setCurrentPhase(phase) {
+  phase = normalisePhase(phase);
   localStorage.setItem('atlas_phase', phase);
   localStorage.setItem('dad_atlas_phase', phase);
   localStorage.setItem('atlas_budget_phase', phase);
@@ -707,6 +713,7 @@ function setCurrentPhase(phase) {
 
 // ── PHASE SWITCHING ────────────────────────────────────────────────────────────
 function setPhase(phase) {
+  phase = normalisePhase(phase);
   currentPhase = phase;
   setCurrentPhase(phase);
   const p = phases[phase];
@@ -736,7 +743,7 @@ function setPhase(phase) {
   renderJourneyDots(phase);
 
   // Next action
-  const na = nextActions[phase] || nextActions['crisis'];
+  const na = nextActions[phase] || nextActions['survive'];
   document.getElementById('next-action-text').textContent = na.text;
   const naLink = document.getElementById('next-action-link');
   naLink.href = na.link;
@@ -846,7 +853,7 @@ function renderMoneyCard(phase) {
     const savingsRate = takeHome > 0 ? Math.round((savingsAmt / takeHome) * 100) : 0;
     const annualSavings = savingsAmt * 12;
 
-    // Transition costs (crisis)
+    // Transition costs (survive)
     let tcSpent = 0;
     try {
       const tcRaw = localStorage.getItem('atlas_transition_costs') || localStorage.getItem('dad_atlas_transition_costs');
@@ -875,7 +882,7 @@ function renderMoneyCard(phase) {
     const [rw3Val, rw3Sub] = fmtRunway('3.0');
     const [nwVal, nwSub]   = fmtNW();
 
-    if (phase === 'crisis' || phase === 'waiting-room') {
+    if (phase === 'survive' || phase === 'waiting-room') {
       const hc = surplus < 0 ? 'negative' : 'positive';
       heroLabel = 'Surplus'; heroVal = fmtV(surplus); heroSub = surplus < 0 ? 'short this month' : 'this month'; heroClass = hc;
       tiles = [
@@ -1143,11 +1150,11 @@ function renderGoalsCard(phase) {
     const goals = raw ? JSON.parse(raw) : [];
     const active = Array.isArray(goals) ? goals.filter(g => !g.done) : [];
 
-    const crisisNote = `<p style="font-size:13px;color:var(--ink-muted);font-style:italic;margin-bottom:12px">Goal-setting comes after stabilising. For now, focus on getting through.</p>`;
+    const surviveNote = `<p style="font-size:13px;color:var(--ink-muted);font-style:italic;margin-bottom:12px">Goal-setting comes after stabilising. For now, focus on getting through.</p>`;
 
-    if (phase === 'crisis') {
-      if (!active.length) { body.innerHTML = crisisNote; return; }
-      body.innerHTML = crisisNote + `<div class="goals-count">${active.length} goal${active.length !== 1 ? 's' : ''} set</div>` + renderGoalItems(active.slice(0, 3), phase);
+    if (phase === 'survive') {
+      if (!active.length) { body.innerHTML = surviveNote; return; }
+      body.innerHTML = surviveNote + `<div class="goals-count">${active.length} goal${active.length !== 1 ? 's' : ''} set</div>` + renderGoalItems(active.slice(0, 3), phase);
       return;
     }
 
@@ -1183,11 +1190,12 @@ document.addEventListener('click', e => {
 });
 
 window.addEventListener('storage', e => {
-  if (e.key === 'atlas_phase' && e.newValue && phases[e.newValue]) setPhase(e.newValue);
+  const nextPhase = normalisePhase(e.newValue);
+  if (e.key === 'atlas_phase' && nextPhase && phases[nextPhase]) setPhase(nextPhase);
 });
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-const urlPhase = new URLSearchParams(location.search).get('phase');
+const urlPhase = normalisePhase(new URLSearchParams(location.search).get('phase'));
 const saved = getCurrentPhase();
 setPhase(urlPhase && phases[urlPhase] ? urlPhase : saved);
 </script>
