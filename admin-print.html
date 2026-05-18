@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Checklist — Atlas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #3d3a35;
+    --ink-muted: #6b6760;
+    --ink-faded: #a09d97;
+    --paper: #faf8f5;
+    --paper-card: #f5f2ee;
+    --paper-warm: #f0ece5;
+    --paper-edge: #e0dbd2;
+    --amber: #d4924a;
+    --amber-deep: #b8741e;
+    --green: #3d7a5e;
+    --green-deep: #2c5c44;
+    --coral: #c9644a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCREEN CONTROLS ──────────────────────────────────────────────────────── */
+  .screen-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--paper-edge);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-print {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--green-deep); }
+  .btn-back {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .screen-hint { font-size: 12px; color: var(--ink-faded); margin-left: auto; }
+
+  /* ── A4 PAGES ─────────────────────────────────────────────────────────────── */
+  .pages-wrap { padding: 32px 0 64px; }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px;
+    background: white;
+    padding: 18mm 17mm;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  }
+
+  /* ── PAGE HEADER ──────────────────────────────────────────────────────────── */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .print-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .print-logo-accent { color: var(--amber-deep); }
+  .print-header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .print-header-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ── OVERVIEW PAGE ────────────────────────────────────────────────────────── */
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.6px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 22px;
+    line-height: 1.5;
+    max-width: 50ch;
+  }
+
+  .overall-progress {
+    background: var(--paper-warm);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .overall-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .overall-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+  }
+  .overall-count { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .overall-bar { height: 6px; background: var(--paper-edge); border-radius: 999px; overflow: hidden; }
+  .overall-fill { height: 100%; background: var(--green); border-radius: 999px; }
+
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+  .section-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    padding: 12px 13px;
+  }
+  .section-card.complete { border-color: var(--green); background: rgba(61,122,94,0.04); }
+  .section-card-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .section-card.complete .section-card-title { color: var(--green-deep); }
+  .section-card-count { font-size: 11px; color: var(--ink-muted); margin-bottom: 6px; }
+  .section-card.complete .section-card-count { color: var(--green); }
+  .section-card-bar { height: 4px; background: var(--paper-edge); border-radius: 999px; overflow: hidden; }
+  .section-card-fill { height: 100%; background: var(--green); border-radius: 999px; }
+  .section-card.complete .section-card-fill { background: var(--green-deep); }
+
+  /* ── CHECKLIST SECTIONS ───────────────────────────────────────────────────── */
+  .cl-section { margin-bottom: 20px; break-inside: avoid; }
+
+  .cl-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    padding-bottom: 7px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .cl-section-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .cl-section-stat { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
+
+  .cl-section-bar-wrap {
+    height: 3px;
+    background: var(--paper-edge);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .cl-section-bar-fill { height: 100%; background: var(--green); border-radius: 999px; }
+
+  .cl-subgroup-title {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    padding: 9px 0 3px;
+    margin-top: 3px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .cl-subgroup-title:first-of-type { border-top: none; padding-top: 2px; }
+
+  .cl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4.5px 0;
+    border-bottom: 1px solid var(--paper-card);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .cl-item:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--paper-edge);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+  }
+  .check-box.done { background: var(--green); border-color: var(--green); }
+  .check-box.done::after { content: '✓'; color: white; font-size: 8px; line-height: 1; }
+
+  .cl-item.done .cl-item-text { text-decoration: line-through; color: var(--ink-faded); }
+  .cl-item-text { flex: 1; }
+  .cl-item-custom {
+    font-size: 9.5px;
+    color: var(--ink-faded);
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  /* ── KEY DATES ────────────────────────────────────────────────────────────── */
+  .dates-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin-bottom: 20px;
+  }
+  .dates-table th {
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-muted);
+    font-weight: 600;
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .dates-table td { padding: 6px 8px; border-bottom: 1px solid var(--paper-card); vertical-align: top; }
+  .dates-table tr:last-child td { border-bottom: none; }
+  .td-label { color: var(--ink); font-weight: 500; }
+  .td-date { color: var(--ink-soft); white-space: nowrap; }
+  .td-note { color: var(--ink-muted); font-style: italic; }
+
+  .kd-note-block { margin-bottom: 14px; break-inside: avoid; }
+  .kd-note-label { font-size: 11px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .kd-note-text {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    white-space: pre-wrap;
+    line-height: 1.6;
+    padding: 8px 10px;
+    background: var(--paper-card);
+    border-radius: 6px;
+    min-height: 30px;
+  }
+
+  /* ── EMPTY STATE ──────────────────────────────────────────────────────────── */
+  .empty-hint { font-size: 12px; color: var(--ink-faded); font-style: italic; padding: 10px 0; }
+
+  /* ── PRINT ────────────────────────────────────────────────────────────────── */
+  @media print {
+    @page { margin: 0; size: A4; }
+    body { background: white; }
+    .screen-controls { display: none !important; }
+    .pages-wrap { padding: 0; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      box-shadow: none;
+      padding: 15mm 14mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .cl-section { break-inside: avoid; }
+    .kd-note-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-controls">
+  <button class="btn-print" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print checklist
+  </button>
+  <a href="./admin.html" class="btn-back">← Back to Admin</a>
+  <span class="screen-hint">Opens your browser's print dialog — save as PDF to keep a copy.</span>
+</div>
+
+<div class="pages-wrap" id="pages-wrap"></div>
+
+<script>
+// ── SECTION DATA ───────────────────────────────────────────────────────────────
+
+const SECTIONS = [
+  {
+    id: 'first30',
+    title: 'First 30 days',
+    items: [
+      { id: 'item-f01', text: 'Find somewhere stable to live' },
+      { id: 'item-f02', text: 'Open a personal bank account in your name only' },
+      { id: 'item-f03', text: 'Set up a separate email address for legal and financial correspondence' },
+      { id: 'item-f04', text: 'Create one private folder for separation admin' },
+      { id: 'item-f05', text: 'Locate your important documents' },
+      { id: 'item-f06', text: 'Take phone photos or scans of key documents before anything gets moved' },
+      { id: 'item-f07', text: 'Contact a family lawyer for an initial consultation' },
+      { id: 'item-f08', text: "Notify your children's school of the separation and any new contact details" },
+      { id: 'item-f09', text: 'Contact Services Australia about child support obligations if relevant' },
+      { id: 'item-f10', text: 'Let Centrelink / Services Australia know if your income or living situation has changed' },
+      { id: 'item-f11', text: 'Register with a GP if you have moved suburb' },
+      { id: 'item-f12', text: 'Update your payroll, HR and emergency contact details if needed' },
+      { id: 'item-f13', text: 'Change passwords on personal email, banking and government accounts' },
+      { id: 'item-f14', text: 'Turn on two-factor authentication where possible' },
+      { id: 'item-f15', text: 'Check who has access to shared devices, cloud storage and family accounts' },
+      { id: 'item-f16', text: 'Write down key dates while they are still fresh' },
+      { id: 'item-f17', text: 'Do not make major financial decisions in the first 30 days if you can avoid it' }
+    ]
+  },
+  {
+    id: 'documents',
+    title: 'Identity, legal & documents',
+    subgroups: [
+      {
+        label: 'Identity',
+        items: [
+          { id: 'item-d01', text: 'Passport — yours' },
+          { id: 'item-d02', text: "Passport — children's" },
+          { id: 'item-d03', text: 'Birth certificate — yours' },
+          { id: 'item-d04', text: "Birth certificates — children's" },
+          { id: 'item-d05', text: 'Medicare card' },
+          { id: 'item-d06', text: 'Tax file number' },
+          { id: 'item-d07', text: 'Driver licence' },
+          { id: 'item-d08', text: 'Marriage certificate' }
+        ]
+      },
+      {
+        label: 'Children',
+        items: [
+          { id: 'item-d09', text: "Children's Medicare details" },
+          { id: 'item-d10', text: 'Immunisation records' },
+          { id: 'item-d11', text: 'School reports' },
+          { id: 'item-d12', text: 'School login details' },
+          { id: 'item-d13', text: 'Childcare agreements' },
+          { id: 'item-d14', text: 'Parenting agreements or parenting orders' },
+          { id: 'item-d15', text: "Children's travel documents" }
+        ]
+      },
+      {
+        label: 'Legal',
+        items: [
+          { id: 'item-d16', text: 'Separation date notes' },
+          { id: 'item-d17', text: 'Existing agreements' },
+          { id: 'item-d18', text: 'Consent orders' },
+          { id: 'item-d19', text: 'Court documents' },
+          { id: 'item-d20', text: 'Mediation records' },
+          { id: 'item-d21', text: 'Legal correspondence' },
+          { id: 'item-d22', text: 'Property settlement documents' }
+        ]
+      },
+      {
+        label: 'Estate & authority',
+        items: [
+          { id: 'item-d23', text: 'Will' },
+          { id: 'item-d24', text: 'Power of attorney' },
+          { id: 'item-d25', text: 'Superannuation beneficiary nomination' },
+          { id: 'item-d26', text: 'Life insurance beneficiary details' }
+        ]
+      },
+      {
+        label: 'Financial',
+        items: [
+          { id: 'item-d27', text: 'Most recent tax return' },
+          { id: 'item-d28', text: 'Superannuation statements' },
+          { id: 'item-d29', text: 'Insurance policies' },
+          { id: 'item-d30', text: 'Bank statements' },
+          { id: 'item-d31', text: 'Mortgage statements' },
+          { id: 'item-d32', text: 'Loan documents' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'bank',
+    title: 'Bank, super & insurance',
+    items: [
+      { id: 'item-b01', text: 'Open a bank account solely in your name' },
+      { id: 'item-b02', text: 'Update salary payments and direct debits to your new account' },
+      { id: 'item-b03', text: 'Download recent bank, credit card and loan statements before access changes' },
+      { id: 'item-b04', text: 'Review access to joint accounts and get advice before closing, withdrawing from or changing shared facilities' },
+      { id: 'item-b05', text: 'Check joint credit cards, redraw facilities and offset accounts' },
+      { id: 'item-b06', text: 'Check PayPal, Apple Pay, Google Pay, buy-now-pay-later accounts and saved cards' },
+      { id: 'item-b07', text: 'Notify your super fund of your new address' },
+      { id: 'item-b08', text: 'Review your super beneficiary nomination and update if needed' },
+      { id: 'item-b09', text: 'Check whether life insurance is through super or separate' },
+      { id: 'item-b10', text: 'Review nominated beneficiaries on life insurance' },
+      { id: 'item-b11', text: 'Check whether any insurance premiums are paid from a joint account' },
+      { id: 'item-b12', text: 'Set up or review income protection insurance if relevant' },
+      { id: 'item-b13', text: 'Review private health insurance — are you still on a joint or family policy?' },
+      { id: 'item-b14', text: 'Update to singles or single-parent cover if needed' },
+      { id: 'item-b15', text: "Confirm which parent's policy the children are covered under" },
+      { id: 'item-b16', text: 'Review car insurance — is the policy still in the right name?' },
+      { id: 'item-b17', text: 'Update home and contents insurance for your current address' },
+      { id: 'item-b18', text: 'Check if any accounts are still jointly held that should not be' }
+    ]
+  },
+  {
+    id: 'govt',
+    title: 'Government, tax & payments',
+    items: [
+      { id: 'item-g01', text: 'Notify the ATO of your new address' },
+      { id: 'item-g02', text: 'Notify your accountant or tax agent of your change in circumstances' },
+      { id: 'item-g03', text: 'Update your tax return status if your family situation has changed' },
+      { id: 'item-g04', text: 'Check whether you are claiming the correct Medicare levy adjustment' },
+      { id: 'item-g05', text: 'Lodge any overdue tax returns' },
+      { id: 'item-g06', text: 'Check your HECS-HELP repayment status if applicable' },
+      { id: 'item-g07', text: 'Update Medicare household details' },
+      { id: 'item-g08', text: 'Let Centrelink / Services Australia know if your income or care arrangements have changed' },
+      { id: 'item-g09', text: 'Check Family Tax Benefit eligibility if you care for children' },
+      { id: 'item-g10', text: 'Update childcare subsidy details if applicable' },
+      { id: 'item-g11', text: 'Contact Services Australia about child support if relevant' },
+      { id: 'item-g12', text: 'Decide whether child support will be self-managed, private collect or Services Australia collect' },
+      { id: 'item-g13', text: 'Keep records of agreed child-related expenses' },
+      { id: 'item-g14', text: 'Update your electoral roll address' },
+      { id: 'item-g15', text: 'Update your driver licence address' },
+      { id: 'item-g16', text: 'Update your vehicle registration address' }
+    ]
+  },
+  {
+    id: 'home',
+    title: 'Home, property & utilities',
+    items: [
+      { id: 'item-h01', text: 'Update lease, mortgage or property correspondence address' },
+      { id: 'item-h02', text: 'If renting, make sure the lease is in the correct name and signed' },
+      { id: 'item-h03', text: 'Set up electricity in the correct name' },
+      { id: 'item-h04', text: 'Set up gas in the correct name if applicable' },
+      { id: 'item-h05', text: 'Set up internet in the correct name' },
+      { id: 'item-h06', text: 'Update water / council correspondence if relevant' },
+      { id: 'item-h07', text: 'Update home and contents insurance for your current home' },
+      { id: 'item-h08', text: 'Review mortgage statements and home loan access' },
+      { id: 'item-h09', text: 'Get a property valuation if needed' },
+      { id: 'item-h10', text: 'Locate property title, purchase documents and rates notices' },
+      { id: 'item-h11', text: 'Record renovation, repair or major purchase records' },
+      { id: 'item-h12', text: 'Take photos of household contents and shared valuables' },
+      { id: 'item-h13', text: 'List shared household items still to be divided' },
+      { id: 'item-h14', text: 'Record storage unit details if relevant' },
+      { id: 'item-h15', text: 'Update security codes, keys and garage remotes if appropriate' },
+      { id: 'item-h16', text: 'Review vehicle ownership, registration, finance and insurance' },
+      { id: 'item-h17', text: 'Cancel, split or update shared subscriptions and deliveries' },
+      { id: 'item-h18', text: 'Update mailing address for important services' }
+    ]
+  },
+  {
+    id: 'kids',
+    title: 'Kids, school & medical',
+    items: [
+      { id: 'item-k01', text: 'Update school enrolment records with current addresses and contact details' },
+      { id: 'item-k02', text: 'Confirm both parents are listed on school records where appropriate' },
+      { id: 'item-k03', text: 'Confirm emergency contacts' },
+      { id: 'item-k04', text: 'Confirm pickup and drop-off permissions' },
+      { id: 'item-k05', text: 'Confirm both parents receive school app and email updates where appropriate' },
+      { id: 'item-k06', text: 'Record school login details' },
+      { id: 'item-k07', text: 'Record school fees, uniforms, devices and upcoming costs' },
+      { id: 'item-k08', text: 'Add school events, pupil-free days and term dates to your calendar' },
+      { id: 'item-k09', text: 'Plan ahead for school holidays' },
+      { id: 'item-k10', text: 'Record extracurricular schedules, contacts and fees' },
+      { id: 'item-k11', text: 'Agree how uniforms, devices, sport, tutoring and school costs will be handled' },
+      { id: 'item-k12', text: 'Register children with a GP close to your home if needed' },
+      { id: 'item-k13', text: 'Record allergies, medications and regular health needs' },
+      { id: 'item-k14', text: 'Record dental, orthodontic and specialist details' },
+      { id: 'item-k15', text: 'Confirm Medicare access for the children' },
+      { id: 'item-k16', text: 'Confirm private health insurance cover for the children' },
+      { id: 'item-k17', text: 'Decide how out-of-pocket medical and dental costs will be shared' },
+      { id: 'item-k18', text: 'Create duplicate essentials if the children move between homes' }
+    ]
+  }
+];
+
+const BUILTIN_DATES = [
+  { id: 'date-separation',          label: 'Date of separation' },
+  { id: 'date-moved-out',           label: 'Date you moved out' },
+  { id: 'date-parenting-agreement', label: 'Date parenting agreement signed' },
+  { id: 'date-property-settlement', label: 'Date property settlement finalised' },
+  { id: 'date-divorce-lodged',      label: 'Date divorce application lodged' },
+  { id: 'date-divorce-final',       label: 'Date divorce finalised' },
+  { id: 'date-own-place',           label: 'First night in your own place' },
+  { id: 'date-kids-week',           label: "First kids' week at your place" }
+];
+
+const BUILTIN_NOTES = [
+  { id: 'note-parenting',     label: 'Current parenting arrangement' },
+  { id: 'note-child-support', label: 'Child support status' },
+  { id: 'note-property',      label: 'Property situation' },
+  { id: 'note-lawyer',        label: 'Your lawyer' },
+  { id: 'note-mediator',      label: 'Mediator or family dispute contact' },
+  { id: 'note-court',         label: 'Family court case number' },
+  { id: 'note-memory',        label: 'One thing I want to remember about this time' }
+];
+
+const PHASE_LABELS = {
+  'waiting-room': 'Waiting Room',
+  'survive':      'Survive',
+  'stabilise':    'Stabilise',
+  'rebuild':      'Rebuild',
+  'new-chapter':  'New Chapter'
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+
+function loadState() {
+  const safe = (key, fallback) => {
+    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch(e) { return fallback; }
+  };
+  return {
+    checklistState: safe('atlas_admin_checklists', {}),
+    hiddenItems:    new Set(safe('atlas_admin_hidden_items', [])),
+    customItems:    safe('atlas_admin_custom_items', {}),
+    datesData:      safe('atlas_admin_dates', { hidden: [], values: {}, custom: [] }),
+    notesData:      safe('atlas_admin_notes', { hidden: [], values: {} }),
+    phase:          localStorage.getItem('atlas_phase') || localStorage.getItem('atlas_budget_phase') || 'survive'
+  };
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function fmtDate(s) {
+  if (!s) return '';
+  try {
+    return new Date(s + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch(e) { return s; }
+}
+
+function sectionStats(section, state) {
+  let items = [];
+  if (section.subgroups) {
+    section.subgroups.forEach(sg => sg.items.forEach(i => { if (!state.hiddenItems.has(i.id)) items.push(i); }));
+  } else {
+    items = (section.items || []).filter(i => !state.hiddenItems.has(i.id));
+  }
+  (state.customItems[section.id] || []).forEach(ci => items.push({ id: ci.id }));
+  const done = items.filter(i => state.checklistState[i.id]).length;
+  return { total: items.length, done };
+}
+
+// ── RENDER HELPERS ─────────────────────────────────────────────────────────────
+
+function renderItem(item, state) {
+  const done = !!state.checklistState[item.id];
+  return `<div class="cl-item${done ? ' done' : ''}">
+    <div class="check-box${done ? ' done' : ''}"></div>
+    <span class="cl-item-text">${esc(item.text)}</span>
+    ${item.isCustom ? '<span class="cl-item-custom">added</span>' : ''}
+  </div>`;
+}
+
+function renderSectionBody(section, state) {
+  let html = '';
+  if (section.subgroups) {
+    section.subgroups.forEach(sg => {
+      const visible = sg.items.filter(i => !state.hiddenItems.has(i.id));
+      if (!visible.length) return;
+      html += `<div class="cl-subgroup-title">${esc(sg.label)}</div>`;
+      visible.forEach(i => { html += renderItem(i, state); });
+    });
+    const custom = state.customItems[section.id] || [];
+    if (custom.length) {
+      html += `<div class="cl-subgroup-title">Your additions</div>`;
+      custom.forEach(ci => { html += renderItem({ id: ci.id, text: ci.title, isCustom: true }, state); });
+    }
+  } else {
+    (section.items || []).filter(i => !state.hiddenItems.has(i.id)).forEach(i => { html += renderItem(i, state); });
+    (state.customItems[section.id] || []).forEach(ci => { html += renderItem({ id: ci.id, text: ci.title, isCustom: true }, state); });
+  }
+  return html;
+}
+
+function renderSection(section, state) {
+  const { done, total } = sectionStats(section, state);
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  return `<div class="cl-section">
+    <div class="cl-section-head">
+      <span class="cl-section-name">${esc(section.title)}</span>
+      <span class="cl-section-stat">${done} of ${total} done</span>
+    </div>
+    <div class="cl-section-bar-wrap"><div class="cl-section-bar-fill" style="width:${pct}%"></div></div>
+    ${renderSectionBody(section, state)}
+  </div>`;
+}
+
+function renderPageHeader(title, state) {
+  const dateStr = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  const phaseLabel = PHASE_LABELS[state.phase] || state.phase;
+  return `<div class="print-header">
+    <div class="print-logo">Atlas <span class="print-logo-accent">·</span></div>
+    <div class="print-header-meta">
+      <strong>${esc(title)}</strong><br>
+      ${dateStr}<br>
+      Phase: ${esc(phaseLabel)}
+    </div>
+  </div>`;
+}
+
+// ── PAGE BUILDERS ──────────────────────────────────────────────────────────────
+
+function buildPage1(state) {
+  let totalDone = 0, totalAll = 0;
+  SECTIONS.forEach(s => { const st = sectionStats(s, state); totalDone += st.done; totalAll += st.total; });
+  const overallPct = totalAll > 0 ? Math.round((totalDone / totalAll) * 100) : 0;
+
+  const sectionCards = SECTIONS.map(s => {
+    const { done, total } = sectionStats(s, state);
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    const complete = done === total && total > 0;
+    return `<div class="section-card${complete ? ' complete' : ''}">
+      <div class="section-card-title">${esc(s.title)}</div>
+      <div class="section-card-count">${done} of ${total} done${complete ? ' ✓' : ''}</div>
+      <div class="section-card-bar"><div class="section-card-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  return `<div class="page">
+    ${renderPageHeader('Admin Checklist', state)}
+    <div class="page-title">Separation admin.</div>
+    <div class="page-sub">Reduce avoidable chaos. Not about winning — about knowing where things stand.</div>
+    <div class="overall-progress">
+      <div class="overall-row">
+        <span class="overall-label">Overall progress</span>
+        <span class="overall-count">${totalDone} of ${totalAll} done &mdash; ${overallPct}%</span>
+      </div>
+      <div class="overall-bar"><div class="overall-fill" style="width:${overallPct}%"></div></div>
+    </div>
+    <div class="section-grid">${sectionCards}</div>
+    ${renderSection(SECTIONS[0], state)}
+  </div>`;
+}
+
+function buildPage2(state) {
+  return `<div class="page">
+    ${renderPageHeader('Identity, legal & documents', state)}
+    ${renderSection(SECTIONS[1], state)}
+  </div>`;
+}
+
+function buildPage3(state) {
+  return `<div class="page">
+    ${renderPageHeader('Bank · Government · Tax', state)}
+    ${renderSection(SECTIONS[2], state)}
+    ${renderSection(SECTIONS[3], state)}
+  </div>`;
+}
+
+function buildPage4(state) {
+  return `<div class="page">
+    ${renderPageHeader('Home · Kids · School', state)}
+    ${renderSection(SECTIONS[4], state)}
+    ${renderSection(SECTIONS[5], state)}
+  </div>`;
+}
+
+function buildDatesPage(state) {
+  const { datesData, notesData } = state;
+  const hiddenDates = new Set(datesData.hidden || []);
+  const hiddenNotes = new Set(notesData.hidden || []);
+
+  const dateRows = [
+    ...BUILTIN_DATES.filter(d => !hiddenDates.has(d.id)).map(d => {
+      const v = (datesData.values || {})[d.id] || {};
+      return { label: d.label, date: v.date || '', note: v.note || '' };
+    }),
+    ...(datesData.custom || []).map(cd => ({ label: cd.label, date: cd.date || '', note: cd.note || '' }))
+  ];
+
+  const noteBlocks = BUILTIN_NOTES.filter(n => !hiddenNotes.has(n.id)).map(n => ({
+    label: n.label,
+    text: (notesData.values || {})[n.id] || ''
+  }));
+
+  const hasDateContent = dateRows.some(r => r.date || r.note);
+  const hasNoteContent = noteBlocks.some(n => n.text);
+  if (!hasDateContent && !hasNoteContent) return '';
+
+  const dateTableHTML = hasDateContent ? `
+    <div class="cl-section">
+      <div class="cl-section-head">
+        <span class="cl-section-name">Key dates</span>
+      </div>
+      <table class="dates-table">
+        <thead><tr><th style="width:44%">Event</th><th style="width:26%">Date</th><th>Note</th></tr></thead>
+        <tbody>${dateRows.map(r => `<tr>
+          <td class="td-label">${esc(r.label)}</td>
+          <td class="td-date">${r.date ? fmtDate(r.date) : '<span style="color:var(--ink-faded)">—</span>'}</td>
+          <td class="td-note">${esc(r.note)}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>` : '';
+
+  const notesHTML = hasNoteContent ? `
+    <div class="cl-section">
+      <div class="cl-section-head">
+        <span class="cl-section-name">Notes</span>
+      </div>
+      ${noteBlocks.filter(n => n.text).map(n => `
+        <div class="kd-note-block">
+          <div class="kd-note-label">${esc(n.label)}</div>
+          <div class="kd-note-text">${esc(n.text)}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  return `<div class="page">
+    ${renderPageHeader('Key Dates & Notes', state)}
+    ${dateTableHTML}
+    ${notesHTML}
+  </div>`;
+}
+
+// ── BUILD ──────────────────────────────────────────────────────────────────────
+
+function build() {
+  const state = loadState();
+  document.getElementById('pages-wrap').innerHTML =
+    buildPage1(state) +
+    buildPage2(state) +
+    buildPage3(state) +
+    buildPage4(state) +
+    buildDatesPage(state);
+}
+
+build();
+</script>
+</body>
+</html>

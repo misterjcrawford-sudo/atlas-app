@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Snapshot — Atlas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #3d3a35;
+    --ink-muted: #6b6760;
+    --ink-faded: #a09d97;
+    --paper: #faf8f5;
+    --paper-card: #f5f2ee;
+    --paper-warm: #f0ece5;
+    --paper-edge: #e0dbd2;
+    --amber: #d4924a;
+    --amber-deep: #b8741e;
+    --green: #3d7a5e;
+    --green-deep: #2c5c44;
+    --coral: #c9644a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCREEN CONTROLS ──────────────────────────────────────────────────────── */
+  .screen-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--paper-edge);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-print {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--green-deep); }
+  .btn-back {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .screen-hint { font-size: 12px; color: var(--ink-faded); margin-left: auto; }
+
+  /* ── A4 PAGES ─────────────────────────────────────────────────────────────── */
+  .pages-wrap { padding: 32px 0 64px; }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px;
+    background: white;
+    padding: 18mm 17mm;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  }
+
+  /* ── PAGE HEADER ──────────────────────────────────────────────────────────── */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .print-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .print-logo-accent { color: var(--amber-deep); }
+  .print-header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .print-header-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ── PAGE 1: OVERVIEW ─────────────────────────────────────────────────────── */
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.8px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  /* Key metrics grid */
+  .metrics-hero {
+    background: var(--ink);
+    color: white;
+    border-radius: 12px;
+    padding: 20px 22px 18px;
+    margin-bottom: 12px;
+  }
+  .metrics-hero-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+  }
+  .metrics-hero-val {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .metrics-hero-val.positive { color: #7fcfaa; }
+  .metrics-hero-val.negative { color: #e89f8c; }
+  .metrics-hero-val.warn { color: #e8c97a; }
+  .metrics-hero-sub { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .metric-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    padding: 13px 14px;
+  }
+  .metric-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .metric-val {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .metric-val.green { color: var(--green); }
+  .metric-val.red { color: var(--coral); }
+  .metric-val.amber { color: var(--amber-deep); }
+  .metric-sub { font-size: 10.5px; color: var(--ink-faded); margin-top: 3px; }
+
+  /* Income breakdown table */
+  .section-heading {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+    padding-bottom: 7px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .section-heading-stat { font-size: 11px; color: var(--ink-muted); font-family: 'Space Grotesk', sans-serif; font-weight: 500; }
+
+  .income-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 22px;
+  }
+  .income-table td { padding: 6px 0; border-bottom: 1px solid var(--paper-card); vertical-align: baseline; }
+  .income-table tr:last-child td { border-bottom: none; font-weight: 600; }
+  .income-table .td-label { color: var(--ink-soft); }
+  .income-table .td-val { text-align: right; color: var(--ink); font-weight: 500; white-space: nowrap; }
+  .income-table .td-val.green { color: var(--green); }
+  .income-table .td-val.red { color: var(--coral); }
+  .income-table .td-val.muted { color: var(--ink-muted); font-weight: 400; }
+  .income-table .td-indent { padding-left: 14px; color: var(--ink-muted); font-size: 11.5px; }
+
+  .total-row td { padding-top: 10px; border-top: 1.5px solid var(--ink); font-weight: 700; font-size: 12.5px; }
+
+  /* Expense bar */
+  .expense-bar-wrap { margin-bottom: 22px; }
+  .expense-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .expense-bar {
+    height: 8px;
+    background: var(--paper-edge);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .expense-bar-fill {
+    height: 100%;
+    background: var(--ink);
+    border-radius: 999px;
+  }
+  .expense-bar-fill.ok { background: var(--green); }
+  .expense-bar-fill.warn { background: var(--amber-deep); }
+  .expense-bar-fill.over { background: var(--coral); }
+
+  /* ── EXPENSE SECTIONS ─────────────────────────────────────────────────────── */
+  .exp-section { margin-bottom: 18px; break-inside: avoid; }
+
+  .exp-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .exp-section-name {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+  }
+  .exp-section-total {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .exp-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--paper-card);
+    font-size: 11.5px;
+  }
+  .exp-item:last-child { border-bottom: none; }
+  .exp-item-name { color: var(--ink-soft); flex: 1; }
+  .exp-item-val { color: var(--ink); font-weight: 500; white-space: nowrap; margin-left: 12px; }
+  .exp-item-val.zero { color: var(--ink-faded); font-weight: 400; }
+
+  /* ── NET WORTH ────────────────────────────────────────────────────────────── */
+  .nw-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .nw-col-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--paper-edge);
+    margin-bottom: 4px;
+  }
+  .nw-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--paper-card);
+  }
+  .nw-item:last-child { border-bottom: none; }
+  .nw-item-label { color: var(--ink-soft); }
+  .nw-item-val { font-weight: 500; color: var(--ink); }
+  .nw-item-val.zero { color: var(--ink-faded); font-weight: 400; }
+
+  .nw-summary {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 0;
+    margin-bottom: 26px;
+  }
+  .nw-stat {
+    flex: 1;
+    text-align: center;
+    padding: 0 12px;
+    border-right: 1px solid var(--paper-edge);
+  }
+  .nw-stat:last-child { border-right: none; }
+  .nw-stat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-muted); margin-bottom: 4px; }
+  .nw-stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+  }
+  .nw-stat-val.pos { color: var(--green); }
+  .nw-stat-val.neg { color: var(--coral); }
+
+  /* ── TRANSITION COSTS ─────────────────────────────────────────────────────── */
+  .tc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin-bottom: 12px;
+  }
+  .tc-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    padding: 5px 6px;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .tc-table th:last-child { text-align: right; }
+  .tc-table td { padding: 6px 6px; border-bottom: 1px solid var(--paper-card); vertical-align: top; }
+  .tc-table tr:last-child td { border-bottom: none; }
+  .tc-label { color: var(--ink); font-weight: 500; }
+  .tc-spent { color: var(--ink-soft); }
+  .tc-est { color: var(--ink-muted); }
+  .tc-val { text-align: right; font-weight: 600; color: var(--ink); }
+  .tc-val.over { color: var(--coral); }
+  .tc-archived { opacity: 0.5; }
+
+  .tc-payment-list { font-size: 10.5px; color: var(--ink-muted); margin-top: 3px; }
+  .tc-payment-row { display: flex; gap: 8px; }
+  .tc-payment-date { white-space: nowrap; }
+
+  .tc-totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--paper-card);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 8px;
+  }
+  .tc-totals-label { color: var(--ink-muted); font-weight: 500; }
+
+  /* ── SAVINGS GOALS ────────────────────────────────────────────────────────── */
+  .goal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--paper-card);
+    font-size: 11.5px;
+    gap: 12px;
+  }
+  .goal-item:last-child { border-bottom: none; }
+  .goal-name { color: var(--ink-soft); flex: 1; }
+  .goal-monthly { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .goal-progress {
+    flex: 0 0 80px;
+    text-align: right;
+  }
+  .goal-progress-bar {
+    height: 4px;
+    background: var(--paper-edge);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 2px;
+  }
+  .goal-progress-fill { height: 100%; background: var(--green); border-radius: 999px; }
+  .goal-progress-text { font-size: 10px; color: var(--ink-muted); }
+
+  /* ── PRINT ────────────────────────────────────────────────────────────────── */
+  @media print {
+    @page { margin: 0; size: A4; }
+    body { background: white; }
+    .screen-controls { display: none !important; }
+    .pages-wrap { padding: 0; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      box-shadow: none;
+      padding: 15mm 14mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .exp-section { break-inside: avoid; }
+    .nw-grid { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-controls">
+  <button class="btn-print" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print snapshot
+  </button>
+  <a href="./budget.html" class="btn-back">← Back to Finances</a>
+  <span class="screen-hint">Opens your browser's print dialog — save as PDF to keep a copy.</span>
+</div>
+
+<div class="pages-wrap" id="pages-wrap"></div>
+
+<script>
+// ── UTILITIES ─────────────────────────────────────────────────────────────────
+const fmt = n => '$' + Math.round(n).toLocaleString('en-AU');
+const fmtM = n => fmt(n) + '/mo';
+const pct = (n, d) => d > 0 ? Math.round((n / d) * 100) : 0;
+const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+function fmtDate(s) {
+  if (!s) return '—';
+  const d = new Date(s + 'T12:00:00');
+  if (isNaN(d.getTime())) return s;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function todayStr() {
+  const d = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// ── TAX CALC ──────────────────────────────────────────────────────────────────
+function calcAusTax(gross) {
+  let tax = 0;
+  if (gross <= 18200) tax = 0;
+  else if (gross <= 45000) tax = (gross - 18200) * 0.16;
+  else if (gross <= 135000) tax = 4288 + (gross - 45000) * 0.30;
+  else if (gross <= 190000) tax = 31288 + (gross - 135000) * 0.37;
+  else tax = 51638 + (gross - 190000) * 0.45;
+  const lito = gross <= 37500 ? 700 : gross <= 45000 ? 700 - (gross - 37500) * 0.05 : gross <= 66667 ? 325 - (gross - 45000) * 0.015 : 0;
+  tax = Math.max(0, tax - lito);
+  const medicare = gross > 26000 ? gross * 0.02 : 0;
+  const totalTax = tax + medicare;
+  const netAnnual = gross - totalTax;
+  return { tax, medicare, totalTax, netAnnual, netMonthly: netAnnual / 12 };
+}
+
+// ── LOAD STATE ────────────────────────────────────────────────────────────────
+const DEFAULTS = {
+  grossSalary: 0, salaryInputMode: 'annual', salarySacrifice: 0,
+  ftbMonthly: 0, csReceived: 0, csOut: 0, csMode: 'paying',
+  'kids-costs': [], 'shared': [], 'housing': [], 'personal': [], 'subs': [], 'savings': [],
+  networth: { property: 0, superBal: 0, cashSavings: 0, investments: 0, otherAssets: 0, mortgage: 0, carLoan: 0, otherDebt: 0, settlementDebt: 0 }
+};
+
+let state, transitionCosts, currentPhase;
+
+function load() {
+  // Budget state
+  try {
+    const raw = localStorage.getItem('atlas_budget_state') || localStorage.getItem('dad_budget_state');
+    state = raw ? JSON.parse(raw) : Object.assign({}, DEFAULTS);
+  } catch(e) { state = Object.assign({}, DEFAULTS); }
+  for (const k in DEFAULTS) {
+    if (state[k] === undefined) state[k] = JSON.parse(JSON.stringify(DEFAULTS[k]));
+  }
+  if (!state.networth) state.networth = Object.assign({}, DEFAULTS.networth);
+
+  // Transition costs
+  try {
+    const tc = localStorage.getItem('atlas_transition_costs') || localStorage.getItem('dad_atlas_transition_costs');
+    transitionCosts = tc ? JSON.parse(tc) : [];
+    if (!Array.isArray(transitionCosts)) transitionCosts = [];
+  } catch(e) { transitionCosts = []; }
+
+  // Phase
+  currentPhase = localStorage.getItem('atlas_phase') || localStorage.getItem('atlas_budget_phase') || 'stabilise';
+  if (currentPhase === 'crisis') currentPhase = 'survive';
+}
+
+function sumGroup(key) {
+  return (state[key] || []).reduce((a, i) => a + (Number(i.val) || 0), 0);
+}
+
+function getCSMode() {
+  if (state.csMode === 'receiving' || state.csMode === 'paying') return state.csMode;
+  return (state.csReceived || 0) > 0 && (state.csOut || 0) === 0 ? 'receiving' : 'paying';
+}
+
+function calcNumbers() {
+  const gross = state.grossSalary || 0;
+  const sacrifice = state.salarySacrifice || 0;
+  const taxable = Math.max(0, gross - (sacrifice * 12));
+  const { totalTax, netMonthly } = calcAusTax(taxable);
+  const superMonthly = gross * 0.12 / 12;
+  const ftb = state.ftbMonthly || 0;
+  const csReceived = state.csReceived || 0;
+  const csOut = state.csOut || 0;
+  const csMode = getCSMode();
+  const takeHome = netMonthly + ftb + csReceived;
+
+  const kids = sumGroup('kids-costs');
+  const shared = sumGroup('shared');
+  const housing = sumGroup('housing');
+  const personal = sumGroup('personal');
+  const subs = sumGroup('subs');
+  const savings = sumGroup('savings');
+  const totalExpenses = csOut + kids + shared + housing + personal + subs + savings;
+  const surplus = takeHome - totalExpenses;
+
+  const nw = state.networth;
+  const assets = (nw.property||0) + (nw.superBal||0) + (nw.cashSavings||0) + (nw.investments||0) + (nw.otherAssets||0);
+  const liabilities = (nw.mortgage||0) + (nw.carLoan||0) + (nw.otherDebt||0) + (nw.settlementDebt||0);
+  const netWorth = assets - liabilities;
+  const cash = nw.cashSavings || 0;
+  const essentials = Math.max(0, housing + kids + shared + csOut + (personal + subs) * 0.5);
+  const runwayMo = (cash > 0 && essentials > 0) ? cash / essentials : 0;
+  const sepLoadPct = takeHome > 0 ? Math.round(((csOut + kids + shared) / takeHome) * 100) : 0;
+  const savingsRate = takeHome > 0 ? Math.round((savings / takeHome) * 100) : 0;
+  const effRate = gross > 0 ? Math.round(totalTax / gross * 100) : 0;
+
+  return {
+    gross, sacrifice, taxable, totalTax, netMonthly, superMonthly,
+    ftb, csReceived, csOut, csMode, takeHome,
+    kids, shared, housing, personal, subs, savings,
+    totalExpenses, surplus,
+    assets, liabilities, netWorth, cash, essentials,
+    runwayMo, sepLoadPct, savingsRate, effRate
+  };
+}
+
+function tcSpent(row) {
+  return (row.payments || []).reduce((a, p) => a + (Number(p.amount) || 0), 0);
+}
+function tcTotalSpent() {
+  return transitionCosts.filter(r => !r.archived).reduce((a, r) => a + tcSpent(r), 0);
+}
+function tcTotalEst() {
+  return transitionCosts.filter(r => !r.archived && !r.trackOnly).reduce((a, r) => a + (Number(r.estimated) || 0), 0);
+}
+
+// ── PHASE LABEL ───────────────────────────────────────────────────────────────
+const phaseLabels = {
+  survive: 'Survive', stabilise: 'Stabilise', rebuild: 'Rebuild', 'new-chapter': 'New Chapter'
+};
+
+// ── PAGE HEADER ───────────────────────────────────────────────────────────────
+function pageHeader(title) {
+  return `<div class="print-header">
+    <div class="print-logo">Atlas<span class="print-logo-accent"> · </span>Finances</div>
+    <div class="print-header-meta">
+      <strong>${title}</strong><br>
+      Phase: ${phaseLabels[currentPhase] || currentPhase}<br>
+      Printed ${todayStr()}
+    </div>
+  </div>`;
+}
+
+// ── SURPLUS CLASS ─────────────────────────────────────────────────────────────
+function surplusClass(surplus) {
+  if (surplus < 0) return 'negative';
+  if (surplus < 400) return 'warn';
+  return 'positive';
+}
+
+// ── BUILD PAGES ───────────────────────────────────────────────────────────────
+function build() {
+  load();
+  const m = calcNumbers();
+  const wrap = document.getElementById('pages-wrap');
+  wrap.innerHTML = '';
+  wrap.appendChild(buildPage1(m));
+  wrap.appendChild(buildPage2(m));
+  const page3 = buildPage3(m);
+  if (page3) wrap.appendChild(page3);
+}
+
+// ── PHASE-AWARE METRICS ───────────────────────────────────────────────────────
+function metricCard(label, val, sub, valClass) {
+  return `<div class="metric-card">
+    <div class="metric-label">${label}</div>
+    <div class="metric-val${valClass ? ' ' + valClass : ''}">${val}</div>
+    <div class="metric-sub">${sub}</div>
+  </div>`;
+}
+
+function buildPhaseMetrics(m) {
+  const { takeHome, totalExpenses, surplus, savings, csOut, kids, shared,
+    housing, personal, subs, netWorth, assets, liabilities, cash, essentials,
+    runwayMo, sepLoadPct, savingsRate } = m;
+
+  const nw = state.networth;
+  const investments = (nw.superBal || 0) + (nw.investments || 0);
+  const annualSavings = savings * 12;
+  const transitionSpent = tcTotalSpent();
+  const transitionEst = tcTotalEst();
+
+  const runwayStr = cash <= 0 ? '—' : essentials <= 0 ? '∞' : (runwayMo >= 12 ? '12+' : runwayMo.toFixed(1)) + ' mo';
+  const runwayClass = cash <= 0 ? '' : runwayMo < 1 ? 'red' : runwayMo < 3 ? 'amber' : '';
+  const nwStr = netWorth === 0 ? '—' : fmt(netWorth);
+  const nwClass = netWorth > 0 ? 'green' : netWorth < 0 ? 'red' : '';
+
+  let hero, tiles;
+
+  switch (currentPhase) {
+    case 'survive': {
+      const hClass = surplus < 0 ? 'negative' : 'positive';
+      const hSub = surplus < 0 ? 'short this month' : 'this month';
+      hero = { label: 'Surplus', val: fmtM(surplus), sub: hSub, valClass: hClass };
+      const tcStr = transitionSpent > 0 ? fmt(transitionSpent) : '—';
+      const tcSub = transitionEst > 0 ? 'of ' + fmt(transitionEst) + ' planned' : 'log lump-sum costs below';
+      tiles = [
+        metricCard('Take-Home', fmtM(takeHome), 'after tax &amp; super', 'green'),
+        metricCard('Essentials Out', fmtM(essentials), 'must-pay floor'),
+        metricCard('Transition Burn', tcStr, tcSub),
+        metricCard('Runway', runwayStr, 'if income stopped', runwayClass),
+      ];
+      break;
+    }
+    case 'rebuild': {
+      const sepClass = sepLoadPct > 40 ? 'red' : sepLoadPct > 25 ? 'amber' : '';
+      hero = { label: 'Annual Savings', val: fmt(annualSavings) + '/yr', sub: 'building wealth', valClass: annualSavings > 0 ? 'positive' : '' };
+      tiles = [
+        metricCard('Savings Rate', savingsRate + '%', 'of take-home'),
+        metricCard('Surplus / mo', fmtM(surplus), 'after everything', surplus >= 0 ? 'green' : 'red'),
+        metricCard('Net Worth', nwStr, 'assets − liabilities', nwClass),
+        metricCard('Sep. Load', sepLoadPct + '%', 'still the constraint?', sepClass),
+      ];
+      break;
+    }
+    case 'new-chapter': {
+      const surpClass = surplus >= 0 ? 'green' : 'red';
+      hero = { label: 'Net Worth', val: nwStr, sub: 'assets − liabilities', valClass: nwClass };
+      tiles = [
+        metricCard('Annual Savings', fmt(annualSavings) + '/yr', 'compounding'),
+        metricCard('Savings Rate', savingsRate + '%', 'of take-home'),
+        metricCard('Investments', investments > 0 ? fmt(investments) : '—', investments > 0 ? 'super + invested' : 'set in net worth'),
+        metricCard('Surplus / mo', fmtM(surplus), 'after everything', surpClass),
+      ];
+      break;
+    }
+    case 'stabilise':
+    default: {
+      let hClass = surplus < 0 ? 'negative' : surplus < 400 ? 'warn' : 'positive';
+      const hSub = savings > 0 ? 'after everything · ' + fmtM(savings) + ' to savings' : 'after everything';
+      const sepClass = sepLoadPct > 40 ? 'red' : sepLoadPct > 25 ? 'amber' : '';
+      const rwyStr = cash <= 0 ? '—' : essentials <= 0 ? '∞' : (runwayMo >= 12 ? '12+' : runwayMo.toFixed(1)) + ' / 3.0 mo';
+      const rwyClass = cash <= 0 ? '' : runwayMo < 1 ? 'red' : runwayMo < 3 ? 'amber' : '';
+      hero = { label: 'Surplus', val: fmtM(surplus), sub: hSub, valClass: hClass };
+      tiles = [
+        metricCard('Take-Home', fmtM(takeHome), 'after tax &amp; super', 'green'),
+        metricCard('Total Out', fmtM(totalExpenses), 'all expenses &amp; CS'),
+        metricCard('Sep. Load', sepLoadPct + '%', 'CS + kids of take-home', sepClass),
+        metricCard('Runway', rwyStr, 'target: 3-month buffer', rwyClass),
+      ];
+      break;
+    }
+  }
+
+  return { hero, tiles };
+}
+
+// ── PAGE 1: INCOME + KEY METRICS ─────────────────────────────────────────────
+function buildPage1(m) {
+  const { gross, sacrifice, totalTax, netMonthly, superMonthly, ftb, csReceived, csOut, csMode, takeHome,
+    totalExpenses, surplus, sepLoadPct, savingsRate, runwayMo, effRate, cash, essentials } = m;
+
+  const spentPct = clamp(takeHome > 0 ? Math.round((totalExpenses / takeHome) * 100) : 0, 0, 100);
+  const { hero, tiles } = buildPhaseMetrics(m);
+
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.innerHTML = `
+    ${pageHeader('Financial Snapshot')}
+
+    <div class="page-title">Your finances.</div>
+    <div class="page-sub">Monthly snapshot — phase: ${phaseLabels[currentPhase] || currentPhase}. All amounts per month unless noted.</div>
+
+    <div class="metrics-hero">
+      <div class="metrics-hero-label">${hero.label}</div>
+      <div class="metrics-hero-val ${hero.valClass || ''}">${hero.val}</div>
+      <div class="metrics-hero-sub">${hero.sub}</div>
+    </div>
+
+    <div class="metrics-grid">
+      ${tiles.join('')}
+    </div>
+
+    <div class="expense-bar-wrap">
+      <div class="expense-bar-label">
+        <span>Spent ${spentPct}% of take-home</span>
+        <span>Surplus ${Math.max(0, 100 - spentPct)}%</span>
+      </div>
+      <div class="expense-bar">
+        <div class="expense-bar-fill ${spentPct > 100 ? 'over' : spentPct > 85 ? 'warn' : 'ok'}" style="width:${spentPct}%"></div>
+      </div>
+    </div>
+
+    <div class="section-heading">
+      Income breakdown
+      <span class="section-heading-stat">${fmt(gross)}/yr gross</span>
+    </div>
+    <table class="income-table">
+      <tr>
+        <td class="td-label">Gross Salary</td>
+        <td class="td-val">${fmt(gross)}/yr</td>
+      </tr>
+      ${sacrifice > 0 ? `<tr><td class="td-label td-indent">Salary sacrifice</td><td class="td-val muted">−${fmtM(sacrifice)}</td></tr>` : ''}
+      <tr>
+        <td class="td-label td-indent">Income tax &amp; Medicare (${effRate}% eff. rate)</td>
+        <td class="td-val red">−${fmtM(totalTax / 12)}</td>
+      </tr>
+      <tr>
+        <td class="td-label td-indent">Super (SGC 12%)</td>
+        <td class="td-val muted">${fmtM(superMonthly)}</td>
+      </tr>
+      <tr>
+        <td class="td-label">Take-Home Pay</td>
+        <td class="td-val green">${fmtM(netMonthly)}</td>
+      </tr>
+      ${ftb > 0 ? `<tr><td class="td-label td-indent">FTB / Other income</td><td class="td-val green">+${fmtM(ftb)}</td></tr>` : ''}
+      ${csReceived > 0 ? `<tr><td class="td-label td-indent">Child support received</td><td class="td-val green">+${fmtM(csReceived)}</td></tr>` : ''}
+      ${(ftb > 0 || csReceived > 0) ? `<tr class="total-row"><td class="td-label">Total available</td><td class="td-val green">${fmtM(takeHome)}</td></tr>` : ''}
+    </table>
+
+    <div class="section-heading">Savings goals summary <span class="section-heading-stat">${savingsRate}% savings rate</span></div>
+    ${buildSavingsGoalsSummary()}
+  `;
+  return page;
+}
+
+function buildSavingsGoalsSummary() {
+  const items = (state['savings'] || []).filter(i => (i.val || 0) > 0 || (i.target || 0) > 0);
+  if (!items.length) return '<p style="font-size:12px;color:var(--ink-faded);font-style:italic;padding:8px 0">No savings goals set.</p>';
+  return items.map(item => {
+    const pctFunded = item.target > 0 ? clamp(Math.round((item.balance / item.target) * 100), 0, 100) : 0;
+    return `<div class="goal-item">
+      <span class="goal-name">${item.name}${item.priority ? ' <span style="font-size:9.5px;color:var(--amber-deep);font-weight:600">FIRST</span>' : ''}</span>
+      <span class="goal-monthly">${fmtM(item.val)}</span>
+      ${item.target > 0 ? `<div class="goal-progress">
+        <div class="goal-progress-bar"><div class="goal-progress-fill" style="width:${pctFunded}%"></div></div>
+        <div class="goal-progress-text">${pctFunded}% of ${fmt(item.target)}</div>
+      </div>` : '<div class="goal-progress"><div class="goal-progress-text" style="color:var(--ink-faded)">no target set</div></div>'}
+    </div>`;
+  }).join('');
+}
+
+// ── PAGE 2: EXPENSES ──────────────────────────────────────────────────────────
+function buildPage2(m) {
+  const { csOut, csMode, csReceived, kids, shared, housing, personal, subs, savings, totalExpenses, takeHome } = m;
+  const page = document.createElement('div');
+  page.className = 'page';
+
+  const expGroups = [
+    { key: 'kids-costs', label: 'Kids costs' },
+    { key: 'shared',     label: 'Shared expenses' },
+    { key: 'housing',    label: 'Housing & fixed' },
+    { key: 'personal',   label: 'Personal' },
+    { key: 'subs',       label: 'Subscriptions' },
+    { key: 'savings',    label: 'Savings & goals' },
+  ];
+
+  const csModeLabel = csMode === 'receiving' ? 'Child support received' : 'Child support payment';
+  const csAmount = csMode === 'receiving' ? csReceived : csOut;
+
+  page.innerHTML = `
+    ${pageHeader('Expenses Breakdown')}
+    <div class="page-title">Where it goes.</div>
+    <div class="page-sub">All amounts monthly. ${fmt(totalExpenses)}/mo total · ${fmt(totalExpenses * 12)}/yr</div>
+
+    ${csAmount > 0 ? `
+    <div class="exp-section">
+      <div class="exp-section-head">
+        <span class="exp-section-name">Child Support</span>
+        <span class="exp-section-total">${fmtM(csAmount)}</span>
+      </div>
+      <div class="exp-item">
+        <span class="exp-item-name">${csModeLabel}</span>
+        <span class="exp-item-val">${fmtM(csAmount)}</span>
+      </div>
+    </div>` : ''}
+
+    ${expGroups.map(g => {
+      const items = state[g.key] || [];
+      const total = items.reduce((a, i) => a + (i.val || 0), 0);
+      return `<div class="exp-section">
+        <div class="exp-section-head">
+          <span class="exp-section-name">${g.label}</span>
+          <span class="exp-section-total">${fmtM(total)}</span>
+        </div>
+        ${items.map(item => `<div class="exp-item">
+          <span class="exp-item-name">${item.name.replace(/&amp;/g,'&')}</span>
+          <span class="exp-item-val ${(item.val||0) === 0 ? 'zero' : ''}">${fmtM(item.val || 0)}</span>
+        </div>`).join('')}
+        ${!items.length ? '<div class="exp-item"><span class="exp-item-name" style="color:var(--ink-faded);font-style:italic">No items</span></div>' : ''}
+      </div>`;
+    }).join('')}
+  `;
+  return page;
+}
+
+// ── PAGE 3: NET WORTH + TRANSITION COSTS ─────────────────────────────────────
+function buildPage3(m) {
+  const { assets, liabilities, netWorth } = m;
+  const nw = state.networth;
+  const activeTC = transitionCosts.filter(r => !r.archived);
+  const archivedTC = transitionCosts.filter(r => r.archived);
+  const tcSpentTotal = tcTotalSpent();
+  const tcEstTotal = tcTotalEst();
+  const hasNW = assets > 0 || liabilities > 0;
+  const hasTC = transitionCosts.length > 0;
+
+  if (!hasNW && !hasTC) return null;
+
+  const page = document.createElement('div');
+  page.className = 'page';
+
+  let html = pageHeader('Net Worth & Transition Costs');
+
+  if (hasNW) {
+    html += `
+    <div class="page-title">The full picture.</div>
+    <div class="page-sub" style="margin-bottom:18px">Net worth snapshot — what you own minus what you owe.</div>
+
+    <div class="section-heading">Net worth</div>
+    <div class="nw-grid">
+      <div>
+        <div class="nw-col-title">Assets</div>
+        ${nw.property > 0 ? `<div class="nw-item"><span class="nw-item-label">Property value</span><span class="nw-item-val">${fmt(nw.property)}</span></div>` : ''}
+        ${nw.superBal > 0 ? `<div class="nw-item"><span class="nw-item-label">Super balance</span><span class="nw-item-val">${fmt(nw.superBal)}</span></div>` : ''}
+        ${nw.cashSavings > 0 ? `<div class="nw-item"><span class="nw-item-label">Cash / savings</span><span class="nw-item-val">${fmt(nw.cashSavings)}</span></div>` : ''}
+        ${nw.investments > 0 ? `<div class="nw-item"><span class="nw-item-label">Investments</span><span class="nw-item-val">${fmt(nw.investments)}</span></div>` : ''}
+        ${nw.otherAssets > 0 ? `<div class="nw-item"><span class="nw-item-label">Other assets</span><span class="nw-item-val">${fmt(nw.otherAssets)}</span></div>` : ''}
+        ${assets === 0 ? '<div class="nw-item"><span class="nw-item-label" style="color:var(--ink-faded);font-style:italic">None entered</span></div>' : ''}
+      </div>
+      <div>
+        <div class="nw-col-title">Liabilities</div>
+        ${nw.mortgage > 0 ? `<div class="nw-item"><span class="nw-item-label">Mortgage / rent arrears</span><span class="nw-item-val">${fmt(nw.mortgage)}</span></div>` : ''}
+        ${nw.carLoan > 0 ? `<div class="nw-item"><span class="nw-item-label">Car loan</span><span class="nw-item-val">${fmt(nw.carLoan)}</span></div>` : ''}
+        ${nw.settlementDebt > 0 ? `<div class="nw-item"><span class="nw-item-label">Settlement debt</span><span class="nw-item-val">${fmt(nw.settlementDebt)}</span></div>` : ''}
+        ${nw.otherDebt > 0 ? `<div class="nw-item"><span class="nw-item-label">Other debt</span><span class="nw-item-val">${fmt(nw.otherDebt)}</span></div>` : ''}
+        ${liabilities === 0 ? '<div class="nw-item"><span class="nw-item-label" style="color:var(--ink-faded);font-style:italic">None entered</span></div>' : ''}
+      </div>
+    </div>
+    <div class="nw-summary">
+      <div class="nw-stat">
+        <div class="nw-stat-label">Total assets</div>
+        <div class="nw-stat-val pos">${fmt(assets)}</div>
+      </div>
+      <div class="nw-stat">
+        <div class="nw-stat-label">Total liabilities</div>
+        <div class="nw-stat-val neg">${fmt(liabilities)}</div>
+      </div>
+      <div class="nw-stat">
+        <div class="nw-stat-label">Net worth</div>
+        <div class="nw-stat-val ${netWorth >= 0 ? 'pos' : 'neg'}">${fmt(netWorth)}</div>
+      </div>
+    </div>`;
+  }
+
+  if (hasTC) {
+    const allRows = [...activeTC, ...archivedTC];
+    html += `
+    <div class="section-heading" style="margin-top:${hasNW ? '8px' : '0'}">
+      Transition costs
+      <span class="section-heading-stat">${fmt(tcSpentTotal)} spent</span>
+    </div>
+    <table class="tc-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Payments</th>
+          <th>Budget</th>
+          <th>Spent</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${allRows.map(row => {
+          const spent = tcSpent(row);
+          const est = Number(row.estimated) || 0;
+          const over = !row.trackOnly && est > 0 && spent > est;
+          const lastPayments = (row.payments || []).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,3);
+          return `<tr class="${row.archived ? 'tc-archived' : ''}">
+            <td class="tc-label">${row.label}${row.archived ? ' <span style="font-size:9.5px;color:var(--ink-faded)">(archived)</span>' : ''}</td>
+            <td>
+              ${lastPayments.length ? lastPayments.map(p => `<div class="tc-payment-row"><span class="tc-payment-date">${p.date ? p.date : '—'}</span><span style="color:var(--ink-muted)"> · ${fmt(p.amount)}${p.note ? ' — ' + p.note : ''}</span></div>`).join('') : '<span style="color:var(--ink-faded);font-size:10.5px">No payments</span>'}
+            </td>
+            <td class="tc-est">${row.trackOnly ? '<span style="color:var(--ink-faded)">—</span>' : fmt(est)}</td>
+            <td class="tc-val ${over ? 'over' : ''}">${fmt(spent)}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <div class="tc-totals-row">
+      <span class="tc-totals-label">Total transition costs</span>
+      <span>${fmt(tcSpentTotal)}${tcEstTotal > 0 ? ' of ' + fmt(tcEstTotal) + ' budgeted' : ''}</span>
+    </div>`;
+  }
+
+  page.innerHTML = html;
+  return page;
+}
+
+build();
+</script>
+</body>
+</html>

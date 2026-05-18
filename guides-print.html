@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scripts — Atlas</title>
+<script src="./scripts-data.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #3d3a35;
+    --ink-muted: #6b6760;
+    --ink-faded: #a09d97;
+    --paper: #faf8f5;
+    --paper-card: #f5f2ee;
+    --paper-warm: #f0ece5;
+    --paper-edge: #e0dbd2;
+    --amber: #d4924a;
+    --amber-deep: #b8741e;
+    --green: #3d7a5e;
+    --green-deep: #2c5c44;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCREEN CONTROLS ──────────────────────────────────────────────────────── */
+  .screen-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--paper-edge);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-print {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--green-deep); }
+  .btn-back {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .screen-controls-meta {
+    font-size: 12px;
+    color: var(--ink-faded);
+    margin-left: auto;
+  }
+  .screen-controls-meta strong { color: var(--ink-soft); font-weight: 600; }
+
+  /* ── CATEGORY PICKER (shown when no cat param) ────────────────────────────── */
+  .picker-wrap {
+    max-width: 680px;
+    margin: 64px auto;
+    padding: 0 24px;
+  }
+  .picker-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .picker-sub {
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .picker-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .picker-card {
+    background: white;
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .picker-card:hover { border-color: var(--ink-muted); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+  .picker-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-bottom: 5px;
+  }
+  .picker-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 5px;
+  }
+  .picker-card-count { font-size: 12px; color: var(--ink-muted); }
+  .picker-card-arrow { font-size: 12px; color: var(--ink-faded); margin-top: 10px; display: block; }
+
+  /* ── A4 PAGES ─────────────────────────────────────────────────────────────── */
+  .pages-wrap { padding: 32px 0 64px; }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px;
+    background: white;
+    padding: 18mm 17mm;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  /* ── COVER PAGE ───────────────────────────────────────────────────────────── */
+  .cover-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .cover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 60px;
+  }
+  .cover-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .cover-logo-accent { color: var(--amber-deep); }
+  .cover-date { font-size: 11px; color: var(--ink-muted); text-align: right; line-height: 1.75; }
+
+  .cover-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+  .cover-title {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    line-height: 0.97;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .cover-desc {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    max-width: 44ch;
+    margin-bottom: 40px;
+  }
+  .cover-toc {
+    border-top: 1px solid var(--paper-edge);
+    padding-top: 24px;
+  }
+  .cover-toc-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faded);
+    margin-bottom: 12px;
+  }
+  .cover-toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--paper-card);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    gap: 12px;
+  }
+  .cover-toc-item:last-child { border-bottom: none; }
+  .cover-toc-num {
+    font-size: 11px;
+    color: var(--ink-faded);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── PRINT HEADER (on each script page) ──────────────────────────────────── */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--paper-edge);
+    font-size: 11px;
+    color: var(--ink-faded);
+  }
+  .print-header-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-muted);
+    letter-spacing: -0.2px;
+  }
+  .print-header-logo-accent { color: var(--amber-deep); }
+  .print-header-right { text-align: right; }
+
+  /* ── SCRIPT PAGE ──────────────────────────────────────────────────────────── */
+  .script-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .script-cat-tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .script-num-tag {
+    font-size: 10px;
+    color: var(--ink-faded);
+    font-weight: 500;
+  }
+
+  .script-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .script-situation {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--paper-edge);
+    font-style: italic;
+  }
+
+  /* Script sections */
+  .script-section { margin-bottom: 16px; break-inside: avoid; }
+  .script-section-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faded);
+    margin-bottom: 8px;
+  }
+
+  .script-before-list { padding-left: 0; list-style: none; }
+  .script-before-list li {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    padding: 4px 0 4px 16px;
+    border-bottom: 1px solid var(--paper-card);
+    position: relative;
+  }
+  .script-before-list li:last-child { border-bottom: none; }
+  .script-before-list li::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--ink-faded);
+  }
+
+  .script-opening-quote {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.55;
+    padding: 10px 14px;
+    border-left: 2.5px solid var(--amber);
+    background: var(--paper-warm);
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 8px;
+  }
+  .script-opening-alt-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faded);
+    margin-bottom: 5px;
+    margin-top: 8px;
+  }
+
+  .script-cover-items { display: flex; flex-direction: column; gap: 0; }
+  .script-cover-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--paper-card);
+  }
+  .script-cover-item:last-child { border-bottom: none; }
+  .script-cover-heading {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .script-cover-example {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .script-sideways-items { display: flex; flex-direction: column; gap: 0; }
+  .script-sideways-item {
+    padding: 7px 0;
+    border-bottom: 1px solid var(--paper-card);
+  }
+  .script-sideways-item:last-child { border-bottom: none; }
+  .script-sideways-trigger {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 2px;
+  }
+  .script-sideways-response {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .script-close-text {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    padding: 10px 12px;
+    background: var(--paper-card);
+    border-radius: 6px;
+  }
+
+  /* ── PRINT ────────────────────────────────────────────────────────────────── */
+  @media print {
+    @page { margin: 0; size: A4; }
+    body { background: white; }
+    .screen-controls { display: none !important; }
+    .pages-wrap { padding: 0; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      box-shadow: none;
+      padding: 14mm 13mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .script-section { break-inside: avoid; }
+    .script-opening-quote { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-controls" id="screen-controls">
+  <button class="btn-print" id="btn-print" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print scripts
+  </button>
+  <a href="./guides.html?tab=conversations" class="btn-back" id="btn-back">← Back to Guides</a>
+  <span class="screen-controls-meta" id="controls-meta"></span>
+</div>
+
+<div id="root"></div>
+
+<script>
+function todayStr() {
+  const d = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+const params = new URLSearchParams(window.location.search);
+const catId = params.get('cat');
+const categories = window.ATLAS_CATEGORIES || [];
+const allScripts = (window.ATLAS_SCRIPTS || []).slice().sort((a, b) => a.number - b.number);
+
+// ── CATEGORY PICKER (no ?cat param) ──────────────────────────────────────────
+function renderPicker() {
+  document.getElementById('btn-print').style.display = 'none';
+  document.getElementById('controls-meta').textContent = 'Choose a category to print';
+
+  document.getElementById('root').innerHTML = `
+    <div class="picker-wrap">
+      <div class="picker-title">Print scripts.</div>
+      <div class="picker-sub">Choose a category — all scripts in that category will be formatted for print or PDF.</div>
+      <div class="picker-grid">
+        ${categories.map(cat => `
+          <a class="picker-card" href="./guides-print.html?cat=${esc(cat.id)}">
+            <div class="picker-card-label">Category</div>
+            <div class="picker-card-title">${esc(cat.label)}</div>
+            <div class="picker-card-count">${esc(String(cat.count))} scripts</div>
+            <span class="picker-card-arrow">Print this category →</span>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ── SCRIPT PAGES ──────────────────────────────────────────────────────────────
+function renderScriptPage(script, catLabel, index, total) {
+  const openingAlt = script.openingAlt ? `
+    <div class="script-opening-alt-label">${esc(script.openingAltLabel || 'Alternative opening')}</div>
+    <blockquote class="script-opening-quote">“${esc(script.openingAlt)}”</blockquote>
+  ` : '';
+
+  return `
+    <div class="page">
+      <div class="print-header">
+        <div class="print-header-logo">Atlas<span class="print-header-logo-accent"> · </span>Conversation Scripts</div>
+        <div class="print-header-right">${esc(catLabel)} · Script ${esc(String(index + 1))} of ${esc(String(total))}<br>Printed ${todayStr()}</div>
+      </div>
+
+      <div class="script-meta">
+        <span class="script-cat-tag">${esc(catLabel)}</span>
+        <span class="script-num-tag">${esc(String(script.number).padStart(2, '0'))}</span>
+      </div>
+
+      <div class="script-title">${esc(script.title)}</div>
+      <div class="script-situation">${esc(script.situation)}</div>
+
+      <div class="script-section">
+        <div class="script-section-label">Before you start</div>
+        <ul class="script-before-list">
+          ${script.before.map(item => `<li>${esc(item)}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="script-section">
+        <div class="script-section-label">How to open</div>
+        <blockquote class="script-opening-quote">“${esc(script.opening)}”</blockquote>
+        ${openingAlt}
+      </div>
+
+      <div class="script-section">
+        <div class="script-section-label">What to cover</div>
+        <div class="script-cover-items">
+          ${script.cover.map(item => `
+            <div class="script-cover-item">
+              <div class="script-cover-heading">${esc(item.heading)}</div>
+              <div class="script-cover-example">“${esc(item.example)}”</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="script-section">
+        <div class="script-section-label">If it goes sideways</div>
+        <div class="script-sideways-items">
+          ${script.sideways.map(item => `
+            <div class="script-sideways-item">
+              <div class="script-sideways-trigger">If ${esc(item.trigger)}:</div>
+              <div class="script-sideways-response">“${esc(item.response)}”</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="script-section">
+        <div class="script-section-label">How to close</div>
+        <div class="script-close-text">${esc(script.close)}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCoverPage(cat, scripts) {
+  return `
+    <div class="page cover-page">
+      <div class="cover-header">
+        <div class="cover-logo">Atlas<span class="cover-logo-accent"> · </span>Conversation Scripts</div>
+        <div class="cover-date">Printed ${todayStr()}</div>
+      </div>
+
+      <div class="cover-kicker">Category</div>
+      <div class="cover-title">${esc(cat.label)}</div>
+      <div class="cover-desc">${esc(cat.description)}</div>
+
+      <div class="cover-toc">
+        <div class="cover-toc-label">${esc(String(scripts.length))} scripts in this category</div>
+        ${scripts.map((script, i) => `
+          <div class="cover-toc-item">
+            <span>${esc(script.title)}</span>
+            <span class="cover-toc-num">Script ${esc(String(script.number).padStart(2, '0'))}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderCategory() {
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) {
+    document.getElementById('root').innerHTML = `
+      <div style="max-width:480px;margin:80px auto;padding:0 24px;text-align:center;">
+        <div style="font-family:'Fraunces',serif;font-size:28px;margin-bottom:12px">Category not found.</div>
+        <p style="color:#6b6760;margin-bottom:24px">That category doesn't exist. Go back and choose one.</p>
+        <a href="./guides-print.html" style="color:#3d7a5e;font-weight:600">← Choose a category</a>
+      </div>
+    `;
+    return;
+  }
+
+  const scripts = allScripts.filter(s => s.category === catId);
+
+  // Update controls
+  document.getElementById('btn-back').href = `./guides.html?tab=conversations&cat=${encodeURIComponent(catId)}`;
+  document.getElementById('controls-meta').innerHTML = `<strong>${esc(cat.label)}</strong> &nbsp;·&nbsp; ${scripts.length} scripts`;
+
+  document.title = `${cat.label} Scripts — Atlas`;
+
+  const pagesHtml = [
+    renderCoverPage(cat, scripts),
+    ...scripts.map((script, i) => renderScriptPage(script, cat.label, i, scripts.length))
+  ].join('');
+
+  document.getElementById('root').innerHTML = `<div class="pages-wrap">${pagesHtml}</div>`;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+if (catId) {
+  renderCategory();
+} else {
+  renderPicker();
+}
+</script>
+</body>
+</html>

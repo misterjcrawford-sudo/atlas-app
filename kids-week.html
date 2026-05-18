@@ -151,7 +151,7 @@
 
   /* HERO */
   .hero { padding: 64px 0 40px; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 500px; gap: 44px; align-items: end; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 500px; gap: 44px; align-items: start; }
   .hero-eyebrow {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
@@ -165,7 +165,7 @@
     font-family: 'Fraunces', serif;
     font-weight: 400;
     font-size: clamp(2.8rem, 6.4vw, 5.4rem);
-    line-height: 0.98;
+    line-height: 0.95;
     letter-spacing: -0.045em;
     margin-bottom: 24px;
   }
@@ -1053,6 +1053,37 @@
   }
   .rule-input:focus { border-color: var(--ink); }
 
+  /* CHORES */
+  .chores-summary { display: flex; justify-content: space-between; align-items: center; padding: 0 4px 14px; }
+  .chores-pct-text { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1rem; color: var(--green); letter-spacing: -0.01em; }
+  .chores-reset { background: transparent; border: 1px solid var(--paper-edge); color: var(--ink-muted); border-radius: 999px; padding: 6px 12px; font-size: 11.5px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .chores-reset:hover { color: var(--ink); border-color: var(--ink); }
+  .chores-list { background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 14px; padding: 6px; margin-bottom: 12px; }
+  .chore-item { display: grid; grid-template-columns: 22px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; transition: background 0.15s; }
+  .chore-item:hover { background: var(--paper-warm); }
+  .chore-box { width: 20px; height: 20px; border: 1.5px solid var(--ink-faded); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; color: transparent; background: var(--paper-card); transition: all 0.15s; }
+  .chore-box.done { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .chore-main { min-width: 0; }
+  .chore-text { font-size: 13.5px; line-height: 1.4; color: var(--ink-soft); }
+  .chore-text.done { text-decoration: line-through; color: var(--ink-faded); }
+  .chore-sub { font-size: 11.5px; color: var(--ink-muted); margin-top: 2px; }
+  .chore-chip { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 999px; background: var(--paper-warm); color: var(--ink-muted); white-space: nowrap; }
+  .chore-chip.both { background: var(--amber); color: var(--ink); }
+  .chore-chip.woody { background: rgba(92,122,166,0.15); color: #3d5a8a; }
+  .chore-chip.lumi { background: rgba(226,123,90,0.15); color: var(--coral); }
+  .chore-remove { border: none; background: transparent; cursor: pointer; color: var(--ink-faded); font-size: 1.05rem; padding: 0 6px; opacity: 0; transition: all 0.15s; }
+  .chore-item:hover .chore-remove { opacity: 1; }
+  .chore-remove:hover { color: var(--coral); }
+  .chores-add-form { display: grid; grid-template-columns: 1fr 130px 150px auto; gap: 8px; align-items: center; background: var(--paper); padding: 12px; border-radius: 14px; border: 1px solid var(--paper-edge); margin-bottom: 10px; }
+  .chores-add-form input, .chores-add-form select { border: 1px solid var(--paper-edge); background: var(--paper-card); border-radius: 10px; padding: 8px 10px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--ink); outline: none; min-width: 0; }
+  .chores-add-form input:focus, .chores-add-form select:focus { border-color: var(--ink); }
+  .chores-add-btn { background: var(--ink); color: var(--paper); border: none; border-radius: 10px; padding: 9px 14px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .chores-add-btn:hover { opacity: 0.9; }
+  .chores-suggestions { display: flex; gap: 6px; flex-wrap: wrap; padding: 2px 4px 0; }
+  .chore-suggestion-btn { border: 1px dashed var(--ink-faded); background: transparent; color: var(--ink-muted); border-radius: 999px; padding: 5px 11px; font-size: 11.5px; font-family: 'Space Grotesk', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .chore-suggestion-btn:hover { border-color: var(--green); color: var(--green); border-style: solid; }
+  .chores-empty { font-size: 12.5px; color: var(--ink-muted); padding: 8px 10px; }
+
   /* NOTES */
   .notes-textarea {
     width: 100%;
@@ -1268,6 +1299,99 @@
   .footer-bottom-links { display: flex; gap: 20px; }
   .footer-bottom-links a { color: var(--ink-muted); text-decoration: none; }
   .footer-bottom-links a:hover { color: var(--ink); }
+  /* PRINT ACTION ROW */
+  .print-action-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin: 0 0 28px;
+  }
+  .print-snapshot-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: var(--paper);
+    border: none; border-radius: 999px;
+    padding: 11px 20px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .print-snapshot-btn:hover { background: var(--green-deep); }
+  .fridge-sheet-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: transparent; color: var(--ink-muted);
+    border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 10px 18px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.15s;
+  }
+  .fridge-sheet-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+  .print-action-sub {
+    font-size: 13px; color: var(--ink-faded); font-weight: 400;
+  }
+
+  /* TODAY'S RUN CARD */
+  .todays-run-card {
+    background: var(--paper); border: 1px solid var(--paper-edge);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+    border-left: 3px solid var(--amber-deep);
+  }
+  .todays-run-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px; gap: 8px;
+  }
+  .todays-run-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-muted);
+  }
+
+  /* NEXT HANDOVER CARD */
+  .next-handover-card {
+    background: var(--paper); border: 1px solid var(--paper-edge);
+    border-radius: 14px; padding: 12px 14px; margin-top: 10px;
+  }
+  .next-handover-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px; gap: 8px;
+  }
+  .next-handover-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-muted);
+  }
+  .next-handover-progress {
+    font-size: 10.5px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.04em;
+  }
+  .next-handover-day {
+    font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
+  }
+  .next-handover-dir {
+    font-size: 12.5px; color: var(--ink-soft); margin-bottom: 8px;
+  }
+  .next-handover-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .next-handover-item {
+    font-size: 12.5px; line-height: 1.4; color: var(--ink-soft);
+    display: flex; gap: 7px; align-items: baseline;
+  }
+  .next-handover-item::before {
+    content: ''; display: inline-block; width: 4px; height: 4px;
+    border-radius: 50%; background: var(--ink-faded);
+    flex: 0 0 4px; transform: translateY(-2px);
+  }
+  .next-handover-empty { font-size: 12.5px; color: var(--ink-muted); }
+
+  /* DOSSIER ALERTS */
+  .dossier-alert {
+    background: var(--paper-warm); border: 1px solid var(--paper-edge);
+    border-radius: 12px; padding: 10px 12px; margin-top: 12px;
+  }
+  .dossier-alert-label {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.09em; color: var(--ink-muted); margin-bottom: 4px;
+  }
+  .dossier-alert-text { font-size: 13px; line-height: 1.45; color: var(--ink-soft); }
+  .dossier-alert.warning {
+    background: rgba(234,201,149,0.22); border-color: var(--amber-deep);
+  }
+  .dossier-alert.warning .dossier-alert-label { color: #7a5518; }
+
   @media (max-width: 1024px) {
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
   }
@@ -1277,10 +1401,14 @@
     .dossier { position: static; }
     .rules-grid { grid-template-columns: 1fr; }
     .cycle-controls { grid-template-columns: 1fr 1fr; }
+    .chores-add-form { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 760px) {
+    .chores-add-form { grid-template-columns: 1fr; }
+    .chore-item { grid-template-columns: 22px 1fr auto; }
+    .chore-chip { grid-column: 2; justify-self: start; }
     .hero { padding: 36px 0 24px; }
-    .hero h1 { font-size: 2.4rem; }
+    .hero h1 { font-size: 3rem; }
     .schedule-add-form input[type="time"],
     .schedule-add-form select#ev-day,
     .schedule-add-form select#ev-who,
@@ -1302,10 +1430,7 @@
 <body>
 
 <!-- TOP STRIP -->
-<div class="top-strip">
-  Atlas is private. Everything stays on your device.
-  <a href="./index.html#privacy">How it works <span class="arrow">→</span></a>
-</div>
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
 
 <!-- NAV -->
 <div class="nav-wrap">
@@ -1377,6 +1502,13 @@
           <div class="fortnight-grid" id="fortnight-grid"></div>
           <div class="fortnight-status" id="fortnight-status">Loading…</div>
           <div class="upcoming-line" id="upcoming-line" style="display:none;"></div>
+          <div class="todays-run-card" id="todays-run-card" style="display:none;">
+            <div class="todays-run-head">
+              <span class="todays-run-label" id="todays-run-label">Today</span>
+              <span class="tomorrow-tag" id="todays-run-tag">—</span>
+            </div>
+            <ul class="tomorrow-events" id="todays-run-events"></ul>
+          </div>
           <div class="tomorrow-card">
             <div class="tomorrow-head">
               <span class="tomorrow-label" id="tomorrow-label">Tomorrow</span>
@@ -1391,9 +1523,28 @@
             </div>
             <ul class="tomorrow-events" id="tomorrow-events"></ul>
           </div>
+          <div class="next-handover-card" id="next-handover-card" style="display:none;">
+            <div class="next-handover-head">
+              <span class="next-handover-label">Next handover</span>
+              <span class="next-handover-progress" id="next-handover-progress"></span>
+            </div>
+            <div class="next-handover-day" id="next-handover-day">—</div>
+            <div class="next-handover-dir" id="next-handover-dir"></div>
+            <ul class="next-handover-items" id="next-handover-items"></ul>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- PRINT ACTION ROW -->
+    <div class="print-action-row">
+      <a href="./kids-week-print.html?fridge=1" class="print-snapshot-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print fridge sheet
+      </a>
+      <a href="./kids-week-print.html" class="fridge-sheet-btn">Family snapshot</a>
+      <span class="print-action-sub">Custody, schedule, meals, handover, house rules.</span>
+    </div>
 
     <!-- MASTHEAD -->
     <div class="masthead">
@@ -1516,6 +1667,44 @@
           </div>
         </div>
 
+        <!-- CHORES -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('chores')">
+            <div class="card-dot dot-coral"></div>
+            <div class="card-title">Chores</div>
+            <div class="card-meta" id="chores-meta">Small jobs for the week</div>
+            <span class="save-indicator" id="chores-saved">✓ Saved</span>
+            <svg class="card-chevron open" id="chev-chores" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-chores">
+            <div class="chores-summary">
+              <div class="chores-pct-text" id="chores-pct-text">0 / 0 done</div>
+              <button class="chores-reset" onclick="resetChores()">↺ Reset week</button>
+            </div>
+            <div class="chores-list" id="chores-list"></div>
+            <div class="chores-add-form">
+              <input type="text" id="chore-text" placeholder="Add a small job…" onkeypress="if(event.key==='Enter')addChore()">
+              <select id="chore-who">
+                <option value="both">Both</option>
+              </select>
+              <select id="chore-when">
+                <option value="Every kids day">Every kids day</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+                <option value="Weekend">Weekend</option>
+                <option value="Once this week">Once this week</option>
+              </select>
+              <button class="chores-add-btn" onclick="addChore()">+ Add job</button>
+            </div>
+            <div class="chores-suggestions" id="chores-suggestions"></div>
+          </div>
+        </div>
+
         <!-- NOTES -->
         <div class="card">
           <div class="card-header" onclick="toggleSection('notes')">
@@ -1552,8 +1741,20 @@
           <div class="dossier-row-label">Checklist progress</div>
           <div class="dossier-row-val" id="d-checklist">—</div>
         </div>
+        <div class="dossier-row">
+          <div class="dossier-row-label">Chores progress</div>
+          <div class="dossier-row-val" id="d-chores">—</div>
+        </div>
         <hr class="dossier-divider">
         <div class="flow-note" id="flow-note-text">Just keep the wheels on. Get them fed, rested, and to school.</div>
+        <div class="dossier-alert" id="dossier-missing" style="display:none;">
+          <div class="dossier-alert-label">Missing pieces</div>
+          <div class="dossier-alert-text" id="dossier-missing-text"></div>
+        </div>
+        <div class="dossier-alert warning" id="dossier-pressure" style="display:none;">
+          <div class="dossier-alert-label">Pressure warning</div>
+          <div class="dossier-alert-text" id="dossier-pressure-text"></div>
+        </div>
       </aside>
     </div>
 
@@ -1662,8 +1863,8 @@ const DEFAULT_HOUSE_RULES = {
   bedtimes: ['8:00pm', '8:30pm'],
 };
 
-let state = { events: [], dates: [], checklist: { before: [], during: [], after: [] }, meals: {}, notes: '', heroReminder: DEFAULT_HERO_REMINDER, houseRules: { ...DEFAULT_HOUSE_RULES }, cycle: { preset: 'five-two', pattern: PRESET_PATTERNS['five-two'].slice(), nextKidsDate: '' } };
-let openSections = new Set(['schedule','dates','checklist','meals','rules','notes']);
+let state = { events: [], dates: [], checklist: { before: [], during: [], after: [] }, meals: {}, chores: [], notes: '', heroReminder: DEFAULT_HERO_REMINDER, houseRules: { ...DEFAULT_HOUSE_RULES }, cycle: { preset: 'five-two', pattern: PRESET_PATTERNS['five-two'].slice(), nextKidsDate: '' } };
+let openSections = new Set(['schedule','dates','checklist','meals','rules','chores','notes']);
 
 const CHECKLIST_SUGGESTIONS = {
   before: [
@@ -1716,6 +1917,19 @@ const DEFAULT_CHECKLIST = {
   ],
 };
 
+const DEFAULT_CHORES = [
+  { id: 'ch1', text: 'Clear dinner plate', who: 'both', when: 'Every kids day', done: false },
+  { id: 'ch2', text: 'Put shoes and school bag away', who: 'both', when: 'Every kids day', done: false },
+  { id: 'ch3', text: 'Tidy bedroom', who: 'both', when: 'Sunday', done: false },
+  { id: 'ch4', text: 'Put dirty clothes in basket', who: 'both', when: 'Every kids day', done: false },
+];
+
+const CHORE_SUGGESTIONS = [
+  'Load dishwasher','Unpack dishwasher','Tidy bedroom','Put washing in basket',
+  'Pack school bag','Feed pet','Put shoes away','Clear dinner plate',
+  'Vacuum bedroom','Reset toy room',
+];
+
 const DEFAULT_EVENTS = [
   { id: 'e1', day: 0, time: '07:00', text: 'Before-school care drop-off', who: 'both', recurring: true },
   { id: 'e2', day: 0, time: '15:30', text: 'School pickup', who: 'both', recurring: true },
@@ -1738,6 +1952,8 @@ function load() {
   if (!Array.isArray(state.dates)) state.dates = [];
   if (!state.checklist || Object.keys(state.checklist).length === 0) state.checklist = JSON.parse(JSON.stringify(DEFAULT_CHECKLIST));
   if (!state.meals) state.meals = {};
+  if (!Array.isArray(state.chores)) state.chores = [];
+  if (state.chores.length === 0) state.chores = JSON.parse(JSON.stringify(DEFAULT_CHORES));
   if (typeof state.heroReminder !== 'string' || !state.heroReminder.trim()) state.heroReminder = DEFAULT_HERO_REMINDER;
   if (!state.houseRules || typeof state.houseRules !== 'object') state.houseRules = { ...DEFAULT_HOUSE_RULES };
   state.houseRules.weekdayScreen = state.houseRules.weekdayScreen || DEFAULT_HOUSE_RULES.weekdayScreen;
@@ -1947,8 +2163,14 @@ function renderFortnight() {
   // Tier 2.5 — "Coming up" line for next 7 days
   renderUpcoming();
 
-  // Tier 3 — Tomorrow tile
+  // Tier 3 — Today's run + Tomorrow tile + Next handover
+  renderTodaysRun();
   renderTomorrow();
+  renderNextHandover();
+
+  // Dossier alerts
+  renderMissingPieces();
+  renderPressureWarning();
 }
 
 /* COMING UP — next 7 days from state.dates */
@@ -2103,6 +2325,196 @@ function renderHandoverBanner(today, tomorrow, isKidsTomorrow) {
     }
   }
   wrap.style.display = 'block';
+}
+
+/* TODAY'S RUN CARD */
+function renderTodaysRun() {
+  const card = $('todays-run-card');
+  const labelEl = $('todays-run-label');
+  const tagEl = $('todays-run-tag');
+  const eventsEl = $('todays-run-events');
+  if (!card || !eventsEl) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const dayIdx = (today.getDay() + 6) % 7; // 0=Mon … 6=Sun
+  const isKidsToday = isKidsDate(today);
+  const weekday = today.toLocaleDateString('en-AU', { weekday: 'long' });
+
+  if (labelEl) labelEl.textContent = 'Today · ' + weekday;
+  if (tagEl) {
+    tagEl.textContent = isKidsToday ? 'Kids with you' : 'Solo day';
+    tagEl.className = 'tomorrow-tag ' + (isKidsToday ? 'kids' : 'solo');
+  }
+
+  const todaysEvents = (state.events || [])
+    .filter(ev => ev.day === dayIdx)
+    .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+
+  eventsEl.innerHTML = '';
+  if (todaysEvents.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'tomorrow-empty';
+    li.textContent = isKidsToday ? 'No scheduled events today.' : 'No scheduled events. Solo day.';
+    eventsEl.appendChild(li);
+  } else {
+    todaysEvents.slice(0, 3).forEach(ev => {
+      const li = document.createElement('li');
+      li.className = 'tomorrow-event';
+      const time = (ev.time || '').replace(/^0/, '');
+      li.innerHTML = '<span class="tomorrow-event-time">' + time + '</span><span class="tomorrow-event-text">' + (ev.text || '') + '</span>';
+      eventsEl.appendChild(li);
+    });
+    if (todaysEvents.length > 3) {
+      const more = document.createElement('div');
+      more.className = 'tomorrow-more';
+      more.textContent = '+ ' + (todaysEvents.length - 3) + ' more in the schedule below';
+      eventsEl.appendChild(more);
+    }
+  }
+
+  // Also surface dinner (meals keyed as 'day-0' … 'day-6')
+  const mealObj = state.meals && state.meals['day-' + dayIdx];
+  const dinner = mealObj && typeof mealObj === 'object' ? mealObj.dinner : (typeof mealObj === 'string' ? mealObj : null);
+  if (dinner) {
+    const li = document.createElement('li');
+    li.className = 'tomorrow-event';
+    li.innerHTML = '<span class="tomorrow-event-time">Dinner</span><span class="tomorrow-event-text">' + dinner + '</span>';
+    eventsEl.appendChild(li);
+  }
+
+  card.style.display = 'block';
+}
+
+/* NEXT HANDOVER CARD */
+function renderNextHandover() {
+  const card = $('next-handover-card');
+  const dayEl = $('next-handover-day');
+  const dirEl = $('next-handover-dir');
+  const progressEl = $('next-handover-progress');
+  const itemsEl = $('next-handover-items');
+  if (!card) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const isKidsToday = isKidsDate(today);
+
+  // Find next transition day (up to 14 days ahead)
+  let transitionDate = null;
+  for (let i = 1; i <= 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if (isKidsDate(d) !== isKidsToday) { transitionDate = d; break; }
+  }
+
+  if (!transitionDate) { card.style.display = 'none'; return; }
+
+  const daysAway = Math.round((transitionDate - today) / 86400000);
+  const returning = isKidsToday; // kids with you today → returning at next handover
+  const group = returning ? 'after' : 'before';
+  const items = (state.checklist && state.checklist[group]) || [];
+  const total = items.length;
+  const done = items.filter(i => i.done).length;
+  const undone = items.filter(i => !i.done);
+
+  const dateLabel = daysAway === 1 ? 'Tomorrow' : transitionDate.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'short' });
+  const daysLabel = daysAway === 1 ? '' : ' · ' + daysAway + ' days';
+  if (dayEl) dayEl.textContent = dateLabel + daysLabel;
+  if (dirEl) dirEl.textContent = returning ? 'Returning to other parent' : 'Kids arriving with you';
+  if (progressEl) progressEl.textContent = total ? (done + ' / ' + total + ' done') : '';
+
+  itemsEl.innerHTML = '';
+  if (total === 0) {
+    const li = document.createElement('li');
+    li.className = 'next-handover-empty';
+    li.textContent = 'No checklist set up yet.';
+    itemsEl.appendChild(li);
+  } else if (undone.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'next-handover-empty';
+    li.textContent = '✓ Checklist complete.';
+    itemsEl.appendChild(li);
+  } else {
+    undone.slice(0, 3).forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'next-handover-item';
+      li.textContent = item.text;
+      itemsEl.appendChild(li);
+    });
+    if (undone.length > 3) {
+      const li = document.createElement('li');
+      li.className = 'next-handover-empty';
+      li.textContent = '+ ' + (undone.length - 3) + ' more to do';
+      itemsEl.appendChild(li);
+    }
+  }
+
+  card.style.display = 'block';
+}
+
+/* MISSING PIECES ALERT */
+function renderMissingPieces() {
+  const alert = $('dossier-missing');
+  const text = $('dossier-missing-text');
+  if (!alert || !text) return;
+
+  const gaps = [];
+  const s = state;
+
+  if (!s.kids || s.kids.length === 0) gaps.push('No kids added yet');
+  if (!s.cycle || !s.cycle.nextKidsDate) gaps.push('No custody dates set');
+
+  const dayNames = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  const hasMeals = dayNames.some(d => s.meals && s.meals[d]);
+  if (!hasMeals) gaps.push('No dinners planned');
+
+  const hr = s.houseRules || {};
+  if (!hr.bedtimes || hr.bedtimes.length === 0) gaps.push('No bedtimes set');
+  if (!hr.screenCutoff) gaps.push('No screen cutoff set');
+
+  const checkItems = [...(s.checklist && s.checklist.before || []), ...(s.checklist && s.checklist.after || [])];
+  if (checkItems.length === 0) gaps.push('Handover checklist is empty');
+
+  if (gaps.length === 0) { alert.style.display = 'none'; return; }
+
+  text.textContent = gaps.slice(0, 3).join(' · ') + (gaps.length > 3 ? ' · +' + (gaps.length - 3) + ' more' : '');
+  alert.style.display = 'block';
+}
+
+/* PRESSURE WARNING ALERT */
+function renderPressureWarning() {
+  const alert = $('dossier-pressure');
+  const text = $('dossier-pressure-text');
+  if (!alert || !text) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowIdx = (tomorrow.getDay() + 6) % 7;
+  const isKidsTomorrow = isKidsDate(tomorrow);
+  const isKidsToday = isKidsDate(today);
+
+  const tomorrowEvents = (state.events || []).filter(ev => ev.day === tomorrowIdx);
+  const handoverTomorrow = isKidsToday !== isKidsTomorrow;
+
+  // Check for important date in next 48h
+  const horizon48 = new Date(today);
+  horizon48.setDate(today.getDate() + 2);
+  const urgentDate = getSortedDates().find(entry => {
+    const d = parseDateLocal(entry.date);
+    return d && d >= today && d <= horizon48;
+  });
+
+  const warnings = [];
+  if (handoverTomorrow && tomorrowEvents.length >= 2) warnings.push('Handover + ' + tomorrowEvents.length + ' events tomorrow');
+  else if (tomorrowEvents.length >= 3) warnings.push(tomorrowEvents.length + ' events scheduled tomorrow');
+  if (urgentDate) warnings.push((urgentDate.label || 'Important date') + ' coming up');
+
+  if (warnings.length === 0) { alert.style.display = 'none'; return; }
+
+  text.textContent = warnings.join(' · ');
+  alert.style.display = 'block';
 }
 
 /* SCHEDULE */
@@ -2501,6 +2913,98 @@ function saveHouseRules() {
   }
 }
 
+/* CHORES */
+function syncChoreWhoOptions() {
+  const select = $('chore-who');
+  if (!select) return;
+  const kids = state.kids && state.kids.length ? state.kids : [{ name: 'Child 1' }, { name: 'Child 2' }];
+  const childOne = kids[0]?.name || 'Child 1';
+  const childTwo = kids[1]?.name || 'Child 2';
+  select.innerHTML = `<option value="both">Both</option><option value="woody">${childOne}</option><option value="lumi">${childTwo}</option>`;
+}
+
+function renderChores() {
+  const list = $('chores-list');
+  const suggestionsEl = $('chores-suggestions');
+  if (!list) return;
+  syncChoreWhoOptions();
+  list.innerHTML = '';
+  const chores = Array.isArray(state.chores) ? state.chores : [];
+  if (chores.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'chores-empty';
+    empty.textContent = 'Add a few small jobs that help the week reset without a negotiation every night.';
+    list.appendChild(empty);
+  }
+  chores.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'chore-item';
+    const box = document.createElement('div');
+    box.className = 'chore-box' + (item.done ? ' done' : '');
+    box.textContent = '✓';
+    box.onclick = () => { item.done = !item.done; save(); renderChores(); renderMissingPieces(); };
+    const main = document.createElement('div');
+    main.className = 'chore-main';
+    main.innerHTML = `<div class="chore-text${item.done ? ' done' : ''}">${(item.text || '').replace(/</g,'&lt;')}</div><div class="chore-sub">${item.when || 'This week'}</div>`;
+    const chip = document.createElement('span');
+    chip.className = 'chore-chip ' + (item.who || 'both');
+    chip.textContent = getEventWhoLabel(item.who || 'both');
+    const remove = document.createElement('button');
+    remove.className = 'chore-remove';
+    remove.innerHTML = '×';
+    remove.onclick = () => removeChore(item.id);
+    row.appendChild(box); row.appendChild(main); row.appendChild(chip); row.appendChild(remove);
+    list.appendChild(row);
+  });
+  const done = chores.filter(i => i.done).length;
+  const total = chores.length;
+  if ($('chores-pct-text')) $('chores-pct-text').textContent = done + ' / ' + total + ' done';
+  if ($('chores-meta')) $('chores-meta').textContent = total ? done + '/' + total + ' done' : 'Small jobs for the week';
+  if ($('d-chores')) $('d-chores').textContent = total ? done + '/' + total : '—';
+  if (suggestionsEl) {
+    suggestionsEl.innerHTML = '';
+    const existing = chores.map(c => (c.text || '').toLowerCase());
+    CHORE_SUGGESTIONS.filter(s => !existing.includes(s.toLowerCase())).slice(0, 8).forEach(s => {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'chore-suggestion-btn';
+      btn.textContent = '+ ' + s;
+      btn.onclick = () => addSuggestedChore(s);
+      suggestionsEl.appendChild(btn);
+    });
+  }
+}
+
+function addChore() {
+  const text = $('chore-text')?.value.trim();
+  if (!text) return;
+  if (!Array.isArray(state.chores)) state.chores = [];
+  state.chores.push({ id: 'ch' + Date.now(), text, who: $('chore-who')?.value || 'both', when: $('chore-when')?.value || 'Every kids day', done: false });
+  $('chore-text').value = '';
+  save(); showChoresSaved(); renderChores();
+}
+
+function addSuggestedChore(text) {
+  if (!Array.isArray(state.chores)) state.chores = [];
+  if (state.chores.some(i => (i.text || '').toLowerCase() === text.toLowerCase())) return;
+  state.chores.push({ id: 'ch' + Date.now(), text, who: 'both', when: 'Every kids day', done: false });
+  save(); showChoresSaved(); renderChores();
+}
+
+function removeChore(id) {
+  state.chores = (state.chores || []).filter(i => i.id !== id);
+  save(); showChoresSaved(); renderChores();
+}
+
+function resetChores() {
+  (state.chores || []).forEach(i => i.done = false);
+  save(); showChoresSaved(); renderChores();
+}
+
+function showChoresSaved() {
+  const ind = $('chores-saved');
+  if (ind) { ind.classList.add('show'); clearTimeout(ind._timer); ind._timer = setTimeout(() => ind.classList.remove('show'), 1600); }
+}
+
 /* NOTES */
 function loadNotes() { if ($('week-notes') && state.notes) $('week-notes').value = state.notes; }
 let notesTimer;
@@ -2651,6 +3155,7 @@ function renderKidsChips() {
     el.appendChild(chip);
   });
   syncEventWhoOptions();
+  syncChoreWhoOptions();
 }
 
 function openKidsSetup() {
@@ -2727,6 +3232,7 @@ function saveKids() {
   document.getElementById('kids-modal')?.remove();
   renderKidsChips();
   renderHouseRules();
+  renderChores();
 }
 
 (function init() {
@@ -2739,6 +3245,7 @@ function saveKids() {
   renderChecklist();
   renderMeals();
   renderHouseRules();
+  renderChores();
   loadNotes();
   loadHeroReminder();
   // restore phase

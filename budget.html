@@ -241,6 +241,17 @@
   }
   .view-btn.active { background: var(--ink); color: var(--paper); }
 
+  .print-snapshot-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green); color: var(--paper);
+    border-radius: 999px; border: none;
+    padding: 10px 18px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .print-snapshot-btn:hover { background: var(--green-deep); }
+
   /* Snap panel */
   .snap-panel {
     background: var(--green);
@@ -1553,10 +1564,7 @@
 <body>
 
 <!-- TOP STRIP -->
-<div class="top-strip">
-  Atlas is private. Everything stays on your device.
-  <a href="./index.html#privacy">How it works <span class="arrow">→</span></a>
-</div>
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
 
 <!-- NAV -->
 <div class="nav-wrap">
@@ -1614,9 +1622,15 @@
 
           <div class="phase-context" id="phase-context-text">Don't optimise yet — just get clear. Map every dollar in and out so you know exactly what you're working with before making any decisions.</div>
 
-          <div class="view-toggle">
-            <button class="view-btn active" id="btn-monthly" onclick="setView('monthly')">Monthly</button>
-            <button class="view-btn" id="btn-annual" onclick="setView('annual')">Annual</button>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div class="view-toggle">
+              <button class="view-btn active" id="btn-monthly" onclick="setView('monthly')">Monthly</button>
+              <button class="view-btn" id="btn-annual" onclick="setView('annual')">Annual</button>
+            </div>
+            <a href="./budget-print.html" class="print-snapshot-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Print snapshot
+            </a>
           </div>
         </div>
 
@@ -2156,49 +2170,49 @@ function updateCSAEstimateNote(result) {
 
 // ── STATE ──
 const DEFAULTS = {
-  grossSalary: 95000,
+  grossSalary: 98000,
   salaryInputMode: 'annual',
   salarySacrifice: 0,
   ftbMonthly: 0,
   csReceived: 0,
-  csOut: 800,
+  csOut: 0,
   csMode: 'paying',
 
   'kids-costs': [
     { id: 'kids-food', name: 'Food / Groceries (kids weeks)', val: 400, min: 0, max: 1500 },
-    { id: 'kids-activities', name: 'Sports / Activities / Classes', val: 150, min: 0, max: 800 },
+    { id: 'kids-activities', name: 'Sports / Activities / Classes', val: 100, min: 0, max: 800 },
     { id: 'kids-clothing', name: 'Clothing &amp; Shoes', val: 80, min: 0, max: 400 },
-    { id: 'kids-school', name: 'School Fees / Supplies', val: 120, min: 0, max: 600 },
+    { id: 'kids-school', name: 'School Fees / Supplies', val: 90, min: 0, max: 600 },
     { id: 'kids-medical', name: 'Medical / Dental', val: 60, min: 0, max: 400 },
     { id: 'kids-pocket', name: 'Pocket Money', val: 40, min: 0, max: 200 },
     { id: 'kids-transport', name: 'Transport / Pickup', val: 80, min: 0, max: 400 },
     { id: 'kids-gifts', name: 'Birthdays / Christmas', val: 60, min: 0, max: 300 },
   ],
   'shared': [
-    { id: 'shared-health', name: 'Health Insurance (kids portion)', val: 80, min: 0, max: 400 },
+    { id: 'shared-health', name: 'Health Insurance (kids portion)', val: 110, min: 0, max: 400 },
     { id: 'shared-extras', name: 'Shared Extras (agreed)', val: 0, min: 0, max: 500 },
     { id: 'shared-holidays', name: 'Shared Holiday Costs', val: 0, min: 0, max: 500 },
   ],
   'housing': [
-    { id: 'rent', name: 'Rent / Mortgage', val: 2200, min: 500, max: 5000 },
-    { id: 'utilities', name: 'Utilities (elec/gas/water)', val: 200, min: 50, max: 600 },
-    { id: 'internet', name: 'Internet', val: 75, min: 0, max: 150 },
-    { id: 'phone', name: 'Phone', val: 60, min: 0, max: 150 },
-    { id: 'insurance-home', name: 'Home / Contents Insurance', val: 120, min: 0, max: 400 },
+    { id: 'rent', name: 'Rent / Mortgage', val: 2400, min: 500, max: 6000 },
+    { id: 'utilities', name: 'Utilities (elec/gas/water)', val: 260, min: 50, max: 700 },
+    { id: 'internet', name: 'Internet', val: 80, min: 0, max: 150 },
+    { id: 'phone', name: 'Phone', val: 65, min: 0, max: 150 },
+    { id: 'insurance-home', name: 'Home / Contents Insurance', val: 160, min: 0, max: 500 },
     { id: 'car', name: 'Car Loan / Finance', val: 0, min: 0, max: 1500 },
-    { id: 'fuel', name: 'Fuel', val: 150, min: 0, max: 400 },
-    { id: 'car-insurance', name: 'Car Insurance / Rego', val: 120, min: 0, max: 300 },
+    { id: 'fuel', name: 'Fuel', val: 180, min: 0, max: 500 },
+    { id: 'car-insurance', name: 'Car Insurance / Rego', val: 155, min: 0, max: 400 },
   ],
   'personal': [
-    { id: 'groceries', name: 'Groceries (adult)', val: 350, min: 0, max: 1000 },
+    { id: 'groceries', name: 'Groceries (adult)', val: 450, min: 0, max: 1200 },
     { id: 'gym', name: 'Gym / Fitness', val: 60, min: 0, max: 200 },
     { id: 'dining', name: 'Dining &amp; Social', val: 200, min: 0, max: 600 },
     { id: 'clothing-self', name: 'Clothing (self)', val: 80, min: 0, max: 400 },
-    { id: 'personal-health', name: 'Health / Appointments', val: 60, min: 0, max: 300 },
+    { id: 'personal-health', name: 'Health / Appointments', val: 70, min: 0, max: 300 },
     { id: 'therapy', name: 'Therapy / Counselling', val: 0, min: 0, max: 500 },
   ],
   'subs': [
-    { id: 'streaming1', name: 'Streaming (Netflix / Disney)', val: 25, min: 0, max: 60 },
+    { id: 'streaming1', name: 'Streaming (Netflix / Disney)', val: 23, min: 0, max: 60 },
     { id: 'streaming2', name: 'Music (Spotify)', val: 13, min: 0, max: 30 },
     { id: 'software', name: 'Software / Apps', val: 30, min: 0, max: 150 },
     { id: 'news', name: 'News / Reading', val: 20, min: 0, max: 60 },

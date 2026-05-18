@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goals Snapshot — Atlas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #3d3a35;
+    --ink-muted: #6b6760;
+    --ink-faded: #a09d97;
+    --paper: #faf8f5;
+    --paper-card: #f5f2ee;
+    --paper-warm: #f0ece5;
+    --paper-edge: #e0dbd2;
+    --amber: #d4924a;
+    --amber-deep: #b8741e;
+    --green: #3d7a5e;
+    --green-deep: #2c5c44;
+    --coral: #c9644a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCREEN CONTROLS ──────────────────────────────────────────────────────── */
+  .screen-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--paper-edge);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-print {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--green-deep); }
+  .btn-back {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .screen-hint { font-size: 12px; color: var(--ink-faded); margin-left: auto; }
+
+  /* ── A4 PAGES ─────────────────────────────────────────────────────────────── */
+  .pages-wrap { padding: 32px 0 64px; }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px;
+    background: white;
+    padding: 18mm 17mm;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  }
+
+  /* ── PAGE HEADER ──────────────────────────────────────────────────────────── */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .print-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .print-logo-accent { color: var(--amber-deep); }
+  .print-header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .print-header-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ── OVERVIEW ─────────────────────────────────────────────────────────────── */
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.06em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+  }
+
+  /* Stats row */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .stat-val.green { color: var(--green); }
+  .stat-sub { font-size: 10px; color: var(--ink-faded); margin-top: 3px; }
+
+  /* Overall progress bar */
+  .overall-bar-wrap { margin-bottom: 24px; }
+  .overall-bar-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .overall-bar {
+    height: 7px;
+    background: var(--paper-edge);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .overall-bar-fill { height: 100%; background: var(--green); border-radius: 999px; }
+
+  /* Anchor */
+  .anchor-block {
+    background: var(--paper-warm);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 8px 8px 0;
+    padding: 11px 14px;
+    margin-bottom: 24px;
+    break-inside: avoid;
+  }
+  .anchor-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faded);
+    margin-bottom: 4px;
+  }
+  .anchor-text {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* ── GOAL GROUPS ──────────────────────────────────────────────────────────── */
+  .goal-group { margin-bottom: 18px; break-inside: avoid; }
+
+  .goal-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 7px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 6px;
+  }
+  .group-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .group-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+    flex: 1;
+  }
+  .group-pct { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
+
+  /* Goal items */
+  .goal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--paper-card);
+  }
+  .goal-item:last-child { border-bottom: none; }
+
+  .goal-check-box {
+    width: 13px;
+    height: 13px;
+    border: 1.5px solid var(--paper-edge);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+  }
+  .goal-check-box.done { background: var(--green); border-color: var(--green); }
+  .goal-check-box.done::after { content: '✓'; color: white; font-size: 7.5px; line-height: 1; }
+
+  .goal-body { flex: 1; min-width: 0; }
+  .goal-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+  .goal-title.done { text-decoration: line-through; color: var(--ink-faded); }
+
+  .goal-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  .goal-tag {
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .goal-due {
+    font-size: 10px;
+    color: var(--ink-faded);
+  }
+  .goal-due.overdue { color: var(--coral); font-weight: 600; }
+
+  .goal-note {
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.45;
+    font-style: italic;
+    margin-bottom: 5px;
+  }
+
+  .goal-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .goal-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--paper-edge);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .goal-bar-fill { height: 100%; border-radius: 999px; }
+  .goal-pct { font-size: 10px; color: var(--ink-muted); font-weight: 600; white-space: nowrap; }
+
+  /* ── PRINT ────────────────────────────────────────────────────────────────── */
+  @media print {
+    @page { margin: 0; size: A4; }
+    body { background: white; }
+    .screen-controls { display: none !important; }
+    .pages-wrap { padding: 0; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      box-shadow: none;
+      padding: 15mm 14mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .goal-group { break-inside: avoid; }
+    .anchor-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-controls">
+  <button class="btn-print" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print goals
+  </button>
+  <a href="./goals.html" class="btn-back">← Back to Goals</a>
+  <span class="screen-hint">Opens your browser's print dialog — save as PDF to keep a copy.</span>
+</div>
+
+<div class="pages-wrap" id="pages-wrap"></div>
+
+<script>
+// ── UTILITIES ─────────────────────────────────────────────────────────────────
+function todayStr() {
+  const d = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function formatDue(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T12:00:00');
+  if (isNaN(d.getTime())) return '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return 'Due ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function isOverdue(dateStr) {
+  if (!dateStr) return false;
+  return new Date(dateStr + 'T12:00:00') < new Date();
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const CATS = {
+  financial: { label: 'Financial',     color: '#0F4A3F', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
+  career:    { label: 'Career & Work', color: '#2A2A2A', tag_bg: '#F0F0EA', tag_color: '#0A0A0A' },
+  parenting: { label: 'Parenting',     color: '#DCBD8F', tag_bg: '#EAC995', tag_color: '#0A0A0A' },
+  fitness:   { label: 'Fitness',       color: '#0A332B', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
+  personal:  { label: 'Personal',      color: '#E27B5A', tag_bg: '#F5D996', tag_color: '#0A0A0A' },
+};
+
+const PHASE_LABEL = { survive: 'Survive', stabilise: 'Stabilise', rebuild: 'Rebuild', 'new-chapter': 'New Chapter' };
+
+const DEFAULT_ANCHOR = 'A messy week still counts as progress.';
+const DEFAULTS = [
+  { id: 'g1', cat: 'financial', title: 'Get clear on your numbers',       progress: 0, note: 'Start with one money goal that matches this phase.',          due: '', done: false },
+  { id: 'g2', cat: 'career',    title: 'Define one work move for this phase', progress: 0, note: 'Keep it realistic. One useful step is enough to start.',   due: '', done: false },
+  { id: 'g3', cat: 'parenting', title: 'Set one parenting priority',       progress: 0, note: 'Choose the thing that would make this week calmer or steadier.', due: '', done: false },
+  { id: 'g4', cat: 'fitness',   title: 'Pick one movement goal',           progress: 0, note: 'Consistency beats intensity right now.',                       due: '', done: false },
+  { id: 'g5', cat: 'personal',  title: 'Choose one thing that steadies you', progress: 0, note: 'Something small that helps life feel more manageable.',      due: '', done: false },
+];
+
+function load() {
+  let goals, anchorText, phase;
+  try {
+    const raw = localStorage.getItem('atlas_goals') || localStorage.getItem('dad_goals');
+    goals = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULTS));
+    goals = goals.map(g => ({ ...g, cat: CATS[g.cat] ? g.cat : 'personal' }));
+  } catch(e) { goals = JSON.parse(JSON.stringify(DEFAULTS)); }
+  try {
+    const a = localStorage.getItem('atlas_goals_anchor') || localStorage.getItem('dad_goals_anchor');
+    anchorText = (a && a.trim()) ? a : DEFAULT_ANCHOR;
+  } catch(e) { anchorText = DEFAULT_ANCHOR; }
+  try {
+    let p = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise';
+    if (p === 'crisis') p = 'survive';
+    phase = PHASE_LABEL[p] ? p : 'stabilise';
+  } catch(e) { phase = 'stabilise'; }
+  return { goals, anchorText, phase };
+}
+
+// ── BUILD ─────────────────────────────────────────────────────────────────────
+function build() {
+  const { goals, anchorText, phase } = load();
+
+  const total = goals.length;
+  const done = goals.filter(g => g.done).length;
+  const active = total - done;
+  const avgPct = total > 0
+    ? Math.round(goals.reduce((a, g) => a + (g.done ? 100 : g.progress), 0) / total)
+    : 0;
+  const overdue = goals.filter(g => !g.done && g.due && isOverdue(g.due)).length;
+
+  // Stats
+  const statsHtml = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Overall Progress</div>
+        <div class="stat-val green">${avgPct}%</div>
+        <div class="stat-sub">across all goals</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active</div>
+        <div class="stat-val">${active}</div>
+        <div class="stat-sub">${done} completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total goals</div>
+        <div class="stat-val">${total}</div>
+        <div class="stat-sub">${Object.keys(CATS).filter(k => goals.some(g => g.cat === k)).length} areas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Overdue</div>
+        <div class="stat-val${overdue > 0 ? '' : ' green'}">${overdue > 0 ? overdue : '—'}</div>
+        <div class="stat-sub">${overdue > 0 ? 'need attention' : 'all on track'}</div>
+      </div>
+    </div>
+
+    <div class="overall-bar-wrap">
+      <div class="overall-bar-row">
+        <span>Progress across all goals</span>
+        <span>${avgPct}%</span>
+      </div>
+      <div class="overall-bar">
+        <div class="overall-bar-fill" style="width:${avgPct}%"></div>
+      </div>
+    </div>
+  `;
+
+  // Anchor
+  const anchorHtml = `
+    <div class="anchor-block">
+      <div class="anchor-label">Anchor</div>
+      <div class="anchor-text">${anchorText}</div>
+    </div>
+  `;
+
+  // Goals by category
+  const groupsHtml = Object.entries(CATS).map(([catKey, cat]) => {
+    const catGoals = goals.filter(g => g.cat === catKey);
+    if (!catGoals.length) return '';
+
+    const avgCatPct = Math.round(
+      catGoals.reduce((a, g) => a + (g.done ? 100 : g.progress), 0) / catGoals.length
+    );
+
+    const itemsHtml = catGoals.map(goal => {
+      const pct = goal.done ? 100 : goal.progress;
+      const dueStr = formatDue(goal.due);
+      const overdueGoal = !goal.done && goal.due && isOverdue(goal.due);
+      return `
+        <div class="goal-item">
+          <div class="goal-check-box${goal.done ? ' done' : ''}"></div>
+          <div class="goal-body">
+            <div class="goal-title${goal.done ? ' done' : ''}">${goal.title}</div>
+            <div class="goal-meta-row">
+              <span class="goal-tag" style="background:${cat.tag_bg};color:${cat.tag_color}">${cat.label}</span>
+              ${dueStr ? `<span class="goal-due${overdueGoal ? ' overdue' : ''}">${dueStr}</span>` : ''}
+            </div>
+            ${goal.note ? `<div class="goal-note">${goal.note}</div>` : ''}
+            <div class="goal-progress-row">
+              <div class="goal-bar">
+                <div class="goal-bar-fill" style="width:${pct}%;background:${cat.color}"></div>
+              </div>
+              <span class="goal-pct">${pct}%</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="goal-group">
+        <div class="goal-group-header">
+          <div class="group-dot" style="background:${cat.color}"></div>
+          <div class="group-title">${cat.label}</div>
+          <div class="group-pct">${avgCatPct}% avg</div>
+        </div>
+        ${itemsHtml}
+      </div>
+    `;
+  }).join('');
+
+  const pageHtml = `
+    <div class="pages-wrap">
+      <div class="page">
+        <div class="print-header">
+          <div class="print-logo">Atlas<span class="print-logo-accent"> · </span>Goals</div>
+          <div class="print-header-meta">
+            <strong>Goals Snapshot</strong><br>
+            Phase: ${PHASE_LABEL[phase]}<br>
+            Printed ${todayStr()}
+          </div>
+        </div>
+
+        <div class="page-title">Your goals.</div>
+        <div class="page-sub">${total} goal${total !== 1 ? 's' : ''} · ${done} done · ${active} active</div>
+
+        ${statsHtml}
+        ${anchorHtml}
+        ${groupsHtml}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('pages-wrap').outerHTML = pageHtml;
+}
+
+build();
+</script>
+</body>
+</html>

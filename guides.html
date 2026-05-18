@@ -477,8 +477,27 @@
     color: var(--ink-muted);
     max-width: 56ch;
   }
-  .cat-acc-close {
+  .cat-acc-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     align-self: start;
+  }
+  .cat-acc-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green);
+    color: var(--paper);
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .cat-acc-print:hover { background: var(--green-deep); }
+  .cat-acc-close {
     border: none;
     background: none;
     color: var(--ink-muted);
@@ -923,7 +942,7 @@
 
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Guides</div>
-    <h1><span class="soft">Find the right guide</span><br>for the moment.</h1>
+    <h1><span class="soft">Find the right</span><br>guide for the moment.</h1>
     <p class="hero-sub">Use articles, scripts and phase guides to handle the next decision, conversation or practical step.</p>
 
     <div class="content-tabs" role="tablist" aria-label="Guides content">
@@ -1419,7 +1438,13 @@ function renderOpenCategory() {
     <div class="cat-acc-header">
       <div class="cat-acc-kicker">Category</div>
       <h2 class="cat-acc-title">${escapeHtml(category.label)}</h2>
-      <button class="cat-acc-close" type="button" onclick="closeCategory()">Close ×</button>
+      <div class="cat-acc-actions">
+        <a href="./guides-print.html?cat=${escapeHtml(openCategoryId)}" class="cat-acc-print" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </a>
+        <button class="cat-acc-close" type="button" onclick="closeCategory()">Close ×</button>
+      </div>
       <p class="cat-acc-desc">${escapeHtml(category.description)}</p>
     </div>
     <div class="cat-acc-scripts">

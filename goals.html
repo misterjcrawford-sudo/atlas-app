@@ -237,6 +237,17 @@
     font-weight: 300;
   }
 
+  .print-snapshot-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green); color: var(--paper);
+    border-radius: 999px; border: none;
+    padding: 10px 18px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .print-snapshot-btn:hover { background: var(--green-deep); }
+
   /* Snap panel — hero stats */
   .snap-panel {
     background: var(--green);
@@ -313,7 +324,13 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--ink-muted);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+  }
+  .anchor-hint {
+    font-size: 12px;
+    color: var(--ink-faded);
+    margin-bottom: 8px;
+    font-style: italic;
   }
   .anchor-input {
     width: 100%;
@@ -1046,10 +1063,7 @@
 <body>
 
 <!-- TOP STRIP -->
-<div class="top-strip">
-  Atlas is private. Everything stays on your device.
-  <a href="./index.html#privacy">How it works <span class="arrow">→</span></a>
-</div>
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
 
 <!-- NAV -->
 <div class="nav-wrap">
@@ -1106,6 +1120,10 @@
           <div class="phase-context" id="phase-context-text">
             Pick the phase that matches where you are. Atlas tunes the suggested goals and guidance to match.
           </div>
+          <a href="./goals-print.html" class="print-snapshot-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print goals
+          </a>
         </div>
         <div>
           <div class="snap-panel">
@@ -1141,6 +1159,7 @@
             </div>
             <div class="anchor-card">
               <div class="anchor-label">Anchor</div>
+              <div class="anchor-hint">Write something here that keeps you grounded.</div>
               <textarea
                 id="hero-anchor"
                 class="anchor-input"

@@ -185,21 +185,60 @@
     .overall-progress-label { flex: 100%; }
   }
 
+  /* MOVE DATA */
+  .move-data-section {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    background: var(--paper-card); border: 1px solid var(--paper-edge);
+    border-radius: var(--radius); padding: 18px 24px; margin-bottom: 20px;
+  }
+  .move-data-info { flex: 1; min-width: 0; }
+  .move-data-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .move-data-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+  .move-data-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .move-data-btn {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 9px 18px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--paper-edge); background: var(--paper); color: var(--ink-soft);
+    transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .move-data-btn:hover { background: var(--paper-warm); color: var(--ink); }
+  .move-data-btn.export { background: var(--green); color: white; border-color: var(--green); }
+  .move-data-btn.export:hover { background: var(--green-deep); border-color: var(--green-deep); }
+  .move-data-toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 500;
+    padding: 11px 20px; border-radius: 999px; white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 100;
+  }
+  .move-data-toast.show { opacity: 1; }
+  @media (max-width: 600px) {
+    .move-data-section { flex-direction: column; align-items: flex-start; }
+  }
+
   /* PRINT BUTTON */
-  .print-action-row { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 20px; }
+  .print-action-row { display: flex; justify-content: flex-start; gap: 8px; margin-bottom: 20px; }
   .print-btn {
     font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--ink); background: var(--paper-card); border: 1px solid var(--paper-edge);
+    color: var(--paper); background: var(--green); border: none;
     border-radius: 999px; padding: 11px 20px; cursor: pointer;
     display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s;
+    text-decoration: none;
   }
-  .print-btn:hover { background: var(--paper-warm); }
+  .print-btn:hover { background: var(--green-deep); }
   .reset-btn {
     font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
     color: var(--ink-muted); background: none; border: 1px solid var(--paper-edge);
     border-radius: 999px; padding: 11px 20px; cursor: pointer; transition: all 0.15s;
   }
   .reset-btn:hover { color: var(--coral); border-color: var(--coral); background: rgba(226,123,90,0.06); }
+
+  /* SUBGROUP LABELS */
+  .cl-subgroup-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-muted);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 14px 24px 6px; border-top: 1px solid var(--paper-edge);
+  }
+  .cl-body > .cl-subgroup-label:first-child { border-top: none; padding-top: 18px; }
 
   /* CUSTOM ITEMS */
   .cl-add-row { display: flex; align-items: center; gap: 10px; padding: 12px 24px 16px; border-top: 1px solid var(--paper-edge); }
@@ -396,64 +435,86 @@
 
   <div class="print-action-row">
     <button class="reset-btn" onclick="resetPage()">Reset checklist</button>
-    <button class="print-btn" onclick="printChecklist()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="3" y="1" width="10" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
-        <rect x="1" y="5" width="14" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-        <rect x="4" y="10" width="8" height="5" rx="0.5" stroke="currentColor" stroke-width="1.5"/>
-        <circle cx="12.5" cy="8" r="1" fill="currentColor"/>
-      </svg>
+    <a href="./admin-print.html" class="print-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Print checklist
-    </button>
+    </a>
   </div>
 
   <!-- SECTION 1: First 30 Days -->
   <div class="checklist-section" id="cl-first30" data-priority-phases="survive">
     <button class="cl-header" onclick="toggleSection('first30')">
-      <span class="cl-title">First 30 Days</span>
-      <span class="cl-progress" id="cl-first30-progress">0 / 12</span>
+      <span class="cl-title">First 30 days</span>
+      <span class="cl-progress" id="cl-first30-progress">0 / 17</span>
       <span class="cl-chevron">›</span>
     </button>
     <div class="cl-body" id="cl-first30-body">
       <div class="cl-item"><input type="checkbox" id="item-f01" onchange="saveChecklists()"><label for="item-f01"><span class="cl-item-title">Find somewhere stable to live</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f02" onchange="saveChecklists()"><label for="item-f02"><span class="cl-item-title">Tell your employer your address has changed</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f03" onchange="saveChecklists()"><label for="item-f03"><span class="cl-item-title">Open a personal bank account in your name only</span><span class="cl-item-note">If you don't already have one solely in your name.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f04" onchange="saveChecklists()"><label for="item-f04"><span class="cl-item-title">Get a PO Box or update your mailing address</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f05" onchange="saveChecklists()"><label for="item-f05"><span class="cl-item-title">Locate your important documents</span><span class="cl-item-note">Passport, birth certificate, tax file number.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f06" onchange="saveChecklists()"><label for="item-f06"><span class="cl-item-title">Contact a family lawyer for an initial consultation</span><span class="cl-item-note">Many offer free first calls.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f07" onchange="saveChecklists()"><label for="item-f07"><span class="cl-item-title">Notify your children's school of the separation and new contact details</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f08" onchange="saveChecklists()"><label for="item-f08"><span class="cl-item-title">Register with a GP if you've moved suburb</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f09" onchange="saveChecklists()"><label for="item-f09"><span class="cl-item-title">Let Centrelink know if your income or living situation has changed</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f10" onchange="saveChecklists()"><label for="item-f10"><span class="cl-item-title">Contact Services Australia about child support obligations</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f11" onchange="saveChecklists()"><label for="item-f11"><span class="cl-item-title">Set up a separate email address for legal and financial correspondence</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-f12" onchange="saveChecklists()"><label for="item-f12"><span class="cl-item-title">Do not make major financial decisions in the first 30 days</span><span class="cl-item-note">If you can avoid it.</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f02" onchange="saveChecklists()"><label for="item-f02"><span class="cl-item-title">Open a personal bank account in your name only</span><span class="cl-item-note">If you do not already have one.</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f03" onchange="saveChecklists()"><label for="item-f03"><span class="cl-item-title">Set up a separate email address for legal and financial correspondence</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f04" onchange="saveChecklists()"><label for="item-f04"><span class="cl-item-title">Create one private folder for separation admin</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f05" onchange="saveChecklists()"><label for="item-f05"><span class="cl-item-title">Locate your important documents</span><span class="cl-item-note">Passport, birth certificate, Medicare, tax file number.</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f06" onchange="saveChecklists()"><label for="item-f06"><span class="cl-item-title">Take phone photos or scans of key documents before anything gets moved</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f07" onchange="saveChecklists()"><label for="item-f07"><span class="cl-item-title">Contact a family lawyer for an initial consultation</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f08" onchange="saveChecklists()"><label for="item-f08"><span class="cl-item-title">Notify your children's school of the separation and any new contact details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f09" onchange="saveChecklists()"><label for="item-f09"><span class="cl-item-title">Contact Services Australia about child support obligations if relevant</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f10" onchange="saveChecklists()"><label for="item-f10"><span class="cl-item-title">Let Centrelink / Services Australia know if your income or living situation has changed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f11" onchange="saveChecklists()"><label for="item-f11"><span class="cl-item-title">Register with a GP if you have moved suburb</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f12" onchange="saveChecklists()"><label for="item-f12"><span class="cl-item-title">Update your payroll, HR and emergency contact details if needed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f13" onchange="saveChecklists()"><label for="item-f13"><span class="cl-item-title">Change passwords on personal email, banking and government accounts</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f14" onchange="saveChecklists()"><label for="item-f14"><span class="cl-item-title">Turn on two-factor authentication where possible</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f15" onchange="saveChecklists()"><label for="item-f15"><span class="cl-item-title">Check who has access to shared devices, cloud storage and family accounts</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f16" onchange="saveChecklists()"><label for="item-f16"><span class="cl-item-title">Write down key dates while they are still fresh</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-f17" onchange="saveChecklists()"><label for="item-f17"><span class="cl-item-title">Do not make major financial decisions in the first 30 days if you can avoid it</span></label></div>
       <div class="cl-add-row" data-section="first30"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('first30')">Add</button></div>
     </div>
   </div>
 
-  <!-- SECTION 2: Documents -->
+  <!-- SECTION 2: Identity, Legal & Documents -->
   <div class="checklist-section" id="cl-documents" data-priority-phases="waiting-room survive">
     <button class="cl-header" onclick="toggleSection('documents')">
-      <span class="cl-title">Documents</span>
-      <span class="cl-progress" id="cl-documents-progress">0 / 15</span>
+      <span class="cl-title">Identity, legal &amp; documents</span>
+      <span class="cl-progress" id="cl-documents-progress">0 / 32</span>
       <span class="cl-chevron">›</span>
     </button>
     <div class="cl-body" id="cl-documents-body">
-      <div class="cl-item"><input type="checkbox" id="item-d01" onchange="saveChecklists()"><label for="item-d01"><span class="cl-item-title">Passport (yours)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d02" onchange="saveChecklists()"><label for="item-d02"><span class="cl-item-title">Passport (children's — know where it is)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d03" onchange="saveChecklists()"><label for="item-d03"><span class="cl-item-title">Birth certificates (yours and children's)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d04" onchange="saveChecklists()"><label for="item-d04"><span class="cl-item-title">Tax file number (TFN)</span></label></div>
+      <div class="cl-subgroup-label">Identity</div>
+      <div class="cl-item"><input type="checkbox" id="item-d01" onchange="saveChecklists()"><label for="item-d01"><span class="cl-item-title">Passport — yours</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d02" onchange="saveChecklists()"><label for="item-d02"><span class="cl-item-title">Passport — children's</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d03" onchange="saveChecklists()"><label for="item-d03"><span class="cl-item-title">Birth certificate — yours</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d04" onchange="saveChecklists()"><label for="item-d04"><span class="cl-item-title">Birth certificates — children's</span></label></div>
       <div class="cl-item"><input type="checkbox" id="item-d05" onchange="saveChecklists()"><label for="item-d05"><span class="cl-item-title">Medicare card</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d06" onchange="saveChecklists()"><label for="item-d06"><span class="cl-item-title">Marriage certificate</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d07" onchange="saveChecklists()"><label for="item-d07"><span class="cl-item-title">Driver's licence (updated address)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d08" onchange="saveChecklists()"><label for="item-d08"><span class="cl-item-title">Will (update or create one)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d09" onchange="saveChecklists()"><label for="item-d09"><span class="cl-item-title">Power of attorney (consider setting up)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d10" onchange="saveChecklists()"><label for="item-d10"><span class="cl-item-title">Signed copies of any parenting agreements or orders</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d11" onchange="saveChecklists()"><label for="item-d11"><span class="cl-item-title">Property settlement documents</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d12" onchange="saveChecklists()"><label for="item-d12"><span class="cl-item-title">Separation agreement or consent orders</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d13" onchange="saveChecklists()"><label for="item-d13"><span class="cl-item-title">Insurance policies (home, car, life, income protection)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d14" onchange="saveChecklists()"><label for="item-d14"><span class="cl-item-title">Superannuation statements</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-d15" onchange="saveChecklists()"><label for="item-d15"><span class="cl-item-title">Most recent tax return</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d06" onchange="saveChecklists()"><label for="item-d06"><span class="cl-item-title">Tax file number</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d07" onchange="saveChecklists()"><label for="item-d07"><span class="cl-item-title">Driver licence</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d08" onchange="saveChecklists()"><label for="item-d08"><span class="cl-item-title">Marriage certificate</span></label></div>
+      <div class="cl-subgroup-label">Children</div>
+      <div class="cl-item"><input type="checkbox" id="item-d09" onchange="saveChecklists()"><label for="item-d09"><span class="cl-item-title">Children's Medicare details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d10" onchange="saveChecklists()"><label for="item-d10"><span class="cl-item-title">Immunisation records</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d11" onchange="saveChecklists()"><label for="item-d11"><span class="cl-item-title">School reports</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d12" onchange="saveChecklists()"><label for="item-d12"><span class="cl-item-title">School login details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d13" onchange="saveChecklists()"><label for="item-d13"><span class="cl-item-title">Childcare agreements</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d14" onchange="saveChecklists()"><label for="item-d14"><span class="cl-item-title">Parenting agreements or parenting orders</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d15" onchange="saveChecklists()"><label for="item-d15"><span class="cl-item-title">Children's travel documents</span></label></div>
+      <div class="cl-subgroup-label">Legal</div>
+      <div class="cl-item"><input type="checkbox" id="item-d16" onchange="saveChecklists()"><label for="item-d16"><span class="cl-item-title">Separation date notes</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d17" onchange="saveChecklists()"><label for="item-d17"><span class="cl-item-title">Existing agreements</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d18" onchange="saveChecklists()"><label for="item-d18"><span class="cl-item-title">Consent orders</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d19" onchange="saveChecklists()"><label for="item-d19"><span class="cl-item-title">Court documents</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d20" onchange="saveChecklists()"><label for="item-d20"><span class="cl-item-title">Mediation records</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d21" onchange="saveChecklists()"><label for="item-d21"><span class="cl-item-title">Legal correspondence</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d22" onchange="saveChecklists()"><label for="item-d22"><span class="cl-item-title">Property settlement documents</span></label></div>
+      <div class="cl-subgroup-label">Estate &amp; authority</div>
+      <div class="cl-item"><input type="checkbox" id="item-d23" onchange="saveChecklists()"><label for="item-d23"><span class="cl-item-title">Will</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d24" onchange="saveChecklists()"><label for="item-d24"><span class="cl-item-title">Power of attorney</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d25" onchange="saveChecklists()"><label for="item-d25"><span class="cl-item-title">Superannuation beneficiary nomination</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d26" onchange="saveChecklists()"><label for="item-d26"><span class="cl-item-title">Life insurance beneficiary details</span></label></div>
+      <div class="cl-subgroup-label">Financial</div>
+      <div class="cl-item"><input type="checkbox" id="item-d27" onchange="saveChecklists()"><label for="item-d27"><span class="cl-item-title">Most recent tax return</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d28" onchange="saveChecklists()"><label for="item-d28"><span class="cl-item-title">Superannuation statements</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d29" onchange="saveChecklists()"><label for="item-d29"><span class="cl-item-title">Insurance policies</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d30" onchange="saveChecklists()"><label for="item-d30"><span class="cl-item-title">Bank statements</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d31" onchange="saveChecklists()"><label for="item-d31"><span class="cl-item-title">Mortgage statements</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-d32" onchange="saveChecklists()"><label for="item-d32"><span class="cl-item-title">Loan documents</span></label></div>
       <div class="cl-add-row" data-section="documents"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('documents')">Add</button></div>
     </div>
   </div>
@@ -461,70 +522,118 @@
   <!-- SECTION 3: Bank, Super & Insurance -->
   <div class="checklist-section" id="cl-bank" data-priority-phases="survive stabilise">
     <button class="cl-header" onclick="toggleSection('bank')">
-      <span class="cl-title">Bank, Super &amp; Insurance</span>
-      <span class="cl-progress" id="cl-bank-progress">0 / 14</span>
+      <span class="cl-title">Bank, super &amp; insurance</span>
+      <span class="cl-progress" id="cl-bank-progress">0 / 18</span>
       <span class="cl-chevron">›</span>
     </button>
     <div class="cl-body" id="cl-bank-body">
       <div class="cl-item"><input type="checkbox" id="item-b01" onchange="saveChecklists()"><label for="item-b01"><span class="cl-item-title">Open a bank account solely in your name</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b02" onchange="saveChecklists()"><label for="item-b02"><span class="cl-item-title">Update direct debits and salary payments to your new account</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b03" onchange="saveChecklists()"><label for="item-b03"><span class="cl-item-title">Remove ex-partner's access to joint accounts (or formally close them)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b04" onchange="saveChecklists()"><label for="item-b04"><span class="cl-item-title">Notify your super fund of your new address and beneficiary</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b05" onchange="saveChecklists()"><label for="item-b05"><span class="cl-item-title">Review your super beneficiary nomination — update if needed</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b06" onchange="saveChecklists()"><label for="item-b06"><span class="cl-item-title">Check if your life insurance is through super or separate (and whether it's adequate)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b07" onchange="saveChecklists()"><label for="item-b07"><span class="cl-item-title">Set up income protection insurance if you don't have it</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b08" onchange="saveChecklists()"><label for="item-b08"><span class="cl-item-title">Review your private health insurance — are you still on a joint or family policy?</span><span class="cl-item-note">Joint policies usually need to be split or transferred. Contact your insurer.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b09" onchange="saveChecklists()"><label for="item-b09"><span class="cl-item-title">Update to a singles or single-parent health insurance policy if needed</span><span class="cl-item-note">Single-parent cover includes dependants at a lower premium than couples cover.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b10" onchange="saveChecklists()"><label for="item-b10"><span class="cl-item-title">Confirm which parent's policy the children are covered under</span><span class="cl-item-note">Get this in writing. Gaps in children's cover can be costly.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b11" onchange="saveChecklists()"><label for="item-b11"><span class="cl-item-title">Review your level of hospital and extras cover — is it right for a single-parent household?</span><span class="cl-item-note">Many people are over-insured on couples cover and can reduce premiums by switching.</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b12" onchange="saveChecklists()"><label for="item-b12"><span class="cl-item-title">Review car insurance — is the policy still in the right name?</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b13" onchange="saveChecklists()"><label for="item-b13"><span class="cl-item-title">Update home/contents insurance for your new address</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-b14" onchange="saveChecklists()"><label for="item-b14"><span class="cl-item-title">Check if any accounts are still jointly held that shouldn't be</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b02" onchange="saveChecklists()"><label for="item-b02"><span class="cl-item-title">Update salary payments and direct debits to your new account</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b03" onchange="saveChecklists()"><label for="item-b03"><span class="cl-item-title">Download recent bank, credit card and loan statements before access changes</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b04" onchange="saveChecklists()"><label for="item-b04"><span class="cl-item-title">Review access to joint accounts and get advice before closing, withdrawing from or changing shared facilities</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b05" onchange="saveChecklists()"><label for="item-b05"><span class="cl-item-title">Check joint credit cards, redraw facilities and offset accounts</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b06" onchange="saveChecklists()"><label for="item-b06"><span class="cl-item-title">Check PayPal, Apple Pay, Google Pay, buy-now-pay-later accounts and saved cards</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b07" onchange="saveChecklists()"><label for="item-b07"><span class="cl-item-title">Notify your super fund of your new address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b08" onchange="saveChecklists()"><label for="item-b08"><span class="cl-item-title">Review your super beneficiary nomination and update if needed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b09" onchange="saveChecklists()"><label for="item-b09"><span class="cl-item-title">Check whether life insurance is through super or separate</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b10" onchange="saveChecklists()"><label for="item-b10"><span class="cl-item-title">Review nominated beneficiaries on life insurance</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b11" onchange="saveChecklists()"><label for="item-b11"><span class="cl-item-title">Check whether any insurance premiums are paid from a joint account</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b12" onchange="saveChecklists()"><label for="item-b12"><span class="cl-item-title">Set up or review income protection insurance if relevant</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b13" onchange="saveChecklists()"><label for="item-b13"><span class="cl-item-title">Review private health insurance — are you still on a joint or family policy?</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b14" onchange="saveChecklists()"><label for="item-b14"><span class="cl-item-title">Update to singles or single-parent cover if needed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b15" onchange="saveChecklists()"><label for="item-b15"><span class="cl-item-title">Confirm which parent's policy the children are covered under</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b16" onchange="saveChecklists()"><label for="item-b16"><span class="cl-item-title">Review car insurance — is the policy still in the right name?</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b17" onchange="saveChecklists()"><label for="item-b17"><span class="cl-item-title">Update home and contents insurance for your current address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-b18" onchange="saveChecklists()"><label for="item-b18"><span class="cl-item-title">Check if any accounts are still jointly held that should not be</span></label></div>
       <div class="cl-add-row" data-section="bank"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('bank')">Add</button></div>
     </div>
   </div>
 
-  <!-- SECTION 4: Tax, Subscriptions & Utilities -->
-  <div class="checklist-section" id="cl-tax" data-priority-phases="stabilise rebuild">
-    <button class="cl-header" onclick="toggleSection('tax')">
-      <span class="cl-title">Tax, Subscriptions &amp; Utilities</span>
-      <span class="cl-progress" id="cl-tax-progress">0 / 10</span>
+  <!-- SECTION 4: Government, Tax & Payments -->
+  <div class="checklist-section" id="cl-govt" data-priority-phases="stabilise">
+    <button class="cl-header" onclick="toggleSection('govt')">
+      <span class="cl-title">Government, tax &amp; payments</span>
+      <span class="cl-progress" id="cl-govt-progress">0 / 16</span>
       <span class="cl-chevron">›</span>
     </button>
-    <div class="cl-body" id="cl-tax-body">
-      <div class="cl-item"><input type="checkbox" id="item-t01" onchange="saveChecklists()"><label for="item-t01"><span class="cl-item-title">Notify the ATO of your new address</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t02" onchange="saveChecklists()"><label for="item-t02"><span class="cl-item-title">Update your tax return status — single, with dependants</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t03" onchange="saveChecklists()"><label for="item-t03"><span class="cl-item-title">Check you're claiming the correct Medicare levy adjustment</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t04" onchange="saveChecklists()"><label for="item-t04"><span class="cl-item-title">Review all subscriptions — cancel anything still shared with ex-partner</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t05" onchange="saveChecklists()"><label for="item-t05"><span class="cl-item-title">Set up utilities in your name (electricity, gas, internet)</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t06" onchange="saveChecklists()"><label for="item-t06"><span class="cl-item-title">Update your address on all streaming/subscription services</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t07" onchange="saveChecklists()"><label for="item-t07"><span class="cl-item-title">Review phone plan — are you still on a family plan?</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t08" onchange="saveChecklists()"><label for="item-t08"><span class="cl-item-title">Notify your accountant or tax agent of change in circumstances</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t09" onchange="saveChecklists()"><label for="item-t09"><span class="cl-item-title">Check your HECS-HELP repayment status if applicable</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-t10" onchange="saveChecklists()"><label for="item-t10"><span class="cl-item-title">Lodge a tax return if you haven't</span><span class="cl-item-note">Child support is calculated on income.</span></label></div>
-      <div class="cl-add-row" data-section="tax"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('tax')">Add</button></div>
+    <div class="cl-body" id="cl-govt-body">
+      <div class="cl-item"><input type="checkbox" id="item-g01" onchange="saveChecklists()"><label for="item-g01"><span class="cl-item-title">Notify the ATO of your new address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g02" onchange="saveChecklists()"><label for="item-g02"><span class="cl-item-title">Notify your accountant or tax agent of your change in circumstances</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g03" onchange="saveChecklists()"><label for="item-g03"><span class="cl-item-title">Update your tax return status if your family situation has changed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g04" onchange="saveChecklists()"><label for="item-g04"><span class="cl-item-title">Check whether you are claiming the correct Medicare levy adjustment</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g05" onchange="saveChecklists()"><label for="item-g05"><span class="cl-item-title">Lodge any overdue tax returns</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g06" onchange="saveChecklists()"><label for="item-g06"><span class="cl-item-title">Check your HECS-HELP repayment status if applicable</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g07" onchange="saveChecklists()"><label for="item-g07"><span class="cl-item-title">Update Medicare household details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g08" onchange="saveChecklists()"><label for="item-g08"><span class="cl-item-title">Let Centrelink / Services Australia know if your income or care arrangements have changed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g09" onchange="saveChecklists()"><label for="item-g09"><span class="cl-item-title">Check Family Tax Benefit eligibility if you care for children</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g10" onchange="saveChecklists()"><label for="item-g10"><span class="cl-item-title">Update childcare subsidy details if applicable</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g11" onchange="saveChecklists()"><label for="item-g11"><span class="cl-item-title">Contact Services Australia about child support if relevant</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g12" onchange="saveChecklists()"><label for="item-g12"><span class="cl-item-title">Decide whether child support will be self-managed, private collect or Services Australia collect</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g13" onchange="saveChecklists()"><label for="item-g13"><span class="cl-item-title">Keep records of agreed child-related expenses</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g14" onchange="saveChecklists()"><label for="item-g14"><span class="cl-item-title">Update your electoral roll address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g15" onchange="saveChecklists()"><label for="item-g15"><span class="cl-item-title">Update your driver licence address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-g16" onchange="saveChecklists()"><label for="item-g16"><span class="cl-item-title">Update your vehicle registration address</span></label></div>
+      <div class="cl-add-row" data-section="govt"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('govt')">Add</button></div>
     </div>
   </div>
 
-  <!-- SECTION 5: Property, School & Medical -->
-  <div class="checklist-section" id="cl-property" data-priority-phases="rebuild new-chapter">
-    <button class="cl-header" onclick="toggleSection('property')">
-      <span class="cl-title">Property, School &amp; Medical</span>
-      <span class="cl-progress" id="cl-property-progress">0 / 10</span>
+  <!-- SECTION 5: Home, Property & Utilities -->
+  <div class="checklist-section" id="cl-home" data-priority-phases="stabilise rebuild">
+    <button class="cl-header" onclick="toggleSection('home')">
+      <span class="cl-title">Home, property &amp; utilities</span>
+      <span class="cl-progress" id="cl-home-progress">0 / 18</span>
       <span class="cl-chevron">›</span>
     </button>
-    <div class="cl-body" id="cl-property-body">
-      <div class="cl-item"><input type="checkbox" id="item-p01" onchange="saveChecklists()"><label for="item-p01"><span class="cl-item-title">Update school enrolment records with your new address and contact details</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p02" onchange="saveChecklists()"><label for="item-p02"><span class="cl-item-title">Ensure both parents are listed on school emergency contact records</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p03" onchange="saveChecklists()"><label for="item-p03"><span class="cl-item-title">Register the children with a GP close to your home</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p04" onchange="saveChecklists()"><label for="item-p04"><span class="cl-item-title">Ensure both parents have access to children's Medicare records</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p05" onchange="saveChecklists()"><label for="item-p05"><span class="cl-item-title">Update children's dental and specialist records</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p06" onchange="saveChecklists()"><label for="item-p06"><span class="cl-item-title">Review any property settlement — is it documented and finalised?</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p07" onchange="saveChecklists()"><label for="item-p07"><span class="cl-item-title">Update your address on the electoral roll</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p08" onchange="saveChecklists()"><label for="item-p08"><span class="cl-item-title">If renting, make sure your lease is in your name and signed</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p09" onchange="saveChecklists()"><label for="item-p09"><span class="cl-item-title">Review your contents insurance covers your new home</span></label></div>
-      <div class="cl-item"><input type="checkbox" id="item-p10" onchange="saveChecklists()"><label for="item-p10"><span class="cl-item-title">Plan ahead for school holidays — have a schedule agreed</span></label></div>
-      <div class="cl-add-row" data-section="property"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('property')">Add</button></div>
+    <div class="cl-body" id="cl-home-body">
+      <div class="cl-item"><input type="checkbox" id="item-h01" onchange="saveChecklists()"><label for="item-h01"><span class="cl-item-title">Update lease, mortgage or property correspondence address</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h02" onchange="saveChecklists()"><label for="item-h02"><span class="cl-item-title">If renting, make sure the lease is in the correct name and signed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h03" onchange="saveChecklists()"><label for="item-h03"><span class="cl-item-title">Set up electricity in the correct name</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h04" onchange="saveChecklists()"><label for="item-h04"><span class="cl-item-title">Set up gas in the correct name if applicable</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h05" onchange="saveChecklists()"><label for="item-h05"><span class="cl-item-title">Set up internet in the correct name</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h06" onchange="saveChecklists()"><label for="item-h06"><span class="cl-item-title">Update water / council correspondence if relevant</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h07" onchange="saveChecklists()"><label for="item-h07"><span class="cl-item-title">Update home and contents insurance for your current home</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h08" onchange="saveChecklists()"><label for="item-h08"><span class="cl-item-title">Review mortgage statements and home loan access</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h09" onchange="saveChecklists()"><label for="item-h09"><span class="cl-item-title">Get a property valuation if needed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h10" onchange="saveChecklists()"><label for="item-h10"><span class="cl-item-title">Locate property title, purchase documents and rates notices</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h11" onchange="saveChecklists()"><label for="item-h11"><span class="cl-item-title">Record renovation, repair or major purchase records</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h12" onchange="saveChecklists()"><label for="item-h12"><span class="cl-item-title">Take photos of household contents and shared valuables</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h13" onchange="saveChecklists()"><label for="item-h13"><span class="cl-item-title">List shared household items still to be divided</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h14" onchange="saveChecklists()"><label for="item-h14"><span class="cl-item-title">Record storage unit details if relevant</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h15" onchange="saveChecklists()"><label for="item-h15"><span class="cl-item-title">Update security codes, keys and garage remotes if appropriate</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h16" onchange="saveChecklists()"><label for="item-h16"><span class="cl-item-title">Review vehicle ownership, registration, finance and insurance</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h17" onchange="saveChecklists()"><label for="item-h17"><span class="cl-item-title">Cancel, split or update shared subscriptions and deliveries</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-h18" onchange="saveChecklists()"><label for="item-h18"><span class="cl-item-title">Update mailing address for important services</span></label></div>
+      <div class="cl-add-row" data-section="home"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('home')">Add</button></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: Kids, School & Medical -->
+  <div class="checklist-section" id="cl-kids" data-priority-phases="stabilise rebuild new-chapter">
+    <button class="cl-header" onclick="toggleSection('kids')">
+      <span class="cl-title">Kids, school &amp; medical</span>
+      <span class="cl-progress" id="cl-kids-progress">0 / 18</span>
+      <span class="cl-chevron">›</span>
+    </button>
+    <div class="cl-body" id="cl-kids-body">
+      <div class="cl-item"><input type="checkbox" id="item-k01" onchange="saveChecklists()"><label for="item-k01"><span class="cl-item-title">Update school enrolment records with current addresses and contact details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k02" onchange="saveChecklists()"><label for="item-k02"><span class="cl-item-title">Confirm both parents are listed on school records where appropriate</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k03" onchange="saveChecklists()"><label for="item-k03"><span class="cl-item-title">Confirm emergency contacts</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k04" onchange="saveChecklists()"><label for="item-k04"><span class="cl-item-title">Confirm pickup and drop-off permissions</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k05" onchange="saveChecklists()"><label for="item-k05"><span class="cl-item-title">Confirm both parents receive school app and email updates where appropriate</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k06" onchange="saveChecklists()"><label for="item-k06"><span class="cl-item-title">Record school login details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k07" onchange="saveChecklists()"><label for="item-k07"><span class="cl-item-title">Record school fees, uniforms, devices and upcoming costs</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k08" onchange="saveChecklists()"><label for="item-k08"><span class="cl-item-title">Add school events, pupil-free days and term dates to your calendar</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k09" onchange="saveChecklists()"><label for="item-k09"><span class="cl-item-title">Plan ahead for school holidays</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k10" onchange="saveChecklists()"><label for="item-k10"><span class="cl-item-title">Record extracurricular schedules, contacts and fees</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k11" onchange="saveChecklists()"><label for="item-k11"><span class="cl-item-title">Agree how uniforms, devices, sport, tutoring and school costs will be handled</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k12" onchange="saveChecklists()"><label for="item-k12"><span class="cl-item-title">Register children with a GP close to your home if needed</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k13" onchange="saveChecklists()"><label for="item-k13"><span class="cl-item-title">Record allergies, medications and regular health needs</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k14" onchange="saveChecklists()"><label for="item-k14"><span class="cl-item-title">Record dental, orthodontic and specialist details</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k15" onchange="saveChecklists()"><label for="item-k15"><span class="cl-item-title">Confirm Medicare access for the children</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k16" onchange="saveChecklists()"><label for="item-k16"><span class="cl-item-title">Confirm private health insurance cover for the children</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k17" onchange="saveChecklists()"><label for="item-k17"><span class="cl-item-title">Decide how out-of-pocket medical and dental costs will be shared</span></label></div>
+      <div class="cl-item"><input type="checkbox" id="item-k18" onchange="saveChecklists()"><label for="item-k18"><span class="cl-item-title">Create duplicate essentials if the children move between homes</span></label></div>
+      <div class="cl-add-row" data-section="kids"><input type="text" class="cl-add-input" placeholder="Add your own item…" maxlength="120"><button class="cl-add-btn" onclick="addCustomItem('kids')">Add</button></div>
     </div>
   </div>
 
@@ -557,6 +666,26 @@
     </div>
   </div>
 
+  <!-- MOVE DATA -->
+  <div class="move-data-section" id="move-data" style="margin-top:12px;">
+    <div class="move-data-info">
+      <div class="move-data-title">Move your data</div>
+      <div class="move-data-desc">Export your Atlas data to move it to another browser or device. Import on the new device to restore everything.</div>
+    </div>
+    <div class="move-data-actions">
+      <button class="move-data-btn export" onclick="exportData()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+      <label class="move-data-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import
+        <input type="file" accept=".json" style="display:none" onchange="importData(this.files[0]); this.value='';">
+      </label>
+    </div>
+  </div>
+  <div class="move-data-toast" id="move-toast"></div>
+
 </div>
 </div>
 
@@ -578,6 +707,7 @@
       <ul class="footer-col-links">
         <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
         <li><a href="https://www.get-atlas.com.au/terms/" target="_blank" rel="noopener">Terms</a></li>
+        <li><a href="./admin.html#move-data">Move to another device</a></li>
       </ul>
     </div>
     <div>
@@ -620,11 +750,12 @@ const phaseContexts = {
 };
 
 const sectionPriorityMap = {
-  'first30': ['survive'],
+  'first30':   ['survive'],
   'documents': ['waiting-room', 'survive'],
-  'bank': ['survive', 'stabilise'],
-  'tax': ['stabilise', 'rebuild'],
-  'property': ['rebuild', 'new-chapter']
+  'bank':      ['survive', 'stabilise'],
+  'govt':      ['stabilise'],
+  'home':      ['stabilise', 'rebuild'],
+  'kids':      ['stabilise', 'rebuild', 'new-chapter']
 };
 
 let currentPhase = 'survive';
@@ -660,21 +791,23 @@ function applyPhaseStyling(phase) {
   const keydates = document.getElementById('cl-keydates');
   document.querySelectorAll('.checklist-section').forEach(section => {
     if (section.id === 'cl-keydates') {
-      section.classList.remove('priority', 'muted');
+      section.classList.add('priority');
+      section.classList.remove('muted');
       return;
     }
     const id = section.id.replace('cl-', '');
     const isPriority = (sectionPriorityMap[id] || []).includes(phase);
-    section.classList.toggle('priority', isPriority);
-    section.classList.toggle('muted', !isPriority);
+    section.classList.add('priority');
+    section.classList.remove('muted');
   });
 
-  // Sort checklist sections: priority first; Key Dates always last
+  // Sort checklist sections: First 30 days always first, priority next, Key Dates always last
   const container = document.querySelector('.container');
   const sections = [...document.querySelectorAll('.checklist-section:not(#cl-keydates)')];
+  const first30 = document.getElementById('cl-first30');
 
-  const priority = sections.filter(s => s.classList.contains('priority'));
-  const others = sections.filter(s => !s.classList.contains('priority'));
+  const priority = sections.filter(s => s !== first30 && s.classList.contains('priority'));
+  const others = sections.filter(s => s !== first30 && !s.classList.contains('priority'));
 
   // Open priority sections, collapse others
   priority.forEach(s => {
@@ -692,9 +825,13 @@ function applyPhaseStyling(phase) {
     if (header) header.classList.remove('open');
   });
 
-  // Reorder: checklist sections first, Key Dates pinned last
-  [...priority, ...others].forEach(s => container.appendChild(s));
+  // Reorder: First 30 days pinned first, then priority, then others, Key Dates pinned last
+  [first30, ...priority, ...others].filter(Boolean).forEach(s => container.appendChild(s));
   if (keydates) container.appendChild(keydates);
+  const moveData = document.getElementById('move-data');
+  const moveToast = document.getElementById('move-toast');
+  if (moveData) container.appendChild(moveData);
+  if (moveToast) container.appendChild(moveToast);
 }
 
 function toggleSection(id) {
@@ -1111,6 +1248,56 @@ function loadKeyDates() {
     if (!notesData.hidden.includes(entry.id))
       notes.appendChild(renderBuiltinNote(entry, notesData));
   });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('move-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function exportData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('atlas_') || key.startsWith('dad_')) {
+      data[key] = localStorage.getItem(key);
+    }
+  }
+  if (!Object.keys(data).length) { showToast('Nothing to export yet.'); return; }
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'atlas-data-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Data exported — save that file somewhere safe.');
+}
+
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      let count = 0;
+      for (const [key, value] of Object.entries(data)) {
+        if ((key.startsWith('atlas_') || key.startsWith('dad_')) && typeof value === 'string') {
+          localStorage.setItem(key, value);
+          count++;
+        }
+      }
+      if (!count) { showToast('No Atlas data found in that file.'); return; }
+      showToast('Imported ' + count + ' items — reloading…');
+      setTimeout(() => window.location.reload(), 1200);
+    } catch(err) {
+      showToast('Could not read that file — is it an Atlas export?');
+    }
+  };
+  reader.readAsText(file);
 }
 
 function toggleNav() {
