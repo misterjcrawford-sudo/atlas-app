@@ -793,6 +793,19 @@
   .script-back-link:hover,
   .script-close-link:hover { text-decoration: underline; }
 
+  /* HELP CARD */
+  .help-card { background: var(--paper-warm); border: 1px solid var(--paper-edge); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+  .help-card-toggle { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: none; border: none; cursor: pointer; text-align: left; font-family: 'Space Grotesk', sans-serif; }
+  .help-card-toggle:hover { background: var(--paper-edge); }
+  .help-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); flex: 1; }
+  .help-card-chevron { font-size: 16px; color: var(--ink-faded); transition: transform 0.2s; line-height: 1; }
+  .help-card.open .help-card-chevron { transform: rotate(90deg); }
+  .help-card-body { display: none; padding: 2px 18px 14px; }
+  .help-card.open .help-card-body { display: block; }
+  .help-card-body p { font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); margin-bottom: 6px; }
+  .help-card-body p:last-child { margin-bottom: 0; }
+  .help-card-body strong { color: var(--ink); font-weight: 600; }
+
   .site-footer {
     background: var(--paper);
     border-top: 1px solid var(--paper-edge);
@@ -922,7 +935,7 @@
       <li><a href="./goals.html">Goals</a></li>
       <li><a href="./guides.html" class="active">Guides</a></li>
     </ul>
-    <a href="https://www.get-atlas.com.au/tag/articles/" class="nav-cta" target="_blank" rel="noopener">Articles</a>
+    <a href="./how-it-works.html" class="nav-cta">How Atlas Works</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
       <span></span><span></span><span></span>
     </button>
@@ -950,6 +963,36 @@
       <button class="content-tab" id="tab-articles" type="button" role="tab" aria-selected="false" onclick="setActiveTab('articles')">Guides</button>
     </div>
   </section>
+
+  <div class="page-wrap" style="padding-top:0;">
+  <div class="container" style="max-width:860px;">
+    <div class="help-card" id="help-card">
+      <button class="help-card-toggle" id="help-toggle" onclick="toggleHelp()" aria-expanded="false">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-faded);flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span class="help-card-label">What this section does</span>
+        <span class="help-card-chevron">›</span>
+      </button>
+      <div class="help-card-body" id="help-body">
+        <p>Use Guides when you need practical context before making a decision. Articles, scripts, checklists and explainers sit here.</p>
+        <p><strong>First goal: understand the next decision.</strong></p>
+      </div>
+    </div>
+    <script>
+      function toggleHelp() {
+        const card = document.getElementById('help-card');
+        const isOpen = card.classList.toggle('open');
+        document.getElementById('help-toggle').setAttribute('aria-expanded', isOpen);
+        localStorage.setItem('atlas_help_guides', isOpen ? '1' : '0');
+      }
+      (function() {
+        if (localStorage.getItem('atlas_help_guides') !== '0') {
+          document.getElementById('help-card').classList.add('open');
+          document.getElementById('help-toggle').setAttribute('aria-expanded', 'true');
+        }
+      })();
+    </script>
+  </div>
+  </div>
 
   <section id="articles-panel" class="content-panel" aria-labelledby="tab-articles">
     <div class="articles-toolbar">
