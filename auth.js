@@ -33,6 +33,7 @@ const ATLAS_AUTH_KEY = 'atlas_auth_v1';
         '<button id="atlas-gate-btn" type="submit">Enter &rarr;</button>',
       '</form>',
       '<p id="atlas-gate-error">Incorrect password &mdash; try again.</p>',
+      '<p id="atlas-gate-access"><a href="mailto:hello@get-atlas.com.au">Request early access &rarr;</a></p>',
     '</div>',
   ].join('');
 
@@ -83,6 +84,17 @@ const ATLAS_AUTH_KEY = 'atlas_auth_v1';
     '#atlas-gate-error {',
       'font-size:13px;color:#E27B5A;margin:10px 0 0;',
       'display:none;',
+    '}',
+    '#atlas-gate-access {',
+      'margin-top:20px;font-size:13px;',
+    '}',
+    '#atlas-gate-access a {',
+      'color:#6E6E63;text-decoration:none;',
+      'border-bottom:1px solid #E8E8E0;padding-bottom:1px;',
+      'transition:color 0.15s,border-color 0.15s;',
+    '}',
+    '#atlas-gate-access a:hover {',
+      'color:#0F4A3F;border-color:#0F4A3F;',
     '}',
   ].join('');
   document.head.appendChild(gStyle);
