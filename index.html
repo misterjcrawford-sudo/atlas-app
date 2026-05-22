@@ -503,7 +503,7 @@
           </div>
         </div>
       </div>
-      <a href="./guides.html" class="card-phase-guide" id="phase-guide-link">Read the Survive guide →</a>
+      <a href="https://www.get-atlas.com.au/the-four-phases-of-rebuilding-after-separation/" class="card-phase-guide" id="phase-guide-link" target="_blank" rel="noopener">Read the Survive guide →</a>
     </div>
 
     <!-- CARD: MONEY SNAPSHOT -->
@@ -612,7 +612,7 @@
       <div class="footer-col-heading">About</div>
       <ul class="footer-col-links">
         <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
-        <li><a href="https://www.get-atlas.com.au/terms/" target="_blank" rel="noopener">Terms</a></li>
+        <li><a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a></li>
       </ul>
     </div>
     <div>
@@ -636,8 +636,8 @@
     <div class="footer-bottom-inner">
       <div class="footer-copy">© Atlas 2026 · Life After Separation</div>
       <div class="footer-legal">
-        <a href="./terms.html">Privacy</a>
-        <a href="./terms.html">Terms</a>
+        
+        <a href="https://www.get-atlas.com.au/privacy/">Privacy &amp; Terms</a>
       </div>
     </div>
   </div>
@@ -788,8 +788,13 @@ function setPhase(phase) {
   document.getElementById('phase-focus').textContent = p.focus.join(' · ');
   document.getElementById('phase-watch').textContent = p.watchOut.join(' · ');
   document.getElementById('phase-threshold').textContent = p.threshold;
-  document.getElementById('phase-guide-link').href = `./guides.html?phase=${phase}`;
-  document.getElementById('phase-guide-link').textContent = `Read the ${p.label} guide →`;
+  const guideLink = document.getElementById('phase-guide-link');
+  guideLink.href = phase === 'waiting-room'
+    ? 'https://www.get-atlas.com.au/the-waiting-room/'
+    : 'https://www.get-atlas.com.au/the-four-phases-of-rebuilding-after-separation/';
+  guideLink.target = '_blank';
+  guideLink.rel = 'noopener';
+  guideLink.textContent = `Read the ${p.label} guide →`;
   renderJourneyDots(phase);
 
   // Next action

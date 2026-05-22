@@ -739,10 +739,20 @@
     font-size: 16px;
     font-weight: 500;
     color: var(--green-deep);
-    min-width: 72px;
+    width: 96px;
+    flex: 0 0 96px;
+    box-sizing: border-box;
     text-align: right;
     letter-spacing: -0.01em;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 6px;
+    cursor: text;
+    transition: background 0.15s, border-color 0.15s;
   }
+  .savings-val:hover { background: var(--paper); border-color: var(--paper-edge); }
+  .savings-val:focus { outline: none; background: var(--paper); border-color: var(--green); }
   .savings-slider-row {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1937,7 +1947,7 @@
       <div class="footer-col-heading">About</div>
       <ul class="footer-col-links">
         <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
-        <li><a href="https://www.get-atlas.com.au/terms/" target="_blank" rel="noopener">Terms</a></li>
+        <li><a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a></li>
       </ul>
     </div>
     <div>
@@ -1961,8 +1971,8 @@
     <div class="footer-bottom-inner">
       <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
       <div class="footer-legal">
-        <a href="./terms.html">Privacy</a>
-        <a href="./terms.html">Terms</a>
+        
+        <a href="https://www.get-atlas.com.au/privacy/">Privacy &amp; Terms</a>
       </div>
     </div>
   </div>
@@ -2570,9 +2580,11 @@ function buildSavingsRow(item) {
   nameEl.className = 'savings-name';
   nameEl.innerHTML = item.name + (item.priority ? ' <span class="badge">First</span>' : '');
 
-  const valSpan = document.createElement('div');
+  const valSpan = document.createElement('input');
   valSpan.className = 'savings-val';
-  valSpan.textContent = fmtView(item.val);
+  valSpan.inputMode = 'numeric';
+  valSpan.value = fmtView(item.val);
+  valSpan.title = 'Click to type a value';
 
   top.appendChild(nameEl);
   top.appendChild(tools);
@@ -2597,10 +2609,31 @@ function buildSavingsRow(item) {
   slider.value = item.val;
   slider.oninput = () => {
     item.val = parseInt(slider.value);
-    valSpan.textContent = fmtView(item.val);
+    valSpan.value = fmtView(item.val);
     updateTotals();
     scheduleSave();
   };
+
+  valSpan.addEventListener('focus', () => {
+    valSpan.value = String(item.val);
+    setTimeout(() => valSpan.select(), 0);
+  });
+  const commitSavingsVal = () => {
+    const raw = valSpan.value.replace(/[^0-9.]/g, '');
+    let n = Math.round(parseFloat(raw));
+    if (isNaN(n) || n < 0) n = 0;
+    if (n > parseInt(slider.max)) { slider.max = n; item.max = n; }
+    item.val = n;
+    slider.value = Math.min(n, parseInt(slider.max));
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+  valSpan.addEventListener('blur', commitSavingsVal);
+  valSpan.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); valSpan.blur(); }
+    if (e.key === 'Escape') { valSpan.value = fmtView(item.val); valSpan.blur(); }
+  });
 
   const sliderWrap = document.createElement('div');
   sliderWrap.className = 'savings-slider-row';
@@ -2639,7 +2672,7 @@ function updateSavingsRow(item, valSpan, progressLine, slider) {
   const monthly = item.val || 0;
   const target = item.target || 0;
   const balance = item.balance || 0;
-  valSpan.textContent = fmtView(monthly);
+  valSpan.value = fmtView(monthly);
   slider.value = monthly;
   const pct = target > 0 ? Math.min(100, Math.round((balance / target) * 100)) : 0;
   const remaining = Math.max(0, target - balance);
