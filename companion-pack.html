@@ -134,11 +134,11 @@
   }
   .pack-card:hover { box-shadow: var(--shadow-card); }
 
-  .pack-grid > div:not(.pack-card-start) {
+  .pack-grid > div:not(.pack-card-start):not(.pairings-card):not(.pack-card-wide):not(.pack-card-short) {
     display: flex;
   }
 
-  .pack-grid > div:not(.pack-card-start) .pack-card {
+  .pack-grid > div:not(.pack-card-start):not(.pairings-card):not(.pack-card-wide):not(.pack-card-short) .pack-card {
     height: 500px;
     width: 100%;
   }
@@ -158,7 +158,8 @@
   }
 
   .pack-grid > div.pack-card-short .pack-card {
-    height: 420px;
+    height: 410px;
+    width: 100%;
   }
 
   .pack-card-wide .pack-tools {
@@ -335,11 +336,16 @@
 
   /* PAIRINGS CALLOUT */
   .pairings-card {
+    grid-column: 1 / -1;
     background: var(--paper-card);
     border: 1px solid var(--paper-edge);
     border-radius: var(--radius-lg);
+    display: block;
     padding: 28px 32px;
-    margin-bottom: 80px;
+  }
+  .pairings-copy {
+    display: block;
+    max-width: none;
   }
   .pairings-label {
     font-size: 11px;
@@ -347,12 +353,12 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-muted);
-    margin-bottom: 16px;
   }
   .pairings-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
+    margin-top: 16px;
   }
   .pairing-item {
     background: var(--paper);
@@ -362,7 +368,13 @@
   }
   .pairing-pdf { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
   .pairing-app { font-size: 12px; color: var(--ink-muted); }
-  .pairing-app span { color: var(--green); font-weight: 600; }
+  .pairing-app span { color: var(--pairing-key-color, var(--green)); font-weight: 700; }
+  .pairing-key-finances { --pairing-key-color: var(--green); }
+  .pairing-key-week { --pairing-key-color: #7EA35F; }
+  .pairing-key-admin { --pairing-key-color: var(--amber-deep); }
+  .pairing-key-goals { --pairing-key-color: #4A6F8C; }
+  .pairing-key-guides { --pairing-key-color: var(--coral); }
+  .pairing-key-home { --pairing-key-color: #8A6A2A; }
 
   /* FOOTER */
   .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; }
@@ -381,7 +393,8 @@
 
   @media (max-width: 760px) {
     .pack-grid { grid-template-columns: 1fr; }
-    .pack-grid > div:not(.pack-card-start) .pack-card { height: auto; }
+    .pack-grid > div:not(.pack-card-start):not(.pairings-card):not(.pack-card-wide):not(.pack-card-short) .pack-card { height: auto; }
+    .pack-grid > div.pack-card-short .pack-card { height: auto; }
     .pack-card-wide { grid-column: auto; }
     .pack-grid > div.pack-card-wide .pack-card { display: flex; height: auto; }
     .pack-card-wide .pack-tools { margin-bottom: 24px; }
@@ -389,7 +402,8 @@
     .start-left { flex: unset; }
     .start-right { padding-top: 16px; }
     .pack-card-start .start-right { border-left: 0; padding-left: 0; padding-top: 16px; }
-    .pairings-grid { grid-template-columns: 1fr 1fr; }
+    .pairings-card { padding: 24px 20px; }
+    .pairings-grid { grid-template-columns: 1fr; }
     .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
     .footer-tagline { grid-column: 1 / -1; }
     .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -470,6 +484,39 @@
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download
             </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD PAIRINGS -->
+      <div class="pairings-card">
+        <div class="pairings-copy">
+          <div class="pairings-label">Dashboard pairings — each PDF maps to a live tool</div>
+        </div>
+        <div class="pairings-grid">
+          <div class="pairing-item">
+            <div class="pairing-pdf">Emergency Budget + Financial Snapshot</div>
+            <div class="pairing-app">→ <span class="pairing-key-finances">Finances</span> dashboard</div>
+          </div>
+          <div class="pairing-item">
+            <div class="pairing-pdf">Handover Checklist + Sunday Reset</div>
+            <div class="pairing-app">→ <span class="pairing-key-week">Week</span> dashboard</div>
+          </div>
+          <div class="pairing-item">
+            <div class="pairing-pdf">Admin Checklist + Timeline</div>
+            <div class="pairing-app">→ <span class="pairing-key-admin">Admin</span> dashboard</div>
+          </div>
+          <div class="pairing-item">
+            <div class="pairing-pdf">Rebuild Goals workbook</div>
+            <div class="pairing-app">→ <span class="pairing-key-goals">Goals</span> dashboard</div>
+          </div>
+          <div class="pairing-item">
+            <div class="pairing-pdf">Conversation Scripts</div>
+            <div class="pairing-app">→ <span class="pairing-key-guides">Guides</span> — Conversations</div>
+          </div>
+          <div class="pairing-item">
+            <div class="pairing-pdf">Weekly Reset Sheet</div>
+            <div class="pairing-app">→ <span class="pairing-key-home">Home</span> dashboard</div>
           </div>
         </div>
       </div>
@@ -590,37 +637,6 @@
       </div>
 
     </div><!-- /pack-grid -->
-
-    <!-- DASHBOARD PAIRINGS -->
-    <div class="pairings-card">
-      <div class="pairings-label">Dashboard pairings — each PDF maps to a live tool</div>
-      <div class="pairings-grid">
-        <div class="pairing-item">
-          <div class="pairing-pdf">Emergency Budget + Financial Snapshot</div>
-          <div class="pairing-app">→ <span>Finances</span> dashboard</div>
-        </div>
-        <div class="pairing-item">
-          <div class="pairing-pdf">Handover Checklist + Sunday Reset</div>
-          <div class="pairing-app">→ <span>Week</span> dashboard</div>
-        </div>
-        <div class="pairing-item">
-          <div class="pairing-pdf">Admin Checklist + Timeline</div>
-          <div class="pairing-app">→ <span>Admin</span> dashboard</div>
-        </div>
-        <div class="pairing-item">
-          <div class="pairing-pdf">Rebuild Goals workbook</div>
-          <div class="pairing-app">→ <span>Goals</span> dashboard</div>
-        </div>
-        <div class="pairing-item">
-          <div class="pairing-pdf">Conversation Scripts</div>
-          <div class="pairing-app">→ <span>Guides</span> — Conversations</div>
-        </div>
-        <div class="pairing-item">
-          <div class="pairing-pdf">Weekly Reset Sheet</div>
-          <div class="pairing-app">→ <span>Home</span> dashboard</div>
-        </div>
-      </div>
-    </div>
 
   </div>
 </div><!-- /page-wrap -->
