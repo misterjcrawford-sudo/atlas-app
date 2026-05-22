@@ -59,6 +59,8 @@
   .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
   .nav-cta { background: var(--amber); color: var(--ink); text-decoration: none; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
   .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .nav-cta-outline { background: transparent; color: var(--ink); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--ink); white-space: nowrap; transition: background 0.15s, color 0.15s; }
+  .nav-cta-outline:hover { background: var(--ink); color: var(--paper); }
   .nav-cta.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; margin-left: auto; }
   .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
@@ -72,6 +74,7 @@
   @media (max-width: 760px) {
     .nav-links { display: none; }
     .nav-cta { display: none; }
+    .nav-cta-outline { display: none; }
     .hamburger { display: flex; }
     .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
   }
@@ -535,6 +538,7 @@
       <li><a href="./goals.html">Goals</a></li>
       <li><a href="./guides.html">Guides</a></li>
     </ul>
+    <a href="./companion-pack.html" class="nav-cta-outline">Companion Pack</a>
     <a href="./how-it-works.html" class="nav-cta active">How Atlas Works</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
       <span></span><span></span><span></span>
@@ -548,6 +552,7 @@
   <a href="./admin.html">Admin</a>
   <a href="./goals.html">Goals</a>
   <a href="./guides.html">Guides</a>
+  <a href="./companion-pack.html">Companion Pack</a>
   <a href="./how-it-works.html" class="active">How Atlas Works</a>
 </div>
 

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Companion Pack — Atlas</title>
+<script src="./auth.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --amber: #EAC995;
+    --amber-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --shadow-card: 0 4px 24px rgba(15,74,63,0.07);
+    --radius: 20px;
+    --radius-lg: 28px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip { background: var(--green); color: var(--paper); padding: 11px 24px; text-align: center; font-size: 13px; font-weight: 500; }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 8px 8px 22px; display: flex; align-items: center; gap: 24px;
+    box-shadow: var(--shadow-soft); max-width: 1100px; width: 100%; height: 60px;
+  }
+  .nav-wordmark { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.45rem; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 999px; transition: background 0.15s; }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+  .nav-cta { background: var(--amber); color: var(--ink); text-decoration: none; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
+  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .nav-cta-outline { background: transparent; color: var(--ink); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--ink); white-space: nowrap; transition: background 0.15s, color 0.15s; }
+  .nav-cta-outline:hover { background: var(--ink); color: var(--paper); }
+  .nav-cta-outline.active { background: var(--ink); color: var(--paper); }
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; margin-left: auto; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-cta-outline { display: none; }
+    .hamburger { display: flex; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+    .page-wrap { padding: 0 16px; }
+  }
+
+  /* LAYOUT */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 72px 0 56px; }
+  .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 18px; }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .soft {
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero-sub { font-size: 17px; line-height: 1.7; color: var(--ink-soft); max-width: 52ch; }
+
+  /* SECTION DIVIDER */
+  .section-rule { border: none; border-top: 1px solid var(--paper-edge); margin: 0 0 48px; }
+
+  /* PACK GRID */
+  .pack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* START HERE spans full width */
+  .pack-card-start {
+    grid-column: 1 / -1;
+  }
+
+  .pack-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 32px 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: box-shadow 0.18s;
+  }
+  .pack-card:hover { box-shadow: var(--shadow-card); }
+
+  .pack-grid > div:not(.pack-card-start) {
+    display: flex;
+  }
+
+  .pack-grid > div:not(.pack-card-start) .pack-card {
+    height: 500px;
+    width: 100%;
+  }
+
+  .pack-card-wide {
+    grid-column: 1 / -1;
+  }
+
+  .pack-grid > div.pack-card-wide .pack-card {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.3fr);
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: 48px;
+    height: 250px;
+    padding-bottom: 24px;
+    padding-top: 28px;
+  }
+
+  .pack-grid > div.pack-card-short .pack-card {
+    height: 420px;
+  }
+
+  .pack-card-wide .pack-tools {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    margin-bottom: 0;
+  }
+
+  .pack-card-wide .pack-footer {
+    grid-column: 1 / -1;
+  }
+
+  .pack-card-start .pack-card {
+    background: var(--green);
+    border-color: rgba(10,51,43,0.72);
+    box-shadow: 0 18px 42px rgba(15,74,63,0.18);
+    display: grid;
+    grid-template-columns: minmax(260px, 0.62fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    column-gap: 48px;
+    row-gap: 26px;
+    align-items: flex-start;
+    overflow: hidden;
+    position: relative;
+  }
+  .pack-card-start .start-left,
+  .pack-card-start .start-right,
+  .pack-card-start .pack-footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .pack-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .pack-card-start .pack-num { color: rgba(255,255,255,0.5); }
+
+  .pack-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .pack-card-start .pack-title {
+    color: var(--paper);
+    font-size: clamp(2rem, 3vw, 2.45rem);
+  }
+
+  .pack-meta {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+    letter-spacing: 0.04em;
+    margin-bottom: 20px;
+  }
+  .pack-card-start .pack-meta { color: rgba(255,255,255,0.48); }
+
+  .pack-desc {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+    flex: 1;
+  }
+  .pack-card-start .pack-desc {
+    color: rgba(255,255,255,0.68);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+
+  .pack-tools {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+  .pack-tool {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .pack-tool-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-faded);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+    min-width: 36px;
+  }
+
+  .pack-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--paper-edge);
+    margin-top: auto;
+  }
+  .pack-card-start .pack-footer {
+    grid-column: 1 / -1;
+    border-top-color: rgba(255,255,255,0.14);
+    margin-top: 0;
+  }
+
+  .phase-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .phase-tag.any { background: var(--paper-warm); color: var(--ink-muted); border: 1px solid var(--paper-edge); }
+  .phase-tag.crisis { background: var(--coral); color: var(--paper); }
+  .phase-tag.crisis-stabilise { background: var(--honey); color: var(--ink); }
+  .phase-tag.stabilise-rebuild { background: var(--sage); color: var(--ink); }
+  .phase-tag.rebuild { background: #4A6F8C; color: var(--paper); }
+
+  /* Start Here phase tag override — light on dark */
+  .pack-card-start .phase-tag.any {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--green);
+    color: var(--paper);
+    text-decoration: none;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.15s, transform 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .download-btn:hover { background: var(--green-deep); transform: translateY(-1px); }
+  .pack-card-start .download-btn {
+    background: var(--amber);
+    color: var(--ink);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+    padding: 11px 22px;
+  }
+  .pack-card-start .download-btn:hover { background: var(--amber-deep); }
+
+  /* Start Here layout — left content col, right desc col */
+  .start-left { flex: 0 0 340px; }
+  .pack-card-start .start-left { flex: unset; }
+  .start-right { flex: 1; padding-top: 28px; }
+  .pack-card-start .start-right {
+    border-left: 1px solid rgba(255,255,255,0.14);
+    padding-left: 34px;
+    padding-top: 24px;
+  }
+
+  /* PAIRINGS CALLOUT */
+  .pairings-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    margin-bottom: 80px;
+  }
+  .pairings-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+  .pairings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .pairing-item {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .pairing-pdf { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .pairing-app { font-size: 12px; color: var(--ink-muted); }
+  .pairing-app span { color: var(--green); font-weight: 600; }
+
+  /* FOOTER */
+  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; }
+  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
+  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
+  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; }
+  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; transition: color 0.15s; }
+  .footer-col-links a:hover { color: var(--ink); }
+  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-copy { font-size: 13px; color: var(--ink-faded); }
+  .footer-legal { display: flex; gap: 20px; }
+  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a:hover { color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .pack-grid { grid-template-columns: 1fr; }
+    .pack-grid > div:not(.pack-card-start) .pack-card { height: auto; }
+    .pack-card-wide { grid-column: auto; }
+    .pack-grid > div.pack-card-wide .pack-card { display: flex; height: auto; }
+    .pack-card-wide .pack-tools { margin-bottom: 24px; }
+    .pack-card-start .pack-card { display: flex; flex-direction: column; gap: 0; }
+    .start-left { flex: unset; }
+    .start-right { padding-top: 16px; }
+    .pack-card-start .start-right { border-left: 0; padding-left: 0; padding-top: 16px; }
+    .pairings-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-tagline { grid-column: 1 / -1; }
+    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+  @media (max-width: 480px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .pairings-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
+
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Week</a></li>
+      <li><a href="./admin.html">Admin</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+      <li><a href="./guides.html">Guides</a></li>
+    </ul>
+    <a href="./companion-pack.html" class="nav-cta-outline active">Companion Pack</a>
+    <a href="./how-it-works.html" class="nav-cta">How Atlas Works</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Week</a>
+  <a href="./admin.html">Admin</a>
+  <a href="./goals.html">Goals</a>
+  <a href="./guides.html">Guides</a>
+  <a href="./companion-pack.html" class="active">Companion Pack</a>
+  <a href="./how-it-works.html">How Atlas Works</a>
+</div>
+
+<!-- HERO -->
+<div class="page-wrap">
+  <div class="container">
+    <section class="hero">
+      <div class="hero-eyebrow">Companion Pack &middot; 6 Packs &middot; 22 Tools</div>
+      <h1>The <span class="soft">printable</span> half.</h1>
+      <p class="hero-sub">The Atlas dashboards handle the live tracking. The companion pack is for the decisions that need paper, space, and a pen. Print what you need. Leave the rest.</p>
+    </section>
+
+    <hr class="section-rule">
+
+    <!-- PACK GRID -->
+    <div class="pack-grid">
+
+      <!-- START HERE -->
+      <div class="pack-card-start">
+        <div class="pack-card">
+          <div class="start-left">
+            <div class="pack-num">Start Here — Orientation</div>
+            <div class="pack-title">Read first.</div>
+            <div class="pack-meta">2 pages</div>
+          </div>
+          <div class="start-right">
+            <p class="pack-desc">A short map for the whole system. Where to start, what to print now vs later, and a seven-day first-use path. Pairs every PDF with its matching dashboard.</p>
+          </div>
+          <div class="pack-footer">
+            <span class="phase-tag any">Any phase</span>
+            <a href="./assets/Atlas%20%E2%80%94%20Start%20Here.pdf" class="download-btn" download>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PACK 01 -->
+      <div class="pack-card-short">
+        <div class="pack-card">
+          <div class="pack-num">01 — The First 30 Days</div>
+          <div class="pack-title">Immediate stabilisation.</div>
+          <div class="pack-meta">3 tools &middot; 12 pages</div>
+          <ul class="pack-tools">
+            <li class="pack-tool"><span class="pack-tool-num">Tool 01</span><span>The First 30 Days field guide — safety, money, kids, admin, emotional support, priority hierarchy</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 02</span><span>Emergency Budget — reality check, what can pause, survival number, stabilised budget, buffer target, snapshot summary</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 03</span><span>Financial Snapshot — cash, income, debts, assets, upcoming pressure</span></li>
+          </ul>
+          <div class="pack-footer">
+            <span class="phase-tag crisis">Crisis</span>
+            <a href="./assets/Atlas%20%E2%80%94%20The%20first%2030%20days.pdf" class="download-btn" download>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PACK 02 -->
+      <div class="pack-card-short">
+        <div class="pack-card">
+          <div class="pack-num">02 — Kids &amp; Co-Parenting</div>
+          <div class="pack-title">Running two homes.</div>
+          <div class="pack-meta">5 tools &middot; 9 pages</div>
+          <ul class="pack-tools">
+            <li class="pack-tool"><span class="pack-tool-num">Tool 04</span><span>Handover Checklist — school, sports, health, comfort items, notes for the other home</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 05</span><span>Conversation Scripts — schedule changes, difficult messages, money, parenting, boundaries</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 06</span><span>Routine &amp; Rhythm Builder — morning, evening, weekly structure across both homes</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 07</span><span>Shared Information Snapshot — school, medical, activities per child</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 08</span><span>Sunday Reset — weekly priorities, upcoming events, reset checklist</span></li>
+          </ul>
+          <div class="pack-footer">
+            <span class="phase-tag crisis-stabilise">Crisis → Stabilise</span>
+            <a href="./assets/Atlas%20%E2%80%94%20Kids%20%26%20co-parenting.pdf" class="download-btn" download>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PACK 03 -->
+      <div>
+        <div class="pack-card">
+          <div class="pack-num">03 — Legal &amp; Admin</div>
+          <div class="pack-title">The paperwork side.</div>
+          <div class="pack-meta">6 tools &middot; 10 pages</div>
+          <ul class="pack-tools">
+            <li class="pack-tool"><span class="pack-tool-num">Tool 09</span><span>Admin Checklist — six lists: First 30 days, Identity/legal/documents, Bank/super/insurance, Government/tax, Home/property/utilities, Kids/school/medical</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 10</span><span>Ask Your Lawyer or Mediator — parenting questions, financial/property questions, mediation prep, personal clarity</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 11</span><span>Accounts &amp; Password Tracker — all household logins in one place</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 12</span><span>Household Admin Map — recurring responsibilities, who owned what, what needs a new plan</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 13</span><span>Separation Timeline — important dates, key changes</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 14</span><span>Weekly Admin Reset — 10-item checklist, runs every week</span></li>
+          </ul>
+          <div class="pack-footer">
+            <span class="phase-tag crisis-stabilise">Crisis → Stabilise</span>
+            <a href="./assets/Atlas%20%E2%80%94%20Legal%20%26%20admin.pdf" class="download-btn" download>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PACK 04 -->
+      <div>
+        <div class="pack-card">
+          <div class="pack-num">04 — Personal Reset</div>
+          <div class="pack-title">Keeping yourself together.</div>
+          <div class="pack-meta">7 tools &middot; 7 pages</div>
+          <ul class="pack-tools">
+            <li class="pack-tool"><span class="pack-tool-num">Tool 15</span><span>Weekly Reset Sheet — priorities, weekly checklist, stabilising actions, minimum viable week</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 16</span><span>New Routine Builder — morning, evening, weekly anchors</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 17</span><span>Solo Nights Survival Guide — healthy default plan, solo night checklist</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 18</span><span>Low-Energy Meal &amp; Grocery Planner — default meals, emergency foods, weekly grocery reset</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 19</span><span>Movement &amp; Nervous System Reset — low-pressure options, weekly movement plan</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 20</span><span>Support System Map — practical, emotional, professional support</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Tool 21</span><span>Personal Stability Tracker — weekly check-in across 8 areas, small wins, next step</span></li>
+          </ul>
+          <div class="pack-footer">
+            <span class="phase-tag stabilise-rebuild">Stabilise → Rebuild</span>
+            <a href="./assets/Atlas%20%E2%80%94%20Personal%20reset.pdf" class="download-btn" download>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PACK 05 -->
+      <div class="pack-card-wide">
+        <div class="pack-card">
+          <div class="pack-num">05 — Rebuild Goals</div>
+          <div class="pack-title">Designing what comes next.</div>
+          <div class="pack-meta">1 workbook &middot; 4 pages</div>
+          <ul class="pack-tools">
+            <li class="pack-tool"><span class="pack-tool-num">Page 01</span><span>Where things stand — life snapshot scored across 8 areas</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Page 02</span><span>Rebuild priorities — money, health, parenting goals</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Page 03</span><span>The quieter rebuild — friendships, home, identity, work</span></li>
+            <li class="pack-tool"><span class="pack-tool-num">Page 04</span><span>Quiet direction — future relationships, next six months sketch, three next actions</span></li>
+          </ul>
+          <div class="pack-footer">
+            <span class="phase-tag rebuild">Rebuild</span>
+            <a href="./assets/Atlas%20%E2%80%94%20Rebuild%20goals.pdf" class="download-btn" download>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pack-grid -->
+
+    <!-- DASHBOARD PAIRINGS -->
+    <div class="pairings-card">
+      <div class="pairings-label">Dashboard pairings — each PDF maps to a live tool</div>
+      <div class="pairings-grid">
+        <div class="pairing-item">
+          <div class="pairing-pdf">Emergency Budget + Financial Snapshot</div>
+          <div class="pairing-app">→ <span>Finances</span> dashboard</div>
+        </div>
+        <div class="pairing-item">
+          <div class="pairing-pdf">Handover Checklist + Sunday Reset</div>
+          <div class="pairing-app">→ <span>Week</span> dashboard</div>
+        </div>
+        <div class="pairing-item">
+          <div class="pairing-pdf">Admin Checklist + Timeline</div>
+          <div class="pairing-app">→ <span>Admin</span> dashboard</div>
+        </div>
+        <div class="pairing-item">
+          <div class="pairing-pdf">Rebuild Goals workbook</div>
+          <div class="pairing-app">→ <span>Goals</span> dashboard</div>
+        </div>
+        <div class="pairing-item">
+          <div class="pairing-pdf">Conversation Scripts</div>
+          <div class="pairing-app">→ <span>Guides</span> — Conversations</div>
+        </div>
+        <div class="pairing-item">
+          <div class="pairing-pdf">Weekly Reset Sheet</div>
+          <div class="pairing-app">→ <span>Home</span> dashboard</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /page-wrap -->
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
+    <div>
+      <div class="footer-col-heading">Modules</div>
+      <ul class="footer-col-links">
+        <li><a href="./budget.html">Finances</a></li>
+        <li><a href="./kids-week.html">Kids Week</a></li>
+        <li><a href="./goals.html">Goals</a></li>
+        <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./guides.html">Guides</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">About</div>
+      <ul class="footer-col-links">
+        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+        <li><a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a></li>
+        <li><a href="./admin.html#move-data">Move to another device</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">Reading</div>
+      <ul class="footer-col-links">
+        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">All articles</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">The Sunday email</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
+      <div class="footer-legal">
+        <a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a>
+        <a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  const open = nav.classList.toggle('open');
+  ham.classList.toggle('open', open);
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  if (nav.classList.contains('open') && !e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav')) {
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
