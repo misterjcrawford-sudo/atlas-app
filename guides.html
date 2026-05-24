@@ -874,6 +874,23 @@
   }
   .footer-legal a:hover { color: var(--ink); }
 
+  .nav-cta-outline {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 18px;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta-outline:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
   @media (max-width: 1024px) {
     .guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1257,7 +1274,265 @@ const articles = [
     image: './images/Atlas Article 10B.png',
     phases: ['waiting-room', 'survive', 'stabilise'],
     category: 'admin-legal',
-    url: 'https://get-atlas.com.au/the-2025-family-law-changes-what-separated-parents-actually-need-to-know'
+    url: 'https://www.get-atlas.com.au/the-2025-family-law-changes-what-separated-parents-actually-need-to-know/'
+  },
+  {
+    id: 'article-12',
+    title: 'What happens to the family home when you separate',
+    excerpt: 'The practical and legal reality of the family home — and what your options actually are.',
+    image: './images/Atlas What happens to the family home.png',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/what-happens-to-the-family-home-when-you-separate/'
+  },
+  {
+    id: 'article-13',
+    title: "Separation vs divorce in Australia: what's the difference and when does it actually matter",
+    excerpt: "They're not the same thing. Here's when the distinction actually changes what you need to do.",
+    image: './images/Atlas separation-vs-divorce.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/separation-vs-divorce-in-australia-whats-the-difference-and-when-does-it-actually-matter/'
+  },
+  {
+    id: 'article-14',
+    title: 'Property settlement after separation: the four steps most people get wrong',
+    excerpt: 'Most property settlements stall at the same four points. Here is what they are and how to move through them.',
+    image: './images/Atlas Property Settlement.png',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/property-settlement-after-separation-the-four-steps-most-people-get-wrong/'
+  },
+  {
+    id: 'article-15',
+    title: 'Superannuation splitting after separation: what it is and whether you need to do it',
+    excerpt: 'Super splitting is optional, not automatic. This is what it involves and when it is worth pursuing.',
+    image: './images/Atlas Super Splitting.png',
+    phases: ['stabilise'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/superannuation-splitting-after-separation-what-it-is-and-whether-you-need-to-do-it/'
+  },
+  {
+    id: 'article-16',
+    title: 'How to tell the kids when you separate: what to say and what not to',
+    excerpt: 'What to say, what to avoid, and how to handle the questions that follow.',
+    image: './images/Atlas telling-the-kids.png',
+    phases: ['survive'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/how-to-tell-the-kids-what-to-say-and-what-not-to/'
+  },
+  {
+    id: 'article-17',
+    title: 'Parenting plans: what to actually include and what breaks them',
+    excerpt: 'A parenting plan is only useful if it covers the right things. Most do not.',
+    image: './images/Atlas Parenting plans.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/parenting-plans-what-to-actually-include-and-what-breaks-them/'
+  },
+  {
+    id: 'article-18',
+    title: 'Mediation vs lawyers: when to use which and what each actually costs',
+    excerpt: 'The real cost difference — and the situations where one clearly beats the other.',
+    image: './images/Atlas mediation-vs-lawyers.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/mediation-vs-lawyers-when-to-use-which-and-what-each-actually-costs/'
+  },
+  {
+    id: 'article-19',
+    title: "Co-parenting when you don't trust your ex",
+    excerpt: 'How to keep the kids out of it when the relationship between you is genuinely broken.',
+    image: './images/Atlas coparenting-low-trust.png',
+    phases: ['survive'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/co-parenting-when-you-dont-trust-your-ex/'
+  },
+  {
+    id: 'article-20',
+    title: 'Building your finances back after separation: the actual order of operations',
+    excerpt: 'There is a sequence that works. Most people get it backwards.',
+    image: './images/Atlas rebuilding-finances.png',
+    phases: ['rebuild'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/building-your-finances-back-after-separation-the-actual-order-of-operations/',
+    toolLink: './budget.html',
+    toolLabel: 'Open Finances'
+  },
+  {
+    id: 'article-21',
+    title: 'Dating after separation: what nobody says out loud',
+    excerpt: 'The practical and emotional reality of re-entering the dating pool — with kids.',
+    image: './images/Atlas dating-after-separation.png',
+    phases: ['rebuild'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/dating-after-separation-what-nobody-says-out-loud/'
+  },
+  {
+    id: 'article-22',
+    title: 'The plain-English glossary of separation terms',
+    excerpt: "If you don't know what a consent order is, you're not alone. Plain definitions for everything you'll encounter.",
+    image: './images/Atlas Glossary.png',
+    phases: ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'],
+    category: 'getting-started',
+    url: 'https://www.get-atlas.com.au/the-plain-english-glossary-of-separation-terms/'
+  },
+  {
+    id: 'article-101',
+    title: 'What matters now: the Atlas separation roadmap',
+    excerpt: 'A phase-by-phase map of what actually matters at each stage — and what can wait.',
+    image: './images/article-101-what-matters-now-the-atlas-separation-roadmap.png',
+    phases: ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'],
+    category: 'getting-started',
+    url: 'https://www.get-atlas.com.au/what-matters-now-the-atlas-separation-roadmap/'
+  },
+  {
+    id: 'article-102',
+    title: 'Family Tax Benefit, Centrelink and parenting payment: what you can actually access',
+    excerpt: 'The payments most separated parents are entitled to — and how to actually claim them.',
+    image: './images/article-102-family-tax-benefit-centrelink-and-parenting-payment-what-you-can-actually-access.png',
+    phases: ['survive'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/family-tax-benefit-centrelink-and-parenting-payment-what-you-can-actually-access/'
+  },
+  {
+    id: 'article-103',
+    title: 'The mortgage after separation: who pays while property settlement drags on',
+    excerpt: 'Property settlement takes time. The mortgage does not wait. Here is how to handle the gap.',
+    image: './images/article-103-the-mortgage-after-separation-who-pays-while-property-settlement-drags-on.png',
+    phases: ['stabilise'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/the-mortgage-after-separation-who-pays-while-property-settlement-drags-on/'
+  },
+  {
+    id: 'article-104',
+    title: 'The GP appointment after separation: what they can actually help you with',
+    excerpt: 'Most people walk past their GP during the worst of it. They should not.',
+    image: './images/article-104-the-gp-appointment-after-separation-what-they-can-actually-help-you-with.png',
+    phases: ['survive'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/the-gp-appointment-after-separation-what-they-can-actually-help-you-with/'
+  },
+  {
+    id: 'article-105',
+    title: "The first lawyer appointment: how to use it without burning $600 an hour",
+    excerpt: 'What to prepare, what to ask, and how to leave with answers instead of billable hours.',
+    image: './images/article-105-the-first-lawyer-appointment-how-to-use-it-without-burning-600-an-hour.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/the-first-lawyer-appointment-how-to-use-it-without-burning-600-an-hour/'
+  },
+  {
+    id: 'article-106',
+    title: 'The first solo week with the kids: how to actually run the house alone',
+    excerpt: 'The logistics of feeding, schooling, and managing kids solo for the first time.',
+    image: './images/article-106-the-first-solo-week-with-the-kids-how-to-actually-run-the-house-alone.png',
+    phases: ['stabilise'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/the-first-solo-week-with-the-kids-how-to-actually-run-the-house-alone/',
+    toolLink: './kids-week.html',
+    toolLabel: 'Open Week'
+  },
+  {
+    id: 'article-107',
+    title: 'Going to family court for the first time: what will actually happen',
+    excerpt: 'Family court is not what most people expect. Here is the reality.',
+    image: './images/article-107-going-to-family-court-for-the-first-time-what-will-actually-happen.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/going-to-family-court-for-the-first-time-what-will-actually-happen/'
+  },
+  {
+    id: 'article-108',
+    title: "The 'I can't afford rent' problem after separation",
+    excerpt: 'What to do when your income does not cover the basics after splitting one household into two.',
+    image: './images/article-108-the-i-cant-afford-rent-problem-after-separation.png',
+    phases: ['survive'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/the-i-cant-afford-rent-problem-after-separation/'
+  },
+  {
+    id: 'article-201',
+    title: 'Separated under one roof: the legal and practical reality',
+    excerpt: 'Living together while legally separated is more common than people admit. Here is how it works.',
+    image: './images/article-201-separated-under-one-roof-the-legal-and-practical-reality.png',
+    phases: ['waiting-room', 'survive'],
+    category: 'getting-started',
+    url: 'https://www.get-atlas.com.au/separated-under-one-roof-the-legal-and-practical-reality/'
+  },
+  {
+    id: 'article-202',
+    title: 'Communication with a difficult ex: how to use the BIFF method',
+    excerpt: 'Brief, informative, friendly, firm. A communication framework that actually holds up under pressure.',
+    image: './images/article-202-communication-with-a-difficult-ex-how-to-use-the-biff-method.png',
+    phases: ['stabilise'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/communication-with-a-difficult-ex-how-to-use-the-biff-method/'
+  },
+  {
+    id: 'article-203',
+    title: 'Mediation failed. Now what?',
+    excerpt: 'When mediation breaks down, the next steps are not what most people expect.',
+    image: './images/article-203-mediation-failed-now-what.md.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/mediation-failed-now-what/'
+  },
+  {
+    id: 'article-204',
+    title: "What to do when you can't get a psychologist: the interim system",
+    excerpt: 'Psychology waitlists are long. Here is what to put in place while you wait.',
+    image: './images/article-204-what-to-do-when-you-cant-get-a-psychologist-the-interim-system.png',
+    phases: ['survive'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/what-to-do-when-you-cant-get-a-psychologist-the-interim-system/'
+  },
+  {
+    id: 'article-205',
+    title: 'What to write down after separation: what to document and what is overkill',
+    excerpt: 'Some things are worth documenting. Most things are not. Here is the distinction.',
+    image: './images/article-205-what-to-write-down-after-separation-what-to-document-and-whats-overkill.png',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/what-to-write-down-after-separation-what-to-document-and-whats-overkill/'
+  },
+  {
+    id: 'article-206',
+    title: 'The separation admin nobody warns you about: accounts, utilities, subscriptions and access',
+    excerpt: 'The unglamorous list of things that need to be untangled — and how to work through it.',
+    image: './images/article-206-the-separation-admin-nobody-warns-you-about-accounts-utilities-subscriptions-and-access.png',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/the-separation-admin-nobody-warns-you-about-accounts-utilities-subscriptions-and-access/',
+    toolLink: './admin.html',
+    toolLabel: 'Open Admin'
+  },
+  {
+    id: 'article-207',
+    title: 'How to prepare for mediation: what to organise in the week before',
+    excerpt: 'What to bring, what to know, and how to walk in without being caught off guard.',
+    image: './images/article-207-how-to-prepare-for-mediation-what-to-organise-in-the-week-before.png',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/how-to-prepare-for-mediation-what-to-organise-in-the-week-before/'
+  },
+  {
+    id: 'article-208',
+    title: 'How to explain separation to your workplace',
+    excerpt: 'What to say, how much to share, and how to protect yourself without lying.',
+    image: './images/article-208-how-to-explain-separation-to-your-workplace.png',
+    phases: ['stabilise'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/how-to-explain-separation-to-your-workplace/'
+  },
+  {
+    id: 'article-209',
+    title: 'What to do if your ex cuts off communication entirely',
+    excerpt: 'Silence from a co-parent is a specific problem. Here is how to handle it practically.',
+    image: './images/article-209-what-to-do-if-your-ex-cuts-off-communication-entirely.png',
+    phases: ['stabilise'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/what-to-do-if-your-ex-cuts-off-communication-entirely/'
   }
 ];
 
@@ -1367,8 +1642,11 @@ function renderGuides() {
 
   grid.innerHTML = filtered.map(article => `
     <div class="guide-card">
-      <div class="guide-card-img">
-        <img src="${escapeHtml(article.image)}" alt="" loading="lazy" onerror="this.parentElement.style.background='var(--paper-warm)'">
+      <div class="guide-card-img" style="${article.image ? '' : 'background:var(--paper-warm);display:flex;align-items:center;justify-content:center;'}">
+        ${article.image
+          ? `<img src="${escapeHtml(article.image)}" alt="" loading="lazy" onerror="this.parentElement.style.cssText='height:180px;overflow:hidden;background:var(--paper-warm)';">`
+          : `<span style="font-family:'Fraunces',serif;font-size:2.5rem;color:var(--paper-edge);user-select:none;">~</span>`
+        }
       </div>
       <div class="guide-card-body">
         <div class="guide-card-meta">
