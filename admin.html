@@ -683,10 +683,10 @@
     </div>
   </div>
 
-  <!-- SECTION 6: Key Dates -->
+  <!-- SECTION 6: Key Dates & Notes -->
   <div class="checklist-section" id="cl-keydates">
     <button class="cl-header" onclick="toggleSection('keydates')">
-      <span class="cl-title">Key Dates</span>
+      <span class="cl-title">Key Dates &amp; Notes</span>
       <span class="cl-chevron">›</span>
     </button>
     <div class="cl-body" id="cl-keydates-body">
@@ -709,6 +709,10 @@
         <div class="kd-subsection-label">Key Notes</div>
       </div>
       <div id="kd-notes-items"></div>
+      <div class="kd-add-row">
+        <input type="text" class="cl-add-input kd-add-label" id="kd-new-note-label" placeholder="Note title…" maxlength="80">
+        <button class="cl-add-btn" onclick="addCustomNote()">Add note</button>
+      </div>
     </div>
   </div>
 
@@ -1119,8 +1123,8 @@ function getDatesData() {
 function saveDatesData(data) { localStorage.setItem(DATES_KEY, JSON.stringify(data)); }
 
 function getNotesData() {
-  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{"hidden":[],"values":{}}'); }
-  catch(e) { return { hidden: [], values: {} }; }
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch(e) { return { hidden: [], values: {}, custom: [] }; }
 }
 function saveNotesData(data) { localStorage.setItem(NOTES_KEY, JSON.stringify(data)); }
 
@@ -1254,6 +1258,65 @@ function hideBuiltinNote(id) {
   document.querySelector(`.key-note-item[data-note-id="${id}"]`)?.remove();
 }
 
+function renderCustomNote(item) {
+  const div = document.createElement('div');
+  div.className = 'key-note-item';
+  div.dataset.customNoteId = item.id;
+
+  const row = document.createElement('div');
+  row.className = 'kd-note-label-row';
+
+  const label = document.createElement('div');
+  label.className = 'kd-note-label';
+  label.textContent = item.label;
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = () => deleteCustomNote(item.id);
+
+  row.appendChild(label);
+  row.appendChild(del);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'kd-textarea';
+  ta.rows = 3;
+  ta.placeholder = 'Your note…';
+  ta.value = item.value || '';
+  ta.oninput = () => saveCustomNoteValue(item.id, ta.value);
+
+  div.appendChild(row);
+  div.appendChild(ta);
+  return div;
+}
+
+function saveCustomNoteValue(id, value) {
+  const data = getNotesData();
+  const item = (data.custom || []).find(c => c.id === id);
+  if (item) { item.value = value; saveNotesData(data); }
+}
+
+function deleteCustomNote(id) {
+  const data = getNotesData();
+  data.custom = (data.custom || []).filter(c => c.id !== id);
+  saveNotesData(data);
+  document.querySelector(`.key-note-item[data-custom-note-id="${id}"]`)?.remove();
+}
+
+function addCustomNote() {
+  const labelInput = document.getElementById('kd-new-note-label');
+  const label = labelInput.value.trim();
+  if (!label) return;
+  const data = getNotesData();
+  data.custom = data.custom || [];
+  const item = { id: `custom-note-${Date.now()}`, label, value: '' };
+  data.custom.push(item);
+  saveNotesData(data);
+  document.getElementById('kd-notes-items').appendChild(renderCustomNote(item));
+  labelInput.value = '';
+}
+
 function deleteCustomDate(id) {
   const data = getDatesData();
   data.custom = (data.custom || []).filter(c => c.id !== id);
@@ -1294,6 +1357,7 @@ function loadKeyDates() {
     if (!notesData.hidden.includes(entry.id))
       notes.appendChild(renderBuiltinNote(entry, notesData));
   });
+  (notesData.custom || []).forEach(item => notes.appendChild(renderCustomNote(item)));
 }
 
 function showToast(msg) {
@@ -1381,6 +1445,7 @@ document.querySelectorAll('.cl-add-input').forEach(input => {
       const row = input.closest('.cl-add-row');
       if (row.dataset.section) addCustomItem(row.dataset.section);
       else if (row.querySelector('#kd-new-label')) addCustomDate();
+      else if (row.querySelector('#kd-new-note-label')) addCustomNote();
     }
   });
 });
