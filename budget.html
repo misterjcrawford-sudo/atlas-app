@@ -2085,9 +2085,12 @@ function calcAusTax(gross) {
 // ── CSA CALCULATION ──
 function calcChildSupport(myGross, otherGross, numChildren, nightsPerFortnight) {
   const SSA = 29446;
+  const INCOME_CAP = 184051;
   const MIN_RATE = 1638;
-  const myCSI = Math.max(0, myGross - SSA);
-  const otherCSI = Math.max(0, otherGross - SSA);
+  const myCapped = Math.min(myGross, INCOME_CAP);
+  const otherCapped = Math.min(otherGross, INCOME_CAP);
+  const myCSI = Math.max(0, myCapped - SSA);
+  const otherCSI = Math.max(0, otherCapped - SSA);
   const combinedCSI = myCSI + otherCSI;
   if (combinedCSI === 0) return { monthly: 0, annual: 0, paying: false, receiving: false };
   const costPcts = [0, 0.17, 0.24, 0.27, 0.30];
