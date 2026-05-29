@@ -2084,27 +2084,84 @@ function calcAusTax(gross) {
 
 // ── CSA CALCULATION ──
 function calcChildSupport(myGross, otherGross, numChildren, nightsPerFortnight) {
-  const SSA = 29446;
-  const INCOME_CAP = 184051;
-  const MIN_RATE = 1638;
-  const myCapped = Math.min(myGross, INCOME_CAP);
-  const otherCapped = Math.min(otherGross, INCOME_CAP);
-  const myCSI = Math.max(0, myCapped - SSA);
-  const otherCSI = Math.max(0, otherCapped - SSA);
-  const combinedCSI = myCSI + otherCSI;
+  // 2026 Services Australia values — update annually
+  // Source: https://operational.servicesaustralia.gov.au/public/Pages/separated-parents/277-03160000-03.html
+  const SSA          = 31046;   // Self-support amount (1/3 MTAWE)
+  const MTAWE        = 93137;   // Annualised Male Total Average Weekly Earnings
+  const CAP_COMBINED = MTAWE * 2.5; // Combined CSI cap = $232,843
+  const MIN_RATE     = 551;     // Minimum annual rate
+
+  // Step 1: Child Support Income (CSI) per parent
+  const myCSI    = Math.max(0, myGross - SSA);
+  const otherCSI = Math.max(0, otherGross - SSA);
+
+  // Step 2: Combined CSI, capped at 2.5 × MTAWE
+  const combinedCSI = Math.min(myCSI + otherCSI, CAP_COMBINED);
   if (combinedCSI === 0) return { monthly: 0, annual: 0, paying: false, receiving: false };
-  const costPcts = [0, 0.17, 0.24, 0.27, 0.30];
-  const pct = costPcts[Math.min(numChildren, 4)];
-  const costOfChildren = combinedCSI * pct;
-  const myIncomeProportion = myCSI / combinedCSI;
+
+  // Step 3: Cost of children using tiered table (2026, children aged 0–12)
+  // Source: Services Australia Costs of Children table
+  function costOfChildren(csi, n) {
+    const b = [0, MTAWE * 0.5, MTAWE, MTAWE * 1.5, MTAWE * 2.0, CAP_COMBINED];
+
+    // [base, marginal rate] per bracket per child count (1, 2, 3+)
+    const table = {
+      1: [
+        [0,      0.17],
+        [7917,   0.15],
+        [14902,  0.12],
+        [20490,  0.10],
+        [25147,  0.07],
+        [28407,  0],
+      ],
+      2: [
+        [0,      0.24],
+        [11177,  0.23],
+        [21888,  0.20],
+        [31202,  0.18],
+        [39584,  0.10],
+        [44241,  0],
+      ],
+      3: [
+        [0,      0.27],
+        [12574,  0.26],
+        [24682,  0.25],
+        [36324,  0.24],
+        [47500,  0.18],
+        [55882,  0],
+      ],
+    };
+
+    const key = Math.min(n, 3);
+    const row = table[key];
+
+    for (let i = b.length - 1; i >= 0; i--) {
+      if (csi >= b[i]) {
+        if (i === b.length - 1) return row[i][0];
+        return row[i][0] + row[i][1] * (csi - b[i]);
+      }
+    }
+    return 0;
+  }
+
+  // Step 4: Each parent's income proportion (using uncapped individual CSIs)
+  const rawCombined        = myCSI + otherCSI;
+  const myIncomeProportion = rawCombined > 0 ? myCSI / rawCombined : 0;
+
+  // Step 5: Care fraction
   const careFraction = nightsPerFortnight / 14;
-  const annual = costOfChildren * (myIncomeProportion - careFraction);
+
+  // Step 6: Annual assessment
+  const cost   = costOfChildren(combinedCSI, numChildren);
+  const annual = cost * (myIncomeProportion - careFraction);
+
   let absAnnual = Math.abs(annual);
   if (absAnnual > 0 && absAnnual < MIN_RATE) absAnnual = MIN_RATE;
+
   return {
-    annual: absAnnual,
-    monthly: absAnnual / 12,
-    paying: annual > 0,
+    annual:    absAnnual,
+    monthly:   absAnnual / 12,
+    paying:    annual > 0,
     receiving: annual < 0,
   };
 }
