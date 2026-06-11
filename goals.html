@@ -1100,6 +1100,7 @@
       <li><a href="./budget.html">Finances</a></li>
       <li><a href="./kids-week.html">Week</a></li>
       <li><a href="./admin.html">Admin</a></li>
+      <li><a href="./records.html">Records</a></li>
       <li><a href="./goals.html" class="active">Goals</a></li>
       <li><a href="./guides.html">Guides</a></li>
     </ul>
@@ -1115,6 +1116,7 @@
   <a href="./budget.html">Finances</a>
   <a href="./kids-week.html">Week</a>
   <a href="./admin.html">Admin</a>
+  <a href="./records.html">Records</a>
   <a href="./goals.html" class="active">Goals</a>
   <a href="./guides.html">Guides</a>
   <a href="./companion-pack.html">Companion Pack</a>
@@ -1290,6 +1292,7 @@
         <li><a href="./kids-week.html">Kids Week</a></li>
         <li><a href="./goals.html">Goals</a></li>
         <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./records.html">Records</a></li>
         <li><a href="./guides.html">Guides</a></li>
       </ul>
     </div>
@@ -1624,7 +1627,7 @@ function setPhase(phase) {
 
 window.addEventListener('storage', e => {
   const nextPhase = normalisePhase(e.newValue);
-  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && PHASE_LABEL[nextPhase]) {
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && nextPhase !== currentPhase && PHASE_LABEL[nextPhase]) {
     setPhase(nextPhase);
   }
 });

@@ -419,6 +419,7 @@
       <li><a href="./budget.html">Finances</a></li>
       <li><a href="./kids-week.html">Week</a></li>
       <li><a href="./admin.html">Admin</a></li>
+      <li><a href="./records.html">Records</a></li>
       <li><a href="./goals.html">Goals</a></li>
       <li><a href="./guides.html">Guides</a></li>
     </ul>
@@ -434,6 +435,7 @@
   <a href="./budget.html">Finances</a>
   <a href="./kids-week.html">Week</a>
   <a href="./admin.html">Admin</a>
+  <a href="./records.html">Records</a>
   <a href="./goals.html">Goals</a>
   <a href="./guides.html">Guides</a>
   <a href="./companion-pack.html">Companion Pack</a>
@@ -581,6 +583,12 @@
         <div class="quick-link-desc">Checklists for every practical task.</div>
         <div class="quick-link-arrow">Open →</div>
       </a>
+      <a href="./records.html" class="quick-link-card">
+        <div class="quick-link-icon">≔</div>
+        <div class="quick-link-title">Records</div>
+        <div class="quick-link-desc">Shared costs, incidents, and handovers — dated.</div>
+        <div class="quick-link-arrow">Open →</div>
+      </a>
       <a href="./goals.html" class="quick-link-card">
         <div class="quick-link-icon">◇</div>
         <div class="quick-link-title">Goals</div>
@@ -610,6 +618,7 @@
         <li><a href="./kids-week.html">Kids Week</a></li>
         <li><a href="./goals.html">Goals</a></li>
         <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./records.html">Records</a></li>
         <li><a href="./guides.html">Guides</a></li>
       </ul>
     </div>
@@ -1251,7 +1260,7 @@ document.addEventListener('click', e => {
 
 window.addEventListener('storage', e => {
   const nextPhase = normalisePhase(e.newValue);
-  if (e.key === 'atlas_phase' && nextPhase && phases[nextPhase]) setPhase(nextPhase);
+  if (e.key === 'atlas_phase' && nextPhase && nextPhase !== currentPhase && phases[nextPhase]) setPhase(nextPhase);
 });
 
 // ── INIT ──────────────────────────────────────────────────────────────────────

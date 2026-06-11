@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Records — Atlas</title>
+<script src="./auth.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --amber: #EAC995;
+    --amber-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --black: #0A0A0A;
+    --red: #C44A3A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* TOP STRIP */
+  .top-strip {
+    background: var(--green);
+    color: var(--paper);
+    padding: 11px 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .top-strip a { color: var(--paper); text-decoration: none; font-weight: 600; margin-left: 10px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 1px; }
+
+  /* NAV */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 8px 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    box-shadow: var(--shadow-soft);
+    max-width: 1100px;
+    width: 100%;
+    height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.45rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background 0.15s;
+  }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+  .nav-cta {
+    background: var(--amber);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .nav-cta-outline { background: transparent; color: var(--ink); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--ink); white-space: nowrap; transition: background 0.15s, color 0.15s; }
+  .nav-cta-outline:hover { background: var(--ink); color: var(--paper); }
+  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; margin-left: auto; }
+    .nav-cta { display: none; }
+    .nav-cta-outline { display: none; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+    .page-wrap { padding: 0 16px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 48px; }
+  .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px; }
+  .hero h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
+  .hero h1 .soft { background: linear-gradient(180deg, transparent 72%, var(--amber) 72%); padding: 0 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .hero-sub { font-size: 16px; line-height: 1.6; color: var(--ink-soft); max-width: 56ch; }
+
+  /* Phase pills */
+  .phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 28px 0 14px; }
+  .phase-pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper-card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+  .phase-context { font-family: 'Fraunces', serif; font-weight: 300; font-size: 15px; line-height: 1.55; color: var(--ink-muted); margin-bottom: 8px; max-width: 58ch; }
+
+  /* HELP CARD */
+  .help-card { background: var(--paper-warm); border: 1px solid var(--paper-edge); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+  .help-card-toggle { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: none; border: none; cursor: pointer; text-align: left; font-family: 'Space Grotesk', sans-serif; }
+  .help-card-toggle:hover { background: var(--paper-edge); }
+  .help-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); flex: 1; }
+  .help-card-chevron { font-size: 16px; color: var(--ink-faded); transition: transform 0.2s; line-height: 1; }
+  .help-card.open .help-card-chevron { transform: rotate(90deg); }
+  .help-card-body { display: none; padding: 2px 18px 14px; }
+  .help-card.open .help-card-body { display: block; }
+  .help-card-body p { font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); margin-bottom: 6px; }
+  .help-card-body p:last-child { margin-bottom: 0; }
+  .help-card-body strong { color: var(--ink); font-weight: 600; }
+
+  /* LAYOUT: form + summary side by side, timeline below */
+  .records-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; margin-bottom: 40px; }
+  @media (max-width: 900px) { .records-grid { grid-template-columns: 1fr; } }
+
+  /* CAPTURE CARD */
+  .capture-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: var(--shadow-soft);
+  }
+  .capture-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .capture-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 18px; }
+
+  .type-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+  @media (max-width: 560px) { .type-row { grid-template-columns: repeat(2, 1fr); } }
+  .type-btn {
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 11px 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .type-btn:hover { border-color: var(--ink-faded); }
+  .type-btn.active[data-type="cost"] { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+  .type-btn.active[data-type="incident"] { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .type-btn.active[data-type="communication"] { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .type-btn.active[data-type="handover"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  .type-hint { font-size: 12.5px; color: var(--ink-muted); margin: -6px 0 16px; line-height: 1.5; }
+
+  .field-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .field { flex: 1; min-width: 130px; }
+  .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14.5px;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--amber-deep); }
+  .field textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+  .field-amount { max-width: 150px; }
+  .field-date { max-width: 170px; }
+
+  .cost-only { display: none; }
+  .capture-card.type-cost .cost-only { display: flex; }
+
+  .more-toggle {
+    background: none; border: none; cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    padding: 4px 0; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .more-toggle:hover { color: var(--ink); }
+  .more-toggle .chev { transition: transform 0.2s; display: inline-block; }
+  .more-fields { display: none; }
+  .more-fields.open { display: block; }
+  .more-toggle.open .chev { transform: rotate(90deg); }
+
+  .capture-actions { display: flex; gap: 10px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+  .save-btn {
+    background: var(--amber);
+    color: var(--ink);
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 999px;
+    padding: 12px 26px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .save-btn:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .cancel-edit-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    display: none;
+  }
+  .cancel-edit-btn:hover { color: var(--ink); }
+  .capture-card.editing .cancel-edit-btn { display: inline; }
+  .capture-card.editing .save-btn::after { content: ""; }
+
+  .capture-note { font-size: 12px; color: var(--ink-faded); margin-top: 14px; line-height: 1.55; }
+
+  /* SUMMARY DOSSIER PANEL */
+  .summary-panel {
+    background: var(--green);
+    color: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: var(--shadow-card);
+    position: sticky;
+    top: 20px;
+  }
+  .summary-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 18px; }
+  .summary-stat { margin-bottom: 16px; }
+  .summary-stat-label { font-size: 12.5px; color: rgba(255,255,255,0.65); margin-bottom: 2px; }
+  .summary-stat-val { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.7rem; letter-spacing: -0.02em; line-height: 1.1; }
+  .summary-stat-val.small { font-size: 1.15rem; }
+  .summary-divider { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 18px 0; }
+  .summary-balance-note { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; margin-top: 4px; }
+  .summary-export {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--amber);
+    color: var(--ink);
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .summary-export:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .summary-export-hint { font-size: 11.5px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+  /* FILTERS */
+  .timeline-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .timeline-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.6rem; letter-spacing: -0.02em; }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper-card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-pill:hover { background: var(--paper-warm); }
+  .filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .filter-pill .count { color: inherit; opacity: 0.55; margin-left: 4px; }
+
+  /* TIMELINE */
+  .month-group { margin-bottom: 28px; }
+  .month-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 0 4px 10px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 4px;
+  }
+  .month-name { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.1rem; letter-spacing: -0.01em; }
+  .month-meta { font-size: 12.5px; color: var(--ink-muted); font-weight: 500; }
+
+  .entry-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 14px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--paper-edge);
+    align-items: start;
+  }
+  .entry-row:hover { background: var(--paper-card); }
+  .entry-date { text-align: center; padding-top: 2px; }
+  .entry-date-day { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.25rem; line-height: 1; }
+  .entry-date-mon { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); margin-top: 2px; }
+  .entry-main { min-width: 0; }
+  .entry-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+  .entry-badge {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px;
+  }
+  .entry-badge.cost { background: var(--sage); color: var(--ink); }
+  .entry-badge.incident { background: var(--coral); color: var(--paper); }
+  .entry-badge.communication { background: var(--honey); color: var(--ink); }
+  .entry-badge.handover { background: var(--paper-warm); color: var(--ink-soft); border: 1px solid var(--paper-edge); }
+  .entry-kid { font-size: 11px; font-weight: 600; color: var(--ink-muted); background: var(--paper-warm); padding: 3px 9px; border-radius: 999px; }
+  .entry-title { font-size: 14.5px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+  .entry-note { font-size: 13px; color: var(--ink-muted); line-height: 1.5; margin-top: 3px; max-width: 64ch; }
+  .entry-receipt { font-size: 12px; color: var(--ink-faded); margin-top: 3px; }
+  .entry-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .entry-amount { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.15rem; letter-spacing: -0.01em; white-space: nowrap; }
+  .entry-paidby { font-size: 11px; color: var(--ink-muted); font-weight: 600; }
+  .entry-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+  .entry-row:hover .entry-actions { opacity: 1; }
+  @media (hover: none) { .entry-actions { opacity: 1; } }
+  .entry-action-btn {
+    background: none; border: 1px solid var(--paper-edge); border-radius: 999px;
+    width: 28px; height: 28px; cursor: pointer; color: var(--ink-muted);
+    font-size: 13px; line-height: 1; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .entry-action-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--paper-warm); }
+  .entry-action-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+  @media (max-width: 560px) {
+    .entry-row { grid-template-columns: 44px 1fr; }
+    .entry-side { grid-column: 2; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+    .entry-date-day { font-size: 1.05rem; }
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    border: 1.5px dashed var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .empty-state-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.3rem; margin-bottom: 8px; }
+  .empty-state-sub { font-size: 14px; color: var(--ink-muted); line-height: 1.6; max-width: 46ch; margin: 0 auto; }
+
+  /* GUIDANCE STRIP */
+  .guidance-strip {
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 32px 0 56px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .guidance-strip strong { font-weight: 600; }
+
+  /* RESET ROW */
+  .danger-row { margin: 0 0 56px; }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* TOAST */
+  .records-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 9999;
+    box-shadow: var(--shadow-card);
+  }
+  .records-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+  /* MILESTONES & KEY FACTS */
+  .kd-card { background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: var(--radius-lg); margin: 40px 0 0; overflow: hidden; box-shadow: var(--shadow-soft); }
+  .kd-card-header { width: 100%; display: flex; align-items: center; gap: 12px; padding: 18px 24px; background: none; border: none; cursor: pointer; text-align: left; font-family: 'Space Grotesk', sans-serif; }
+  .kd-card-header:hover { background: var(--paper-warm); }
+  .kd-card-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.15rem; letter-spacing: -0.01em; color: var(--ink); flex: 1; }
+  .kd-card-sub { font-size: 12px; color: var(--ink-muted); font-weight: 500; }
+  .kd-card-chevron { font-size: 18px; color: var(--ink-faded); transition: transform 0.2s; line-height: 1; }
+  .kd-card.open .kd-card-chevron { transform: rotate(90deg); }
+  .kd-card-body { display: none; padding-bottom: 10px; }
+  .kd-card.open .kd-card-body { display: block; }
+
+  .cl-add-input {
+    flex: 1; font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 16px; outline: none; transition: border-color 0.15s;
+  }
+  .cl-add-input:focus { border-color: var(--ink-faded); }
+  .cl-add-input::placeholder { color: var(--ink-faded); }
+  .cl-add-btn {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--ink); background: var(--paper-warm); border: 1px solid var(--paper-edge);
+    border-radius: 999px; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+  }
+  .cl-add-btn:hover { background: var(--paper-edge); }
+
+  .kd-subheader {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 14px; color: var(--ink-muted); padding: 4px 24px 4px; line-height: 1.6;
+  }
+  .kd-subsection { padding: 18px 24px 8px; }
+  .kd-subsection-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-muted);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .key-date-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 24px; transition: background 0.12s;
+  }
+  .key-date-item:hover { background: var(--paper-warm); }
+  .kd-label {
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    min-width: 220px; padding-top: 9px; line-height: 1.4; flex-shrink: 0;
+  }
+  .kd-inputs { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .kd-date-input {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 10px;
+    padding: 7px 12px; outline: none; transition: border-color 0.15s; width: 180px;
+  }
+  .kd-date-input:focus { border-color: var(--ink-faded); }
+  .kd-inline-note {
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--ink-soft);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 10px;
+    padding: 6px 12px; outline: none; transition: border-color 0.15s; width: 100%; max-width: 340px;
+  }
+  .kd-inline-note:focus { border-color: var(--ink-faded); }
+  .kd-inline-note::placeholder { color: var(--ink-faded); font-size: 12px; }
+  .key-note-item { padding: 10px 24px 14px; transition: background 0.12s; }
+  .key-note-item:hover { background: var(--paper-warm); }
+  .kd-note-label-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+  }
+  .kd-note-label { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .kd-textarea {
+    width: 100%; font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 12px;
+    padding: 10px 14px; outline: none; resize: vertical; min-height: 76px; line-height: 1.55;
+    transition: border-color 0.15s;
+  }
+  .kd-textarea:focus { border-color: var(--ink-faded); }
+  .kd-textarea::placeholder { color: var(--ink-faded); }
+  .kd-delete-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-faded); font-size: 16px; padding: 0 4px; line-height: 1; flex-shrink: 0;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .key-date-item:hover .kd-delete-btn,
+  .key-note-item:hover .kd-delete-btn { opacity: 1; }
+  .kd-add-row {
+    display: flex; align-items: center; gap: 8px; padding: 10px 24px 14px;
+    border-top: 1px solid var(--paper-edge); flex-wrap: wrap;
+  }
+  .kd-add-label { flex: 1; min-width: 140px; }
+  .kd-add-date {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 12px; outline: none; transition: border-color 0.15s; flex-shrink: 0;
+  }
+  .kd-add-date:focus { border-color: var(--ink-faded); }
+  .kd-add-note { flex: 1; min-width: 120px; }
+  .kd-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 4px 0 0; }
+  @media (max-width: 640px) {
+    .key-date-item { flex-wrap: wrap; }
+    .kd-label { min-width: unset; padding-top: 0; flex: 1; }
+    .kd-inputs { width: 100%; }
+    .kd-date-input { width: 100%; }
+  }
+
+  /* FOOTER */
+  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 64px; }
+  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
+  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
+  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
+  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
+  .footer-col-links a:hover { color: var(--ink); }
+  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
+  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-copy { font-size: 13px; color: var(--ink-faded); }
+  .footer-legal { display: flex; gap: 20px; }
+  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a:hover { color: var(--ink); }
+  @media (max-width: 760px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-tagline { grid-column: 1 / -1; }
+    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+  @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
+
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="./index.html" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./budget.html">Finances</a></li>
+      <li><a href="./kids-week.html">Week</a></li>
+      <li><a href="./admin.html">Admin</a></li>
+      <li><a href="./records.html" class="active">Records</a></li>
+      <li><a href="./goals.html">Goals</a></li>
+      <li><a href="./guides.html">Guides</a></li>
+    </ul>
+    <a href="./companion-pack.html" class="nav-cta-outline">Companion Pack</a>
+    <a href="./how-it-works.html" class="nav-cta">How Atlas Works</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="./index.html">Home</a>
+  <a href="./budget.html">Finances</a>
+  <a href="./kids-week.html">Week</a>
+  <a href="./admin.html">Admin</a>
+  <a href="./records.html" class="active">Records</a>
+  <a href="./goals.html">Goals</a>
+  <a href="./guides.html">Guides</a>
+  <a href="./companion-pack.html">Companion Pack</a>
+  <a href="./how-it-works.html">How Atlas Works</a>
+</div>
+
+<div class="page-wrap">
+<div class="container">
+
+  <section class="hero">
+    <div class="hero-eyebrow">Atlas — Records</div>
+    <h1><span class="soft">Write it down</span><br>while it's fresh.</h1>
+    <p class="hero-sub">Shared costs, incidents, messages and handovers — dated, in one place, exportable when someone official asks. Not about winning. About knowing where things stand.</p>
+
+    <div class="phase-row" id="phase-row">
+      <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
+      <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
+      <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
+      <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
+      <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
+    </div>
+    <div class="phase-context" id="phase-context"></div>
+  </section>
+
+  <div class="help-card" id="help-card">
+    <button class="help-card-toggle" id="help-toggle" onclick="toggleHelp()" aria-expanded="false">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-faded);flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span class="help-card-label">What this tool does</span>
+      <span class="help-card-chevron">›</span>
+    </button>
+    <div class="help-card-body" id="help-body">
+      <p>Use this page to keep a dated record of the things that pass between two households: shared costs for the kids, incidents worth remembering, significant messages, and handovers that didn't go to plan.</p>
+      <p>Each entry takes about 20 seconds. Facts and dates only — write what happened, not what you think of it. Commentary doesn't hold up; dates and amounts do.</p>
+      <p><strong>First goal: never have to reconstruct three months from memory.</strong></p>
+    </div>
+  </div>
+  <script>
+    function toggleHelp() {
+      const card = document.getElementById('help-card');
+      const isOpen = card.classList.toggle('open');
+      document.getElementById('help-toggle').setAttribute('aria-expanded', isOpen);
+      localStorage.setItem('atlas_help_records', isOpen ? '1' : '0');
+    }
+    (function() {
+      if (localStorage.getItem('atlas_help_records') !== '0') {
+        document.getElementById('help-card').classList.add('open');
+        document.getElementById('help-toggle').setAttribute('aria-expanded', 'true');
+      }
+    })();
+  </script>
+
+  <!-- CAPTURE + SUMMARY -->
+  <div class="records-grid">
+
+    <div class="capture-card type-cost" id="capture-card">
+      <div class="capture-title" id="capture-title">Add an entry</div>
+      <div class="capture-sub">Twenty seconds. Date, what happened, done.</div>
+
+      <div class="type-row" id="type-row">
+        <button class="type-btn active" data-type="cost" onclick="setType('cost')">Shared cost</button>
+        <button class="type-btn" data-type="incident" onclick="setType('incident')">Incident</button>
+        <button class="type-btn" data-type="communication" onclick="setType('communication')">Communication</button>
+        <button class="type-btn" data-type="handover" onclick="setType('handover')">Handover</button>
+      </div>
+      <p class="type-hint" id="type-hint"></p>
+
+      <div class="field-row">
+        <div class="field field-date">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date">
+        </div>
+        <div class="field">
+          <label for="f-title">What happened</label>
+          <input type="text" id="f-title" maxlength="140" placeholder="School shoes">
+        </div>
+      </div>
+
+      <div class="field-row cost-only">
+        <div class="field field-amount">
+          <label for="f-amount">Amount</label>
+          <input type="number" id="f-amount" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label for="f-paidby">Who paid</label>
+          <select id="f-paidby">
+            <option value="me">I paid</option>
+            <option value="them">They paid</option>
+            <option value="split">Split at the time</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="more-toggle" id="more-toggle" onclick="toggleMore()" type="button">
+        <span class="chev">›</span> More detail (optional)
+      </button>
+      <div class="more-fields" id="more-fields">
+        <div class="field-row">
+          <div class="field">
+            <label for="f-kids">Which kid(s)</label>
+            <input type="text" id="f-kids" maxlength="60" placeholder="Optional">
+          </div>
+          <div class="field cost-only" style="display:none" id="f-receipt-wrap">
+            <label for="f-receipt">Where the receipt lives</label>
+            <input type="text" id="f-receipt" maxlength="120" placeholder="Email, drawer, photos — optional">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-note">Notes</label>
+            <textarea id="f-note" maxlength="600" placeholder="Plain facts. What was said, what was agreed, what changed."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-actions">
+        <button class="save-btn" id="save-btn" onclick="saveEntry()">Save entry</button>
+        <button class="cancel-edit-btn" onclick="cancelEdit()">Cancel edit</button>
+      </div>
+      <p class="capture-note">Stays in your browser like everything else in Atlas. Nothing is sent anywhere. Back it up from <a href="./admin.html#move-data" style="color:var(--ink-muted)">Admin → Move data</a>.</p>
+    </div>
+
+    <aside class="summary-panel">
+      <div class="summary-label">The record so far</div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">Entries</div>
+        <div class="summary-stat-val" id="sum-entries">0</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">Covering</div>
+        <div class="summary-stat-val small" id="sum-range">—</div>
+      </div>
+      <hr class="summary-divider">
+      <div class="summary-label">Shared costs</div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">You've paid</div>
+        <div class="summary-stat-val" id="sum-mine">$0</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">They've paid</div>
+        <div class="summary-stat-val" id="sum-theirs">$0</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">Difference</div>
+        <div class="summary-stat-val small" id="sum-diff">—</div>
+        <div class="summary-balance-note">Raw totals only. What's owed depends on what you've agreed — the record just keeps the numbers honest.</div>
+      </div>
+      <hr class="summary-divider">
+      <a href="./records-print.html" class="summary-export">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Export the dossier
+      </a>
+      <div class="summary-export-hint">A clean, dated PDF of everything — built for lawyers, mediators and your own peace of mind.</div>
+    </aside>
+
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline-head">
+    <div class="timeline-title">The record.</div>
+    <div class="filter-row" id="filter-row">
+      <button class="filter-pill active" data-filter="all" onclick="setFilter('all')">All <span class="count" id="count-all"></span></button>
+      <button class="filter-pill" data-filter="cost" onclick="setFilter('cost')">Costs <span class="count" id="count-cost"></span></button>
+      <button class="filter-pill" data-filter="incident" onclick="setFilter('incident')">Incidents <span class="count" id="count-incident"></span></button>
+      <button class="filter-pill" data-filter="communication" onclick="setFilter('communication')">Communications <span class="count" id="count-communication"></span></button>
+      <button class="filter-pill" data-filter="handover" onclick="setFilter('handover')">Handovers <span class="count" id="count-handover"></span></button>
+    </div>
+  </div>
+
+  <div id="timeline"></div>
+
+
+  <!-- MILESTONES & KEY FACTS (moved from Admin — data keys unchanged) -->
+  <div class="kd-card" id="kd-card">
+    <button class="kd-card-header" onclick="toggleKdCard()" aria-expanded="false">
+      <span class="kd-card-title">Milestones &amp; key facts</span>
+      <span class="kd-card-sub" id="kd-card-sub"></span>
+      <span class="kd-card-chevron">›</span>
+    </button>
+    <div class="kd-card-body">
+      <p class="kd-subheader"><em>These aren't events. They're the dates and facts worth keeping — for yourself, for legal conversations, or just to remember where you started. They print as page one of the dossier.</em></p>
+
+      <div class="kd-subsection">
+        <div class="kd-subsection-label">Your Timeline</div>
+      </div>
+      <div id="kd-timeline-items"></div>
+      <div class="kd-add-row">
+        <input type="text" class="cl-add-input kd-add-label" id="kd-new-label" placeholder="Name this date…" maxlength="80">
+        <input type="date" class="kd-add-date" id="kd-new-date">
+        <input type="text" class="cl-add-input kd-add-note" id="kd-new-note" placeholder="Optional note" maxlength="120">
+        <button class="cl-add-btn" onclick="addCustomDate()">Add</button>
+      </div>
+
+      <hr class="kd-divider">
+
+      <div class="kd-subsection">
+        <div class="kd-subsection-label">Key Notes</div>
+      </div>
+      <div id="kd-notes-items"></div>
+      <div class="kd-add-row">
+        <input type="text" class="cl-add-input kd-add-label" id="kd-new-note-label" placeholder="Note title…" maxlength="80">
+        <button class="cl-add-btn" onclick="addCustomNote()">Add note</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="guidance-strip">
+    <strong>Keeping it useful:</strong> short entries beat long ones. Dates and amounts beat adjectives. If it involves money, log it the day it happens. If it involves the kids, log what changed — not how you felt about it. The printable companion pack's <em>What to write down</em> guidance covers what's worth recording and what's overkill.
+  </div>
+
+  <div class="danger-row">
+    <button class="reset-btn" onclick="resetRecords()">Delete all records</button>
+  </div>
+
+</div>
+</div>
+
+<div class="records-toast" id="records-toast"></div>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
+    <div>
+      <div class="footer-col-heading">Modules</div>
+      <ul class="footer-col-links">
+        <li><a href="./budget.html">Finances</a></li>
+        <li><a href="./kids-week.html">Kids Week</a></li>
+        <li><a href="./admin.html">Admin</a></li>
+        <li><a href="./records.html">Records</a></li>
+        <li><a href="./goals.html">Goals</a></li>
+        <li><a href="./guides.html">Guides</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">About</div>
+      <ul class="footer-col-links">
+        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
+        <li><a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a></li>
+        <li><a href="./admin.html#move-data">Move to another device</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">Reading</div>
+      <ul class="footer-col-links">
+        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">All articles</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">The Sunday email</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-mark">
+    <div class="footer-mark-inner">
+      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
+        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="58" cy="14" r="5" fill="#D97757"/>
+      </svg>
+      <div class="footer-mark-word">Atlas</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
+      <div class="footer-legal">
+        <a href="https://www.get-atlas.com.au/privacy/">Privacy &amp; Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ─── Phase handling (standard Atlas pattern) ─────────────────────────────── */
+const phaseContexts = {
+  'waiting-room': 'Start the record now — dates and amounts are easiest to capture while they’re fresh, and hardest to reconstruct later.',
+  'survive': 'Log shared costs and anything involving the kids. Short entries. Facts and dates only — the rest can wait.',
+  'stabilise': 'This is where the record earns its keep — costs, changes to arrangements, what was agreed and when.',
+  'rebuild': 'Keep logging shared costs. Log the rest only when something is off-pattern.',
+  'new-chapter': 'Maintenance mode. Costs and the occasional note. The record is now mostly history — keep it that way.'
+};
+
+let currentPhase = 'survive';
+
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+function getCurrentPhase() {
+  const savedPhase = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+  return normalisePhase(savedPhase || 'survive');
+}
+function setCurrentPhase(phase) {
+  phase = normalisePhase(phase);
+  localStorage.setItem('atlas_phase', phase);
+  localStorage.setItem('dad_atlas_phase', phase);
+  localStorage.setItem('atlas_budget_phase', phase);
+  localStorage.setItem('dad_budget_phase', phase);
+  window.dispatchEvent(new StorageEvent('storage', { key: 'atlas_phase', newValue: phase }));
+}
+function setPhase(phase) {
+  phase = normalisePhase(phase);
+  currentPhase = phase;
+  setCurrentPhase(phase);
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  document.getElementById('phase-context').textContent = phaseContexts[phase] || '';
+}
+window.addEventListener('storage', e => {
+  const nextPhase = normalisePhase(e.newValue);
+  if (e.key === 'atlas_phase' && nextPhase && nextPhase !== currentPhase) setPhase(nextPhase);
+});
+
+/* ─── Mobile nav ──────────────────────────────────────────────────────────── */
+function toggleNav() {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  const open = nav.classList.toggle('open');
+  ham.classList.toggle('open', open);
+}
+document.addEventListener('click', e => {
+  const nav = document.getElementById('mobile-nav');
+  const ham = document.getElementById('hamburger');
+  if (!e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav')) {
+    nav.classList.remove('open');
+    ham.classList.remove('open');
+  }
+});
+
+/* ─── Data layer ──────────────────────────────────────────────────────────── */
+const RECORDS_KEY = 'atlas_records';
+
+function loadRecords() {
+  try {
+    const data = JSON.parse(localStorage.getItem(RECORDS_KEY) || '{"entries":[]}');
+    return Array.isArray(data.entries) ? data : { entries: [] };
+  } catch (e) { return { entries: [] }; }
+}
+function saveRecords(data) {
+  localStorage.setItem(RECORDS_KEY, JSON.stringify(data));
+}
+
+let records = loadRecords();
+let currentType = 'cost';
+let currentFilter = 'all';
+let editingId = null;
+
+/* ─── Capture form ────────────────────────────────────────────────────────── */
+const typeHints = {
+  cost: 'Amount, who paid, what it was for. Note where the receipt lives if it matters.',
+  incident: 'What happened and when. Facts only — no commentary, no adjectives.',
+  communication: 'What was said or sent, and through what channel — text, email, app, in person.',
+  handover: 'Late, early, missed, or notes passed between homes. Only log what was off-pattern.'
+};
+const typeLabels = { cost: 'Shared cost', incident: 'Incident', communication: 'Communication', handover: 'Handover' };
+
+function setType(type) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  const card = document.getElementById('capture-card');
+  card.classList.toggle('type-cost', type === 'cost');
+  document.getElementById('f-receipt-wrap').style.display = (type === 'cost') ? 'block' : 'none';
+  document.getElementById('type-hint').textContent = typeHints[type];
+  const placeholders = {
+    cost: 'School shoes',
+    incident: 'Pickup missed — no notice given',
+    communication: 'Text agreeing to swap weekends 20–21 June',
+    handover: 'Handover 40 min late — school bag left behind'
+  };
+  document.getElementById('f-title').placeholder = placeholders[type];
+}
+
+function toggleMore() {
+  document.getElementById('more-fields').classList.toggle('open');
+  document.getElementById('more-toggle').classList.toggle('open');
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function clearForm() {
+  document.getElementById('f-date').value = todayStr();
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-amount').value = '';
+  document.getElementById('f-paidby').value = 'me';
+  document.getElementById('f-kids').value = '';
+  document.getElementById('f-receipt').value = '';
+  document.getElementById('f-note').value = '';
+  editingId = null;
+  document.getElementById('capture-card').classList.remove('editing');
+  document.getElementById('capture-title').textContent = 'Add an entry';
+  document.getElementById('save-btn').textContent = 'Save entry';
+}
+
+function saveEntry() {
+  const title = document.getElementById('f-title').value.trim();
+  const date = document.getElementById('f-date').value;
+  if (!title) { showToast('Give it a few words — what happened?'); document.getElementById('f-title').focus(); return; }
+  if (!date) { showToast('It needs a date.'); document.getElementById('f-date').focus(); return; }
+
+  const entry = {
+    id: editingId || ('r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
+    type: currentType,
+    date: date,
+    title: title,
+    amount: currentType === 'cost' ? (parseFloat(document.getElementById('f-amount').value) || 0) : null,
+    paidBy: currentType === 'cost' ? document.getElementById('f-paidby').value : null,
+    kids: document.getElementById('f-kids').value.trim(),
+    receipt: currentType === 'cost' ? document.getElementById('f-receipt').value.trim() : '',
+    note: document.getElementById('f-note').value.trim(),
+    created: editingId ? (records.entries.find(e => e.id === editingId) || {}).created || new Date().toISOString() : new Date().toISOString()
+  };
+
+  if (editingId) {
+    const i = records.entries.findIndex(e => e.id === editingId);
+    if (i > -1) records.entries[i] = entry; else records.entries.push(entry);
+    showToast('Entry updated.');
+  } else {
+    records.entries.push(entry);
+    showToast('Saved. ' + (records.entries.length === 1 ? 'The record has started.' : records.entries.length + ' entries on the record.'));
+  }
+  saveRecords(records);
+  clearForm();
+  render();
+}
+
+function editEntry(id) {
+  const e = records.entries.find(x => x.id === id);
+  if (!e) return;
+  setType(e.type);
+  document.getElementById('f-date').value = e.date;
+  document.getElementById('f-title').value = e.title;
+  document.getElementById('f-amount').value = e.amount != null && e.amount !== 0 ? e.amount : '';
+  document.getElementById('f-paidby').value = e.paidBy || 'me';
+  document.getElementById('f-kids').value = e.kids || '';
+  document.getElementById('f-receipt').value = e.receipt || '';
+  document.getElementById('f-note').value = e.note || '';
+  if ((e.kids || e.receipt || e.note) && !document.getElementById('more-fields').classList.contains('open')) toggleMore();
+  editingId = id;
+  document.getElementById('capture-card').classList.add('editing');
+  document.getElementById('capture-title').textContent = 'Edit entry';
+  document.getElementById('save-btn').textContent = 'Update entry';
+  document.getElementById('capture-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEdit() { clearForm(); }
+
+function deleteEntry(id) {
+  const e = records.entries.find(x => x.id === id);
+  if (!e) return;
+  if (!confirm('Delete this entry?\n\n"' + e.title + '" — ' + formatDateLong(e.date) + '\n\nThe record is most useful when it’s complete.')) return;
+  records.entries = records.entries.filter(x => x.id !== id);
+  saveRecords(records);
+  showToast('Entry deleted.');
+  render();
+}
+
+function resetRecords() {
+  if (!records.entries.length) { showToast('Nothing to delete.'); return; }
+  if (!confirm('Delete ALL ' + records.entries.length + ' entries?\n\nThis cannot be undone. Consider exporting your data first (Admin → Move data).')) return;
+  if (!confirm('Last check — permanently delete the entire record?')) return;
+  records = { entries: [] };
+  saveRecords(records);
+  showToast('Record cleared.');
+  render();
+}
+
+/* ─── Rendering ───────────────────────────────────────────────────────────── */
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function money(n) {
+  return '$' + (Math.round(n * 100) / 100).toLocaleString('en-AU', { minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2 });
+}
+function formatDateLong(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function monthKey(ds) { return ds.slice(0, 7); }
+function monthLabel(key) {
+  const d = new Date(key + '-15T12:00:00');
+  return d.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p.dataset.filter === f));
+  renderTimeline();
+}
+
+function render() {
+  renderSummary();
+  renderCounts();
+  renderTimeline();
+}
+
+function renderSummary() {
+  const es = records.entries;
+  document.getElementById('sum-entries').textContent = es.length;
+
+  if (es.length) {
+    const dates = es.map(e => e.date).sort();
+    const first = new Date(dates[0] + 'T12:00:00');
+    const last = new Date(dates[dates.length - 1] + 'T12:00:00');
+    const opts = { month: 'short', year: 'numeric' };
+    const a = first.toLocaleDateString('en-AU', opts);
+    const b = last.toLocaleDateString('en-AU', opts);
+    document.getElementById('sum-range').textContent = a === b ? a : a + ' – ' + b;
+  } else {
+    document.getElementById('sum-range').textContent = '—';
+  }
+
+  let mine = 0, theirs = 0;
+  es.filter(e => e.type === 'cost' && e.amount).forEach(e => {
+    if (e.paidBy === 'me') mine += e.amount;
+    else if (e.paidBy === 'them') theirs += e.amount;
+    else if (e.paidBy === 'split') { mine += e.amount / 2; theirs += e.amount / 2; }
+  });
+  document.getElementById('sum-mine').textContent = money(mine);
+  document.getElementById('sum-theirs').textContent = money(theirs);
+  const diff = mine - theirs;
+  const diffEl = document.getElementById('sum-diff');
+  if (!mine && !theirs) diffEl.textContent = '—';
+  else if (Math.abs(diff) < 0.005) diffEl.textContent = 'Even';
+  else diffEl.textContent = money(Math.abs(diff)) + (diff > 0 ? ' more from you' : ' more from them');
+}
+
+function renderCounts() {
+  const counts = { all: records.entries.length, cost: 0, incident: 0, communication: 0, handover: 0 };
+  records.entries.forEach(e => { if (counts[e.type] != null) counts[e.type]++; });
+  for (const k of ['all', 'cost', 'incident', 'communication', 'handover']) {
+    document.getElementById('count-' + k).textContent = counts[k] ? counts[k] : '';
+  }
+}
+
+function renderTimeline() {
+  const wrap = document.getElementById('timeline');
+  let es = records.entries.slice();
+  if (currentFilter !== 'all') es = es.filter(e => e.type === currentFilter);
+  es.sort((a, b) => b.date.localeCompare(a.date) || String(b.created).localeCompare(String(a.created)));
+
+  if (!es.length) {
+    wrap.innerHTML =
+      '<div class="empty-state">' +
+        '<div class="empty-state-title">' + (records.entries.length ? 'Nothing under this filter.' : 'No entries yet.') + '</div>' +
+        '<div class="empty-state-sub">' + (records.entries.length
+          ? 'Switch filters, or add a new entry above.'
+          : 'The first one takes 20 seconds — a school fee, a missed handover, an agreement made by text. Future you will be glad it’s dated.') +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  const groups = {};
+  es.forEach(e => {
+    const k = monthKey(e.date);
+    (groups[k] = groups[k] || []).push(e);
+  });
+
+  let html = '';
+  Object.keys(groups).sort().reverse().forEach(k => {
+    const list = groups[k];
+    const costTotal = list.filter(e => e.type === 'cost' && e.amount).reduce((s, e) => s + e.amount, 0);
+    html += '<div class="month-group">';
+    html += '<div class="month-head"><span class="month-name">' + monthLabel(k) + '</span>' +
+            '<span class="month-meta">' + list.length + (list.length === 1 ? ' entry' : ' entries') +
+            (costTotal ? ' · ' + money(costTotal) + ' in shared costs' : '') + '</span></div>';
+    list.forEach(e => {
+      const d = new Date(e.date + 'T12:00:00');
+      html += '<div class="entry-row">';
+      html += '<div class="entry-date"><div class="entry-date-day">' + d.getDate() + '</div><div class="entry-date-mon">' + d.toLocaleDateString('en-AU', { month: 'short' }) + '</div></div>';
+      html += '<div class="entry-main"><div class="entry-top">';
+      html += '<span class="entry-badge ' + e.type + '">' + typeLabels[e.type] + '</span>';
+      if (e.kids) html += '<span class="entry-kid">' + esc(e.kids) + '</span>';
+      html += '</div>';
+      html += '<div class="entry-title">' + esc(e.title) + '</div>';
+      if (e.note) html += '<div class="entry-note">' + esc(e.note) + '</div>';
+      if (e.receipt) html += '<div class="entry-receipt">Receipt: ' + esc(e.receipt) + '</div>';
+      html += '</div>';
+      html += '<div class="entry-side">';
+      if (e.type === 'cost' && e.amount) {
+        html += '<div class="entry-amount">' + money(e.amount) + '</div>';
+        html += '<div class="entry-paidby">' + (e.paidBy === 'me' ? 'I paid' : e.paidBy === 'them' ? 'They paid' : 'Split') + '</div>';
+      }
+      html += '<div class="entry-actions">' +
+        '<button class="entry-action-btn" title="Edit" onclick="editEntry(\'' + e.id + '\')">&#9998;</button>' +
+        '<button class="entry-action-btn del" title="Delete" onclick="deleteEntry(\'' + e.id + '\')">&times;</button>' +
+        '</div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+
+  wrap.innerHTML = html;
+}
+
+
+/* ─── Milestones & key facts (moved from Admin — data keys unchanged) ─────── */
+const DATES_KEY = 'atlas_admin_dates';
+const NOTES_KEY = 'atlas_admin_notes';
+
+const BUILTIN_DATES = [
+  { id: 'date-separation',          label: 'Date of separation' },
+  { id: 'date-moved-out',           label: 'Date you moved out' },
+  { id: 'date-parenting-agreement', label: 'Date parenting agreement signed', notePlaceholder: 'e.g. Informal / Consent orders / Court orders' },
+  { id: 'date-property-settlement', label: 'Date property settlement finalised' },
+  { id: 'date-divorce-lodged',      label: 'Date divorce application lodged' },
+  { id: 'date-divorce-final',       label: 'Date divorce finalised' },
+  { id: 'date-own-place',           label: 'First night in your own place' },
+  { id: 'date-kids-week',           label: "First kids' week at your place" }
+];
+
+const BUILTIN_NOTES = [
+  { id: 'note-parenting',     label: 'Current parenting arrangement',     placeholder: 'e.g. Week on / week off, holiday schedule, drop-off arrangements' },
+  { id: 'note-child-support', label: 'Child support status',              placeholder: 'Self-managed / Services Australia / amount and review date' },
+  { id: 'note-property',      label: 'Property situation',                placeholder: 'Who has the family home, your rental details, settlement notes' },
+  { id: 'note-lawyer',        label: 'Your lawyer',                       placeholder: 'Name, firm, phone/email' },
+  { id: 'note-mediator',      label: 'Mediator or family dispute contact', placeholder: 'Name and contact details' },
+  { id: 'note-court',         label: 'Family court case number',          placeholder: 'If applicable' },
+  { id: 'note-memory',        label: 'One thing I want to remember about this time', placeholder: 'Private note — just for you (never printed in the dossier)' }
+];
+
+function getDatesData() {
+  try { return JSON.parse(localStorage.getItem(DATES_KEY) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch(e) { return { hidden: [], values: {}, custom: [] }; }
+}
+function saveDatesData(data) { localStorage.setItem(DATES_KEY, JSON.stringify(data)); }
+
+function getNotesData() {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch(e) { return { hidden: [], values: {}, custom: [] }; }
+}
+function saveNotesData(data) { localStorage.setItem(NOTES_KEY, JSON.stringify(data)); }
+
+function makeDateItemEl(label, dateVal, noteVal, notePlaceholder, onDate, onNote, onDelete) {
+  const div = document.createElement('div');
+  div.className = 'key-date-item';
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'kd-label';
+  labelEl.textContent = label;
+
+  const inputs = document.createElement('div');
+  inputs.className = 'kd-inputs';
+
+  const dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.className = 'kd-date-input';
+  dateInput.value = dateVal || '';
+  dateInput.oninput = () => onDate(dateInput.value);
+
+  const noteInput = document.createElement('input');
+  noteInput.type = 'text';
+  noteInput.className = 'kd-inline-note';
+  noteInput.value = noteVal || '';
+  noteInput.placeholder = notePlaceholder || 'Optional note';
+  noteInput.maxLength = 120;
+  noteInput.oninput = () => onNote(noteInput.value);
+
+  inputs.appendChild(dateInput);
+  inputs.appendChild(noteInput);
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = onDelete;
+
+  div.appendChild(labelEl);
+  div.appendChild(inputs);
+  div.appendChild(del);
+  return div;
+}
+
+function renderBuiltinDate(entry, data) {
+  const val = data.values[entry.id] || {};
+  const el = makeDateItemEl(
+    entry.label, val.date, val.note, entry.notePlaceholder,
+    v => saveBuiltinDateValue(entry.id, 'date', v),
+    v => saveBuiltinDateValue(entry.id, 'note', v),
+    () => hideBuiltinDate(entry.id)
+  );
+  el.dataset.dateId = entry.id;
+  return el;
+}
+
+function renderCustomDate(item) {
+  const el = makeDateItemEl(
+    item.label, item.date, item.note, 'Optional note',
+    v => saveCustomDateValue(item.id, 'date', v),
+    v => saveCustomDateValue(item.id, 'note', v),
+    () => deleteCustomDate(item.id)
+  );
+  el.dataset.customDateId = item.id;
+  return el;
+}
+
+function renderBuiltinNote(entry, data) {
+  const val = data.values[entry.id] || '';
+  const div = document.createElement('div');
+  div.className = 'key-note-item';
+  div.dataset.noteId = entry.id;
+
+  const row = document.createElement('div');
+  row.className = 'kd-note-label-row';
+
+  const label = document.createElement('div');
+  label.className = 'kd-note-label';
+  label.textContent = entry.label;
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = () => hideBuiltinNote(entry.id);
+
+  row.appendChild(label);
+  row.appendChild(del);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'kd-textarea';
+  ta.rows = 3;
+  ta.placeholder = entry.placeholder;
+  ta.value = val;
+  ta.oninput = () => saveBuiltinNoteValue(entry.id, ta.value);
+
+  div.appendChild(row);
+  div.appendChild(ta);
+  return div;
+}
+
+function saveBuiltinDateValue(id, field, value) {
+  const data = getDatesData();
+  if (!data.values[id]) data.values[id] = {};
+  data.values[id][field] = value;
+  saveDatesData(data);
+}
+
+function saveCustomDateValue(id, field, value) {
+  const data = getDatesData();
+  const item = (data.custom || []).find(c => c.id === id);
+  if (item) { item[field] = value; saveDatesData(data); }
+}
+
+function saveBuiltinNoteValue(id, value) {
+  const data = getNotesData();
+  data.values[id] = value;
+  saveNotesData(data);
+}
+
+function hideBuiltinDate(id) {
+  const data = getDatesData();
+  if (!data.hidden.includes(id)) data.hidden.push(id);
+  saveDatesData(data);
+  document.querySelector(`.key-date-item[data-date-id="${id}"]`)?.remove();
+}
+
+function hideBuiltinNote(id) {
+  const data = getNotesData();
+  if (!data.hidden.includes(id)) data.hidden.push(id);
+  saveNotesData(data);
+  document.querySelector(`.key-note-item[data-note-id="${id}"]`)?.remove();
+}
+
+function renderCustomNote(item) {
+  const div = document.createElement('div');
+  div.className = 'key-note-item';
+  div.dataset.customNoteId = item.id;
+
+  const row = document.createElement('div');
+  row.className = 'kd-note-label-row';
+
+  const label = document.createElement('div');
+  label.className = 'kd-note-label';
+  label.textContent = item.label;
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = () => deleteCustomNote(item.id);
+
+  row.appendChild(label);
+  row.appendChild(del);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'kd-textarea';
+  ta.rows = 3;
+  ta.placeholder = 'Your note…';
+  ta.value = item.value || '';
+  ta.oninput = () => saveCustomNoteValue(item.id, ta.value);
+
+  div.appendChild(row);
+  div.appendChild(ta);
+  return div;
+}
+
+function saveCustomNoteValue(id, value) {
+  const data = getNotesData();
+  const item = (data.custom || []).find(c => c.id === id);
+  if (item) { item.value = value; saveNotesData(data); }
+}
+
+function deleteCustomNote(id) {
+  const data = getNotesData();
+  data.custom = (data.custom || []).filter(c => c.id !== id);
+  saveNotesData(data);
+  document.querySelector(`.key-note-item[data-custom-note-id="${id}"]`)?.remove();
+}
+
+function addCustomNote() {
+  const labelInput = document.getElementById('kd-new-note-label');
+  const label = labelInput.value.trim();
+  if (!label) return;
+  const data = getNotesData();
+  data.custom = data.custom || [];
+  const item = { id: `custom-note-${Date.now()}`, label, value: '' };
+  data.custom.push(item);
+  saveNotesData(data);
+  document.getElementById('kd-notes-items').appendChild(renderCustomNote(item));
+  labelInput.value = '';
+}
+
+function deleteCustomDate(id) {
+  const data = getDatesData();
+  data.custom = (data.custom || []).filter(c => c.id !== id);
+  saveDatesData(data);
+  document.querySelector(`.key-date-item[data-custom-date-id="${id}"]`)?.remove();
+}
+
+function addCustomDate() {
+  const labelInput = document.getElementById('kd-new-label');
+  const dateInput  = document.getElementById('kd-new-date');
+  const noteInput  = document.getElementById('kd-new-note');
+  const label = labelInput.value.trim();
+  if (!label) return;
+  const data = getDatesData();
+  const item = { id: `custom-date-${Date.now()}`, label, date: dateInput.value, note: noteInput.value.trim() };
+  data.custom = data.custom || [];
+  data.custom.push(item);
+  saveDatesData(data);
+  document.getElementById('kd-timeline-items').appendChild(renderCustomDate(item));
+  labelInput.value = '';
+  dateInput.value  = '';
+  noteInput.value  = '';
+}
+
+function loadKeyDates() {
+  const datesData = getDatesData();
+  const notesData = getNotesData();
+  const timeline  = document.getElementById('kd-timeline-items');
+  const notes     = document.getElementById('kd-notes-items');
+
+  BUILTIN_DATES.forEach(entry => {
+    if (!datesData.hidden.includes(entry.id))
+      timeline.appendChild(renderBuiltinDate(entry, datesData));
+  });
+  (datesData.custom || []).forEach(item => timeline.appendChild(renderCustomDate(item)));
+
+  BUILTIN_NOTES.forEach(entry => {
+    if (!notesData.hidden.includes(entry.id))
+      notes.appendChild(renderBuiltinNote(entry, notesData));
+  });
+  (notesData.custom || []).forEach(item => notes.appendChild(renderCustomNote(item)));
+
+  updateKdCardSub();
+}
+
+function updateKdCardSub() {
+  const datesData = getDatesData();
+  const notesData = getNotesData();
+  const dateCount = Object.values(datesData.values || {}).filter(v => v && (v.date || v.note)).length
+    + (datesData.custom || []).filter(c => c.date || c.note).length;
+  const noteCount = Object.values(notesData.values || {}).filter(v => v && String(v).trim()).length
+    + (notesData.custom || []).filter(c => c.value && c.value.trim()).length;
+  const parts = [];
+  if (dateCount) parts.push(dateCount + (dateCount === 1 ? ' date' : ' dates'));
+  if (noteCount) parts.push(noteCount + (noteCount === 1 ? ' note' : ' notes'));
+  document.getElementById('kd-card-sub').textContent = parts.join(' · ');
+}
+
+function toggleKdCard() {
+  const card = document.getElementById('kd-card');
+  const isOpen = card.classList.toggle('open');
+  card.querySelector('.kd-card-header').setAttribute('aria-expanded', isOpen);
+  localStorage.setItem('atlas_records_kd_open', isOpen ? '1' : '0');
+  if (isOpen) updateKdCardSub();
+}
+
+/* ─── Toast ───────────────────────────────────────────────────────────────── */
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('records-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ─── Init ────────────────────────────────────────────────────────────────── */
+(function init() {
+  setPhase(getCurrentPhase());
+  setType('cost');
+  document.getElementById('f-date').value = todayStr();
+  render();
+  loadKeyDates();
+  document.querySelectorAll('#kd-card .cl-add-input').forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const row = input.closest('.kd-add-row');
+        if (row && row.querySelector('#kd-new-label')) addCustomDate();
+        else if (row && row.querySelector('#kd-new-note-label')) addCustomNote();
+      }
+    });
+  });
+  if (localStorage.getItem('atlas_records_kd_open') !== '0') {
+    document.getElementById('kd-card').classList.add('open');
+    document.querySelector('#kd-card .kd-card-header').setAttribute('aria-expanded', 'true');
+  }
+})();
+</script>
+
+</body>
+</html>

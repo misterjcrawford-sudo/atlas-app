@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Records Dossier — Atlas</title>
+<script src="./auth.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --ink-soft: #3d3a35;
+    --ink-muted: #6b6760;
+    --ink-faded: #a09d97;
+    --paper: #faf8f5;
+    --paper-card: #f5f2ee;
+    --paper-warm: #f0ece5;
+    --paper-edge: #e0dbd2;
+    --amber: #d4924a;
+    --amber-deep: #b8741e;
+    --green: #3d7a5e;
+    --green-deep: #2c5c44;
+    --coral: #c9644a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCREEN CONTROLS ─────────────────────────────────────────────────────── */
+  .screen-controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--paper-edge);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .btn-print {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--green-deep); }
+  .btn-back {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .control-field { display: flex; align-items: center; gap: 7px; }
+  .control-field label { font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+  .control-field select, .control-field input {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    padding: 7px 10px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+    outline: none;
+  }
+  .screen-hint { font-size: 12px; color: var(--ink-faded); margin-left: auto; }
+
+  /* ── A4 PAGES ────────────────────────────────────────────────────────────── */
+  .pages-wrap { padding: 32px 0 64px; }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 20px;
+    background: white;
+    padding: 18mm 17mm;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+  }
+
+  /* ── PAGE HEADER ─────────────────────────────────────────────────────────── */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .print-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .print-logo-accent { color: var(--amber-deep); }
+  .print-header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .print-header-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ── TITLE BLOCK ─────────────────────────────────────────────────────────── */
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.6px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 22px;
+    line-height: 1.5;
+    max-width: 56ch;
+  }
+
+  /* ── SUMMARY BLOCK ───────────────────────────────────────────────────────── */
+  .summary-block {
+    background: var(--paper-warm);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .summary-cell-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .summary-cell-val {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .summary-cell-sub { font-size: 10.5px; color: var(--ink-muted); margin-top: 2px; }
+
+  /* ── MONTH SECTIONS ──────────────────────────────────────────────────────── */
+  .month-section { margin-bottom: 20px; }
+  .month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 2px;
+  }
+  .month-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .month-meta { font-size: 10.5px; color: var(--ink-muted); }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 64px 86px 1fr 80px;
+    gap: 10px;
+    padding: 8px 2px;
+    border-bottom: 1px solid var(--paper-edge);
+    font-size: 11.5px;
+    align-items: baseline;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .entry-date { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .entry-type {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-align: center;
+    white-space: nowrap;
+    justify-self: start;
+  }
+  .entry-type.cost { background: #e4eede; color: var(--green-deep); }
+  .entry-type.incident { background: #f6e3dc; color: var(--coral); }
+  .entry-type.communication { background: #f5ecd4; color: var(--amber-deep); }
+  .entry-type.handover { background: var(--paper-warm); color: var(--ink-muted); }
+  .entry-body { line-height: 1.5; }
+  .entry-title { font-weight: 600; color: var(--ink); }
+  .entry-kids { color: var(--ink-muted); font-weight: 500; }
+  .entry-note { color: var(--ink-soft); margin-top: 1px; }
+  .entry-receipt { color: var(--ink-faded); font-size: 10.5px; margin-top: 1px; }
+  .entry-amount { text-align: right; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .entry-paidby { display: block; font-size: 9.5px; font-weight: 500; color: var(--ink-muted); }
+
+  /* ── EMPTY / BOUNDARY ────────────────────────────────────────────────────── */
+  .empty-msg {
+    border: 1.5px dashed var(--paper-edge);
+    border-radius: 10px;
+    padding: 36px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+  .boundary {
+    margin-top: 26px;
+    padding: 12px 16px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    font-size: 10px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+  .print-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--ink-faded);
+    margin-top: 24px;
+    padding-top: 10px;
+    border-top: 1px solid var(--paper-edge);
+  }
+
+
+  /* ── KEY DATES & FACTS (page one) ────────────────────────────────────────── */
+  .facts-table { width: 100%; border-collapse: collapse; margin-bottom: 22px; }
+  .facts-table th {
+    text-align: left; font-size: 9.5px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-muted);
+    padding: 0 8px 7px 2px; border-bottom: 1.5px solid var(--ink);
+  }
+  .facts-table td { padding: 8px 8px 8px 2px; border-bottom: 1px solid var(--paper-edge); font-size: 11.5px; vertical-align: baseline; }
+  .facts-table .td-label { font-weight: 600; color: var(--ink); width: 42%; }
+  .facts-table .td-date { color: var(--ink); white-space: nowrap; width: 22%; }
+  .facts-table .td-note { color: var(--ink-soft); }
+  .fact-section-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-muted); margin: 18px 0 8px;
+  }
+  .fact-note-block { padding: 8px 2px; border-bottom: 1px solid var(--paper-edge); page-break-inside: avoid; break-inside: avoid; }
+  .fact-note-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 3px; }
+  .fact-note-text { font-size: 11.5px; color: var(--ink-soft); line-height: 1.55; white-space: pre-wrap; }
+
+  /* ── PRINT ───────────────────────────────────────────────────────────────── */
+  @media print {
+    @page { margin: 0; size: A4; }
+    body { background: white; }
+    .screen-controls { display: none !important; }
+    .pages-wrap { padding: 0; }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      box-shadow: none;
+      padding: 15mm 14mm;
+      page-break-after: always;
+      break-after: page;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen-controls">
+  <a href="./records.html" class="btn-back">&larr; Back to Records</a>
+  <button class="btn-print" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print / Save as PDF
+  </button>
+  <div class="control-field">
+    <label for="filter-type">Include</label>
+    <select id="filter-type" onchange="renderDossier()">
+      <option value="all">Everything</option>
+      <option value="cost">Shared costs only</option>
+      <option value="incident">Incidents only</option>
+      <option value="communication">Communications only</option>
+      <option value="handover">Handovers only</option>
+    </select>
+  </div>
+  <div class="control-field">
+    <label for="filter-from">From</label>
+    <input type="date" id="filter-from" onchange="renderDossier()">
+  </div>
+  <div class="control-field">
+    <label for="filter-to">To</label>
+    <input type="date" id="filter-to" onchange="renderDossier()">
+  </div>
+  <span class="screen-hint">Use your browser's "Save as PDF" to export a file.</span>
+</div>
+
+<div class="pages-wrap" id="pages-wrap"></div>
+
+<script>
+/* ─── Data ────────────────────────────────────────────────────────────────── */
+function loadRecords() {
+  try {
+    const data = JSON.parse(localStorage.getItem('atlas_records') || '{"entries":[]}');
+    return Array.isArray(data.entries) ? data.entries : [];
+  } catch (e) { return []; }
+}
+
+const typeLabels = { cost: 'Cost', incident: 'Incident', communication: 'Comms', handover: 'Handover' };
+
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function money(n) {
+  return '$' + (Math.round(n * 100) / 100).toLocaleString('en-AU', { minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2 });
+}
+function fmtDate(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: '2-digit' });
+}
+function monthLabel(key) {
+  const d = new Date(key + '-15T12:00:00');
+  return d.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+}
+
+
+/* ─── Key dates & facts (page one) — reads Admin-era keys, unchanged ──────── */
+const BUILTIN_DATES = [
+  { id: 'date-separation',          label: 'Date of separation' },
+  { id: 'date-moved-out',           label: 'Date you moved out' },
+  { id: 'date-parenting-agreement', label: 'Date parenting agreement signed' },
+  { id: 'date-property-settlement', label: 'Date property settlement finalised' },
+  { id: 'date-divorce-lodged',      label: 'Date divorce application lodged' },
+  { id: 'date-divorce-final',       label: 'Date divorce finalised' },
+  { id: 'date-own-place',           label: 'First night in your own place' },
+  { id: 'date-kids-week',           label: "First kids' week at your place" }
+];
+const BUILTIN_NOTES = [
+  { id: 'note-parenting',     label: 'Current parenting arrangement' },
+  { id: 'note-child-support', label: 'Child support status' },
+  { id: 'note-property',      label: 'Property situation' },
+  { id: 'note-lawyer',        label: 'Your lawyer' },
+  { id: 'note-mediator',      label: 'Mediator or family dispute contact' },
+  { id: 'note-court',         label: 'Family court case number' }
+  /* note-memory deliberately excluded — private, never printed */
+];
+
+function loadJson(key) {
+  try { return JSON.parse(localStorage.getItem(key) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch (e) { return { hidden: [], values: {}, custom: [] }; }
+}
+
+function fmtDateLong(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function buildFactsPage(headerHtml) {
+  const datesData = loadJson('atlas_admin_dates');
+  const notesData = loadJson('atlas_admin_notes');
+  const hiddenDates = new Set(datesData.hidden || []);
+  const hiddenNotes = new Set(notesData.hidden || []);
+
+  const dateRows = [];
+  BUILTIN_DATES.forEach(d => {
+    if (hiddenDates.has(d.id)) return;
+    const v = (datesData.values || {})[d.id] || {};
+    if (v.date || v.note) dateRows.push({ label: d.label, date: v.date || '', note: v.note || '' });
+  });
+  (datesData.custom || []).forEach(c => {
+    if (c.date || c.note) dateRows.push({ label: c.label, date: c.date || '', note: c.note || '' });
+  });
+
+  const noteBlocks = [];
+  BUILTIN_NOTES.forEach(n => {
+    if (hiddenNotes.has(n.id)) return;
+    const v = (notesData.values || {})[n.id];
+    if (v && String(v).trim()) noteBlocks.push({ label: n.label, text: v });
+  });
+  (notesData.custom || []).forEach(c => {
+    if (c.value && c.value.trim()) noteBlocks.push({ label: c.label, text: c.value });
+  });
+
+  if (!dateRows.length && !noteBlocks.length) return '';
+
+  let html = '<div class="page">' + headerHtml;
+  html += '<div class="page-title">Key dates &amp; facts.</div>';
+  html += '<div class="page-sub">Milestones and current arrangements, as recorded by the user. The chronological record follows.</div>';
+
+  if (dateRows.length) {
+    html += '<div class="fact-section-label">Key dates</div>';
+    html += '<table class="facts-table"><thead><tr><th style="width:42%">Event</th><th style="width:22%">Date</th><th>Note</th></tr></thead><tbody>';
+    dateRows.forEach(r => {
+      html += '<tr><td class="td-label">' + esc(r.label) + '</td>' +
+        '<td class="td-date">' + (r.date ? fmtDateLong(r.date) : '<span style="color:var(--ink-faded)">—</span>') + '</td>' +
+        '<td class="td-note">' + esc(r.note) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+
+  if (noteBlocks.length) {
+    html += '<div class="fact-section-label">Key facts</div>';
+    noteBlocks.forEach(n => {
+      html += '<div class="fact-note-block"><div class="fact-note-label">' + esc(n.label) + '</div>' +
+        '<div class="fact-note-text">' + esc(n.text) + '</div></div>';
+    });
+  }
+
+  html += '<div class="print-footer"><span>Atlas — Life After Separation</span><span>get-atlas.com.au</span></div></div>';
+  return html;
+}
+
+/* ─── Render ──────────────────────────────────────────────────────────────── */
+function renderDossier() {
+  const wrap = document.getElementById('pages-wrap');
+  const typeFilter = document.getElementById('filter-type').value;
+  const from = document.getElementById('filter-from').value;
+  const to = document.getElementById('filter-to').value;
+
+  let entries = loadRecords();
+  if (typeFilter !== 'all') entries = entries.filter(e => e.type === typeFilter);
+  if (from) entries = entries.filter(e => e.date >= from);
+  if (to) entries = entries.filter(e => e.date <= to);
+  entries.sort((a, b) => a.date.localeCompare(b.date) || String(a.created).localeCompare(String(b.created)));
+
+  const today = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  /* Summary numbers (over the filtered set) */
+  let mine = 0, theirs = 0, costCount = 0;
+  entries.filter(e => e.type === 'cost' && e.amount).forEach(e => {
+    costCount++;
+    if (e.paidBy === 'me') mine += e.amount;
+    else if (e.paidBy === 'them') theirs += e.amount;
+    else if (e.paidBy === 'split') { mine += e.amount / 2; theirs += e.amount / 2; }
+  });
+
+  let rangeLabel = '—';
+  if (entries.length) {
+    const a = fmtDate(entries[0].date);
+    const b = fmtDate(entries[entries.length - 1].date);
+    rangeLabel = a === b ? a : a + ' – ' + b;
+  }
+
+  const headerHtml =
+    '<div class="print-header">' +
+      '<div class="print-logo">Atlas<span class="print-logo-accent">.</span></div>' +
+      '<div class="print-header-meta">' +
+        '<strong>Records dossier</strong><br>' +
+        'Generated ' + today + '<br>' +
+        entries.length + ' entries &middot; ' + rangeLabel +
+      '</div>' +
+    '</div>';
+
+  const boundaryHtml =
+    '<div class="boundary">Prepared from personal records kept in Atlas (app.get-atlas.com.au). Entries are recorded by the user at or near the time of the events described. Atlas provides practical organisation only — this document is a personal record, not legal advice or evidence prepared by a third party. Data is stored only on the user\'s own device.</div>';
+
+  const factsPageHtml = buildFactsPage(headerHtml);
+
+  if (!entries.length) {
+    wrap.innerHTML =
+      factsPageHtml +
+      '<div class="page">' + headerHtml +
+      '<div class="page-title">The record.</div>' +
+      '<div class="page-sub">A dated record of shared costs, incidents, communications and handovers.</div>' +
+      '<div class="empty-msg">No entries match this filter.<br>Adjust the date range or type filter above, or add entries on the Records page.</div>' +
+      boundaryHtml +
+      '</div>';
+    return;
+  }
+
+  /* Group by month */
+  const groups = {};
+  entries.forEach(e => {
+    const k = e.date.slice(0, 7);
+    (groups[k] = groups[k] || []).push(e);
+  });
+
+  let monthsHtml = '';
+  Object.keys(groups).sort().forEach(k => {
+    const list = groups[k];
+    const costTotal = list.filter(e => e.type === 'cost' && e.amount).reduce((s, e) => s + e.amount, 0);
+    monthsHtml += '<div class="month-section">';
+    monthsHtml += '<div class="month-header"><span class="month-title">' + monthLabel(k) + '</span>' +
+      '<span class="month-meta">' + list.length + (list.length === 1 ? ' entry' : ' entries') +
+      (costTotal ? ' &middot; ' + money(costTotal) + ' shared costs' : '') + '</span></div>';
+    list.forEach(e => {
+      monthsHtml += '<div class="entry">';
+      monthsHtml += '<span class="entry-date">' + fmtDate(e.date) + '</span>';
+      monthsHtml += '<span class="entry-type ' + e.type + '">' + typeLabels[e.type] + '</span>';
+      monthsHtml += '<span class="entry-body"><span class="entry-title">' + esc(e.title) + '</span>' +
+        (e.kids ? ' <span class="entry-kids">&middot; ' + esc(e.kids) + '</span>' : '') +
+        (e.note ? '<div class="entry-note">' + esc(e.note) + '</div>' : '') +
+        (e.receipt ? '<div class="entry-receipt">Receipt: ' + esc(e.receipt) + '</div>' : '') +
+        '</span>';
+      monthsHtml += '<span class="entry-amount">' +
+        (e.type === 'cost' && e.amount ? money(e.amount) + '<span class="entry-paidby">' + (e.paidBy === 'me' ? 'I paid' : e.paidBy === 'them' ? 'They paid' : 'Split') + '</span>' : '') +
+        '</span>';
+      monthsHtml += '</div>';
+    });
+    monthsHtml += '</div>';
+  });
+
+  const diff = mine - theirs;
+  const summaryHtml =
+    '<div class="summary-block">' +
+      '<div><div class="summary-cell-label">Entries</div><div class="summary-cell-val">' + entries.length + '</div><div class="summary-cell-sub">' + rangeLabel + '</div></div>' +
+      '<div><div class="summary-cell-label">You\'ve paid</div><div class="summary-cell-val">' + money(mine) + '</div><div class="summary-cell-sub">' + costCount + ' shared costs</div></div>' +
+      '<div><div class="summary-cell-label">They\'ve paid</div><div class="summary-cell-val">' + money(theirs) + '</div><div class="summary-cell-sub">&nbsp;</div></div>' +
+      '<div><div class="summary-cell-label">Difference</div><div class="summary-cell-val">' +
+        ((!mine && !theirs) ? '—' : (Math.abs(diff) < 0.005 ? 'Even' : money(Math.abs(diff)))) +
+      '</div><div class="summary-cell-sub">' + (Math.abs(diff) >= 0.005 ? (diff > 0 ? 'more paid by you' : 'more paid by them') : '&nbsp;') + '</div></div>' +
+    '</div>';
+
+  wrap.innerHTML =
+    factsPageHtml +
+    '<div class="page">' +
+      headerHtml +
+      '<div class="page-title">The record.</div>' +
+      '<div class="page-sub">A dated record of shared costs, incidents, communications and handovers between two households. Entries appear in the order they happened.</div>' +
+      summaryHtml +
+      monthsHtml +
+      boundaryHtml +
+      '<div class="print-footer"><span>Atlas — Life After Separation</span><span>get-atlas.com.au</span></div>' +
+    '</div>';
+}
+
+renderDossier();
+</script>
+
+</body>
+</html>

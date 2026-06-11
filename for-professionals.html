@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Practitioners — Atlas</title>
+<meta name="description" content="Atlas gives separated clients practical infrastructure for finances, scheduling, admin and more. Built for the Australian context. Complimentary access for practitioners.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  /* ── TOKENS ── */
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #FAFAF7;
+    --paper-warm: #F0F0EA;
+    --paper-edge: #E8E8E0;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #6E6E63;
+    --ink-faded: #A8A8A0;
+    --green: #0F4A3F;
+    --green-deep: #0A332B;
+    --amber: #EAC995;
+    --amber-deep: #DCBD8F;
+    --honey: #F5D996;
+    --sage: #C9E0B6;
+    --coral: #E27B5A;
+    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
+    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  /* ── BASE ── */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP STRIP ── */
+  .top-strip {
+    background: var(--green); color: var(--paper);
+    padding: 11px 24px; text-align: center; font-size: 13px; font-weight: 500;
+  }
+  .top-strip a { color: var(--amber); text-decoration: none; font-weight: 600; margin-left: 10px; }
+  .top-strip a:hover { text-decoration: underline; }
+
+  /* ── NAV ── */
+  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
+  .atlas-nav {
+    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 8px 8px 22px; display: flex; align-items: center; gap: 24px;
+    box-shadow: var(--shadow-soft); max-width: 1100px; width: 100%; height: 60px;
+  }
+  .nav-wordmark {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.45rem; color: var(--ink);
+    text-decoration: none; letter-spacing: -0.02em; display: flex; align-items: center;
+    gap: 10px; white-space: nowrap;
+  }
+  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
+  .nav-links a {
+    color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 500;
+    padding: 8px 14px; border-radius: 999px; transition: background 0.15s;
+  }
+  .nav-links a:hover { background: var(--paper-warm); }
+  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
+  .nav-actions { display: flex; align-items: center; gap: 8px; }
+  .nav-cta {
+    background: var(--amber); color: var(--ink); text-decoration: none;
+    padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px;
+    transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .hamburger {
+    display: none; flex-direction: column; gap: 4px; cursor: pointer;
+    padding: 12px; background: none; border: none; margin-left: auto;
+  }
+  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
+
+  /* ── LAYOUT ── */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; border-radius: 999px;
+    padding: 14px 26px; font-family: inherit; font-size: 15px; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer;
+    transition: all 0.15s; line-height: 1;
+  }
+  .btn-primary { background: var(--amber); color: var(--ink); }
+  .btn-primary:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .btn-outline-white { background: transparent; color: #FFFFFF; border-color: rgba(255,255,255,0.35); }
+  .btn-outline-white:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.6); }
+
+  /* ── SECTION SHARED ── */
+  .section-head { text-align: center; margin-bottom: 48px; }
+  .section-kicker {
+    font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.035em;
+    line-height: 1.07; color: var(--ink);
+  }
+  .section-title .underline {
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
+    padding: 0 4px;
+  }
+
+  /* ── 1. HERO DARK GREEN ── */
+  .hero-pro {
+    background: var(--green);
+    border-radius: var(--radius-xl);
+    padding: 80px 64px;
+    margin: 24px 0 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero-pro::before, .hero-pro::after {
+    content: ""; position: absolute; width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(234,201,149,0.09), transparent 65%);
+    pointer-events: none;
+  }
+  .hero-pro::before { left: -80px; top: -80px; }
+  .hero-pro::after { right: -80px; bottom: -80px; }
+  .hero-pro > * { position: relative; z-index: 1; }
+  .hero-pro-kicker {
+    display: inline-block; font-family: 'Space Grotesk', sans-serif; font-size: 11px;
+    font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); margin-bottom: 24px;
+  }
+  .hero-pro h1 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+    line-height: 1.02; letter-spacing: -0.04em;
+    color: #FFFFFF; margin-bottom: 24px; max-width: 820px; margin-left: auto; margin-right: auto;
+  }
+  .hero-pro p {
+    font-size: 17px; line-height: 1.6; color: rgba(255,255,255,0.68);
+    max-width: 56ch; margin: 0 auto 36px;
+  }
+  .hero-pro-actions {
+    display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .hero-pro-meta {
+    font-size: 13px; color: rgba(255,255,255,0.35); letter-spacing: 0.01em;
+  }
+
+  /* ── 2. TEXT BAND ── */
+  .text-band {
+    background: var(--paper-warm); border-radius: var(--radius-xl);
+    padding: 52px 64px; margin: 24px 0 0; text-align: center;
+  }
+  .text-band p {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem); line-height: 1.5;
+    letter-spacing: -0.02em; color: var(--ink-soft); max-width: 820px; margin: 0 auto;
+  }
+  .text-band p em { font-style: italic; font-weight: 300; color: var(--green); }
+
+  /* ── 3. MODULE CARDS ── */
+  .modules-section { padding: 80px 0 0; }
+  .module-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .module-row-2 {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    max-width: calc(((100% - 20px) / 3) * 2 + 20px); margin-top: 20px;
+  }
+  .module-card {
+    background: var(--paper-card); border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg); padding: 32px; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; gap: 14px;
+    transition: transform 0.18s, box-shadow 0.18s; min-height: 280px;
+  }
+  .module-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .module-num {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted);
+  }
+  .module-icon {
+    width: 56px; height: 56px; background: var(--amber); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 500; color: var(--ink);
+    flex-shrink: 0;
+  }
+  .module-card.kids .module-icon { background: var(--coral); color: white; }
+  .module-card.admin .module-icon { background: var(--sage); }
+  .module-card.goals .module-icon { background: #D4C4E8; }
+  .module-card.guides .module-icon { background: #B8D4E0; }
+  .module-title {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.65rem; line-height: 1.05; letter-spacing: -0.025em; color: var(--ink);
+  }
+  .module-desc { font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); flex: 1; }
+  .module-tag {
+    display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    color: var(--green); background: rgba(15,74,63,0.07);
+    padding: 4px 12px; border-radius: 999px; margin-top: auto;
+    align-self: flex-start;
+  }
+
+  /* ── 4. PHASE INTERACTIVE ── */
+  .phase-section {
+    background: #0A0A0A; color: var(--paper); border-radius: var(--radius-xl);
+    padding: 64px 56px; margin-top: 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .phase-section-kicker {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); margin-bottom: 20px;
+  }
+  .phase-section h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2.1rem, 3.6vw, 3.2rem); line-height: 1.04;
+    letter-spacing: -0.035em; color: #FFFFFF; margin-bottom: 22px;
+  }
+  .phase-section h2 em { font-style: normal; color: var(--amber); font-weight: 300; }
+  .phase-section .lead {
+    font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.6); margin-bottom: 28px; max-width: 38ch;
+  }
+  .phase-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .phase-pill {
+    appearance: none; border: 1px solid rgba(255,255,255,0.22); background: transparent;
+    color: var(--paper); border-radius: 999px; padding: 10px 18px; font-size: 13px;
+    font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .phase-pill:hover { border-color: rgba(255,255,255,0.6); }
+  .phase-pill.active { background: var(--amber); color: var(--ink); border-color: var(--amber); font-weight: 600; }
+  .phase-card {
+    background: var(--green); border-radius: var(--radius-lg); padding: 36px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+  }
+  .phase-card-eyebrow {
+    font-family: 'Fraunces', serif; font-size: 17px; color: var(--amber); margin-bottom: 10px;
+  }
+  .phase-card-title {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.85rem;
+    line-height: 1.1; color: #FFFFFF; margin-bottom: 16px; letter-spacing: -0.02em;
+    transition: opacity 0.15s;
+  }
+  .phase-card-text {
+    font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,0.78); margin-bottom: 26px;
+    transition: opacity 0.15s;
+  }
+  .phase-card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 6px; background: transparent;
+    color: var(--paper); border: 1px solid rgba(255,255,255,0.32); padding: 13px 20px;
+    border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none;
+    transition: border-color 0.15s, background 0.15s; font-family: inherit; cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--paper); background: rgba(255,255,255,0.06); }
+
+  /* ── 5. PRIVACY BLOCK ── */
+  .privacy-block {
+    background: var(--paper-card); border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-xl); padding: 64px 56px; margin-top: 80px;
+  }
+  .privacy-head {
+    display: grid; grid-template-columns: 1fr auto; gap: 32px;
+    align-items: end; margin-bottom: 40px; padding-bottom: 32px;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .privacy-head-text { max-width: 640px; }
+  .privacy-kicker {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 18px;
+  }
+  .privacy-kicker svg { width: 26px; height: 18px; }
+  .privacy-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2.2rem, 4.2vw, 3.6rem); line-height: 1.04;
+    letter-spacing: -0.035em; color: var(--ink); margin-bottom: 14px;
+  }
+  .privacy-head h2 em { font-style: normal; color: var(--green); }
+  .privacy-head p { font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+  .privacy-mark {
+    width: 92px; height: 92px; border-radius: 50%; background: var(--sage);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .privacy-mark svg { width: 56px; height: 36px; }
+  .privacy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .privacy-cell { background: var(--paper); border-radius: var(--radius-lg); padding: 26px 24px; }
+  .privacy-cell-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 14px;
+  }
+  .privacy-cell-title {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.25rem;
+    line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 10px;
+  }
+  .privacy-cell-text { font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); }
+  .privacy-note { font-size: 14px; line-height: 1.6; color: var(--ink-muted); text-align: center; padding-top: 8px; }
+
+  /* ── 6. COMPANION PACK ── */
+  .companion-section {
+    background: var(--green); color: var(--paper); border-radius: var(--radius-xl);
+    padding: 64px 56px; margin-top: 24px;
+  }
+  .companion-kicker {
+    display: block; font-family: 'Space Grotesk', sans-serif; font-size: 12px;
+    font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); margin-bottom: 36px;
+  }
+  .companion-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .companion-text h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(1.9rem, 3.5vw, 2.9rem); line-height: 1.05;
+    letter-spacing: -0.03em; color: #FFFFFF; margin-bottom: 18px;
+  }
+  .companion-text p { font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.68); margin-bottom: 18px; }
+  .companion-closing {
+    display: block; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300;
+    color: var(--amber); margin-bottom: 0; line-height: 1.4;
+  }
+  .companion-list-card { background: rgba(0,0,0,0.22); border-radius: var(--radius-lg); padding: 28px 32px; }
+  .companion-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .companion-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14.5px; color: rgba(255,255,255,0.82); line-height: 1.45;
+  }
+  .companion-list li::before { content: "✓"; color: var(--amber); font-weight: 600; flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+
+  /* ── 7. WHAT THIS ISN'T ── */
+  .scope-section { padding: 80px 0 0; }
+  .scope-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;
+  }
+  .scope-card {
+    border-radius: var(--radius-xl); padding: 48px 44px;
+  }
+  .scope-card.handles { background: var(--paper-card); border: 1px solid var(--paper-edge); }
+  .scope-card.doesnt { background: var(--paper); border: 1px solid var(--paper-edge); }
+  .scope-card-heading {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.4rem;
+    letter-spacing: -0.02em; color: var(--ink); margin-bottom: 24px; line-height: 1.15;
+  }
+  .scope-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .scope-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 15px; font-weight: 500; color: var(--ink-soft); line-height: 1.4;
+  }
+  .scope-list.yes li::before {
+    content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; font-size: 13px;
+  }
+  .scope-list.no li::before {
+    content: "–"; color: var(--ink-faded); font-weight: 600; flex-shrink: 0; margin-top: 1px; font-size: 14px;
+  }
+  .scope-closing {
+    background: var(--paper-warm); border-radius: var(--radius-lg); padding: 28px 36px;
+    font-size: 15.5px; line-height: 1.6; color: var(--ink-soft);
+    font-family: 'Fraunces', serif; font-weight: 400; font-style: italic;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── 8. FAQ ── */
+  .faq-section { padding: 80px 0 0; }
+  .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .faq-item {
+    background: var(--paper-card); border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg); padding: 26px 28px;
+  }
+  .faq-item h4 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.1rem;
+    letter-spacing: -0.01em; color: var(--ink); margin-bottom: 10px; line-height: 1.25;
+  }
+  .faq-item p { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+
+  /* ── 9. ACCESS CTA (pricing block) ── */
+  .access-section { padding: 80px 0 0; }
+  .access-card {
+    background: var(--green); border-radius: var(--radius-xl);
+    padding: 64px 56px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .access-card::before, .access-card::after {
+    content: ""; position: absolute; width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(234,201,149,0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .access-card::before { left: -80px; top: -80px; }
+  .access-card::after { right: -80px; bottom: -80px; }
+  .access-card > * { position: relative; z-index: 1; }
+  .access-left { display: flex; flex-direction: column; align-items: flex-start; }
+  .access-card-kicker {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); margin-bottom: 18px;
+  }
+  .access-card h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2rem, 3.5vw, 3rem); letter-spacing: -0.035em;
+    color: #FFFFFF; margin-bottom: 12px; line-height: 1.02;
+  }
+  .access-sub { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+  .access-right { display: flex; flex-direction: column; }
+  .access-list {
+    list-style: none; display: flex; flex-direction: column;
+    gap: 12px; margin-bottom: 32px;
+  }
+  .access-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14.5px; color: rgba(255,255,255,0.85); line-height: 1.45;
+  }
+  .access-list li::before { content: "✓"; color: var(--amber); font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+  .access-btn {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--amber);
+    color: var(--ink); border-radius: 999px; padding: 15px 28px; font-family: inherit;
+    font-size: 15px; font-weight: 600; text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.15s, transform 0.15s; margin-bottom: 14px; align-self: flex-start;
+  }
+  .access-btn:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .access-note { font-size: 12.5px; color: rgba(255,255,255,0.35); line-height: 1.5; }
+  .access-note a { color: rgba(255,255,255,0.5); text-decoration: underline; }
+  .access-note a:hover { color: rgba(255,255,255,0.8); }
+
+  /* ── 10. FOOTER CTA ── */
+  .footer-cta {
+    text-align: center; padding: 80px 32px 88px;
+  }
+  .footer-cta .section-kicker { margin-bottom: 18px; }
+  .footer-cta h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(2.5rem, 5vw, 4.4rem); line-height: 1.04;
+    letter-spacing: -0.035em; color: var(--ink); margin-bottom: 20px;
+  }
+  .footer-cta p { font-size: 16.5px; line-height: 1.6; color: var(--ink-soft); max-width: 540px; margin: 0 auto 32px; }
+  .footer-cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .footer-cta .btn-secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+  .footer-cta .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+
+  /* ── SITE FOOTER ── */
+  .site-footer { background: #FFFFFF; border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 0; }
+  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
+  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
+  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
+  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
+  .footer-col-links a:hover { color: var(--ink); }
+  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
+  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
+  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
+  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .footer-copy { font-size: 13px; color: var(--ink-faded); }
+  .footer-legal { display: flex; gap: 20px; }
+  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .footer-legal a:hover { color: var(--ink); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-tagline { grid-column: 1 / -1; }
+  }
+  @media (max-width: 760px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+    .hero-pro { padding: 56px 24px; border-radius: var(--radius-lg); margin: 16px 0 0; }
+    .hero-pro h1 { font-size: clamp(2.2rem, 8vw, 3.2rem); }
+    .text-band { padding: 36px 24px; border-radius: var(--radius-lg); }
+    .module-grid { grid-template-columns: 1fr; }
+    .module-row-2 { grid-template-columns: 1fr; max-width: 100%; }
+    .phase-section { grid-template-columns: 1fr; padding: 44px 24px; border-radius: var(--radius-lg); margin-top: 16px; }
+    .phase-pills { gap: 6px; }
+    .privacy-block { padding: 44px 24px; border-radius: var(--radius-lg); }
+    .privacy-head { grid-template-columns: 1fr; }
+    .privacy-mark { display: none; }
+    .privacy-grid { grid-template-columns: 1fr; }
+    .companion-section { padding: 44px 24px; border-radius: var(--radius-lg); }
+    .companion-inner { grid-template-columns: 1fr; gap: 36px; }
+    .scope-grid { grid-template-columns: 1fr; }
+    .scope-card { padding: 36px 28px; border-radius: var(--radius-lg); }
+    .faq-grid { grid-template-columns: 1fr; }
+    .access-card { grid-template-columns: 1fr; gap: 40px; padding: 44px 24px; border-radius: var(--radius-lg); }
+    .footer-cta { padding: 64px 16px 72px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 28px; }
+    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .page-wrap { padding: 0 16px; }
+  }
+  @media (max-width: 480px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .phase-pills { flex-direction: column; }
+    .phase-pill { text-align: left; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="top-strip">
+  Atlas is a private toolkit for separated Australian parents.<a href="#access">Practitioner access →</a>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="atlas-nav">
+    <a href="https://www.get-atlas.com.au" class="nav-wordmark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="7" r="2" fill="#D97757"/>
+      </svg>
+      Atlas
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://www.get-atlas.com.au/tag/articles/">Articles</a></li>
+      <li><a href="https://www.get-atlas.com.au/csa-calculator/">CSA Calculator</a></li>
+      <li><a href="https://www.get-atlas.com.au/separation-checklist/">Checklist</a></li>
+      <li><a href="#modules">Modules</a></li>
+      <li><a href="#access" class="active">For practitioners</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#access" class="nav-cta">Request access</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <a href="https://www.get-atlas.com.au/tag/articles/">Articles</a>
+  <a href="https://www.get-atlas.com.au/csa-calculator/">CSA Calculator</a>
+  <a href="https://www.get-atlas.com.au/separation-checklist/">Checklist</a>
+  <a href="#modules">Modules</a>
+  <a href="#access" class="active">For practitioners</a>
+</nav>
+
+<div class="page-wrap">
+<div class="container">
+
+<!-- 1. HERO -->
+<section class="hero-pro" id="top">
+  <span class="hero-pro-kicker">For practitioners</span>
+  <h1>Your separated clients need practical infrastructure. Atlas gives them that.</h1>
+  <p>A private, browser-based toolkit covering finances, scheduling, admin and more. Built for the Australian context.</p>
+  <div class="hero-pro-actions">
+    <a href="#access" class="btn btn-primary">Request complimentary access</a>
+    <a href="#modules" class="btn btn-outline-white">See what's inside</a>
+  </div>
+  <div class="hero-pro-meta">No subscription · No account · Data stays on the user's device</div>
+</section>
+
+<!-- 2. TEXT BAND -->
+<div class="text-band">
+  <p>Your clients often arrive with the practical chaos <em>unresolved</em> — finances tangled, no custody schedule, admin undone. Atlas handles the practical layer so your work can focus on what it's actually for.</p>
+</div>
+
+<!-- 3. MODULE CARDS -->
+<section class="modules-section" id="modules">
+  <div class="section-head">
+    <div class="section-kicker">The modules</div>
+    <h2 class="section-title">Five tools. Each one handles a <span class="underline">specific job.</span></h2>
+  </div>
+
+  <div class="module-grid">
+    <div class="module-card finances">
+      <div class="module-num">Module 01 · Finances</div>
+      <div class="module-icon">$</div>
+      <div class="module-title">See the real numbers.</div>
+      <div class="module-desc">Clients arrive knowing what two households actually cost. Income, expenses, child support, and legal costs mapped in one place — before the session, not during it.</div>
+      <span class="module-tag">Finances module</span>
+    </div>
+    <div class="module-card kids">
+      <div class="module-num">Module 02 · Kids Week</div>
+      <div class="module-icon">◐</div>
+      <div class="module-title">Run calmer kids weeks.</div>
+      <div class="module-desc">The custody logistics stop being the main distraction. Handover days, school schedules, meals, and routines — organised so your client can actually think beyond the immediate week.</div>
+      <span class="module-tag">Kids Week module</span>
+    </div>
+    <div class="module-card admin">
+      <div class="module-num">Module 03 · Admin</div>
+      <div class="module-icon">≡</div>
+      <div class="module-title">Get the admin handled.</div>
+      <div class="module-desc">The 30-item checklist they never knew existed — done. Legal tasks, documents, and correspondence tracked so nothing slips and your client isn't piecing it together from memory.</div>
+      <span class="module-tag">Admin module</span>
+    </div>
+  </div>
+
+  <div class="module-row-2">
+    <div class="module-card goals">
+      <div class="module-num">Module 04 · Goals</div>
+      <div class="module-icon">◎</div>
+      <div class="module-title">Goals that fit the phase.</div>
+      <div class="module-desc">Phase-appropriate goal-setting that works in Stabilise and Rebuild. Not generic aspirations — practical next actions tied to where clients actually are in the process.</div>
+      <span class="module-tag">Goals module</span>
+    </div>
+    <div class="module-card guides">
+      <div class="module-num">Module 05 · Guides</div>
+      <div class="module-icon">≋</div>
+      <div class="module-title">Context, not just tools.</div>
+      <div class="module-desc">AU-specific articles and conversation scripts, filtered by phase. Clients arrive better-informed — less time catching up on context, more time on the work that matters.</div>
+      <span class="module-tag">Guides module</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- 4. PHASE INTERACTIVE -->
+<section class="phase-section" id="phase-model">
+  <div>
+    <div class="phase-section-kicker">The phase model</div>
+    <h2>Built around <em>where clients actually are.</em></h2>
+    <p class="lead">The right focus changes depending on where a client is in the process. Each phase calls for different practical priorities — these tools are built around that reality.</p>
+    <div class="phase-pills">
+      <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
+      <button class="phase-pill active" data-phase="survive" onclick="setPhase('survive')">Survive · 0–6m</button>
+      <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise · 6–18m</button>
+      <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild · 18m–3y</button>
+      <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter · 3y+</button>
+    </div>
+  </div>
+  <div class="phase-card">
+    <div class="phase-card-eyebrow" id="guidance-phase">Survive · 0–6 months</div>
+    <div class="phase-card-title" id="guidance-title">Stabilise the week. Nothing else.</div>
+    <div class="phase-card-text" id="guidance-text">The priority is basic structure: somewhere to live, legal basics understood, kids seeing both parents. Atlas maps the immediate financial reality and tracks what needs doing — so sessions don't spend the first 20 minutes on logistics.</div>
+    <div class="phase-card-actions">
+      <a href="#access" class="btn btn-primary">Request access</a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PRIVACY BLOCK -->
+<section class="privacy-block" id="privacy">
+  <div class="privacy-head">
+    <div class="privacy-head-text">
+      <div class="privacy-kicker">
+        <svg viewBox="0 0 28 18" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#0F4A3F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="14" cy="9" rx="11.5" ry="6.5"/>
+          <ellipse cx="14" cy="9" rx="7.5" ry="3.8"/>
+          <circle cx="14" cy="9" r="1.4" fill="#0F4A3F" stroke="none"/>
+        </svg>
+        Privacy
+      </div>
+      <h2>Your client's data never leaves <em>their device.</em></h2>
+      <p>Atlas runs entirely in the user's browser. Nothing they enter — their income, their kids' schedule, their legal tasks — is sent to a server or stored anywhere but their own device. No account, no sync, no servers reading their numbers. Export to PDF or CSV whenever needed. Clear browser data and Atlas forgets. Instantly.</p>
+    </div>
+    <div class="privacy-mark" aria-hidden="true">
+      <svg viewBox="0 0 28 18" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#0F4A3F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="14" cy="9" rx="11.5" ry="6.5"/>
+        <ellipse cx="14" cy="9" rx="7.5" ry="3.8"/>
+        <circle cx="14" cy="9" r="1.4" fill="#0F4A3F" stroke="none"/>
+      </svg>
+    </div>
+  </div>
+  <div class="privacy-grid">
+    <div class="privacy-cell">
+      <div class="privacy-cell-label">In their browser</div>
+      <div class="privacy-cell-title">Local only.</div>
+      <div class="privacy-cell-text">Everything they enter is stored in their browser's local memory. Atlas never sends it anywhere — there's nowhere to send it.</div>
+    </div>
+    <div class="privacy-cell">
+      <div class="privacy-cell-label">No account</div>
+      <div class="privacy-cell-title">No sign‑up.</div>
+      <div class="privacy-cell-text">No login, no email, no password. Atlas doesn't know who the user is, and doesn't need to.</div>
+    </div>
+    <div class="privacy-cell">
+      <div class="privacy-cell-label">Fully isolated</div>
+      <div class="privacy-cell-title">Wipe it any time.</div>
+      <div class="privacy-cell-text">Clear browser data and Atlas forgets — instantly. No copy on a server, no trail to chase, no access for the other party.</div>
+    </div>
+  </div>
+  <div class="privacy-note">No tracking pixel, no analytics, no ad network — and no one has access to the user's data. Not even us.</div>
+</section>
+
+<!-- 6. COMPANION PACK -->
+<section class="companion-section">
+  <span class="companion-kicker">Included with every purchase</span>
+  <div class="companion-inner">
+    <div class="companion-text">
+      <h2>A printable pack for decisions worth slowing down.</h2>
+      <p>Some parts of separation are easier on paper. The companion pack gives clients structured worksheets for the heavier thinking: money, kids, legal admin, routines, support, and rebuilding.</p>
+      <p>Use alongside the Atlas dashboards, or print the pages they need when life is too messy for another screen.</p>
+      <span class="companion-closing">20+ practical worksheets included.<br>Print them, mark them up, come back later.</span>
+    </div>
+    <div class="companion-list-card">
+      <ul class="companion-list">
+        <li>Start Here guide — what to use first</li>
+        <li>First 30 Days checklist — stabilise the urgent stuff</li>
+        <li>Emergency budget &amp; financial snapshot — get the numbers visible</li>
+        <li>Kids &amp; co-parenting tools — handovers, routines, scripts and shared info</li>
+        <li>Legal &amp; admin tools — documents, accounts, timelines and prep questions</li>
+        <li>Personal reset &amp; rebuild goals — routines, support, stability and next actions</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 7. WHAT THIS ISN'T -->
+<section class="scope-section">
+  <div class="section-head">
+    <div class="section-kicker">Scope</div>
+    <h2 class="section-title">What Atlas handles. <span class="underline">What it doesn't.</span></h2>
+  </div>
+  <div class="scope-grid">
+    <div class="scope-card handles">
+      <div class="scope-card-heading">What Atlas handles</div>
+      <ul class="scope-list yes">
+        <li>Finances — income, expenses, child support, two-household budgeting</li>
+        <li>Kids-week scheduling — custody cycle, handovers, routines, school logistics</li>
+        <li>Admin checklists — legal tasks, documents, correspondence tracking</li>
+        <li>Goal-setting — phase-appropriate, practical, rebuild-focused</li>
+        <li>AU-specific guides — CSA formula, Centrelink, family law 2025</li>
+        <li>Printable worksheets — offline tools for heavier decisions</li>
+      </ul>
+    </div>
+    <div class="scope-card doesnt">
+      <div class="scope-card-heading">What it doesn't replace</div>
+      <ul class="scope-list no">
+        <li>Therapeutic support of any kind</li>
+        <li>Legal advice or representation</li>
+        <li>Financial advice or tax planning</li>
+        <li>Crisis intervention or welfare assessment</li>
+        <li>Professional care — yours or anyone else's</li>
+      </ul>
+    </div>
+  </div>
+  <div class="scope-closing">
+    These roles are complementary. Clients with the practical side under control tend to arrive more ready for the work you do.
+  </div>
+</section>
+
+<!-- 8. FAQ -->
+<section class="faq-section">
+  <div class="section-head">
+    <div class="section-kicker">Questions</div>
+    <h2 class="section-title">What practitioners <span class="underline">ask first.</span></h2>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <h4>Is Atlas a therapeutic or clinical tool?</h4>
+      <p>No. It handles logistics and planning — finances, scheduling, admin, guides. It doesn't provide counselling, legal advice, or any form of professional support. It's a practical organiser, not a clinical intervention.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What happens to client data?</h4>
+      <p>Everything runs in the browser. No account, no backend, no data leaving the device. Nothing is stored anywhere except the user's own browser. You have no access to it, and neither does anyone else.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I recommend this to clients in contested proceedings?</h4>
+      <p>Yes. The privacy-by-design model means there's nothing to subpoena and nothing that can be accessed by the other party. The data exists only in the user's browser, on their device.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Who built this?</h4>
+      <p>Johnnie Crawford — a separated parent and brand strategist based in NSW. Built it because nothing practical existed for Australians going through this. Not a lawyer, not a therapist. A parent who needed it.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Is it Australian-specific?</h4>
+      <p>Yes. Child support formula, Centrelink, ATO, Services Australia, family law 2025 — all content is AU-specific. It won't recommend US or UK resources, and the financial calculations use the Australian CSA formula.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What does it cost my clients?</h4>
+      <p>$79 once. No subscription, no account, no ongoing commitment. They pay once, access everything indefinitely. There's nothing to cancel and no tier to upgrade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9. ACCESS CTA -->
+<section class="access-section" id="access">
+  <div class="access-card">
+    <div class="access-left">
+      <div class="access-card-kicker">For practitioners</div>
+      <h2>Complimentary access for practitioners.</h2>
+      <p class="access-sub">Try the full toolkit before recommending it. No strings, no follow-up sequence. Just access.</p>
+    </div>
+    <div class="access-right">
+      <ul class="access-list">
+        <li>Full access to all 5 dashboards</li>
+        <li>Companion PDF pack included</li>
+        <li>No subscription or account required</li>
+        <li>I'll respond within 48 hours</li>
+      </ul>
+      <a href="mailto:hello@get-atlas.com.au?subject=Practitioner access request" class="access-btn">
+        Request access →
+      </a>
+      <div class="access-note">Or email <a href="mailto:hello@get-atlas.com.au">hello@get-atlas.com.au</a> directly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. FOOTER CTA -->
+<section class="footer-cta">
+  <div class="section-kicker">Ready when you are</div>
+  <h2>Ready to take a look?</h2>
+  <p>Full access to every module, no account required. See exactly what your clients will use.</p>
+  <div class="footer-cta-actions">
+    <a href="#access" class="btn btn-primary">Request access</a>
+    <a href="https://app.get-atlas.com.au" class="btn btn-secondary" target="_blank" rel="noopener">Open the app ↗</a>
+  </div>
+</section>
+
+</div><!-- /container -->
+</div><!-- /page-wrap -->
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
+    <div>
+      <div class="footer-col-heading">Modules</div>
+      <ul class="footer-col-links">
+        <li><a href="https://app.get-atlas.com.au/budget.html">Finances</a></li>
+        <li><a href="https://app.get-atlas.com.au/kids-week.html">Kids Week</a></li>
+        <li><a href="https://app.get-atlas.com.au/goals.html">Goals</a></li>
+        <li><a href="https://app.get-atlas.com.au/admin.html">Admin</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/articles/">Articles</a></li>
+        <li><a href="https://www.get-atlas.com.au/csa-calculator/">CSA Calculator</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">About</div>
+      <ul class="footer-col-links">
+        <li><a href="https://www.get-atlas.com.au/about/">About Johnnie</a></li>
+        <li><a href="https://www.get-atlas.com.au/privacy">Privacy &amp; Terms</a></li>
+        <li><a href="https://app.get-atlas.com.au/how-it-works.html">How it works</a></li>
+        <li><a href="for-professionals.html" class="active">For practitioners</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-heading">Reading</div>
+      <ul class="footer-col-links">
+        <li><a href="https://www.get-atlas.com.au/tag/survive/">Survive phase</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/stabilise/">Stabilise phase</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/rebuild/">Rebuild phase</a></li>
+        <li><a href="https://www.get-atlas.com.au/tag/articles/">All articles</a></li>
+        <li><a href="https://www.get-atlas.com.au/newsletter">The Sunday email</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-mark">
+    <div class="footer-mark-inner">
+      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
+        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="58" cy="14" r="5" fill="#D97757"/>
+      </svg>
+      <div class="footer-mark-word">Atlas</div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
+      <div class="footer-legal">
+        <a href="https://www.get-atlas.com.au/privacy">Privacy &amp; Terms</a>
+        <a href="for-professionals.html">For Practitioners</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── PHASE DATA — practitioner framing ── */
+  const phaseData = {
+    'waiting-room': {
+      phase: 'Waiting Room · Before separation',
+      title: 'Practical clarity before the conversation happens.',
+      text: "Clients who arrive here often can't act yet — but they can understand the landscape. The Finances module and AU-specific guides help them know what they're facing before anything is formally decided. Less shock when the reality lands.",
+      tag1: 'Open Finances →', url1: 'https://app.get-atlas.com.au/budget.html',
+      tag2: 'All articles', url2: 'https://www.get-atlas.com.au/tag/articles/'
+    },
+    'survive': {
+      phase: 'Survive · 0–6 months',
+      title: 'Stabilise the week. Nothing else.',
+      text: "The priority is basic structure: somewhere to live, legal basics understood, kids seeing both parents. Atlas maps the immediate financial reality and tracks what needs doing — so sessions don't spend the first 20 minutes on logistics.",
+      tag1: 'Open Finances →', url1: 'https://app.get-atlas.com.au/budget.html',
+      tag2: 'Survive guides', url2: 'https://www.get-atlas.com.au/tag/survive/'
+    },
+    'stabilise': {
+      phase: 'Stabilise · 6–18 months',
+      title: 'Get the numbers on the table.',
+      text: "Housing is settled, custody cycle forming. The Finances module maps two-household costs accurately. The Admin module tracks legal tasks and correspondence. Clients who've done this work arrive ready to plan, not just report.",
+      tag1: 'Open Admin →', url1: 'https://app.get-atlas.com.au/admin.html',
+      tag2: 'Stabilise guides', url2: 'https://www.get-atlas.com.au/tag/stabilise/'
+    },
+    'rebuild': {
+      phase: 'Rebuild · 18 months – 3 years',
+      title: 'Build forward momentum.',
+      text: "The acute phase is over. Goals, savings, identity, and connection become the focus. The Goals module is phase-aware — it shifts from stabilisation tasks to rebuild actions. Clients in this phase typically show the most benefit from structured planning support.",
+      tag1: 'Open Goals →', url1: 'https://app.get-atlas.com.au/goals.html',
+      tag2: 'Rebuild guides', url2: 'https://www.get-atlas.com.au/tag/rebuild/'
+    },
+    'new-chapter': {
+      phase: 'New Chapter · 3 years +',
+      title: 'Living the version they rebuilt.',
+      text: "Financial foundation re-established. Strong relationship with the kids. Clear sense of direction. Clients here need very little from Atlas — which is the point. The tool did its job and got out of the way.",
+      tag1: 'Open Goals →', url1: 'https://app.get-atlas.com.au/goals.html',
+      tag2: 'All articles', url2: 'https://www.get-atlas.com.au/tag/articles/'
+    }
+  };
+
+  function setPhase(phase) {
+    if (!phaseData[phase]) return;
+    const d = phaseData[phase];
+    document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+    document.getElementById('guidance-phase').textContent = d.phase;
+    document.getElementById('guidance-title').textContent = d.title;
+    document.getElementById('guidance-text').textContent = d.text;
+    const actions = document.querySelector('.phase-card-actions');
+    actions.innerHTML = `<a href="#access" class="btn btn-primary">Request access</a>`;
+  }
+
+  setPhase('survive');
+
+  document.getElementById('hamburger').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('mobileNav').classList.toggle('open');
+  });
+</script>
+
+</body>
+</html>

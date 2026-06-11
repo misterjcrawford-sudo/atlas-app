@@ -514,26 +514,6 @@ const SECTIONS = [
   }
 ];
 
-const BUILTIN_DATES = [
-  { id: 'date-separation',          label: 'Date of separation' },
-  { id: 'date-moved-out',           label: 'Date you moved out' },
-  { id: 'date-parenting-agreement', label: 'Date parenting agreement signed' },
-  { id: 'date-property-settlement', label: 'Date property settlement finalised' },
-  { id: 'date-divorce-lodged',      label: 'Date divorce application lodged' },
-  { id: 'date-divorce-final',       label: 'Date divorce finalised' },
-  { id: 'date-own-place',           label: 'First night in your own place' },
-  { id: 'date-kids-week',           label: "First kids' week at your place" }
-];
-
-const BUILTIN_NOTES = [
-  { id: 'note-parenting',     label: 'Current parenting arrangement' },
-  { id: 'note-child-support', label: 'Child support status' },
-  { id: 'note-property',      label: 'Property situation' },
-  { id: 'note-lawyer',        label: 'Your lawyer' },
-  { id: 'note-mediator',      label: 'Mediator or family dispute contact' },
-  { id: 'note-court',         label: 'Family court case number' },
-  { id: 'note-memory',        label: 'One thing I want to remember about this time' }
-];
 
 const PHASE_LABELS = {
   'waiting-room': 'Waiting Room',
@@ -553,8 +533,6 @@ function loadState() {
     checklistState: safe('atlas_admin_checklists', {}),
     hiddenItems:    new Set(safe('atlas_admin_hidden_items', [])),
     customItems:    safe('atlas_admin_custom_items', {}),
-    datesData:      safe('atlas_admin_dates', { hidden: [], values: {}, custom: [] }),
-    notesData:      safe('atlas_admin_notes', { hidden: [], values: {} }),
     phase:          localStorage.getItem('atlas_phase') || localStorage.getItem('atlas_budget_phase') || 'survive'
   };
 }
@@ -699,62 +677,6 @@ function buildPage4(state) {
   </div>`;
 }
 
-function buildDatesPage(state) {
-  const { datesData, notesData } = state;
-  const hiddenDates = new Set(datesData.hidden || []);
-  const hiddenNotes = new Set(notesData.hidden || []);
-
-  const dateRows = [
-    ...BUILTIN_DATES.filter(d => !hiddenDates.has(d.id)).map(d => {
-      const v = (datesData.values || {})[d.id] || {};
-      return { label: d.label, date: v.date || '', note: v.note || '' };
-    }),
-    ...(datesData.custom || []).map(cd => ({ label: cd.label, date: cd.date || '', note: cd.note || '' }))
-  ];
-
-  const noteBlocks = BUILTIN_NOTES.filter(n => !hiddenNotes.has(n.id)).map(n => ({
-    label: n.label,
-    text: (notesData.values || {})[n.id] || ''
-  }));
-
-  const hasDateContent = dateRows.some(r => r.date || r.note);
-  const hasNoteContent = noteBlocks.some(n => n.text);
-  if (!hasDateContent && !hasNoteContent) return '';
-
-  const dateTableHTML = hasDateContent ? `
-    <div class="cl-section">
-      <div class="cl-section-head">
-        <span class="cl-section-name">Key dates</span>
-      </div>
-      <table class="dates-table">
-        <thead><tr><th style="width:44%">Event</th><th style="width:26%">Date</th><th>Note</th></tr></thead>
-        <tbody>${dateRows.map(r => `<tr>
-          <td class="td-label">${esc(r.label)}</td>
-          <td class="td-date">${r.date ? fmtDate(r.date) : '<span style="color:var(--ink-faded)">—</span>'}</td>
-          <td class="td-note">${esc(r.note)}</td>
-        </tr>`).join('')}</tbody>
-      </table>
-    </div>` : '';
-
-  const notesHTML = hasNoteContent ? `
-    <div class="cl-section">
-      <div class="cl-section-head">
-        <span class="cl-section-name">Notes</span>
-      </div>
-      ${noteBlocks.filter(n => n.text).map(n => `
-        <div class="kd-note-block">
-          <div class="kd-note-label">${esc(n.label)}</div>
-          <div class="kd-note-text">${esc(n.text)}</div>
-        </div>`).join('')}
-    </div>` : '';
-
-  return `<div class="page">
-    ${renderPageHeader('Key Dates & Notes', state)}
-    ${dateTableHTML}
-    ${notesHTML}
-  </div>`;
-}
-
 // ── BUILD ──────────────────────────────────────────────────────────────────────
 
 function build() {
@@ -763,8 +685,7 @@ function build() {
     buildPage1(state) +
     buildPage2(state) +
     buildPage3(state) +
-    buildPage4(state) +
-    buildDatesPage(state);
+    buildPage4(state);
 }
 
 build();
