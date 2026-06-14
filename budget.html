@@ -209,11 +209,12 @@
     letter-spacing: -0.005em;
   }
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
-  .phase-pill.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper);
-  }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="waiting-room"].active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
   .phase-context {
     margin-bottom: 24px;
     font-size: 15px;
@@ -224,6 +225,102 @@
     font-family: 'Fraunces', serif;
     font-weight: 300;
   }
+
+  /* ── SIMPLE MODE CARDS ── */
+  .simple-cards-wrap { display: none; }
+  .simple-cards-wrap.visible { display: block; }
+  .full-cards-wrap { display: block; }
+  .full-cards-wrap.hidden { display: none; }
+
+  .simple-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .simple-card-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.45rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .simple-card-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+  .simple-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .simple-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .simple-row-left { flex: 1; min-width: 0; }
+  .simple-row-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .simple-row-hint {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+  .simple-row input[type="number"] {
+    width: 120px;
+    flex-shrink: 0;
+    padding: 8px 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    text-align: right;
+    outline: none;
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+  .simple-row input[type="number"]::-webkit-inner-spin-button,
+  .simple-row input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .simple-row input[type="number"]:focus { border-color: var(--ink-soft); }
+  .simple-cash-tile {
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 20px 28px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .simple-cash-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .simple-cash-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .simple-cash-val.positive { color: var(--green); }
+  .simple-cash-val.negative { color: var(--red); }
 
   /* View toggle */
   .view-toggle {
@@ -1649,6 +1746,7 @@
           <p class="hero-sub">No guessing. No spreadsheet panic. Track income, expenses, debts and what's left each week.</p>
 
           <div class="phase-row" id="hero-phase-row">
+            <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
             <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
@@ -1815,7 +1913,123 @@
 
     <!-- MASTHEAD: CARDS + DOSSIER -->
     <div class="masthead" id="start">
-      <div class="cards-col" id="cards-col"></div>
+
+      <!-- SIMPLE MODE CARDS (Waiting Room + Survive) -->
+      <div class="simple-cards-wrap" id="simple-cards-wrap">
+
+        <div class="simple-card">
+          <div class="simple-card-title">The emergency budget</div>
+          <div class="simple-card-sub">income + the four fixed costs</div>
+          <p style="font-size:13.5px;color:var(--ink-muted);margin-bottom:20px;line-height:1.6;">Rough numbers. Monthly. This isn't the real budget — it's the floor: what has to come in for the basics to be covered.</p>
+
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Take-home pay</div>
+              <div class="simple-row-hint">After tax, per month — include FTB and payments</div>
+            </div>
+            <input type="number" id="sm-takehome" min="0" step="50" placeholder="0" oninput="onSimpleInput('takeHome', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Housing</div>
+              <div class="simple-row-hint">Rent or mortgage</div>
+            </div>
+            <input type="number" id="sm-housing" min="0" step="50" placeholder="0" oninput="onSimpleInput('housing', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Food &amp; groceries</div>
+            </div>
+            <input type="number" id="sm-food" min="0" step="50" placeholder="0" oninput="onSimpleInput('food', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Power, phone &amp; utilities</div>
+            </div>
+            <input type="number" id="sm-utilities" min="0" step="50" placeholder="0" oninput="onSimpleInput('utilities', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Transport</div>
+              <div class="simple-row-hint">Car, fuel, rego, fares</div>
+            </div>
+            <input type="number" id="sm-transport" min="0" step="50" placeholder="0" oninput="onSimpleInput('transport', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Child Support</div>
+              <div class="simple-row-hint">Populated from estimator — or enter manually</div>
+            </div>
+            <input type="number" id="sm-cs" min="0" step="50" placeholder="0" oninput="onSimpleInput('cs', this.value)">
+          </div>
+        </div>
+
+        <div class="simple-card">
+          <div class="simple-card-title">The rest of the month</div>
+          <div class="simple-card-sub">when the floor is in, add the rest</div>
+
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">The kids</div>
+              <div class="simple-row-hint">School, care, activities, clothes</div>
+            </div>
+            <input type="number" id="sm-kids" min="0" step="50" placeholder="0" oninput="onSimpleInput('kids', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Legal</div>
+              <div class="simple-row-hint">This month's average — track the total below</div>
+            </div>
+            <input type="number" id="sm-legal" min="0" step="50" placeholder="0" oninput="onSimpleInput('legal', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Insurance &amp; health</div>
+            </div>
+            <input type="number" id="sm-insurance" min="0" step="50" placeholder="0" oninput="onSimpleInput('insurance', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Subscriptions &amp; memberships</div>
+            </div>
+            <input type="number" id="sm-subs" min="0" step="50" placeholder="0" oninput="onSimpleInput('subs', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Health &amp; medical</div>
+              <div class="simple-row-hint">GP gaps, scripts, specialists, dental</div>
+            </div>
+            <input type="number" id="sm-medical" min="0" step="50" placeholder="0" oninput="onSimpleInput('medical', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Debt repayments</div>
+              <div class="simple-row-hint">Loans, cards, BNPL — separation's quiet tax</div>
+            </div>
+            <input type="number" id="sm-debt" min="0" step="50" placeholder="0" oninput="onSimpleInput('debt', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Entertainment &amp; activities</div>
+              <div class="simple-row-hint">Yours and the kids'. A real number, not a guilty zero</div>
+            </div>
+            <input type="number" id="sm-entertainment" min="0" step="50" placeholder="0" oninput="onSimpleInput('entertainment', this.value)">
+          </div>
+          <div class="simple-row">
+            <div class="simple-row-left">
+              <div class="simple-row-label">Everything else</div>
+              <div class="simple-row-hint">Honest catch-all beats a false zero</div>
+            </div>
+            <input type="number" id="sm-other" min="0" step="50" placeholder="0" oninput="onSimpleInput('other', this.value)">
+          </div>
+        </div>
+
+      </div><!-- /simple-cards-wrap -->
+
+      <!-- FULL DETAIL CARDS (Stabilise, Rebuild, New Chapter) -->
+      <div class="full-cards-wrap" id="full-cards-wrap">
+        <div class="cards-col" id="cards-col"></div>
+      </div>
 
       <div>
         <!-- DOSSIER -->
@@ -1866,7 +2080,7 @@
           </div>
           <hr class="dossier-divider">
           <div class="dossier-row">
-            <span class="dossier-row-label" style="font-weight:700">Surplus</span>
+            <span class="dossier-row-label" style="font-weight:700" id="d-surplus-label">Surplus</span>
             <span class="dossier-row-val" id="d-surplus" style="font-size:1rem">—</span>
           </div>
           <div class="surplus-bar-wrap">
@@ -1998,6 +2212,11 @@ function fmtView(monthly) {
 
 // ── PHASE ──
 const phaseData = {
+  'waiting-room': {
+    label: 'Waiting Room',
+    note: 'Before anything else — get the floor number. What has to come in for the basics to be covered. Don\'t overthink it. Rough numbers now, detail later.',
+    heroText: 'Before anything else — get the floor number. What has to come in for the basics to be covered.',
+  },
   survive: {
     label: 'Survive',
     note: 'Survival mode. Priorities: somewhere safe to live, basic legal advice, cash flow positive. Don\'t optimise — just stabilise. Every dollar matters right now.',
@@ -2027,7 +2246,10 @@ function normalisePhase(phase) {
 
 function setPhase(phase) {
   phase = normalisePhase(phase);
-  if (!phaseData[phase]) phase = 'stabilise';
+  if (!phaseData[phase]) phase = 'waiting-room';
+  const prevPhase = currentPhase;
+  const wasSimple = isSimplePhase(prevPhase);
+  const nowSimple = isSimplePhase(phase);
   currentPhase = phase;
   document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
   const data = phaseData[phase];
@@ -2040,10 +2262,23 @@ function setPhase(phase) {
     localStorage.setItem('atlas_budget_phase', phase);
     localStorage.setItem('dad_budget_phase', phase);
   } catch(e) {}
-  // Re-render the snap panel for the new phase (skip during init — render() will fire it)
-  if (typeof updateTotals === 'function' && document.getElementById('total-income')) {
-    updateTotals();
+
+  // Bidirectional seeding on phase transition
+  if (wasSimple && !nowSimple) {
+    seedDetailedFromSimple();
+    // Re-render cards so seeded values appear immediately
+    if (typeof render === 'function' && document.getElementById('cards-col')) render();
   }
+  if (!wasSimple && nowSimple) {
+    seedSimpleFromDetailed();
+  }
+
+  // Toggle simple vs full card view
+  applyViewMode(phase);
+  if (nowSimple) populateSimpleInputs();
+
+  // Re-render the snap panel for the new phase
+  if (typeof updateTotals === 'function') updateTotals();
   // Re-render transition costs copy for the new phase
   if (typeof renderTransitionCosts === 'function' && document.getElementById('tc-section')) {
     renderTransitionCosts();
@@ -2070,6 +2305,18 @@ function setView(v) {
 }
 
 // ── AUSTRALIAN TAX ──
+// Reverse-calculate gross salary from a monthly net take-home (binary search)
+function grossFromNetMonthly(netMo) {
+  if (!netMo || netMo <= 0) return 0;
+  const target = netMo * 12;
+  let lo = target, hi = target * 4, mid, iters = 0;
+  while (hi - lo > 1 && iters++ < 60) {
+    mid = (lo + hi) / 2;
+    calcAusTax(mid).netAnnual > target ? hi = mid : lo = mid;
+  }
+  return Math.round((lo + hi) / 2);
+}
+
 function calcAusTax(gross) {
   let tax = 0;
   if (gross <= 18200) tax = 0;
@@ -2256,6 +2503,11 @@ function applyCSAEstimate() {
   updateCSAEstimateNote(result);
   updateTotals();
   scheduleSave();
+  // Refresh simple mode CS input if visible
+  if (isSimplePhase(currentPhase)) {
+    const csEl = document.getElementById('sm-cs');
+    if (csEl) csEl.value = (state.csOut || 0) > 0 ? state.csOut : '';
+  }
 }
 
 function updateCSAEstimateNote(result) {
@@ -2355,6 +2607,10 @@ const DEFAULTS = {
   'networth': {
     property: 0, superBal: 0, cashSavings: 0, investments: 0, otherAssets: 0,
     mortgage: 0, carLoan: 0, otherDebt: 0, settlementDebt: 0,
+  },
+  'simpleMode': {
+    takeHome: 0, housing: 0, food: 0, utilities: 0, transport: 0,
+    kids: 0, legal: 0, insurance: 0, subs: 0, medical: 0, debt: 0, entertainment: 0, other: 0
   }
 };
 
@@ -2430,7 +2686,131 @@ function saveState() {
     const serialised = JSON.stringify(state);
     localStorage.setItem('atlas_budget_state', serialised);
     localStorage.setItem('dad_budget_state', serialised);
+    // Notify other pages (e.g. index.html) that budget state changed
+    window.dispatchEvent(new StorageEvent('storage', { key: 'atlas_budget_state', newValue: serialised }));
   } catch(e) {}
+}
+
+// ── SIMPLE MODE HELPERS ──
+function isSimplePhase(phase) {
+  return phase === 'waiting-room' || phase === 'survive';
+}
+
+function applyViewMode(phase) {
+  const simple = isSimplePhase(phase);
+  const sw = document.getElementById('simple-cards-wrap');
+  const fw = document.getElementById('full-cards-wrap');
+  if (sw) sw.classList.toggle('visible', simple);
+  if (fw) fw.classList.toggle('hidden', simple);
+}
+
+function onSimpleInput(field, value) {
+  if (!state.simpleMode) state.simpleMode = {};
+  if (field === 'cs') {
+    // Child support lives in state.csOut, not simpleMode
+    state.csOut = parseFloat(value) || 0;
+    state.csReceived = 0;
+  } else {
+    state.simpleMode[field] = parseFloat(value) || 0;
+  }
+  updateTotals();
+  scheduleSave();
+}
+
+function populateSimpleInputs() {
+  const sm = state.simpleMode || {};
+  const map = [
+    ['sm-takehome',    'takeHome'],
+    ['sm-housing',     'housing'],
+    ['sm-food',        'food'],
+    ['sm-utilities',   'utilities'],
+    ['sm-transport',   'transport'],
+    ['sm-kids',        'kids'],
+    ['sm-legal',       'legal'],
+    ['sm-insurance',   'insurance'],
+    ['sm-subs',        'subs'],
+    ['sm-medical',     'medical'],
+    ['sm-debt',        'debt'],
+    ['sm-entertainment','entertainment'],
+    ['sm-other',       'other'],
+  ];
+  map.forEach(([id, field]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = sm[field] > 0 ? sm[field] : '';
+  });
+  // Child support comes from state.csOut, not simpleMode
+  const csEl = document.getElementById('sm-cs');
+  if (csEl) csEl.value = (state.csOut || 0) > 0 ? state.csOut : '';
+}
+
+function seedSimpleFromDetailed() {
+  const sm = state.simpleMode;
+  // Only seed if user hasn't already entered simple mode data
+  if (sm.takeHome > 0) return;
+
+  const findItem = (groupKey, id) => (state[groupKey] || []).find(i => i.id === id);
+
+  // Derive take-home from gross salary
+  const gross = state.grossSalary || 0;
+  if (gross > 0) {
+    const sacrifice = (state.salarySacrifice || 0) * 12;
+    const { netMonthly } = calcAusTax(Math.max(0, gross - sacrifice));
+    sm.takeHome = Math.round(netMonthly + (state.ftbMonthly || 0) + (state.csReceived || 0));
+  }
+
+  sm.housing      = (findItem('housing', 'rent') || {}).val            || 0;
+  sm.food         = (findItem('personal', 'groceries') || {}).val      || 0;
+  sm.utilities    = (findItem('housing', 'utilities') || {}).val       || 0;
+  sm.transport    = (findItem('housing', 'fuel') || {}).val            || 0;
+  sm.kids         = (state['kids-costs'] || []).reduce((a, i) => a + (i.val || 0), 0);
+  sm.legal        = (findItem('personal', 'legal') || {}).val          || 0;
+  sm.insurance    = (findItem('housing', 'insurance-home') || {}).val  || 0;
+  sm.subs         = (state.subs || []).reduce((a, i) => a + (i.val || 0), 0);
+  sm.medical      = (findItem('personal', 'personal-health') || {}).val || 0;
+  sm.debt         = (findItem('personal', 'debt-repayment') || {}).val  || 0;
+  sm.entertainment= (findItem('personal', 'dining') || {}).val         || 0;
+  sm.other        = (findItem('personal', 'other-expenses') || {}).val  || 0;
+}
+
+function seedDetailedFromSimple() {
+  const sm = state.simpleMode;
+  if (!sm || sm.takeHome === 0) return;
+
+  const setItem = (groupKey, id, val, name) => {
+    const arr = state[groupKey];
+    if (!Array.isArray(arr)) return;
+    let item = arr.find(i => i.id === id);
+    if (!item) {
+      item = { id, name: name || id, val: 0, min: 0, max: Math.max(val * 2, 2000) };
+      arr.push(item);
+    } else {
+      item.val = val;
+    }
+    if (item) item.val = val;
+  };
+
+  // Note: takeHome is stored as a reference — the user sets gross salary in the Income card.
+  // Store the simpleMode takeHome so the Income card can show it as a prompt.
+  state.simpleModeRefTakeHome = sm.takeHome;
+
+  setItem('housing', 'rent',            sm.housing,       'Rent / Mortgage');
+  setItem('personal', 'groceries',      sm.food,          'Groceries (adult)');
+  setItem('housing', 'utilities',       sm.utilities,     'Utilities (elec/gas/water)');
+  setItem('housing', 'fuel',            sm.transport,     'Fuel');
+  setItem('housing', 'insurance-home',  sm.insurance,     'Home / Contents Insurance');
+  setItem('personal', 'personal-health',sm.medical,       'Health / Appointments');
+  setItem('personal', 'dining',         sm.entertainment, 'Dining & Social');
+  setItem('personal', 'legal',          sm.legal,         'Legal');
+  setItem('personal', 'debt-repayment', sm.debt,          'Debt Repayments');
+  setItem('personal', 'other-expenses', sm.other,         'Everything Else');
+  setItem('subs', 'other-sub',          sm.subs,          'Other Subscriptions');
+
+  // Kids: write total to first item, leave other line items untouched if already set
+  const kidsArr = state['kids-costs'];
+  if (sm.kids > 0 && Array.isArray(kidsArr) && kidsArr.length > 0) {
+    const allZero = kidsArr.every(i => !i.val || i.val === 0);
+    if (allZero) kidsArr[0].val = sm.kids;
+  }
 }
 
 // ── SECTIONS CONFIG ──
@@ -3018,6 +3398,28 @@ function renderSnapPanel(m) {
   };
   const fmtNetWorth = () => netWorth === 0 ? ['—', 'set net worth'] : [fmt(netWorth), 'assets − liabilities'];
 
+  // ── Simple mode snap (Waiting Room + Survive) ──
+  if (isSimplePhase(currentPhase)) {
+    const sm = state.simpleMode || {};
+    const th = sm.takeHome || 0;
+    const fixed = (sm.housing || 0) + (sm.food || 0) + (sm.utilities || 0) + (sm.transport || 0);
+    const variable = (sm.kids || 0) + (sm.legal || 0) + (sm.insurance || 0) + (sm.subs || 0) +
+                     (sm.medical || 0) + (sm.debt || 0) + (sm.entertainment || 0) + (sm.other || 0);
+    const csOut = state.csOut || 0;
+    const cashLeft = th - fixed - variable - csOut;
+    const cashClass = th === 0 ? '' : cashLeft > 0 ? 'positive' : 'negative';
+    setTile('hero', 'Cash left',
+      th > 0 ? fmtView(cashLeft) : '—',
+      th > 0 ? (cashLeft < 0 ? 'short this month' : 'after all costs') : 'enter take-home above',
+      cashClass);
+    setTile('t1', 'Take-Home', th > 0 ? fmtView(th) : '—', 'after tax & super');
+    setTile('t2', 'Fixed floor', fixed > 0 ? fmtView(fixed) : '—', 'housing + food + bills');
+    setTile('t3', 'Variable', variable > 0 ? fmtView(variable) : '—', 'kids + everything else');
+    setTile('t4', 'Child Support', csOut > 0 ? fmtView(csOut) : '—',
+      csOut > 0 ? 'monthly payment' : 'set in child support card');
+    return;
+  }
+
   switch (currentPhase) {
     case 'survive': {
       // Hero: Surplus (binary signal — bleeding or not)
@@ -3123,15 +3525,16 @@ function updateTotals() {
     $('ib-rate').textContent = effRate + '%';
   }
 
-  // Card totals
-  $('total-income').textContent = fmtView(takeHome);
-  $('total-cs-out').textContent = csMode === 'receiving' ? fmtView(csBudgetAmount) + ' in' : fmtView(csBudgetAmount);
-  $('total-kids-costs').textContent = fmtView(kids);
-  $('total-shared').textContent = fmtView(shared);
-  $('total-housing').textContent = fmtView(housing);
-  $('total-personal').textContent = fmtView(personal);
-  $('total-subs').textContent = fmtView(subs);
-  $('total-savings').textContent = fmtView(savings);
+  // Card totals — only exist after render() is called (not in simple phase on first load)
+  const setText = (id, txt) => { const el = $(id); if (el) el.textContent = txt; };
+  setText('total-income', fmtView(takeHome));
+  setText('total-cs-out', csMode === 'receiving' ? fmtView(csBudgetAmount) + ' in' : fmtView(csBudgetAmount));
+  setText('total-kids-costs', fmtView(kids));
+  setText('total-shared', fmtView(shared));
+  setText('total-housing', fmtView(housing));
+  setText('total-personal', fmtView(personal));
+  setText('total-subs', fmtView(subs));
+  setText('total-savings', fmtView(savings));
 
   // Update cs-out slider display if view changed
   syncCSCardControls();
@@ -3143,32 +3546,77 @@ function updateTotals() {
   (state['savings'] || []).forEach(item => { if (item._updateDisplay) item._updateDisplay(); });
 
   // Dossier
-  $('d-gross').textContent = fmt(gross) + '/yr';
-  if ($('d-ftb-label')) $('d-ftb-label').textContent = csMode === 'receiving' ? 'FTB / CS Received' : 'FTB / Other Income';
-  $('d-ftb').textContent = fmtView(ftb + (csMode === 'receiving' ? csReceived : 0));
-  $('d-tax').textContent = '-' + fmtView(totalTax / 12);
-  $('d-super').textContent = fmtView(superMonthly);
-  $('d-takehome').textContent = fmtView(takeHome);
-  if ($('d-cs-label')) $('d-cs-label').textContent = csMode === 'receiving' ? 'Child Support In' : 'Child Support Out';
-  $('d-cs').textContent = fmtView(csBudgetAmount);
-  $('d-kids').textContent = fmtView(kids + shared);
-  $('d-housing').textContent = fmtView(housing);
-  $('d-personal').textContent = fmtView(personal + subs);
-  $('d-savings').textContent = fmtView(savings);
-  const surplusEl = $('d-surplus');
-  surplusEl.textContent = fmtView(surplus);
-  surplusEl.className = 'dossier-row-val' + (surplus >= 0 ? ' green' : ' red');
-  surplusEl.style.fontSize = '1rem';
-  const surplusPct = takeHome > 0 ? Math.max(0, Math.min(100, surplus / takeHome * 100)) : 0;
-  $('d-surplus-bar').style.width = surplusPct + '%';
-  $('d-surplus-bar').style.background = surplus >= 0 ? 'var(--green)' : 'var(--coral)';
+  if (isSimplePhase(currentPhase)) {
+    // Simple mode — show simpleMode inputs, not detailed tax calc
+    const sm = state.simpleMode || {};
+    const smTH    = sm.takeHome || 0;
+    const smFixed = (sm.housing || 0) + (sm.food || 0) + (sm.utilities || 0) + (sm.transport || 0);
+    const smVar   = (sm.kids || 0) + (sm.legal || 0) + (sm.insurance || 0) + (sm.subs || 0) +
+                    (sm.medical || 0) + (sm.debt || 0) + (sm.entertainment || 0) + (sm.other || 0);
+    const smCS    = csOut;
+    const smCash  = smTH - smFixed - smVar - smCS;
+    // Back-calculate gross/tax/super from the simple take-home input
+    const smGross = smTH > 0 ? grossFromNetMonthly(smTH) : 0;
+    const smTax   = smGross > 0 ? calcAusTax(smGross) : null;
+    const smSuper = smGross > 0 ? smGross * 0.12 / 12 : 0;
+    $('d-gross').textContent = smGross > 0 ? fmt(smGross) + '/yr' : '—';
+    if ($('d-ftb-label')) $('d-ftb-label').textContent = 'FTB / Other Income';
+    $('d-ftb').textContent = '—';
+    $('d-tax').textContent = smTax ? '-' + fmtView(smTax.totalTax / 12) : '—';
+    $('d-super').textContent = smSuper > 0 ? fmtView(smSuper) : '—';
+    $('d-takehome').textContent = smTH > 0 ? fmtView(smTH) : '—';
+    if ($('d-cs-label')) $('d-cs-label').textContent = csMode === 'receiving' ? 'Child Support In' : 'Child Support Out';
+    $('d-cs').textContent = smCS > 0 ? fmtView(smCS) : '—';
+    $('d-kids').textContent = sm.kids > 0 ? fmtView(sm.kids) : '—';
+    $('d-housing').textContent = smFixed > 0 ? fmtView(smFixed) : '—';
+    $('d-personal').textContent = smVar > 0 ? fmtView(smVar) : '—';
+    $('d-savings').textContent = '—';
+    if ($('d-surplus-label')) $('d-surplus-label').textContent = 'Cash Left';
+    const surplusEl = $('d-surplus');
+    surplusEl.textContent = smTH > 0 ? fmtView(smCash) : '—';
+    surplusEl.className = 'dossier-row-val' + (smCash >= 0 ? ' green' : ' red');
+    surplusEl.style.fontSize = '1rem';
+    const smSurPct = smTH > 0 ? Math.max(0, Math.min(100, smCash / smTH * 100)) : 0;
+    $('d-surplus-bar').style.width = smSurPct + '%';
+    $('d-surplus-bar').style.background = smCash >= 0 ? 'var(--green)' : 'var(--coral)';
+  } else {
+    $('d-gross').textContent = fmt(gross) + '/yr';
+    if ($('d-ftb-label')) $('d-ftb-label').textContent = csMode === 'receiving' ? 'FTB / CS Received' : 'FTB / Other Income';
+    $('d-ftb').textContent = fmtView(ftb + (csMode === 'receiving' ? csReceived : 0));
+    $('d-tax').textContent = '-' + fmtView(totalTax / 12);
+    $('d-super').textContent = fmtView(superMonthly);
+    $('d-takehome').textContent = fmtView(takeHome);
+    if ($('d-cs-label')) $('d-cs-label').textContent = csMode === 'receiving' ? 'Child Support In' : 'Child Support Out';
+    $('d-cs').textContent = fmtView(csBudgetAmount);
+    $('d-kids').textContent = fmtView(kids + shared);
+    $('d-housing').textContent = fmtView(housing);
+    $('d-personal').textContent = fmtView(personal + subs);
+    $('d-savings').textContent = fmtView(savings);
+    if ($('d-surplus-label')) $('d-surplus-label').textContent = 'Surplus';
+    const surplusEl = $('d-surplus');
+    surplusEl.textContent = fmtView(surplus);
+    surplusEl.className = 'dossier-row-val' + (surplus >= 0 ? ' green' : ' red');
+    surplusEl.style.fontSize = '1rem';
+    const surplusPct = takeHome > 0 ? Math.max(0, Math.min(100, surplus / takeHome * 100)) : 0;
+    $('d-surplus-bar').style.width = surplusPct + '%';
+    $('d-surplus-bar').style.background = surplus >= 0 ? 'var(--green)' : 'var(--coral)';
+  }
 
   // Snap panel — phase-aware
   renderSnapPanel({ takeHome, totalExpenses, surplus, savings, csOut, kids, shared, housing, personal, subs });
 
-  // Snap bar — Spent vs Surplus
-  if (takeHome > 0) {
-    const spentPct = Math.max(0, Math.min(100, Math.round((totalExpenses / takeHome) * 100)));
+  // Snap bar — Spent vs Surplus (use simpleMode data when in simple phase)
+  let barTakeHome = takeHome, barSpent = totalExpenses;
+  if (isSimplePhase(currentPhase) && state.simpleMode) {
+    const sm = state.simpleMode;
+    barTakeHome = sm.takeHome || 0;
+    barSpent = (sm.housing || 0) + (sm.food || 0) + (sm.utilities || 0) + (sm.transport || 0) +
+               (sm.kids || 0) + (sm.legal || 0) + (sm.insurance || 0) + (sm.subs || 0) +
+               (sm.medical || 0) + (sm.debt || 0) + (sm.entertainment || 0) + (sm.other || 0) +
+               (state.csOut || 0);
+  }
+  if (barTakeHome > 0) {
+    const spentPct = Math.max(0, Math.min(100, Math.round((barSpent / barTakeHome) * 100)));
     $('bar-spent').style.width = spentPct + '%';
     $('bar-spent-pct').textContent = spentPct + '%';
     $('bar-surplus-pct').textContent = Math.max(0, 100 - spentPct) + '%';
@@ -3205,6 +3653,11 @@ const TC_DEFAULTS = [
   { label: 'Moving costs', estimated: 0, trackOnly: true },
 ];
 const TC_PHASE_COPY = {
+  'waiting-room': {
+    title: 'Costs of getting through this',
+    sub: "Log legal fees, mediation, and setup costs here. Keeping them separate stops lump-sum payments distorting your monthly picture.",
+    totals: 'Burn so far',
+  },
   survive: {
     title: 'Costs of getting through this',
     sub: "Lawyers, mediation, the new place. Lump-sum payments hit hard right now — track them here so they don't poison your monthly view.",
@@ -3770,15 +4223,19 @@ function render() {
 
   // restore phase
   try {
-    const savedPhase = normalisePhase(localStorage.getItem('atlas_budget_phase') || localStorage.getItem('dad_budget_phase') || localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise');
+    const savedPhase = normalisePhase(localStorage.getItem('atlas_budget_phase') || localStorage.getItem('dad_budget_phase') || localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'waiting-room');
     setPhase(savedPhase);
-  } catch(e) { setPhase('stabilise'); }
+  } catch(e) { setPhase('waiting-room'); }
 
   // restore view
   try {
     const savedView = localStorage.getItem('atlas_budget_view') || localStorage.getItem('dad_budget_view') || 'monthly';
     setView(savedView);
   } catch(e) {}
+
+  // Apply correct view mode and populate simple inputs if needed
+  applyViewMode(currentPhase);
+  if (isSimplePhase(currentPhase)) populateSimpleInputs();
 
   render();
   syncCSAIncome();
