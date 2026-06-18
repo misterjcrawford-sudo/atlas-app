@@ -109,12 +109,11 @@
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
   .phase-pill[data-phase="rebuild"].active { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
-  /* White ring so active pills don't vanish into the phase card background */
-  .card-phase-pills-row .phase-pill[data-phase="survive"].active,
-  .card-phase-pills-row .phase-pill[data-phase="stabilise"].active,
-  .card-phase-pills-row .phase-pill[data-phase="rebuild"].active,
-  .card-phase-pills-row .phase-pill[data-phase="new-chapter"].active {
-    box-shadow: 0 0 0 2.5px rgba(255,255,255,0.65);
+  /* Inside the phase card — no borders on any pill state */
+  .card-phase-pills-row .phase-pill { border-color: transparent; }
+  .card-phase-pills-row .phase-pill:hover { border-color: transparent; }
+  .card-phase-pills-row .phase-pill.active {
+    background: var(--ink); border-color: transparent; color: var(--paper);
   }
 
   /* DASHBOARD GRID */
@@ -731,7 +730,7 @@ const phases = {
     focus: ['Goals', 'Health', 'Wealth', 'Identity', 'Social life'],
     watchOut: ['Living defensively', 'Under-planning', 'Dating as distraction', 'Staying in survival mode'],
     threshold: 'You move into New Chapter when life is no longer organised around the separation.',
-    style: { accent: '#8BBAD8', cardBg: '#4A6F8C', cardBorder: '#3A5A78', cardFg: '#FFFFFF', cardFgMuted: 'rgba(255,255,255,0.65)' }
+    style: { accent: '#8BBAD8', cardBg: '#8BBAD8', cardBorder: '#6A9ABE', cardFg: '#1A3048', cardFgMuted: 'rgba(26,48,72,0.55)' }
   },
   'new-chapter': {
     label: 'New Chapter',
