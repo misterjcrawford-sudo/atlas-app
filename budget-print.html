@@ -491,6 +491,64 @@ const DEFAULTS = {
 
 let state, transitionCosts, currentPhase;
 
+// ── PHASE VISIBILITY ──────────────────────────────────────────────────────────
+// Mirrors the phases arrays in budget.html DEFAULTS — keep in sync if items change.
+const ITEM_PHASES = {
+  // Kids — My Time
+  'kids-food':          ['survive','stabilise','rebuild','new-chapter'],
+  'kids-childcare':     ['survive','stabilise','rebuild','new-chapter'],
+  'kids-pocket':        ['survive','stabilise','rebuild','new-chapter'],
+  'kids-gifts':         ['stabilise','rebuild','new-chapter'],
+  // Co-parenting Costs
+  'kids-school':        ['survive','stabilise','rebuild','new-chapter'],
+  'kids-activities':    ['survive','stabilise','rebuild','new-chapter'],
+  'kids-clothing':      ['survive','stabilise','rebuild','new-chapter'],
+  'kids-medical':       ['survive','stabilise','rebuild','new-chapter'],
+  'shared-health':      ['survive','stabilise','rebuild','new-chapter'],
+  'shared-specialists': ['stabilise','rebuild','new-chapter'],
+  'shared-devices':     ['stabilise','rebuild','new-chapter'],
+  'shared-holidays':    ['stabilise','rebuild','new-chapter'],
+  'shared-extras':      ['survive','stabilise','rebuild','new-chapter'],
+  // Housing
+  'car':                ['survive','stabilise','rebuild','new-chapter'],
+  // Personal
+  'clothing-self':      ['survive','stabilise','rebuild','new-chapter'],
+  'gym':                ['stabilise','rebuild','new-chapter'],
+  'dining':             ['stabilise','rebuild','new-chapter'],
+  // Subs — only other-sub visible in WR/Survive
+  'streaming1':         ['stabilise','rebuild','new-chapter'],
+  'streaming2':         ['stabilise','rebuild','new-chapter'],
+  'software':           ['stabilise','rebuild','new-chapter'],
+  'news':               ['stabilise','rebuild','new-chapter'],
+  'cloud':              ['stabilise','rebuild','new-chapter'],
+  // Savings
+  'general':            ['stabilise','rebuild','new-chapter'],
+  'holiday-kids':       ['stabilise','rebuild','new-chapter'],
+  'housing-deposit':    ['rebuild','new-chapter'],
+  'kids-future':        ['rebuild','new-chapter'],
+  'super-catchup':      ['new-chapter'],
+};
+
+// Sections hidden in certain phases
+const SECTION_PHASES = {
+  'kids-costs': ['survive','stabilise','rebuild','new-chapter'],
+  'shared':     ['survive','stabilise','rebuild','new-chapter'],
+  'subs':       ['stabilise','rebuild','new-chapter'],
+  'networth':   ['stabilise','rebuild','new-chapter'],
+};
+
+function itemVisible(item) {
+  const allowed = ITEM_PHASES[item.id];
+  if (!allowed) return true; // not in map = visible all phases
+  return allowed.includes(currentPhase);
+}
+
+function sectionVisible(key) {
+  const allowed = SECTION_PHASES[key];
+  if (!allowed) return true;
+  return allowed.includes(currentPhase);
+}
+
 function load() {
   // Budget state
   try {
@@ -515,7 +573,7 @@ function load() {
 }
 
 function sumGroup(key) {
-  return (state[key] || []).reduce((a, i) => a + (Number(i.val) || 0), 0);
+  return (state[key] || []).filter(itemVisible).reduce((a, i) => a + (Number(i.val) || 0), 0);
 }
 
 function getCSMode() {
@@ -577,7 +635,7 @@ function tcTotalEst() {
 
 // ── PHASE LABEL ───────────────────────────────────────────────────────────────
 const phaseLabels = {
-  survive: 'Survive', stabilise: 'Stabilise', rebuild: 'Rebuild', 'new-chapter': 'New Chapter'
+  'waiting-room': 'Waiting Room', survive: 'Survive', stabilise: 'Stabilise', rebuild: 'Rebuild', 'new-chapter': 'New Chapter'
 };
 
 // ── PAGE HEADER ───────────────────────────────────────────────────────────────
@@ -788,13 +846,13 @@ function buildPage2(m) {
   page.className = 'page';
 
   const expGroups = [
-    { key: 'kids-costs', label: 'Kids costs' },
-    { key: 'shared',     label: 'Shared expenses' },
+    { key: 'kids-costs', label: 'Kids — My Time' },
+    { key: 'shared',     label: 'Co-parenting Costs' },
     { key: 'housing',    label: 'Housing & fixed' },
     { key: 'personal',   label: 'Personal' },
     { key: 'subs',       label: 'Subscriptions' },
     { key: 'savings',    label: 'Savings & goals' },
-  ];
+  ].filter(g => sectionVisible(g.key));
 
   const csModeLabel = csMode === 'receiving' ? 'Child support received' : 'Child support payment';
   const csAmount = csMode === 'receiving' ? csReceived : csOut;
@@ -817,7 +875,7 @@ function buildPage2(m) {
     </div>` : ''}
 
     ${expGroups.map(g => {
-      const items = state[g.key] || [];
+      const items = (state[g.key] || []).filter(itemVisible);
       const total = items.reduce((a, i) => a + (i.val || 0), 0);
       return `<div class="exp-section">
         <div class="exp-section-head">
@@ -843,7 +901,8 @@ function buildPage3(m) {
   const archivedTC = transitionCosts.filter(r => r.archived);
   const tcSpentTotal = tcTotalSpent();
   const tcEstTotal = tcTotalEst();
-  const hasNW = assets > 0 || liabilities > 0;
+  const nwPhaseVisible = sectionVisible('networth');
+  const hasNW = nwPhaseVisible && (assets > 0 || liabilities > 0);
   const hasTC = transitionCosts.length > 0;
 
   if (!hasNW && !hasTC) return null;

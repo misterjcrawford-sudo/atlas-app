@@ -209,6 +209,11 @@
   }
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
+  .phase-pill[data-phase="survive"].active      { background: var(--coral);  border-color: var(--coral);  color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active    { background: var(--honey);  border-color: var(--honey);  color: var(--ink);   }
+  .phase-pill[data-phase="rebuild"].active      { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
+  .phase-pill[data-phase="new-chapter"].active  { background: var(--sage);   border-color: var(--sage);   color: var(--ink);   }
   .phase-context {
     margin-bottom: 24px;
     font-size: 15px;
@@ -1505,6 +1510,7 @@
           <p class="hero-sub">Map handovers, school days, meals, routines, activities and the little things that keep the week steady.</p>
 
           <div class="phase-row" id="hero-phase-row">
+            <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
             <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
@@ -3187,6 +3193,11 @@ document.addEventListener('click', e => {
 
 /* PHASE — synced with the rest of Atlas */
 const phaseData = {
+  'waiting-room': {
+    label: 'Waiting Room',
+    note: 'You\'re still in the thick of it. Keep things calm and consistent for the kids. Even simple routines help them feel secure right now.',
+    heroText: 'You\'re still in the thick of it. Keep things calm and consistent. Simple, repeatable routines are what the kids need most right now.',
+  },
   survive: {
     label: 'Survive',
     note: 'Just keep the wheels on. Get them fed, rested, and to school. Don\'t try to be perfect — you don\'t need to be right now.',

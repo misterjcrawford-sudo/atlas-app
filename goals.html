@@ -233,6 +233,11 @@
     border-color: var(--ink);
     color: var(--paper);
   }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
+  .phase-pill[data-phase="survive"].active      { background: var(--coral);  border-color: var(--coral);  color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active    { background: var(--honey);  border-color: var(--honey);  color: var(--ink);   }
+  .phase-pill[data-phase="rebuild"].active      { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
+  .phase-pill[data-phase="new-chapter"].active  { background: var(--sage);   border-color: var(--sage);   color: var(--ink);   }
   .phase-context {
     margin-bottom: 24px;
     font-size: 15px;
@@ -1137,6 +1142,7 @@
           </h1>
           <p class="hero-sub">Choose practical goals for money, home, health, parenting, work and the life you're rebuilding.</p>
           <div class="phase-row" id="hero-phase-row">
+            <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
             <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
@@ -1239,6 +1245,7 @@
           </div>
           <div class="suggested-phase-copy">Change phase to see a different set of suggestions.</div>
           <div class="suggested-phase-row">
+            <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
             <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
             <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
             <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
@@ -1384,9 +1391,10 @@ const CATS = {
   personal:  { label: 'Personal',      color: '#E27B5A', tag_bg: '#F5D996', tag_color: '#0A0A0A' },
 };
 
-const PHASE_LABEL = { survive:'Survive', stabilise:'Stabilise', rebuild:'Rebuild', 'new-chapter':'New Chapter' };
+const PHASE_LABEL = { 'waiting-room':'Waiting Room', survive:'Survive', stabilise:'Stabilise', rebuild:'Rebuild', 'new-chapter':'New Chapter' };
 
 const PHASE_CONTEXT = {
+  'waiting-room': 'No goal-setting yet. Get clear on what you have first — finances, legal basics, records. Clarity now saves pain later.',
   survive: 'Two or three goals max. Survival and stability first. Don\'t add more pressure right now.',
   stabilise: 'One goal per area is enough. Lock in the basics: emergency fund, fitness routine, kids connection.',
   rebuild: 'Routines hold. Add stretch goals in career and personal growth — progress compounds.',
@@ -1394,6 +1402,7 @@ const PHASE_CONTEXT = {
 };
 
 const PHASE_TIPS = {
+  'waiting-room': 'No goal-setting yet. Get clear on finances, legal basics, and records. Clarity first.',
   survive: 'Focus on 2–3 goals max. Survival and stability first. Don\'t add more pressure right now.',
   stabilise: 'Pick 1 goal per area. Lock in basics: emergency fund, fitness routine, kids connection.',
   rebuild: 'Now expand. Add stretch goals in career and personal growth. Progress compounds.',
@@ -1401,6 +1410,7 @@ const PHASE_TIPS = {
 };
 
 const PHASE_FLOW = {
+  'waiting-room': 'Don\'t set goals yet. Understand your situation first — records, finances, legal basics. The right goals will become obvious once you have clarity.',
   survive: 'Be ruthless. Two goals only. Anything else is noise — write it down somewhere else and come back later.',
   stabilise: 'Pick one goal per area and protect it. Repetition beats ambition right now.',
   rebuild: 'Add a stretch goal in the area where you have the most energy. Let momentum carry the rest.',
@@ -1408,6 +1418,16 @@ const PHASE_FLOW = {
 };
 
 const SUGGESTED_GOALS = {
+  'waiting-room': [
+    { title: 'Get all financial accounts into your name only', cat: 'financial', note: 'Bank accounts, super, shares — know what is yours before anything else.' },
+    { title: 'Gather the last 2 years of tax returns', cat: 'financial', note: 'These will be needed for financial disclosure in any legal process.' },
+    { title: 'List every asset, debt, and account you are aware of', cat: 'financial', note: 'A simple spreadsheet. Both yours and shared. Start here.' },
+    { title: 'Update super and insurance beneficiaries', cat: 'financial', note: 'Do this immediately. Your previous beneficiary may no longer be appropriate.' },
+    { title: 'Book an initial legal consultation', cat: 'career', note: 'Understand your rights and options before making any commitments.' },
+    { title: 'Document what parenting currently looks like week to week', cat: 'parenting', note: 'Write down the current arrangement — who does what and when. This matters later.' },
+    { title: 'Identify two people you can call at short notice', cat: 'social', note: 'You will need real support, not just digital ones. Line them up now.' },
+    { title: 'Protect your sleep — even if everything else is uncertain', cat: 'fitness', note: 'Everything is harder without sleep. Make it the one thing you protect.' },
+  ],
   survive: [
     { title: 'Open a separate bank account in your name only', cat: 'financial', note: 'Do this first. Financial separation starts here.' },
     { title: 'List every monthly expense and income source', cat: 'financial', note: 'No optimising yet — just map the real numbers.' },

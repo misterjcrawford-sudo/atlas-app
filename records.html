@@ -162,9 +162,10 @@
   }
   .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
   .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
   .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
-  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .phase-pill[data-phase="rebuild"].active { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
   .phase-context { font-family: 'Fraunces', serif; font-weight: 300; font-size: 15px; line-height: 1.55; color: var(--ink-muted); margin-bottom: 8px; max-width: 58ch; }
 
@@ -622,7 +623,7 @@
   <section class="hero">
     <div class="hero-eyebrow">Atlas — Records</div>
     <h1><span class="soft">Write it down</span><br>while it's fresh.</h1>
-    <p class="hero-sub">Shared costs, incidents, messages and handovers — dated, in one place, exportable when someone official asks. Not about winning. About knowing where things stand.</p>
+    <p class="hero-sub">Payments, incidents, messages and handovers — dated, in one place, exportable when someone official asks. Not about winning. About knowing where things stand.</p>
 
     <div class="phase-row" id="phase-row">
       <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
@@ -669,10 +670,10 @@
       <div class="capture-sub">Twenty seconds. Date, what happened, done.</div>
 
       <div class="type-row" id="type-row">
-        <button class="type-btn active" data-type="cost" onclick="setType('cost')">Shared cost</button>
+        <button class="type-btn active" data-type="cost" onclick="setType('cost')">Payment</button>
         <button class="type-btn" data-type="incident" onclick="setType('incident')">Incident</button>
         <button class="type-btn" data-type="communication" onclick="setType('communication')">Communication</button>
-        <button class="type-btn" data-type="handover" onclick="setType('handover')">Handover</button>
+        <button class="type-btn" data-type="handover" onclick="setType('handover')">Schedule change</button>
       </div>
       <p class="type-hint" id="type-hint"></p>
 
@@ -742,7 +743,7 @@
         <div class="summary-stat-val small" id="sum-range">—</div>
       </div>
       <hr class="summary-divider">
-      <div class="summary-label">Shared costs</div>
+      <div class="summary-label">Payments</div>
       <div class="summary-stat">
         <div class="summary-stat-label">You've paid</div>
         <div class="summary-stat-val" id="sum-mine">$0</div>
@@ -771,10 +772,10 @@
     <div class="timeline-title">The record.</div>
     <div class="filter-row" id="filter-row">
       <button class="filter-pill active" data-filter="all" onclick="setFilter('all')">All <span class="count" id="count-all"></span></button>
-      <button class="filter-pill" data-filter="cost" onclick="setFilter('cost')">Costs <span class="count" id="count-cost"></span></button>
+      <button class="filter-pill" data-filter="cost" onclick="setFilter('cost')">Payments <span class="count" id="count-cost"></span></button>
       <button class="filter-pill" data-filter="incident" onclick="setFilter('incident')">Incidents <span class="count" id="count-incident"></span></button>
       <button class="filter-pill" data-filter="communication" onclick="setFilter('communication')">Communications <span class="count" id="count-communication"></span></button>
-      <button class="filter-pill" data-filter="handover" onclick="setFilter('handover')">Handovers <span class="count" id="count-handover"></span></button>
+      <button class="filter-pill" data-filter="handover" onclick="setFilter('handover')">Schedule changes <span class="count" id="count-handover"></span></button>
     </div>
   </div>
 
@@ -955,9 +956,9 @@ const typeHints = {
   cost: 'Amount, who paid, what it was for. Note where the receipt lives if it matters.',
   incident: 'What happened and when. Facts only — no commentary, no adjectives.',
   communication: 'What was said or sent, and through what channel — text, email, app, in person.',
-  handover: 'Late, early, missed, or notes passed between homes. Only log what was off-pattern.'
+  handover: 'Changes to the schedule — date swaps, late pickups, missed handovers. Only log what was off-pattern.'
 };
-const typeLabels = { cost: 'Shared cost', incident: 'Incident', communication: 'Communication', handover: 'Handover' };
+const typeLabels = { cost: 'Payment', incident: 'Incident', communication: 'Communication', handover: 'Schedule change' };
 
 function setType(type) {
   currentType = type;
@@ -970,7 +971,7 @@ function setType(type) {
     cost: 'School shoes',
     incident: 'Pickup missed — no notice given',
     communication: 'Text agreeing to swap weekends 20–21 June',
-    handover: 'Handover 40 min late — school bag left behind'
+    handover: 'Weekend swap agreed — moved from 14 June to 21 June'
   };
   document.getElementById('f-title').placeholder = placeholders[type];
 }

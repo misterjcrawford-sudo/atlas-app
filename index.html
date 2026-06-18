@@ -95,16 +95,7 @@
   .page-wrap { padding: 20px 24px 0; }
   .container { max-width: 1100px; margin: 0 auto; }
 
-  /* PHASE BAR */
-  .phase-bar {
-    background: none; border: none;
-    margin-bottom: 8px; padding: 0;
-  }
-  .phase-bar-heading {
-    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500;
-    letter-spacing: -0.02em; color: var(--ink); margin-bottom: 14px;
-  }
-  .phase-bar-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  /* PHASE PILLS */
   .phase-pill {
     font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
     padding: 9px 18px; border-radius: 999px; cursor: pointer;
@@ -116,8 +107,15 @@
   .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
   .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
   .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
-  .phase-pill[data-phase="rebuild"].active { background: #4A6F8C; border-color: #3A5A78; color: var(--paper); }
+  .phase-pill[data-phase="rebuild"].active { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
   .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+  /* White ring so active pills don't vanish into the phase card background */
+  .card-phase-pills-row .phase-pill[data-phase="survive"].active,
+  .card-phase-pills-row .phase-pill[data-phase="stabilise"].active,
+  .card-phase-pills-row .phase-pill[data-phase="rebuild"].active,
+  .card-phase-pills-row .phase-pill[data-phase="new-chapter"].active {
+    box-shadow: 0 0 0 2.5px rgba(255,255,255,0.65);
+  }
 
   /* DASHBOARD GRID */
   .dash-grid {
@@ -142,12 +140,38 @@
   }
   .dash-card-link:hover { gap: 10px; }
 
-  /* PHASE CARD */
+  /* PHASE CARD — full-width, collapsible */
+  #card-phase { grid-column: 1 / -1; order: 0; }
+  .card-phase-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .card-phase-header-info { flex: 1; min-width: 0; }
+  .card-phase-collapsed-label {
+    font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 500;
+    letter-spacing: -0.015em; color: var(--phase-card-fg); margin-top: 3px;
+    display: none;
+  }
+  .card-phase.collapsed .card-phase-collapsed-label { display: block; }
+  .card-phase-collapse-btn {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.18);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--phase-card-fg); transition: background 0.15s;
+  }
+  .card-phase-collapse-btn:hover { background: rgba(255,255,255,0.32); }
+  .card-phase-collapse-btn svg { transition: transform 0.22s ease; }
+  .card-phase.collapsed .card-phase-collapse-btn svg { transform: rotate(180deg); }
+  .card-phase-body-wrap { margin-top: 4px; }
+  .card-phase.collapsed .card-phase-body-wrap { display: none; }
+  .card-phase-pills-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
   .card-phase-name {
     font-family: 'Fraunces', serif; font-weight: 500; font-size: 2.2rem; line-height: 1;
     letter-spacing: -0.025em; color: var(--ink); margin-bottom: 6px;
   }
   .card-phase-subtitle { font-size: 14px; color: var(--ink-muted); margin-bottom: 12px; }
+  .card-phase-tip-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+  .card-phase-tip-row .card-phase-tip { flex: 1; }
+  .card-phase-tip-row .card-phase-guide { flex-shrink: 0; white-space: nowrap; margin-top: 2px; }
   .card-phase-tip { font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); }
   .card-phase-guide { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--green); text-decoration: none; }
   .card-phase-guide:hover { text-decoration: underline; }
@@ -208,18 +232,17 @@
   .goal-bar { height: 6px; background: var(--paper-edge); border-radius: 999px; overflow: hidden; }
   .goal-bar-fill { height: 100%; background: var(--phase-accent); border-radius: 999px; transition: background 0.35s; }
 
-  /* NEXT ACTION CARD */
-  .next-action-text { font-size: 15px; line-height: 1.65; color: var(--ink-soft); margin-bottom: 4px; }
-  #card-next {
-    background: var(--green);
-    border-color: var(--green-deep);
-    color: var(--paper);
-  }
-  #card-next .dash-card-label { color: rgba(255,255,255,0.6); }
-  #card-next .next-action-text { color: rgba(255,255,255,0.88); }
-  #card-next .dash-card-link { color: var(--honey); }
-  #card-next .dash-card-link:hover { color: var(--amber); }
-  #card-next:hover { box-shadow: 0 12px 40px rgba(15,74,63,0.28); }
+  /* YOUR MOVE — inside phase card */
+  .your-move-section { background: #ffffff; border-radius: 12px; padding: 14px 16px; margin-top: 4px; }
+  .your-move-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .your-move-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-muted); }
+  .your-move-count { font-size: 11px; color: var(--ink-faded); }
+  .your-move-text { font-size: 14px; line-height: 1.6; color: var(--ink); font-weight: 500; margin-bottom: 10px; }
+  .your-move-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .your-move-link { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; }
+  .your-move-link:hover { text-decoration: underline; }
+  .your-move-skip { font-size: 13px; color: var(--ink-faded); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Space Grotesk', sans-serif; transition: color 0.15s; }
+  .your-move-skip:hover { color: var(--ink-muted); }
 
   /* PHASE CARD HERO */
   .card-phase {
@@ -373,24 +396,20 @@
   .admin-urgent-item { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--ink-muted); padding: 4px 0; }
   .admin-urgent-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
 
-  /* NEXT ACTION — priority pill */
-  .next-priority-pill { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 999px; align-self: flex-start; }
-
   /* GRID PHASE LAYOUTS — consistent order across all phases */
   #dash-grid.layout-stabilise  #card-phase, #dash-grid.layout-rebuild #card-phase, #dash-grid.layout-new-chapter #card-phase { order: 1; }
   #dash-grid.layout-stabilise  #card-money, #dash-grid.layout-rebuild #card-money, #dash-grid.layout-new-chapter #card-money { order: 2; }
   #dash-grid.layout-stabilise  #card-week,  #dash-grid.layout-rebuild #card-week,  #dash-grid.layout-new-chapter #card-week  { order: 3; }
   #dash-grid.layout-stabilise  #card-admin, #dash-grid.layout-rebuild #card-admin, #dash-grid.layout-new-chapter #card-admin { order: 4; }
   #dash-grid.layout-stabilise  #card-goals, #dash-grid.layout-rebuild #card-goals, #dash-grid.layout-new-chapter #card-goals { order: 5; }
-  #dash-grid.layout-stabilise  #card-next,  #dash-grid.layout-rebuild #card-next,  #dash-grid.layout-new-chapter #card-next  { order: 6; }
 
   @media (max-width: 900px) {
     .quick-links-grid { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 760px) {
     .page-wrap { padding: 0 16px; }
-    .phase-bar { margin: 16px 16px 0; padding: 16px 18px; }
     .dash-grid { grid-template-columns: 1fr; }
+    #card-phase { grid-column: auto; }
     .quick-links-grid { grid-template-columns: repeat(2, 1fr); }
     .money-row { grid-template-columns: 1fr; }
     .money-stat.span-2 { grid-column: auto; }
@@ -445,18 +464,6 @@
 <div class="page-wrap">
 <div class="container">
 
-  <!-- PHASE BAR -->
-  <div class="phase-bar" id="phase-bar">
-    <div class="phase-bar-heading">Select your phase</div>
-    <div class="phase-bar-pills">
-      <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
-      <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
-      <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
-      <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
-      <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
-    </div>
-  </div>
-
   <div class="help-card" id="help-card">
     <button class="help-card-toggle" id="help-toggle" onclick="toggleHelp()" aria-expanded="false">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-faded);flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -488,29 +495,64 @@
 
     <!-- CARD: PHASE -->
     <div class="dash-card card-phase" id="card-phase">
-      <div class="dash-card-label">Your phase</div>
-      <div class="dash-card-body">
-        <div class="card-phase-name" id="phase-name">Survive</div>
-        <div class="card-phase-subtitle" id="phase-subtitle">0–6 months. Just keep the wheels on.</div>
-        <div class="phase-journey" id="phase-journey"></div>
-        <div class="card-phase-tip" id="phase-tip">Survival mode. Focus only on shelter, legal basics, kids seeing both parents, and not making major financial decisions under stress.</div>
-        <div class="phase-card-line" id="phase-card-line"></div>
-        <div class="phase-modules">
-          <div class="phase-module">
-            <div class="phase-module-label">Focus now</div>
-            <div class="phase-module-items" id="phase-focus"></div>
+      <!-- Header — always visible -->
+      <div class="card-phase-header">
+        <div class="card-phase-header-info">
+          <div class="dash-card-label">Your Phase</div>
+          <div class="card-phase-collapsed-label" id="phase-name-inline">Survive</div>
+        </div>
+        <button class="card-phase-collapse-btn" id="phase-collapse-btn" onclick="togglePhaseCard()" aria-label="Toggle phase detail" aria-expanded="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+      </div>
+      <!-- Collapsible body -->
+      <div class="card-phase-body-wrap" id="phase-card-body">
+        <!-- Phase selector pills -->
+        <div class="card-phase-pills-row">
+          <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
+          <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
+          <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
+          <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
+          <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
+        </div>
+        <!-- Phase info -->
+        <div class="dash-card-body">
+          <div class="card-phase-name" id="phase-name">Survive</div>
+          <div class="card-phase-subtitle" id="phase-subtitle">0–6 months. Just keep the wheels on.</div>
+          <div class="phase-journey" id="phase-journey"></div>
+          <div class="card-phase-tip-row">
+            <div class="card-phase-tip" id="phase-tip">Survival mode. Focus only on shelter, legal basics, kids seeing both parents, and not making major financial decisions under stress.</div>
+            <a href="https://www.get-atlas.com.au/the-four-phases-of-rebuilding-after-separation/" class="card-phase-guide" id="phase-guide-link" target="_blank" rel="noopener">Read the Survive guide →</a>
           </div>
-          <div class="phase-module">
-            <div class="phase-module-label">Watch out for</div>
-            <div class="phase-module-items" id="phase-watch"></div>
+          <div class="phase-card-line" id="phase-card-line"></div>
+          <div class="phase-modules">
+            <div class="phase-module">
+              <div class="phase-module-label">Focus now</div>
+              <div class="phase-module-items" id="phase-focus"></div>
+            </div>
+            <div class="phase-module">
+              <div class="phase-module-label">Watch out for</div>
+              <div class="phase-module-items" id="phase-watch"></div>
+            </div>
+            <div class="phase-module phase-module-full">
+              <div class="phase-module-label">Next threshold</div>
+              <div class="phase-module-items" id="phase-threshold"></div>
+            </div>
           </div>
-          <div class="phase-module phase-module-full">
-            <div class="phase-module-label">Next threshold</div>
-            <div class="phase-module-items" id="phase-threshold"></div>
+        </div>
+        <!-- YOUR MOVE -->
+        <div class="your-move-section">
+          <div class="your-move-header">
+            <span class="your-move-label">Your move</span>
+            <span class="your-move-count" id="your-move-count">1 of 5</span>
+          </div>
+          <div class="your-move-text" id="your-move-text"></div>
+          <div class="your-move-actions">
+            <a href="#" class="your-move-link" id="your-move-link">Open →</a>
+            <button class="your-move-skip" onclick="skipNextAction()">Skip this →</button>
           </div>
         </div>
       </div>
-      <a href="https://www.get-atlas.com.au/the-four-phases-of-rebuilding-after-separation/" class="card-phase-guide" id="phase-guide-link" target="_blank" rel="noopener">Read the Survive guide →</a>
     </div>
 
     <!-- CARD: MONEY SNAPSHOT -->
@@ -549,15 +591,6 @@
       <a href="./goals.html" class="dash-card-link">Open Goals →</a>
     </div>
 
-    <!-- CARD: NEXT ACTION -->
-    <div class="dash-card" id="card-next">
-      <div class="dash-card-label">Next action</div>
-      <div class="next-priority-pill">Priority</div>
-      <div class="dash-card-body">
-        <div class="next-action-text" id="next-action-text"></div>
-      </div>
-      <a href="#" class="dash-card-link" id="next-action-link">Open tool →</a>
-    </div>
 
   </div>
 
@@ -714,13 +747,125 @@ const phases = {
 
 const phaseOrder = ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'];
 
-const nextActions = {
-  'waiting-room': { text: "Gather your financial records now — tax returns, super statements, bank accounts. It's harder once legal processes start.", link: './admin.html', linkText: 'Open Admin →' },
-  'survive':       { text: "Open the budget tool and map every dollar in and out. Clarity here prevents bigger problems later.", link: './budget.html', linkText: 'Open Finances →' },
-  'stabilise':    { text: "Review your goals. Pick one financial and one personal target for the next 90 days.", link: './goals.html', linkText: 'Open Goals →' },
-  'rebuild':      { text: "Check your savings goal. Are you on track? Adjust your budget if not.", link: './budget.html', linkText: 'Open Finances →' },
-  'new-chapter':  { text: "Review your net worth and savings position. You've rebuilt — now extend.", link: './budget.html', linkText: 'Open Finances →' }
+// ── NEXT ACTION QUEUES ────────────────────────────────────────────────────────
+// condition: fn returns true = surface this first (setup gap detected)
+// no condition = always in the regular rotation
+const nextActionQueues = {
+  'waiting-room': [
+    { text: "Gather your financial records now — tax returns, super, bank accounts. It's harder once legal processes start.", link: './admin.html', linkText: 'Open Admin →', condition: () => !hasAdminStarted() },
+    { text: "Map what you earn and what you owe before anything changes.", link: './budget.html', linkText: 'Open Finances →', condition: () => !hasBudgetData() },
+    { text: "Set up a separate email account for all legal and financial correspondence.", link: null },
+    { text: "Find and secure your important documents — passport, birth certificates, tax file number.", link: './admin.html', linkText: 'Open Admin →' },
+    { text: "Get a PO Box or update your address on sensitive accounts before the process starts.", link: null },
+  ],
+  'survive': [
+    { text: "Map every dollar in and out. Clarity now prevents bigger problems later.", link: './budget.html', linkText: 'Open Finances →', condition: () => !hasBudgetData() },
+    { text: "Start your admin checklist. Small tasks compound fast — get on top of them.", link: './admin.html', linkText: 'Open Admin →', condition: () => !hasAdminStarted() },
+    { text: "Set up your custody week calendar so the kids have a visible, predictable routine.", link: './kids-week.html', linkText: 'Open Week →', condition: () => !hasWeekData() },
+    { text: "Don't make major financial decisions under stress — avoid big commitments this month.", link: null },
+    { text: "Focus on three things only: shelter, cash flow, and kids seeing both parents.", link: null },
+    { text: "Open a bank account in your name only if you haven't already.", link: './admin.html', linkText: 'Open Admin →' },
+  ],
+  'stabilise': [
+    { text: "Set one financial and one personal goal for the next 90 days.", link: './goals.html', linkText: 'Open Goals →', condition: () => !hasGoals() },
+    { text: "Review your subscriptions — you almost certainly have duplicates from when you were two households.", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Check your admin progress. What's still outstanding from your separation list?", link: './admin.html', linkText: 'Open Admin →' },
+    { text: "Make sure your co-parenting schedule is documented. Informal agreements cause problems later.", link: './records.html', linkText: 'Open Records →' },
+    { text: "Map your net worth. You need a baseline before you can improve it.", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Build one month's buffer. It's the difference between a problem and a crisis.", link: './goals.html', linkText: 'Open Goals →' },
+  ],
+  'rebuild': [
+    { text: "Set a savings goal and automate a contribution — even $50/week compounds meaningfully.", link: './goals.html', linkText: 'Open Goals →', condition: () => !hasGoals() },
+    { text: "Check your net worth. Do you know your number? Map it now.", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Review your insurance — health, life, income protection. Your situation changed when your household did.", link: './admin.html', linkText: 'Open Admin →' },
+    { text: "Set a goal you would have thought impossible 12 months ago. Ambition is back on the table.", link: './goals.html', linkText: 'Open Goals →' },
+    { text: "Revisit your budget with fresh eyes. Are you still optimising for survival? Time to build.", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Start thinking about super. The gap from your separation years is worth closing.", link: './budget.html', linkText: 'Open Finances →' },
+  ],
+  'new-chapter': [
+    { text: "Review your net worth and savings trajectory. What's working? Scale it.", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Think beyond super — are you investing for the long term outside of it?", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Is anything in your budget still set up for crisis mode? Time to fully optimise.", link: './budget.html', linkText: 'Open Finances →' },
+    { text: "Set a 3-year vision. You've earned the right to think this big.", link: './goals.html', linkText: 'Open Goals →' },
+    { text: "Review your estate plan — will, beneficiaries, and insurance — now that your life is different.", link: './admin.html', linkText: 'Open Admin →' },
+    { text: "The separation is no longer the story. What do you actually want the next decade to look like?", link: './goals.html', linkText: 'Open Goals →' },
+  ],
 };
+
+// ── CONTEXT CHECKS ────────────────────────────────────────────────────────────
+function hasBudgetData() {
+  try {
+    const s = JSON.parse(localStorage.getItem('atlas_budget_state') || localStorage.getItem('dad_budget_state') || 'null');
+    return s && s.income && Number(s.income) > 0;
+  } catch(e) { return false; }
+}
+function hasGoals() {
+  try {
+    const g = JSON.parse(localStorage.getItem('atlas_goals') || localStorage.getItem('dad_goals') || 'null');
+    return Array.isArray(g) && g.length > 0;
+  } catch(e) { return false; }
+}
+function hasAdminStarted() {
+  try {
+    const a = JSON.parse(localStorage.getItem('atlas_admin_checklists') || 'null');
+    return a && Object.keys(a).length > 0;
+  } catch(e) { return false; }
+}
+function hasWeekData() {
+  try {
+    const w = JSON.parse(localStorage.getItem('atlas_kidsweek') || localStorage.getItem('dad_kidsweek') || 'null');
+    return !!(w && w.pattern);
+  } catch(e) { return false; }
+}
+
+// ── NEXT ACTION LOGIC ─────────────────────────────────────────────────────────
+function buildActionQueue(phase) {
+  const queue = nextActionQueues[phase] || nextActionQueues['survive'];
+  const priority  = queue.filter(a => a.condition && a.condition());
+  const regular   = queue.filter(a => !a.condition);
+  const deferred  = queue.filter(a => a.condition && !a.condition());
+  return [...priority, ...regular, ...deferred];
+}
+
+function getSkipIdx(phase) {
+  try { return JSON.parse(localStorage.getItem('atlas_next_action_idx') || '{}')[phase] || 0; }
+  catch(e) { return 0; }
+}
+function setSkipIdx(phase, idx) {
+  const map = (() => { try { return JSON.parse(localStorage.getItem('atlas_next_action_idx') || '{}'); } catch(e) { return {}; } })();
+  map[phase] = idx;
+  localStorage.setItem('atlas_next_action_idx', JSON.stringify(map));
+}
+
+function renderNextAction(phase) {
+  const queue = buildActionQueue(phase);
+  const idx = getSkipIdx(phase) % queue.length;
+  const action = queue[idx];
+  if (!action) return;
+
+  const textEl  = document.getElementById('your-move-text');
+  const linkEl  = document.getElementById('your-move-link');
+  const countEl = document.getElementById('your-move-count');
+
+  if (textEl)  textEl.textContent = action.text;
+  if (countEl) countEl.textContent = `${idx + 1} of ${queue.length}`;
+  if (linkEl) {
+    if (action.link) {
+      linkEl.href = action.link;
+      linkEl.textContent = action.linkText || 'Open →';
+      linkEl.style.display = '';
+    } else {
+      linkEl.style.display = 'none';
+    }
+  }
+}
+
+function skipNextAction() {
+  const queue = buildActionQueue(currentPhase);
+  const next = (getSkipIdx(currentPhase) + 1) % queue.length;
+  setSkipIdx(currentPhase, next);
+  renderNextAction(currentPhase);
+}
 
 const itemLabels = {
   'item-f01': 'Find somewhere stable to live', 'item-f02': 'Tell employer address changed',
@@ -796,6 +941,8 @@ function setPhase(phase) {
 
   // Phase card content
   document.getElementById('phase-name').textContent = p.label;
+  const phaseNameInline = document.getElementById('phase-name-inline');
+  if (phaseNameInline) phaseNameInline.textContent = p.label;
   document.getElementById('phase-subtitle').textContent = p.subtitle;
   document.getElementById('phase-tip').textContent = p.tip;
   document.getElementById('phase-card-line').textContent = p.cardLine;
@@ -811,19 +958,13 @@ function setPhase(phase) {
   guideLink.textContent = `Read the ${p.label} guide →`;
   renderJourneyDots(phase);
 
-  // Next action
-  const na = nextActions[phase] || nextActions['survive'];
-  document.getElementById('next-action-text').textContent = na.text;
-  const naLink = document.getElementById('next-action-link');
-  naLink.href = na.link;
-  naLink.textContent = na.linkText;
-
   applyPhaseVisibility(phase);
   applyPhaseLayout(phase);
   renderMoneyCard(phase);
   renderWeekCard();
   renderAdminCard(phase);
   renderGoalsCard(phase);
+  renderNextAction(phase);
 }
 
 function applyPhaseVisibility(phase) {
@@ -837,13 +978,13 @@ function applyPhaseLayout(phase) {
   const grid = document.getElementById('dash-grid');
   grid.className = 'dash-grid';
 
-  const ids = ['card-phase','card-money','card-goals','card-week','card-admin','card-next'];
+  const ids = ['card-phase','card-money','card-goals','card-week','card-admin'];
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.style.order = ''; });
 
   const layouts = {
-    'stabilise':   ['card-phase','card-money','card-week','card-admin','card-goals','card-next'],
-    'rebuild':     ['card-phase','card-money','card-week','card-admin','card-goals','card-next'],
-    'new-chapter': ['card-phase','card-money','card-week','card-admin','card-goals','card-next'],
+    'stabilise':   ['card-phase','card-money','card-week','card-admin','card-goals'],
+    'rebuild':     ['card-phase','card-money','card-week','card-admin','card-goals'],
+    'new-chapter': ['card-phase','card-money','card-week','card-admin','card-goals'],
   };
 
   if (layouts[phase]) {
@@ -934,8 +1075,8 @@ function renderMoneyCard(phase) {
 
     const fmt     = n => '$' + Math.abs(Math.round(n)).toLocaleString();
     const fmtV    = n => (n < 0 ? '–' : '') + fmt(n);
-    const expPct  = takeHome > 0 ? Math.min(100, (totalExpenses / takeHome) * 100) : 100;
-    const surPct  = Math.max(0, 100 - expPct);
+    let expPct  = takeHome > 0 ? Math.min(100, (totalExpenses / takeHome) * 100) : 100;
+    let surPct  = Math.max(0, 100 - expPct);
 
     const fmtRunway = (target) => {
       if (cash <= 0) return ['—', 'add cash to net worth'];
@@ -952,14 +1093,39 @@ function renderMoneyCard(phase) {
     const [nwVal, nwSub]   = fmtNW();
 
     if (phase === 'survive' || phase === 'waiting-room') {
-      const hc = surplus < 0 ? 'negative' : 'positive';
-      heroLabel = 'Surplus'; heroVal = fmtV(surplus); heroSub = surplus < 0 ? 'short this month' : 'this month'; heroClass = hc;
-      tiles = [
-        { label: 'Take-Home',       val: fmtV(takeHome),           sub: 'after tax & super' },
-        { label: 'Essentials Out',  val: fmtV(essentials),         sub: 'must-pay floor' },
-        { label: 'Transition Burn', val: tcSpent > 0 ? fmt(tcSpent) : '—', sub: 'log lump-sum costs' },
-        { label: 'Runway',          val: rwVal,                    sub: rwSub },
-      ];
+      // Use simple mode data if the user has entered it
+      const sm = s.simpleMode || {};
+      if (sm.takeHome > 0) {
+        const smTH = sm.takeHome;
+        const smFixed = (sm.housing || 0) + (sm.food || 0) + (sm.utilities || 0) + (sm.transport || 0);
+        const smVar   = (sm.kids || 0) + (sm.legal || 0) + (sm.insurance || 0) + (sm.subs || 0) +
+                        (sm.medical || 0) + (sm.debt || 0) + (sm.entertainment || 0) + (sm.other || 0);
+        const smCS    = csOut;
+        const smTotal = smFixed + smVar + smCS;
+        const smCash  = smTH - smTotal;
+        const smExp   = smTH > 0 ? Math.min(100, (smTotal / smTH) * 100) : 100;
+        const smSur   = Math.max(0, 100 - smExp);
+        const smCC    = smCash > 0 ? 'positive' : smCash < 0 ? 'negative' : '';
+        heroLabel = 'Cash left'; heroVal = fmtV(smCash); heroSub = smCash < 0 ? 'short this month' : 'after all costs'; heroClass = smCC;
+        tiles = [
+          { label: 'Take-Home',    val: fmtV(smTH),    sub: 'after tax & super' },
+          { label: 'Fixed floor',  val: fmtV(smFixed), sub: 'housing + food + bills' },
+          { label: 'Variable',     val: fmtV(smVar),   sub: 'kids + everything else' },
+          { label: 'Child Support',val: smCS > 0 ? fmtV(smCS) : '—', sub: smCS > 0 ? 'monthly payment' : 'none set' },
+        ];
+        // Override bar with simple mode totals
+        expPct = smExp;
+        surPct = smSur;
+      } else {
+        const hc = surplus < 0 ? 'negative' : 'positive';
+        heroLabel = 'Surplus'; heroVal = fmtV(surplus); heroSub = surplus < 0 ? 'short this month' : 'this month'; heroClass = hc;
+        tiles = [
+          { label: 'Take-Home',       val: fmtV(takeHome),           sub: 'after tax & super' },
+          { label: 'Essentials Out',  val: fmtV(essentials),         sub: 'must-pay floor' },
+          { label: 'Transition Burn', val: tcSpent > 0 ? fmt(tcSpent) : '—', sub: 'log lump-sum costs' },
+          { label: 'Runway',          val: rwVal,                    sub: rwSub },
+        ];
+      }
     } else if (phase === 'rebuild') {
       heroLabel = 'Annual Savings'; heroVal = fmt(annualSavings) + '/yr'; heroSub = 'building wealth'; heroClass = annualSavings > 0 ? 'positive' : '';
       tiles = [
@@ -1242,6 +1408,15 @@ function renderGoalsCard(phase) {
   }
 }
 
+// ── PHASE CARD COLLAPSE ───────────────────────────────────────────────────────
+function togglePhaseCard() {
+  const card = document.getElementById('card-phase');
+  const btn = document.getElementById('phase-collapse-btn');
+  const isCollapsed = card.classList.toggle('collapsed');
+  if (btn) btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+  localStorage.setItem('atlas_phase_card_collapsed', isCollapsed ? '1' : '0');
+}
+
 // ── NAV ───────────────────────────────────────────────────────────────────────
 function toggleNav() {
   const nav = document.getElementById('mobile-nav');
@@ -1261,12 +1436,23 @@ document.addEventListener('click', e => {
 window.addEventListener('storage', e => {
   const nextPhase = normalisePhase(e.newValue);
   if (e.key === 'atlas_phase' && nextPhase && nextPhase !== currentPhase && phases[nextPhase]) setPhase(nextPhase);
+  if (e.key === 'atlas_budget_state' || e.key === 'dad_budget_state') {
+    renderMoneyCard(currentPhase);
+  }
 });
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 const urlPhase = normalisePhase(new URLSearchParams(location.search).get('phase'));
 const saved = getCurrentPhase();
 setPhase(urlPhase && phases[urlPhase] ? urlPhase : saved);
+
+// Restore phase card collapsed state
+if (localStorage.getItem('atlas_phase_card_collapsed') === '1') {
+  const phaseCard = document.getElementById('card-phase');
+  const collapseBtn = document.getElementById('phase-collapse-btn');
+  if (phaseCard) phaseCard.classList.add('collapsed');
+  if (collapseBtn) collapseBtn.setAttribute('aria-expanded', 'false');
+}
 </script>
 </body>
 </html>
