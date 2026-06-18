@@ -232,16 +232,16 @@
   .goal-bar-fill { height: 100%; background: var(--phase-accent); border-radius: 999px; transition: background 0.35s; }
 
   /* YOUR MOVE — inside phase card */
-  .your-move-section { background: #ffffff; border-radius: 12px; padding: 14px 16px; margin-top: 4px; }
+  .your-move-section { background: var(--ink); border-radius: 12px; padding: 14px 16px; margin-top: 8px; }
   .your-move-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .your-move-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-muted); }
-  .your-move-count { font-size: 11px; color: var(--ink-faded); }
-  .your-move-text { font-size: 14px; line-height: 1.6; color: var(--ink); font-weight: 500; margin-bottom: 10px; }
+  .your-move-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.75); }
+  .your-move-count { font-size: 11px; color: rgba(255,255,255,0.6); }
+  .your-move-text { font-size: 14px; line-height: 1.6; color: var(--paper); font-weight: 500; margin-bottom: 10px; }
   .your-move-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .your-move-link { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; }
+  .your-move-link { font-size: 13px; font-weight: 700; color: var(--paper); text-decoration: none; }
   .your-move-link:hover { text-decoration: underline; }
-  .your-move-skip { font-size: 13px; color: var(--ink-faded); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Space Grotesk', sans-serif; transition: color 0.15s; }
-  .your-move-skip:hover { color: var(--ink-muted); }
+  .your-move-skip { font-size: 13px; color: rgba(255,255,255,0.7); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Space Grotesk', sans-serif; transition: color 0.15s; }
+  .your-move-skip:hover { color: var(--paper); }
 
   /* PHASE CARD HERO */
   .card-phase {
@@ -542,7 +542,7 @@
         <!-- YOUR MOVE -->
         <div class="your-move-section">
           <div class="your-move-header">
-            <span class="your-move-label">Your move</span>
+            <span class="your-move-label">Next Move</span>
             <span class="your-move-count" id="your-move-count">1 of 5</span>
           </div>
           <div class="your-move-text" id="your-move-text"></div>
