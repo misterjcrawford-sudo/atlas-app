@@ -306,9 +306,16 @@ details.at-more { display: block; width: 100%; max-width: none; margin: 0 0 14px
 .at-more[open] > summary::after { content: ''; transform: rotate(-135deg) translateY(-3px); }
 .at-more > summary:hover { background: #fafaf9; }
 .at-more-hint { display: inline-block; margin-top: 4px; font-size: 13px; font-weight: 400; letter-spacing: 0; }
-/* Six nav items on phones: tighter pills, no scrolling at 360px and up */
-@media (max-width: 720px) { .at-links { gap: 0; justify-content: space-between; flex-wrap: nowrap; } .at-links a { padding: 8px 9px; font-size: 13px; white-space: nowrap; } }
-@media (max-width: 380px) { .at-links a { padding: 8px 7px; font-size: 12.5px; } }
+/* Five nav items on phones (Scripts lives in More). A flex row of pills, not the old six-column grid:
+   the grid squeezed each link into a fixed cell and its 44px minimum made the current pill taller than the row. */
+@media (max-width: 720px) {
+  .at-links { display: flex; gap: 2px; justify-content: space-between; flex-wrap: nowrap; overflow: visible; }
+  .at-links a { min-height: 0; padding: 9px 12px; font-size: 14px; line-height: 1.2; white-space: nowrap; text-align: center; }
+}
+@media (max-width: 380px) { .at-links a { padding: 8px 9px; font-size: 13px; } }
+/* More: the current page in the menu, and the More button marked when you're on one of its pages */
+.at-tools-menu a[aria-current=page] { background: var(--canvas); font-weight: 600; }
+.at-tools:has(.at-tools-menu a[aria-current=page]) summary { background: var(--ink); color: #fff; }
 /* Today in the Week fortnight: white ring, so lime only ever means handover (matches Today's strip) */
 .fort-day.today { box-shadow: none; outline: 2px solid #fff; outline-offset: 2px; }
 /* Handover days in the Week fortnight: the same lime dot as Today's strip, under the date */

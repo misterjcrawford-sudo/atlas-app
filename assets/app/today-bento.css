@@ -65,8 +65,11 @@ button { cursor: pointer; }
 .status { display: flex; flex-direction: column; justify-content: space-between; min-height: 330px; }
 .status h1 { font-size: clamp(44px, 6.2vw, 88px); line-height: .95; font-weight: 700; letter-spacing: -.05em; margin: 14px 0 16px; }
 .status p { margin: 0; font-size: 19px; color: var(--mute); max-width: 560px; letter-spacing: -.01em; }
-.phase { display: inline-flex; align-items: center; gap: 10px; margin-top: 24px; font-size: 13px; color: var(--mute); font-weight: 500; }
-.phase select { appearance: none; -webkit-appearance: none; border: 0; background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23111' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center; border-radius: 999px; padding: 10px 34px 10px 16px; font-weight: 600; font-size: 14px; color: var(--ink); }
+/* Phase: one capsule, same as the chip on every other page */
+.phase { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; justify-self: start; align-self: start; width: max-content; max-width: 100%; padding: 10px 16px; background: var(--bg); border-radius: 999px; font-size: 13px; color: var(--mute); font-weight: 500; cursor: pointer; }
+.phase select { appearance: none; -webkit-appearance: none; border: 0; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23111' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 2px center; padding: 2px 18px 2px 0; font-weight: 600; font-size: 14px; color: var(--ink); cursor: pointer; }
+.phase select:focus-visible { outline: none; }
+.phase:focus-within { outline: 3px solid var(--cobalt); outline-offset: 2px; }
 
 /* Countdown: how long until the next handover, the checklist that gets you ready, and the fortnight at a glance.
    Mid-stretch with the kids it becomes "day 3 of 7 together". */
@@ -269,5 +272,5 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12
   .log-grid button { min-height: 128px; font-size: 16px; }
 }
 /* Six nav items on phones: tighter pills, no scrolling at 360px and up */
-@media (max-width: 720px) { .at-links { gap: 0; justify-content: space-between; flex-wrap: nowrap; } .at-links a { padding: 8px 9px; font-size: 13px; white-space: nowrap; } }
-@media (max-width: 380px) { .at-links a { padding: 8px 7px; font-size: 12.5px; } }
+@media (max-width: 720px) { .at-links { gap: 2px; justify-content: space-between; flex-wrap: nowrap; overflow: visible; } .at-links a { padding: 9px 12px; font-size: 14px; line-height: 1.2; white-space: nowrap; } }
+@media (max-width: 380px) { .at-links a { padding: 8px 9px; font-size: 13px; } }
