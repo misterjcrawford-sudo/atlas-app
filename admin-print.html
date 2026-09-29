@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Checklist — Atlas</title>
+<meta name="robots" content="noindex,nofollow">
+<title>Admin checklist · Atlas</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+  
 
   :root {
     --ink: #1a1814;
@@ -26,7 +29,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     background: var(--paper);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
@@ -50,7 +53,7 @@
     border: none;
     border-radius: 999px;
     padding: 10px 22px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -94,9 +97,9 @@
     border-bottom: 2px solid var(--ink);
   }
   .print-logo {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.3px;
   }
@@ -111,9 +114,9 @@
 
   /* ── OVERVIEW PAGE ────────────────────────────────────────────────────────── */
   .page-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 32px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.6px;
     line-height: 1;
@@ -141,9 +144,8 @@
   }
   .overall-label {
     font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
   }
   .overall-count { font-size: 13px; font-weight: 600; color: var(--ink); }
@@ -162,7 +164,7 @@
     border-radius: 8px;
     padding: 12px 13px;
   }
-  .section-card.complete { border-color: var(--green); background: rgba(61,122,94,0.04); }
+  .section-card.complete { border-color: var(--green); background: rgba(212,240,98,0.12); }
   .section-card-title {
     font-size: 11px;
     font-weight: 600;
@@ -189,9 +191,9 @@
     border-bottom: 1.5px solid var(--ink);
   }
   .cl-section-name {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 15px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.2px;
   }
@@ -208,9 +210,8 @@
 
   .cl-subgroup-title {
     font-size: 9.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     padding: 9px 0 3px;
     margin-top: 3px;
@@ -264,9 +265,8 @@
   }
   .dates-table th {
     text-align: left;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 10px; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     font-weight: 600;
     padding: 5px 8px;
@@ -314,6 +314,7 @@
     .kd-note-block { break-inside: avoid; }
   }
 </style>
+<link rel="stylesheet" href="./assets/app/bento.css">
 </head>
 <body>
 

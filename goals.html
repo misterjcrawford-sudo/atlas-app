@@ -2,35 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>Goals — Atlas</title>
+<title>Goals · Atlas</title>
 <script src="./auth.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --paper: #FFFFFF;
-    --paper-card: #FAFAF7;
-    --paper-warm: #F0F0EA;
-    --paper-edge: #E8E8E0;
-    --ink: #0A0A0A;
+    --paper-card: #f7f7f5;
+    --paper-warm: #f2f2f0;
+    --paper-edge: #e7e7e4;
+    --ink: #111111;
     --ink-soft: #2A2A2A;
-    --ink-muted: #6E6E63;
-    --ink-faded: #A8A8A0;
-    --green: #0F4A3F;
-    --green-deep: #0A332B;
-    --amber: #EAC995;
-    --amber-deep: #DCBD8F;
-    --honey: #F5D996;
-    --sage: #C9E0B6;
-    --coral: #E27B5A;
-    --black: #0A0A0A;
+    --ink-muted: #62626a;
+    --ink-faded: #9a9aa0;
+    --green: #111111;
+    --green-deep: #1a2ccc;
+    --amber: #d4f062;
+    --amber-deep: #b9d63a;
+    --honey: #eef8c6;
+    --sage: #eef8c6;
+    --coral: #e0532f;
+    --black: #111111;
     --red: #C44A3A;
-    --shadow-card: 0 12px 40px rgba(15,74,63,0.08);
-    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --shadow-card: 0 12px 40px rgba(17,17,17,0.08);
+    --shadow-soft: 0 2px 8px rgba(17,17,17,0.05);
     --radius: 20px;
     --radius-lg: 28px;
     --radius-xl: 40px;
@@ -59,7 +57,7 @@
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-body);
     background: var(--paper);
     color: var(--ink);
     min-height: 100vh;
@@ -67,101 +65,8 @@
     overflow-x: hidden;
   }
 
-  /* TOP STRIP */
-  .top-strip {
-    background: var(--green);
-    color: var(--paper);
-    padding: 11px 24px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  .top-strip a {
-    color: var(--paper);
-    text-decoration: none;
-    font-weight: 600;
-    margin-left: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    padding-bottom: 1px;
-  }
-  .top-strip .arrow { display: inline-block; transition: transform 0.18s; margin-left: 4px; }
-  .top-strip a:hover .arrow { transform: translateX(3px); }
-
-  /* NAV */
-  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
-  .atlas-nav {
-    background: var(--paper-card);
-    border: 1px solid var(--paper-edge);
-    border-radius: 999px;
-    padding: 8px 8px 8px 22px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    box-shadow: var(--shadow-soft);
-    max-width: 1100px;
-    width: 100%;
-    height: 60px;
-  }
-  .nav-wordmark {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 1.45rem;
-    color: var(--ink);
-    text-decoration: none;
-    letter-spacing: -0.02em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
-  }
-  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
-
-  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
-  .nav-links a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 14px;
-    border-radius: 999px;
-    transition: background 0.15s;
-  }
-  .nav-links a:hover { background: var(--paper-warm); }
-  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
-
-  .nav-cta {
-    background: var(--amber);
-    color: var(--ink);
-    text-decoration: none;
-    padding: 11px 18px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 14px;
-    transition: background 0.15s, transform 0.15s;
-    border: 1px solid rgba(0,0,0,0.05);
-    white-space: nowrap;
-    cursor: pointer;
-  }
-  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
-  .nav-cta-outline { background: transparent; color: var(--ink); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--ink); white-space: nowrap; transition: background 0.15s, color 0.15s; }
-  .nav-cta-outline:hover { background: var(--ink); color: var(--paper); }
-
-  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; }
-  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
-  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
-  .mobile-nav.open { display: block; }
-  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
-  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
-
   @media (max-width: 760px) {
-    .nav-links { display: none; }
-    .hamburger { display: flex; margin-left: auto; }
-    .nav-cta { display: none; }
-    .nav-cta-outline { display: none; }
-    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
+
     .page-wrap { padding: 0 16px; }
   }
 
@@ -172,18 +77,10 @@
   /* HERO */
   .hero { padding: 64px 0 40px; }
   .hero-grid { display: grid; grid-template-columns: 1fr 460px; gap: 56px; align-items: end; }
-  .hero-eyebrow {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--ink-muted);
-    margin-bottom: 18px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
+  
   .hero h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: clamp(2.8rem, 6.4vw, 5.4rem);
     line-height: 0.98;
     letter-spacing: -0.045em;
@@ -207,15 +104,8 @@
     font-weight: 400;
   }
 
-  /* Phase chips */
-  .phase-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
   .phase-pill {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     padding: 9px 18px;
@@ -245,16 +135,15 @@
     color: var(--ink-muted);
     max-width: 580px;
     font-style: normal;
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-  }
+    font-family: var(--font-display);
+    font-weight: 700; letter-spacing: -.025em}
 
   .print-snapshot-btn {
     display: inline-flex; align-items: center; gap: 7px;
     background: var(--green); color: var(--paper);
     border-radius: 999px; border: none;
     padding: 10px 18px;
-    font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600;
+    font-family: var(--font-body); font-size: 13px; font-weight: 600;
     cursor: pointer; text-decoration: none;
     transition: background 0.15s;
   }
@@ -303,16 +192,15 @@
   .snap-stat.hero .snap-stat-sub { font-size: 13px; margin-top: 4px; color: var(--ink-soft); }
   .snap-stat-label {
     font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     margin-bottom: 4px;
   }
   .snap-stat-val {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 1.55rem;
-    font-weight: 500;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.02em;
   }
@@ -332,9 +220,8 @@
   }
   .anchor-label {
     font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     margin-bottom: 4px;
   }
@@ -351,10 +238,10 @@
     background: transparent;
     resize: vertical;
     outline: none;
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 15px;
     font-style: normal;
-    font-weight: 300;
+    font-weight: 700;
     color: var(--ink-soft);
     line-height: 1.45;
     letter-spacing: -0.01em;
@@ -378,9 +265,9 @@
     gap: 0;
   }
   .dossier-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-style: normal;
-    font-weight: 400;
+    font-weight: 700;
     font-size: 22px;
     color: var(--ink);
     margin-bottom: 12px;
@@ -391,8 +278,7 @@
     color: var(--paper);
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: .01em; 
     padding: 5px 12px;
     border-radius: 999px;
     display: inline-block;
@@ -425,7 +311,7 @@
     border: 1px solid var(--ink);
     border-radius: 999px;
     color: var(--paper);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -439,7 +325,7 @@
     border: 1px solid var(--paper-edge);
     border-radius: 999px;
     color: var(--ink-soft);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -456,9 +342,9 @@
     margin-top: 14px;
   }
   .flow-note-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-style: normal;
-    font-weight: 400;
+    font-weight: 700;
     font-size: 17px;
     color: var(--paper);
     margin-bottom: 6px;
@@ -485,18 +371,17 @@
     margin-bottom: 18px;
   }
   .suggested-panel-kicker {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     margin-bottom: 8px;
   }
   .suggested-panel-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 1.65rem;
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.05;
     color: var(--ink);
     letter-spacing: -0.02em;
@@ -519,8 +404,7 @@
     color: var(--ink-faded);
     margin-bottom: 12px;
   }
-  .suggested-phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-  .suggested-phase-row .phase-pill { font-size: 12px; padding: 7px 14px; }
+
   .suggested-dismiss {
     appearance: none;
     border: 1px solid var(--paper-edge);
@@ -528,11 +412,10 @@
     color: var(--ink-muted);
     border-radius: 999px;
     padding: 8px 14px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: .01em; 
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.15s ease;
@@ -566,11 +449,10 @@
   .suggested-tag {
     display: inline-flex;
     align-items: center;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 10.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     padding: 3px 9px;
     border-radius: 999px;
   }
@@ -582,7 +464,7 @@
     border: 1px solid var(--ink);
     background: var(--ink);
     color: var(--paper);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 1.1rem;
     line-height: 1;
     font-weight: 500;
@@ -612,7 +494,7 @@
     margin-bottom: 20px;
   }
   .filter-btn {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     padding: 7px 16px;
@@ -648,7 +530,7 @@
   .goal-group-header:hover { background: var(--paper-warm); }
   .group-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .group-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 14px;
     font-weight: 600;
     color: var(--ink);
@@ -656,10 +538,10 @@
     letter-spacing: -0.005em;
   }
   .group-pct {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 1.2rem;
     color: var(--ink);
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: -0.02em;
   }
   .group-chevron {
@@ -704,11 +586,10 @@
   .goal-title.done { text-decoration: line-through; color: var(--ink-faded); }
   .goal-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   .goal-tag {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 10.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     padding: 3px 9px;
     border-radius: 999px;
   }
@@ -724,7 +605,7 @@
     border: 1px solid var(--paper-edge);
     cursor: pointer;
     color: var(--ink-muted);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 14px;
     font-weight: 500;
     width: 28px;
@@ -749,7 +630,7 @@
     border: 1px solid var(--paper-edge);
     cursor: pointer;
     color: var(--ink-muted);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 12px;
     font-weight: 600;
     padding: 5px 12px;
@@ -784,7 +665,7 @@
   }
   .goal-bar-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
   .goal-pct-label {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 12px;
     font-weight: 600;
     color: var(--ink-muted);
@@ -805,11 +686,10 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-soft);
     background: var(--paper);
     border: 1px solid var(--paper-edge);
@@ -829,12 +709,11 @@
     border-radius: var(--radius);
   }
   .empty-state-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 1.4rem;
     color: var(--ink);
     margin-bottom: 8px;
-    letter-spacing: -0.02em;
-  }
+    letter-spacing: -0.02em; font-weight: 700}
   .empty-state-copy {
     font-size: 14px;
     color: var(--ink-muted);
@@ -865,8 +744,8 @@
     box-shadow: 0 24px 80px rgba(10,10,10,0.18);
   }
   .modal h3 {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: 1.7rem;
     color: var(--ink);
     margin-bottom: 22px;
@@ -875,11 +754,10 @@
   .modal-field { margin-bottom: 16px; }
   .modal-field label {
     display: block;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     margin-bottom: 6px;
   }
@@ -888,9 +766,9 @@
   .modal-field textarea {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid var(--paper-edge);
-    border-radius: 12px;
-    font-family: 'Space Grotesk', sans-serif;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-family: var(--font-body);
     font-size: 14px;
     font-weight: 500;
     color: var(--ink);
@@ -909,7 +787,7 @@
     border-radius: 999px;
     border: 1px solid var(--paper-edge);
     background: var(--paper);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     color: var(--ink-muted);
@@ -922,7 +800,7 @@
     border-radius: 999px;
     border: 1px solid var(--ink);
     background: var(--ink);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     color: var(--paper);
@@ -960,113 +838,6 @@
     border: 2px solid var(--paper);
   }
 
-  /* HELP CARD */
-  .help-card { background: var(--paper-warm); border: 1px solid var(--paper-edge); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
-  .help-card-toggle { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: none; border: none; cursor: pointer; text-align: left; font-family: 'Space Grotesk', sans-serif; }
-  .help-card-toggle:hover { background: var(--paper-edge); }
-  .help-card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); flex: 1; }
-  .help-card-chevron { font-size: 16px; color: var(--ink-faded); transition: transform 0.2s; line-height: 1; }
-  .help-card.open .help-card-chevron { transform: rotate(90deg); }
-  .help-card-body { display: none; padding: 2px 18px 14px; }
-  .help-card.open .help-card-body { display: block; }
-  .help-card-body p { font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); margin-bottom: 6px; }
-  .help-card-body p:last-child { margin-bottom: 0; }
-  .help-card-body strong { color: var(--ink); font-weight: 600; }
-
-  /* SITE FOOTER */
-  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; margin-top: 64px; }
-  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
-  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
-  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
-  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
-  .footer-col-links a:hover { color: var(--ink); }
-  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
-  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
-  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
-  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
-  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-  .footer-copy { font-size: 13px; color: var(--ink-faded); }
-  .footer-legal { display: flex; gap: 20px; }
-  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
-  .footer-legal a:hover { color: var(--ink); }
-  @media (max-width: 760px) {
-    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .footer-tagline { grid-column: 1 / -1; }
-    .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
-  }
-  @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
-
-  /* FOOTER (legacy) */
-  .footer {
-    background: var(--paper);
-    border-top: 1px solid var(--paper-edge);
-    padding: 64px 24px 0;
-    margin-top: 24px;
-  }
-  .footer-grid {
-    max-width: 1180px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 40px;
-    padding-bottom: 56px;
-  }
-  .footer-tagline {
-    font-family: 'Fraunces', serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.35;
-    color: var(--ink);
-    max-width: 24ch;
-    letter-spacing: -0.01em;
-  }
-  .footer-col h4 {
-    font-family: 'Fraunces', serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.15rem;
-    color: var(--ink-muted);
-    margin-bottom: 18px;
-  }
-  .footer-col a {
-    display: block;
-    color: var(--ink);
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 12px;
-    transition: color 0.15s;
-  }
-  .footer-col a:hover { color: var(--green); }
-  .footer-mark {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 0 24px;
-    overflow: hidden;
-  }
-  .footer-mark svg { width: 100%; height: auto; display: block; }
-  .footer-bottom {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 20px 0 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    color: var(--ink-muted);
-    border-top: 1px solid var(--paper-edge);
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .footer-bottom-links { display: flex; gap: 20px; }
-  .footer-bottom-links a { color: var(--ink-muted); text-decoration: none; }
-  .footer-bottom-links a:hover { color: var(--ink); }
-  @media (max-width: 1024px) {
-    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-  }
-
   /* Responsive */
   @media (max-width: 1120px) {
     .hero-grid, .masthead { grid-template-columns: 1fr; gap: 28px; }
@@ -1080,84 +851,28 @@
     .suggested-panel-head { flex-direction: column; }
     .modal { padding: 26px 22px; }
     .modal-row { grid-template-columns: 1fr; }
-    .footer { padding: 48px 16px 0; }
+    
     .goal-progress-wrap, .goal-note { padding-left: 0; }
   }
 </style>
+<link rel="stylesheet" href="./assets/app/interface.css">
+<link rel="stylesheet" href="./assets/app/bento.css">
 </head>
-<body>
+<body class="atlas-app" data-module="goals">
 
-<!-- TOP STRIP -->
-<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
+<a class="at-skip" href="#at-content">Skip to content</a>
+<header class="at-header">
+ <div class="at-nav"><a class="at-brand" href="./index.html" aria-label="Atlas, Today">Atlas<b>.</b></a><nav class="at-links" aria-label="Main navigation"><a href="./index.html">Today</a><a href="./money.html">Money</a><a href="./week.html">Week</a><a href="./records.html">Records</a><a href="./admin.html">Admin</a><a href="./scripts.html">Scripts</a></nav>
+ <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="./goals.html">Goals</a><a href="./companion-pack.html">Companion pack</a><a href="./admin.html#move-data">Back up / import data</a><a href="./how-it-works.html">How Atlas works</a></div></details></div>
+ <div class="at-heading"><div><div class="at-kicker">Goals</div><h1>Build from where you are.</h1><p id="phase-context-text">A few useful goals, at a pace that works for you.</p></div><a class="at-phase-chip" href="./index.html#at-phase"><span class="at-phase-chip-label">Phase</span> <strong data-phase-label>Stabilise</strong><span class="at-phase-chip-action">Change</span></a></div>
+</header>
 
-<!-- NAV -->
-<div class="nav-wrap">
-  <nav class="atlas-nav">
-    <a href="./index.html" class="nav-wordmark">
-      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="24" cy="7" r="2" fill="#D97757"/>
-      </svg>
-      Atlas
-    </a>
-    <ul class="nav-links">
-      <li><a href="./index.html">Home</a></li>
-      <li><a href="./budget.html">Finances</a></li>
-      <li><a href="./kids-week.html">Week</a></li>
-      <li><a href="./admin.html">Admin</a></li>
-      <li><a href="./records.html">Records</a></li>
-      <li><a href="./goals.html" class="active">Goals</a></li>
-      <li><a href="./guides.html">Guides</a></li>
-    </ul>
-    <a href="./companion-pack.html" class="nav-cta-outline">Companion Pack</a>
-    <a href="./how-it-works.html" class="nav-cta">How Atlas Works</a>
-    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-</div>
-<div class="mobile-nav" id="mobile-nav">
-  <a href="./index.html">Home</a>
-  <a href="./budget.html">Finances</a>
-  <a href="./kids-week.html">Week</a>
-  <a href="./admin.html">Admin</a>
-  <a href="./records.html">Records</a>
-  <a href="./goals.html" class="active">Goals</a>
-  <a href="./guides.html">Guides</a>
-  <a href="./companion-pack.html">Companion Pack</a>
-  <a href="./how-it-works.html">How Atlas Works</a>
-</div>
-
-<div class="page-wrap">
+<main class="page-wrap" id="at-content">
   <div class="container">
 
-    <!-- HERO -->
+    <!-- HERO: overall progress, full width. Headline number and bar | four stats | anchor -->
     <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <div class="hero-eyebrow">Atlas — Goals</div>
-          <h1>
-            <span class="soft">Set your</span><br>
-            <span class="bold">next targets.</span>
-          </h1>
-          <p class="hero-sub">Choose practical goals for money, home, health, parenting, work and the life you're rebuilding.</p>
-          <div class="phase-row" id="hero-phase-row">
-            <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
-            <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
-            <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
-            <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
-            <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
-          </div>
-          <div class="phase-context" id="phase-context-text">
-            Pick the phase that matches where you are. Atlas tunes the suggested goals and guidance to match.
-          </div>
-          <a href="./goals-print.html" class="print-snapshot-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Print goals
-          </a>
-        </div>
-        <div>
-          <div class="snap-panel">
+      <div class="snap-panel goals-hero">
             <div class="snap-bar">
               <div class="snap-bar-fill" id="hero-fill" style="width:0%"></div>
             </div>
@@ -1199,36 +914,14 @@
               ></textarea>
             </div>
           </div>
-        </div>
+
+      <div class="print-action-row">
+          <a href="./goals-print.html" class="print-snapshot-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print goals
+          </a>
       </div>
     </section>
-
-    <!-- HELP CARD -->
-    <div class="help-card" id="help-card">
-      <button class="help-card-toggle" id="help-toggle" onclick="toggleHelp()" aria-expanded="false">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-faded);flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span class="help-card-label">What this tool does</span>
-        <span class="help-card-chevron">›</span>
-      </button>
-      <div class="help-card-body" id="help-body">
-        <p>Use this page when life is stable enough to look forward. Set practical goals for money, home, parenting, health, work and identity.</p>
-        <p><strong>First goal: choose direction without overwhelming yourself.</strong></p>
-      </div>
-    </div>
-    <script>
-      function toggleHelp() {
-        const card = document.getElementById('help-card');
-        const isOpen = card.classList.toggle('open');
-        document.getElementById('help-toggle').setAttribute('aria-expanded', isOpen);
-        localStorage.setItem('atlas_help_goals', isOpen ? '1' : '0');
-      }
-      (function() {
-        if (localStorage.getItem('atlas_help_goals') !== '0') {
-          document.getElementById('help-card').classList.add('open');
-          document.getElementById('help-toggle').setAttribute('aria-expanded', 'true');
-        }
-      })();
-    </script>
 
     <!-- MASTHEAD -->
     <div class="masthead">
@@ -1243,14 +936,7 @@
             </div>
             <button class="suggested-dismiss" type="button" onclick="dismissSuggestedGoals()">Dismiss</button>
           </div>
-          <div class="suggested-phase-copy">Change phase to see a different set of suggestions.</div>
-          <div class="suggested-phase-row">
-            <button class="phase-pill" data-phase="waiting-room" onclick="setPhase('waiting-room')">Waiting Room</button>
-            <button class="phase-pill" data-phase="survive" onclick="setPhase('survive')">Survive</button>
-            <button class="phase-pill" data-phase="stabilise" onclick="setPhase('stabilise')">Stabilise</button>
-            <button class="phase-pill" data-phase="rebuild" onclick="setPhase('rebuild')">Rebuild</button>
-            <button class="phase-pill" data-phase="new-chapter" onclick="setPhase('new-chapter')">New Chapter</button>
-          </div>
+          <div class="suggested-phase-copy">Suggestions match your phase. <a href="./index.html#at-phase">Change your phase on Today</a>.</div>
           <div class="suggested-grid" id="suggested-grid"></div>
         </div>
 
@@ -1286,57 +972,9 @@
     </div>
 
   </div>
-</div>
+</main>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="footer-top">
-    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
-    <div>
-      <div class="footer-col-heading">Modules</div>
-      <ul class="footer-col-links">
-        <li><a href="./budget.html">Finances</a></li>
-        <li><a href="./kids-week.html">Kids Week</a></li>
-        <li><a href="./goals.html">Goals</a></li>
-        <li><a href="./admin.html">Admin</a></li>
-        <li><a href="./records.html">Records</a></li>
-        <li><a href="./guides.html">Guides</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-heading">About</div>
-      <ul class="footer-col-links">
-        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
-        <li><a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-heading">Reading</div>
-      <ul class="footer-col-links">
-        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">All articles</a></li>
-        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">The Sunday email</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-mark">
-    <div class="footer-mark-inner">
-      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
-        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="58" cy="14" r="5" fill="#D97757"/>
-      </svg>
-      <div class="footer-mark-word">Atlas</div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="footer-bottom-inner">
-      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
-      <div class="footer-legal">
-        
-        <a href="https://www.get-atlas.com.au/privacy/">Privacy &amp; Terms</a>
-      </div>
-    </div>
-  </div>
-</footer>
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="./admin.html#move-data">Back up your data</a><a href="./terms.html">Privacy &amp; terms</a><a href="./how-it-works.html">How it works</a></nav></footer>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
@@ -1366,7 +1004,7 @@
       <label>Progress (0–100%)</label>
       <div class="progress-slider-wrap">
         <input type="range" id="m-progress" min="0" max="100" value="0" oninput="$('m-progress-val').textContent=this.value+'%'">
-        <span id="m-progress-val" style="font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);min-width:42px;text-align:right">0%</span>
+        <span id="m-progress-val" style="font-family: var(--font-body);font-weight:600;color:var(--ink);min-width:42px;text-align:right">0%</span>
       </div>
     </div>
     <div class="modal-field">
@@ -1384,11 +1022,11 @@
 const $ = id => document.getElementById(id);
 
 const CATS = {
-  financial: { label: 'Financial',     color: '#0F4A3F', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
-  career:    { label: 'Career & Work', color: '#2A2A2A', tag_bg: '#F0F0EA', tag_color: '#0A0A0A' },
-  parenting: { label: 'Parenting',     color: '#DCBD8F', tag_bg: '#EAC995', tag_color: '#0A0A0A' },
-  fitness:   { label: 'Fitness',       color: '#0A332B', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
-  personal:  { label: 'Personal',      color: '#E27B5A', tag_bg: '#F5D996', tag_color: '#0A0A0A' },
+  financial: { label: 'Financial',     color: '#9fc21a', tag_bg: '#eef8c6', tag_color: '#111111' },
+  career:    { label: 'Career & Work', color: '#111111', tag_bg: '#f2f2f0', tag_color: '#111111' },
+  parenting: { label: 'Parenting',     color: '#ff6a45', tag_bg: '#ffe3da', tag_color: '#111111' },
+  fitness:   { label: 'Fitness',       color: '#2743ff', tag_bg: '#dfe4ff', tag_color: '#111111' },
+  personal:  { label: 'Personal',      color: '#a58bff', tag_bg: '#ece6ff', tag_color: '#111111' },
 };
 
 const PHASE_LABEL = { 'waiting-room':'Waiting Room', survive:'Survive', stabilise:'Stabilise', rebuild:'Rebuild', 'new-chapter':'New Chapter' };
@@ -2096,17 +1734,6 @@ function saveGoal() {
   save(); closeModal(); render();
 }
 
-function toggleNav() {
-  const nav = $('mobile-nav'); const ham = $('hamburger');
-  const open = nav.classList.toggle('open'); ham.classList.toggle('open', open);
-}
-
-document.addEventListener('click', e => {
-  const nav = $('mobile-nav'); const ham = $('hamburger');
-  if (!nav || !ham) return;
-  if (!nav.contains(e.target) && !ham.contains(e.target)) { nav.classList.remove('open'); ham.classList.remove('open'); }
-});
-
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && $('modal-overlay').classList.contains('open')) closeModal();
 });
@@ -2121,5 +1748,6 @@ document.addEventListener('keydown', e => {
   render();
 })();
 </script>
+<script src="./assets/app/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,3649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Money · Atlas</title>
+<script src="./auth.js"></script>
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #f7f7f5;
+    --paper-warm: #f2f2f0;
+    --paper-edge: #e7e7e4;
+    --ink: #111111;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #62626a;
+    --ink-faded: #9a9aa0;
+    --green: #111111;
+    --green-deep: #1a2ccc;
+    --amber: #d4f062;
+    --amber-deep: #b9d63a;
+    --honey: #eef8c6;
+    --sage: #eef8c6;
+    --coral: #e0532f;
+    --black: #111111;
+    --red: #C44A3A;
+    --shadow-card: 0 12px 40px rgba(17,17,17,0.08);
+    --shadow-soft: 0 2px 8px rgba(17,17,17,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 760px) {
+
+    .page-wrap { padding: 0 16px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 460px; gap: 44px; align-items: end; }
+  
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.8rem, 6.4vw, 5.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .soft {
+    color: var(--ink);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero h1 .bold { color: var(--ink); font-weight: 500; }
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  .phase-pill {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper-card);
+    transition: all 0.18s ease;
+    letter-spacing: -0.005em;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
+  .phase-pill[data-phase="survive"].active      { background: var(--coral);  border-color: var(--coral);  color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active    { background: var(--honey);  border-color: var(--honey);  color: var(--ink);   }
+  .phase-pill[data-phase="rebuild"].active      { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
+  .phase-pill[data-phase="new-chapter"].active  { background: var(--sage);   border-color: var(--sage);   color: var(--ink);   }
+  .phase-context {
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 580px;
+    font-style: normal;
+    font-family: var(--font-display);
+    font-weight: 700; letter-spacing: -.025em}
+
+  /* View toggle */
+  .view-toggle {
+    display: inline-flex;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+  }
+  .view-btn {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--ink-muted);
+    transition: all 0.15s ease;
+  }
+  .view-btn.active { background: var(--ink); color: var(--paper); }
+
+  .print-snapshot-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green); color: var(--paper);
+    border-radius: 999px; border: none;
+    padding: 10px 18px;
+    font-family: var(--font-body); font-size: 13px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .print-snapshot-btn:hover { background: var(--green-deep); }
+
+  /* Snap panel */
+  .snap-panel {
+    background: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 18px 50px rgba(10,10,10,0.18);
+    color: var(--paper);
+  }
+  .snap-panel-head {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 14px;
+  }
+  .snap-bar {
+    height: 12px;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    background: var(--paper);
+  }
+  .snap-bar-spent {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .snap-bar-legend {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 18px;
+    letter-spacing: 0.02em;
+  }
+  .snap-bar-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .snap-bar-legend-item strong { color: var(--paper); font-weight: 600; margin-left: 4px; }
+  .snap-bar-legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .snap-bar-legend-dot.dark { background: var(--ink); }
+  .snap-bar-legend-dot.light { background: var(--paper); border: 1px solid rgba(255,255,255,0.4); box-sizing: border-box; }
+  .snap-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .snap-stat {
+    background: var(--paper-card);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 14px;
+    padding: 16px 16px;
+  }
+  .snap-stat-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .snap-stat-val {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .snap-stat-val.positive { color: var(--green); }
+  .snap-stat-val.negative { color: var(--coral); }
+  .snap-stat-val.warn { color: var(--amber-deep); }
+  .snap-stat-val.purple { color: var(--amber-deep); }
+  .snap-stat-sub { font-size: 12px; color: var(--ink-faded); margin-top: 2px; }
+  .snap-stat.hero {
+    grid-column: 1 / -1;
+    padding: 20px 22px 18px;
+    background: var(--paper);
+  }
+  .snap-stat.hero .snap-stat-label { font-size: 11px; }
+  .snap-stat.hero .snap-stat-val {
+    font-size: 2.6rem;
+    line-height: 1.05;
+    margin-top: 2px;
+  }
+  .snap-stat.hero .snap-stat-sub { font-size: 12px; margin-top: 6px; }
+
+  /* ── MASTHEAD GRID ── */
+  .masthead { display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start; padding-bottom: 56px; }
+
+  /* ── DOSSIER ── */
+  .dossier {
+    position: sticky;
+    top: 24px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 26px 22px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .dossier-title {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .dossier-phase {
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    padding: 5px 12px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 18px;
+    width: fit-content;
+  }
+
+  .dossier-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--paper-edge);
+    font-size: 13.5px;
+  }
+  .dossier-row:last-of-type { border-bottom: none; }
+  .dossier-row-label { color: var(--ink-muted); font-weight: 500; }
+  .dossier-row-val { font-weight: 600; color: var(--ink); }
+  .dossier-row-val.green { color: var(--green); }
+  .dossier-row-val.red { color: var(--coral); }
+  .dossier-row-val.accent { color: var(--green); }
+  .dossier-row-val.purple { color: var(--amber-deep); }
+
+  .dossier-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 12px 0; }
+
+  /* Surplus bar */
+  .surplus-bar-wrap { margin-top: 6px; margin-bottom: 14px; }
+  .surplus-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--paper-warm);
+    overflow: hidden;
+  }
+  .surplus-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--green);
+    transition: width 0.4s ease;
+  }
+
+  /* CSA estimator in dossier */
+  .csa-section {
+    margin-top: 6px;
+    border-top: 1px solid var(--paper-edge);
+    padding-top: 18px;
+  }
+  .csa-title {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .csa-field { margin-bottom: 10px; }
+  .csa-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .csa-field input, .csa-field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .csa-field input:focus, .csa-field select:focus { border-color: var(--amber-deep); }
+  .csa-result {
+    background: var(--amber);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+  .csa-result-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .csa-result-val {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .csa-result-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+  .csa-result-footnote {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+  .csa-result-footnote a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+  }
+  .csa-ages { display: grid; gap: 6px; margin: -2px 0 12px; }
+  .csa-age-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--ink-soft); }
+  .csa-age-row .csa-seg { display: inline-flex; border: 1px solid var(--line, rgba(0,0,0,.14)); border-radius: 999px; padding: 2px; background: var(--card, #fff); }
+  .csa-age-row .csa-seg button { border: 0; background: transparent; font: inherit; font-size: 12.5px; padding: 5px 11px; border-radius: 999px; cursor: pointer; color: var(--ink-soft); }
+  .csa-age-row .csa-seg button[aria-pressed="true"] { background: var(--ink, #111); color: #fff; }
+  .csa-breakdown { font-size: 12px; color: var(--ink-muted); margin-top: 6px; line-height: 1.5; }
+  .csa-breakdown p { margin: 0 0 4px; }
+  .csa-breakdown .csa-warn { color: var(--ink); font-weight: 600; }
+  .csa-help { font-size: 12px; color: var(--ink-muted); line-height: 1.5; margin: -4px 0 12px; }
+  .csa-section .csa-help a { color: inherit; text-decoration: underline; }
+  .csa-actions { display: flex; gap: 10px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+  .csa-apply-btn {
+    appearance: none;
+    border: none;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 9px 16px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .csa-apply-btn:hover { background: var(--green-deep); transform: translateY(-1px); }
+  .csa-sync-note { font-size: 12px; color: var(--ink-muted); }
+  .cs-estimate-note { font-size: 12.5px; color: var(--ink-soft); padding-top: 10px; line-height: 1.55; font-style: normal; }
+  .cs-mode-toggle {
+    display: inline-flex;
+    background: var(--paper-warm);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+  .cs-mode-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cs-mode-btn.active { background: var(--ink); color: var(--paper); }
+
+  /* ── CARDS ── */
+  .cards-col { display: flex; flex-direction: column; gap: 14px; }
+
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover { box-shadow: var(--shadow-soft); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+  .card-header:hover { background: var(--paper-warm); }
+  .card-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: var(--green); }
+  .dot-purple { background: var(--amber-deep); }
+  .dot-teal { background: var(--sage); }
+  .dot-orange { background: var(--honey); }
+  .dot-red { background: var(--coral); }
+  .dot-blue { background: var(--ink-soft); }
+  .dot-yellow { background: var(--green-deep); }
+  .dot-pink { background: var(--amber); }
+
+  .card-title {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    letter-spacing: -0.005em;
+  }
+  .card-total {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+    font-weight: 700;
+    margin-left: auto;
+    letter-spacing: -0.02em;
+  }
+  .card-total.income-total { color: var(--green); }
+  .card-total.saving-total { color: var(--green-deep); }
+  .card-chevron {
+    width: 20px; height: 20px; flex-shrink: 0;
+    color: var(--ink-faded);
+    transition: transform 0.2s ease;
+  }
+  .card-chevron.open { transform: rotate(180deg); }
+
+  .card-body { display: none; padding: 0 24px 22px; }
+  .card-body.open { display: block; }
+
+  /* Slider rows */
+  .slider-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--paper-edge);
+  }
+  .slider-row:last-child { border-bottom: none; }
+  .slider-row-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .slider-row-label .badge {
+    font-size: 10px;
+    font-weight: 700; 
+    letter-spacing: .01em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--amber);
+    color: var(--ink);
+  }
+  .slider-row-label .badge.priority { background: var(--honey); color: var(--ink); }
+  .slider-tools { display: flex; align-items: center; gap: 6px; }
+  .reorder-btn {
+    appearance: none;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    width: 26px;
+    height: 26px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reorder-btn:hover { background: var(--paper-warm); color: var(--ink); }
+  .reorder-btn:disabled { opacity: 0.35; cursor: default; }
+  .helper-btn {
+    appearance: none;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .helper-btn:hover { background: var(--paper-warm); color: var(--ink); }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--paper-warm);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    border: 2px solid var(--paper);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: 2px solid var(--paper);
+  }
+  .slider-val {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+    width: 96px;
+    flex: 0 0 96px;
+    box-sizing: border-box;
+    letter-spacing: -0.01em;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 6px;
+    cursor: text;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .slider-val:hover { background: var(--paper); border-color: var(--paper-edge); }
+  .slider-val:focus {
+    outline: none;
+    background: var(--paper);
+    border-color: var(--ink);
+  }
+  .remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-faded); font-size: 18px; padding: 0 0 0 6px;
+    line-height: 1; transition: color 0.15s ease;
+  }
+  .remove-btn:hover { color: var(--coral); }
+
+  /* Savings rows */
+  .savings-row { padding: 16px 0 18px; border-bottom: 1px solid var(--paper-edge); }
+  .savings-row:last-child { border-bottom: none; }
+  .savings-row-top { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .savings-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .savings-name .badge {
+    font-size: 10px;
+    font-weight: 700; 
+    letter-spacing: .01em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--honey);
+    color: var(--ink);
+  }
+  .savings-val {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-deep);
+    width: 96px;
+    flex: 0 0 96px;
+    box-sizing: border-box;
+    text-align: right;
+    letter-spacing: -0.01em;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 6px;
+    cursor: text;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .savings-val:hover { background: var(--paper); border-color: var(--paper-edge); }
+  .savings-val:focus { outline: none; background: var(--paper); border-color: var(--green); }
+  .savings-slider-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .savings-slider-meta {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .savings-slider-row input[type=range] { margin: 0; }
+  .savings-meta-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .savings-meta-item label {
+    display: inline;
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .savings-meta-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .savings-meta-item input {
+    width: 100%;
+    padding: 3px 0 4px;
+    border: none;
+    border-bottom: 1px solid var(--paper-edge);
+    background: transparent;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    outline: none;
+    letter-spacing: -0.01em;
+  }
+  .savings-meta-item input:focus { border-bottom-color: var(--ink); }
+  .savings-progress-line {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .savings-progress-line strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Net worth */
+  .nw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .nw-item label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .nw-item input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .nw-item input:focus { border-color: var(--ink); }
+  .nw-divider { grid-column: 1 / -1; border-top: 1px solid var(--paper-edge); margin: 4px 0; }
+  .nw-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 18px; }
+  .nw-stat {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .nw-stat-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .nw-stat-val {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .nw-stat-val.pos { color: var(--green); }
+  .nw-stat-val.neg { color: var(--coral); }
+
+  /* Add item button */
+  .add-item-row { padding: 14px 0 0; }
+  .add-item-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .add-item-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* Income card specifics */
+  .income-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .income-input-group { }
+  .income-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+  .income-input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+  .income-input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--paper);
+    outline: none;
+    transition: border-color 0.15s ease;
+    letter-spacing: -0.01em;
+  }
+  .income-input-group input:focus { border-color: var(--green); }
+  .input-mode-toggle {
+    display: inline-flex;
+    background: var(--paper-warm);
+    border-radius: 14px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .input-mode-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .input-mode-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .income-breakdown {
+    background: var(--amber);
+    color: var(--ink);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .ib-item { }
+  .ib-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .ib-val {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  /* ── FLOW NOTE ── */
+  .flow-note {
+    background: var(--green);
+    color: var(--paper);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-top: 16px;
+  }
+  .flow-note-title {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--paper);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .flow-note span { color: rgba(255,255,255,0.85); }
+
+  /* TRANSITION COSTS */
+  .tc-section {
+    margin: 32px 0 40px;
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 28px 28px 26px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .tc-section-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 18px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    padding-right: 44px;
+  }
+  .tc-section-kicker {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .tc-section-title {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .tc-section-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    max-width: 540px;
+  }
+  .tc-section-totals {
+    text-align: right;
+    min-width: 220px;
+  }
+  .tc-totals-label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .tc-totals-val {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .tc-totals-val .of { color: var(--ink-faded); font-weight: 400; font-size: 0.85em; }
+  .tc-totals-bar {
+    margin-top: 8px;
+    height: 6px;
+    background: rgba(10,10,10,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .tc-totals-bar-fill {
+    height: 100%;
+    background: var(--ink);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .tc-totals-bar-fill.over { background: var(--coral); }
+  .tc-rows { display: flex; flex-direction: column; gap: 10px; }
+  .tc-row {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 16px;
+    padding: 16px 18px;
+    transition: border-color 0.18s ease;
+  }
+  .tc-row:hover { border-color: var(--ink-faded); }
+  .tc-row-collapsed {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+  }
+  .tc-row-main { min-width: 0; }
+  .tc-row-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+  }
+  .tc-row-meta {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--ink-faded);
+    letter-spacing: 0.01em;
+  }
+  .tc-row-meta .sep { margin: 0 6px; opacity: 0.4; }
+  .tc-row-numbers {
+    text-align: right;
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -.025em}
+  .tc-row-spent {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .tc-row-spent.over { color: var(--coral); }
+  .tc-row-est {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-faded);
+    letter-spacing: .01em; 
+    margin-top: 2px;
+  }
+  button.tc-row-est.tc-set-est {
+    background: transparent;
+    border: 0;
+    padding: 2px 0 0 0;
+    cursor: pointer;
+    color: var(--amber-deep);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+  }
+  button.tc-row-est.tc-set-est:hover { color: var(--ink); text-decoration: underline; }
+  .tc-row-actions { display: flex; gap: 6px; align-items: center; }
+  .tc-row-action-btn {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .tc-row-action-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tc-row-action-btn.icon { padding: 7px 9px; }
+  .tc-row-bar {
+    margin-top: 12px;
+    height: 5px;
+    background: rgba(10,10,10,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .tc-row-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .tc-row-bar-fill.over { background: var(--coral); }
+  .tc-row-bar-fill.no-est {
+    background: repeating-linear-gradient(
+      135deg,
+      var(--honey) 0,
+      var(--honey) 6px,
+      rgba(255,255,255,0.55) 6px,
+      rgba(255,255,255,0.55) 10px
+    );
+  }
+  .tc-totals-bar-fill.no-est {
+    background: repeating-linear-gradient(
+      135deg,
+      var(--honey) 0,
+      var(--honey) 6px,
+      rgba(255,255,255,0.55) 6px,
+      rgba(255,255,255,0.55) 10px
+    );
+  }
+
+  .tc-row-expanded {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--paper-edge);
+    display: none;
+  }
+  .tc-row.open .tc-row-expanded { display: block; }
+  .tc-row-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .tc-row-fields.tc-fields-trackonly {
+    grid-template-columns: 1fr;
+    max-width: 240px;
+  }
+  .tc-trackonly-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tc-trackonly-cb {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--ink);
+    cursor: pointer;
+    margin: 0;
+  }
+  .tc-trackonly-text {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: -0.01em;
+  }
+  .tc-field-label {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .tc-field-val {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink); letter-spacing: -.025em}
+  .tc-field-val.green { color: var(--green); }
+  .tc-field-val.red { color: var(--coral); }
+  .tc-field-input {
+    background: var(--paper-card);
+    border: 1px solid transparent;
+    border-radius: 14px;
+    padding: 6px 10px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s; letter-spacing: -.025em}
+  .tc-field-input:focus { border-color: var(--ink); }
+
+  .tc-payments-head {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .tc-payments-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .tc-payment-row {
+    display: grid;
+    grid-template-columns: 92px 96px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--paper-card);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .tc-payment-date {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+  .tc-payment-amount {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink); letter-spacing: -.025em}
+  .tc-payment-note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tc-payment-note.empty { color: var(--ink-faded); font-style: normal; }
+  .tc-payment-actions { display: flex; gap: 6px; }
+  .tc-payment-x {
+    background: transparent;
+    border: none;
+    color: var(--ink-faded);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .tc-payment-x:hover { color: var(--coral); background: rgba(199,84,68,0.08); }
+  .tc-payments-empty {
+    font-size: 12px;
+    color: var(--ink-faded);
+    padding: 8px 10px;
+  }
+  .tc-row-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tc-row-buttons-left { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tc-row-buttons-right { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .tc-add-row-btn {
+    margin-top: 14px;
+    background: var(--canvas);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 14px 18px;
+    width: 100%;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+    transition: all 0.18s ease;
+  }
+  .tc-add-row-btn:hover {
+    background: var(--paper-card);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .tc-row.archived { opacity: 0.55; }
+  .tc-row.archived .tc-row-title::after {
+    content: ' · archived';
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--ink-faded);
+    font-weight: 400;
+  }
+
+  .tc-empty {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--ink-faded);
+    font-size: 14px;
+  }
+
+  /* TRANSITION COSTS — modal */
+  .tc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+  }
+  .tc-modal-overlay.open { display: flex; }
+  .tc-modal {
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 24px 70px rgba(10,10,10,0.3);
+  }
+  .tc-modal-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .tc-modal-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .tc-modal-field { margin-bottom: 14px; }
+  .tc-modal-field-label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .tc-modal-input {
+    width: 100%;
+    background: var(--paper-card);
+    border: 1px solid transparent;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s; font-weight: 700; letter-spacing: -.025em}
+  .tc-modal-input:focus { border-color: var(--ink); }
+  .tc-modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+  .tc-modal-btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper-card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tc-modal-btn:hover { background: var(--paper-warm); }
+  .tc-modal-btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tc-modal-btn.primary:hover { background: #000; }
+  .tc-modal-btn.danger { color: var(--coral); }
+  .tc-modal-btn.danger:hover { background: rgba(199,84,68,0.08); }
+
+  /* Responsive */
+  @media (max-width: 1120px) {
+    .hero-grid, .masthead { grid-template-columns: 1fr; gap: 28px; }
+    .dossier { position: static; }
+  }
+  @media (max-width: 760px) {
+    .hero { padding: 36px 0 24px; }
+    .hero h1 { font-size: 2.4rem; }
+    .income-inputs { grid-template-columns: 1fr; }
+    .nw-grid { grid-template-columns: 1fr; }
+    .nw-summary { grid-template-columns: 1fr 1fr; }
+    .snap-panel { padding: 20px 18px; border-radius: 22px; }
+    .snap-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .snap-stat { min-width: 0; padding: 14px 12px; }
+    .snap-stat-val { font-size: 1.2rem; overflow-wrap: break-word; }
+    .snap-stat.hero { padding: 18px 16px 16px; }
+    .snap-stat.hero .snap-stat-val { font-size: 2rem; }
+    .snap-stat-sub { font-size: 11px; }
+    
+    .tc-section-head { grid-template-columns: 1fr; }
+    .tc-section-totals { text-align: left; min-width: 0; }
+    .tc-row-collapsed { grid-template-columns: 1fr; gap: 10px; }
+    .tc-row-numbers { text-align: left; }
+    .tc-row-actions { justify-content: flex-start; }
+    .tc-row-fields { grid-template-columns: 1fr; }
+    .tc-payment-row { grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
+    .tc-payment-note { grid-column: 1 / -1; }
+    .tc-payment-actions { grid-column: 1 / -1; justify-content: flex-end; }
+  }
+</style>
+<link rel="stylesheet" href="./assets/app/interface.css">
+<link rel="stylesheet" href="./assets/app/bento.css">
+</head>
+<body class="atlas-app" data-module="money">
+
+<a class="at-skip" href="#at-content">Skip to content</a>
+<header class="at-header">
+ <div class="at-nav"><a class="at-brand" href="./index.html" aria-label="Atlas, Today">Atlas<b>.</b></a><nav class="at-links" aria-label="Main navigation"><a href="./index.html">Today</a><a href="./money.html" aria-current="page">Money</a><a href="./week.html">Week</a><a href="./records.html">Records</a><a href="./admin.html">Admin</a><a href="./scripts.html">Scripts</a></nav>
+ <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="./goals.html">Goals</a><a href="./companion-pack.html">Companion pack</a><a href="./admin.html#move-data">Back up / import data</a><a href="./how-it-works.html">How Atlas works</a></div></details></div>
+ <div class="at-heading"><div><div class="at-kicker">Money</div><h1>Know where you stand.</h1><p id="phase-context-text">Income, costs and what&rsquo;s left. Change a number when life changes.</p></div><a class="at-phase-chip" href="./index.html#at-phase"><span class="at-phase-chip-label">Phase</span> <strong data-phase-label>Stabilise</strong><span class="at-phase-chip-action">Change</span></a></div>
+</header>
+
+<main class="page-wrap" id="at-content"><div class="at-module-hint" id="at-money-setup" hidden><span><strong>Start here.</strong> Add your take-home pay, then your regular costs. Rough numbers are fine. Everything saves on this device.</span><a href="#cards-col">Add your numbers →</a></div>
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div class="view-toggle">
+              <button class="view-btn active" id="btn-monthly" onclick="setView('monthly')">Monthly</button>
+              <button class="view-btn" id="btn-annual" onclick="setView('annual')">Annual</button>
+            </div>
+            <a href="./money-print.html" class="print-snapshot-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Print snapshot
+            </a>
+          </div>
+        </div>
+
+        <div class="snap-panel" id="snap-panel">
+          <div class="snap-panel-head">This month at a glance</div>
+          <div class="snap-bar" id="snap-bar">
+            <div class="snap-bar-spent" id="bar-spent"></div>
+          </div>
+          <div class="snap-bar-legend">
+            <span class="snap-bar-legend-item"><span class="snap-bar-legend-dot dark"></span>Spent <strong id="bar-spent-pct">0%</strong></span>
+            <span class="snap-bar-legend-item"><span class="snap-bar-legend-dot light"></span>Surplus <strong id="bar-surplus-pct">0%</strong></span>
+          </div>
+          <div class="snap-stats">
+            <div class="snap-stat hero">
+              <div class="snap-stat-label" id="ss-hero-label">Surplus</div>
+              <div class="snap-stat-val" id="ss-hero-val">—</div>
+              <div class="snap-stat-sub" id="ss-hero-sub">after everything</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t1-label">Take-Home</div>
+              <div class="snap-stat-val" id="ss-t1-val">—</div>
+              <div class="snap-stat-sub" id="ss-t1-sub">after tax &amp; super</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t2-label">Total Out</div>
+              <div class="snap-stat-val" id="ss-t2-val">—</div>
+              <div class="snap-stat-sub" id="ss-t2-sub">all expenses &amp; CS</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t3-label">Separation Load</div>
+              <div class="snap-stat-val" id="ss-t3-val">—</div>
+              <div class="snap-stat-sub" id="ss-t3-sub">CS + kids monthly</div>
+            </div>
+            <div class="snap-stat">
+              <div class="snap-stat-label" id="ss-t4-label">Runway</div>
+              <div class="snap-stat-val" id="ss-t4-val">—</div>
+              <div class="snap-stat-sub" id="ss-t4-sub">if income stopped</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TC ADD ROW MODAL -->
+    <div class="tc-modal-overlay" id="tc-row-modal" onclick="if(event.target===this)closeTCRowModal()">
+      <div class="tc-modal">
+        <div class="tc-modal-title" id="tc-row-modal-title">Add transition cost</div>
+        <div class="tc-modal-sub">A category for tracking lump-sum, irregular costs.</div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-row-label">Label</label>
+          <input type="text" class="tc-modal-input" id="tc-row-label" placeholder="e.g. Therapy block, Court fees" />
+        </div>
+        <label class="tc-trackonly-row" style="margin-bottom: 12px;">
+          <input type="checkbox" class="tc-trackonly-cb" id="tc-row-trackonly" checked />
+          <span class="tc-trackonly-text">Just track what I spend (no budget for this)</span>
+        </label>
+        <div class="tc-modal-field" id="tc-row-est-field" style="display:none;">
+          <label class="tc-modal-field-label" for="tc-row-est">Budget ($) — optional</label>
+          <input type="number" class="tc-modal-input" id="tc-row-est" min="0" step="100" placeholder="0" />
+        </div>
+        <div class="tc-modal-buttons">
+          <button class="tc-modal-btn" type="button" onclick="closeTCRowModal()">Cancel</button>
+          <button class="tc-modal-btn primary" type="button" onclick="saveTCRow()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TC ADD/EDIT PAYMENT MODAL -->
+    <div class="tc-modal-overlay" id="tc-pay-modal" onclick="if(event.target===this)closeTCPayModal()">
+      <div class="tc-modal">
+        <div class="tc-modal-title" id="tc-pay-modal-title">Add payment</div>
+        <div class="tc-modal-sub" id="tc-pay-modal-sub">Log a payment against this category.</div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-pay-date">Date</label>
+          <input type="date" class="tc-modal-input" id="tc-pay-date" />
+        </div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-pay-amount">Amount ($)</label>
+          <input type="number" class="tc-modal-input" id="tc-pay-amount" min="0" step="0.01" placeholder="0" />
+        </div>
+        <div class="tc-modal-field">
+          <label class="tc-modal-field-label" for="tc-pay-note">Note (optional)</label>
+          <input type="text" class="tc-modal-input" id="tc-pay-note" placeholder="e.g. Mediation prep, retainer top-up" />
+        </div>
+        <div class="tc-modal-buttons">
+          <button class="tc-modal-btn danger" type="button" id="tc-pay-delete" onclick="deleteTCPayment()" style="display:none;margin-right:auto;">Delete</button>
+          <button class="tc-modal-btn" type="button" onclick="closeTCPayModal()">Cancel</button>
+          <button class="tc-modal-btn primary" type="button" onclick="saveTCPayment()">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BILLS AND DUE DATES -->
+    <section class="at-bills" id="bills" aria-labelledby="bills-title">
+      <div class="at-bills-head">
+        <div>
+          <div class="at-kicker">Bills and due dates</div>
+          <h2 id="bills-title">What&rsquo;s due next</h2>
+        </div>
+        <button type="button" class="at-secondary" id="bill-add">+ Add a bill</button>
+      </div>
+      <form class="at-bill-form" id="bill-form" hidden>
+        <div class="at-bill-suggest" id="bill-suggest" aria-label="Common bills"></div>
+        <div class="at-bill-fields">
+          <label class="at-field at-field-grow"><span>Bill</span><input class="at-input" id="bill-name" maxlength="60" required placeholder="e.g. Rent"></label>
+          <label class="at-field at-field-amount"><span>Amount</span><input class="at-input" id="bill-amount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+          <label class="at-field at-field-date"><span>Next due</span><input class="at-input" id="bill-due" type="date" required></label>
+          <label class="at-field"><span>Repeats</span><select class="at-input" id="bill-repeat">
+            <option value="weekly">Weekly</option><option value="fortnightly">Fortnightly</option><option value="monthly" selected>Monthly</option>
+            <option value="quarterly">Quarterly</option><option value="yearly">Yearly</option><option value="once">Just once</option>
+          </select></label>
+        </div>
+        <div class="at-actions"><button type="submit" class="at-primary" id="bill-save">Save bill</button><button type="button" class="at-text-button" id="bill-cancel">Cancel</button><span class="at-small">Today reminds you a week ahead.</span></div>
+      </form>
+      <ul class="at-bill-list" id="bill-list"></ul>
+      <p class="at-help" id="bill-undo" hidden><span id="bill-undo-message"></span> <button type="button" class="at-text-button" id="bill-undo-button">Undo</button></p>
+      <p class="at-bills-empty" id="bills-empty">Add bills with due dates, like rent, rego or insurance. Today will remind you when they&rsquo;re coming up.</p>
+    </section>
+
+    <!-- BUDGET + POSITION -->
+    <div class="masthead" id="start">
+      <div class="cards-col" id="cards-col"></div>
+
+      <div>
+        <!-- DOSSIER -->
+        <div class="dossier">
+          <div class="dossier-title">Financial position</div>
+          <div class="dossier-phase" id="dossier-phase">Stabilise</div>
+
+          <div class="dossier-row">
+            <span class="dossier-row-label">Gross Salary</span>
+            <span class="dossier-row-val" id="d-gross">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label" id="d-ftb-label">FTB / Other Income</span>
+            <span class="dossier-row-val accent" id="d-ftb">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Tax &amp; Medicare</span>
+            <span class="dossier-row-val red" id="d-tax">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Super (SGC 12%)</span>
+            <span class="dossier-row-val" id="d-super">—</span>
+          </div>
+          <hr class="dossier-divider">
+          <div class="dossier-row">
+            <span class="dossier-row-label">Take-Home Pay</span>
+            <span class="dossier-row-val green" id="d-takehome">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label" id="d-cs-label">Child Support Out</span>
+            <span class="dossier-row-val purple" id="d-cs">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Kids Costs</span>
+            <span class="dossier-row-val accent" id="d-kids">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Housing &amp; Fixed</span>
+            <span class="dossier-row-val" id="d-housing">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Personal &amp; Subs</span>
+            <span class="dossier-row-val" id="d-personal">—</span>
+          </div>
+          <div class="dossier-row">
+            <span class="dossier-row-label">Savings</span>
+            <span class="dossier-row-val accent" id="d-savings">—</span>
+          </div>
+          <hr class="dossier-divider">
+          <div class="dossier-row">
+            <span class="dossier-row-label" style="font-weight:700">Surplus</span>
+            <span class="dossier-row-val" id="d-surplus" style="font-size:1rem">—</span>
+          </div>
+          <div class="surplus-bar-wrap">
+            <div class="surplus-bar"><div class="surplus-bar-fill" id="d-surplus-bar" style="width:0%"></div></div>
+          </div>
+
+          <!-- CSA ESTIMATOR -->
+          <div class="csa-section">
+            <div class="csa-title">CSA estimator</div>
+            <div class="csa-field">
+              <label for="csa-my-income">Your adjusted taxable income (ATI) a year</label>
+              <input type="number" id="csa-my-income" value="" placeholder="e.g. 95000" inputmode="numeric" oninput="calcCSA()">
+            </div>
+            <div class="csa-field">
+              <label for="csa-other-income">Their adjusted taxable income (ATI) a year</label>
+              <input type="number" id="csa-other-income" value="" placeholder="e.g. 70000" inputmode="numeric" oninput="calcCSA()">
+            </div>
+            <p class="csa-help">ATI isn’t your salary. It’s taxable income plus items such as reportable super contributions, reportable fringe benefits, foreign income and net investment losses. Yours starts from the salary in your budget. <a href="https://www.servicesaustralia.gov.au/what-adjusted-taxable-income?context=21911" target="_blank" rel="noopener noreferrer">What counts</a></p>
+            <div class="csa-field" id="csa-my-support-field" hidden>
+              <label for="csa-my-support">Did you get an income support payment (like JobSeeker or Parenting Payment) last financial year?</label>
+              <select id="csa-my-support" onchange="calcCSA()"><option value="unknown">Not sure</option><option value="yes">Yes</option><option value="no">No</option></select>
+            </div>
+            <div class="csa-field" id="csa-other-support-field" hidden>
+              <label for="csa-other-support">Did they get an income support payment (like JobSeeker or Parenting Payment) last financial year?</label>
+              <select id="csa-other-support" onchange="calcCSA()"><option value="unknown">Not sure</option><option value="yes">Yes</option><option value="no">No</option></select>
+            </div>
+            <div class="csa-field">
+              <label for="csa-children">Number of children</label>
+              <select id="csa-children" onchange="renderCSAAges();calcCSA()">
+                <option value="1">1 child</option>
+                <option value="2" selected>2 children</option>
+                <option value="3">3 children</option>
+                <option value="4">4 children</option>
+                <option value="5">5 children</option>
+              </select>
+            </div>
+            <div class="csa-ages" id="csa-ages" role="group" aria-label="Children's ages"></div>
+            <div class="csa-field">
+              <label for="csa-nights">Your nights per fortnight</label>
+              <select id="csa-nights" onchange="calcCSA()">
+                <option value="0">0 nights · 0% care</option>
+                <option value="1">1 night · 7% care</option>
+                <option value="2">2 nights · 14% care</option>
+                <option value="3">3 nights · 21% care</option>
+                <option value="4">4 nights · 28% care</option>
+                <option value="5">5 nights · 35% care</option>
+                <option value="6">6 nights · 42% care</option>
+                <option value="7" selected>7 nights · 50% care</option>
+                <option value="8">8 nights · 58% care</option>
+                <option value="9">9 nights · 65% care</option>
+                <option value="10">10 nights · 72% care</option>
+                <option value="11">11 nights · 79% care</option>
+                <option value="12">12 nights · 86% care</option>
+                <option value="13">13 nights · 93% care</option>
+                <option value="14">14 nights · 100% care</option>
+              </select>
+            </div>
+            <div class="csa-result">
+              <div class="csa-result-label">Estimated child support</div>
+              <div class="csa-result-val" id="csa-result-val">$0/mo</div>
+              <div class="csa-result-sub" id="csa-result-sub">Estimate will show whether you pay or receive.</div>
+              <div class="csa-breakdown" id="csa-breakdown"></div>
+              <div class="csa-result-footnote">Basic formula with 2026 rates. It handles one case between two parents with the same care for every child. It doesn’t cover other dependent children, multiple cases, non-parent carers, court orders, child support agreements or change of assessment decisions, and assumes Services Australia hasn’t decided the fixed rate shouldn’t apply. Always verify your figure using the official <a href="https://www.servicesaustralia.gov.au/child-support-assessment" target="_blank" rel="noopener noreferrer">Services Australia child support calculator</a> or speak to a CSA-registered adviser.</div>
+              <div class="csa-actions">
+                <button type="button" class="csa-apply-btn" onclick="applyCSAEstimate()">Use estimate for budget</button>
+                <span class="csa-sync-note">Estimator stays editable for scenario testing.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLOW NOTE -->
+        <div class="flow-note">
+          <div class="flow-note-title">Phase guide</div>
+          <span id="flow-note-text">Set your phase above to see guidance for where you are in the journey.</span>
+        </div>
+      </div>
+    </div>
+
+    <details class="at-more" id="separation-costs">
+      <summary><span>Separation costs<br><span class="at-more-hint">Legal, mediation, moving and setting up. Tracked apart from your monthly budget.</span></span></summary>
+    <div class="container">
+      <section class="tc-section" id="tc-section">
+        <div class="tc-section-head" id="tc-section-head">
+          <div>
+            <div class="tc-section-kicker">Transition costs</div>
+            <div class="tc-section-title" id="tc-title">Separation Costs</div>
+            <div class="tc-section-sub" id="tc-sub">Lump-sum payments — legal, mediation, setting up the new place. Tracked separately from your monthly budget so they don't distort cash flow.</div>
+          </div>
+          <div class="tc-section-totals">
+            <div class="tc-totals-label" id="tc-totals-label">Spent so far</div>
+            <div class="tc-totals-val">
+              <span id="tc-spent-total">$0</span>
+              <span class="of" id="tc-of-suffix"> / <span id="tc-est-total">$0</span> budgeted</span>
+            </div>
+            <div class="tc-totals-bar"><div class="tc-totals-bar-fill" id="tc-totals-bar-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="tc-section-body" id="tc-section-body">
+          <div class="tc-rows" id="tc-rows"></div>
+          <button class="tc-add-row-btn" type="button" onclick="openTCAddRow()">+ Add transition cost</button>
+        </div>
+      </section>
+    </div>
+
+    </details>
+
+  </div>
+</main>
+
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="./admin.html#move-data">Back up your data</a><a href="./terms.html">Privacy &amp; terms</a><a href="./how-it-works.html">How it works</a></nav></footer>
+
+<script>
+// ── UTILITIES ──
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + Math.round(n).toLocaleString('en-AU');
+
+let viewMode = 'monthly';
+function fmtView(monthly) {
+  return viewMode === 'annual' ? fmt(monthly * 12) + '/yr' : fmt(monthly) + '/mo';
+}
+
+// ── PHASE ──
+const phaseData = {
+  'waiting-room': {
+    label: 'Waiting Room',
+    note: 'You\'re still in the thick of it. Focus on understanding what you have — income, expenses, and debts. This is about clarity, not optimisation.',
+    heroText: 'Get clear on your numbers before anything else. Map your income and essential costs so you know exactly what you\'re working with.',
+  },
+  survive: {
+    label: 'Survive',
+    note: 'Survival mode. Priorities: somewhere safe to live, basic legal advice, cash flow positive. Don\'t optimise — just stabilise. Every dollar matters right now.',
+    heroText: 'Don\'t optimise yet — just get clear. Map every dollar in and out so you know exactly what you\'re working with before making any decisions.',
+  },
+  stabilise: {
+    label: 'Stabilise',
+    note: 'Housing is settled, kids routine is forming. Now: map every dollar, build a 1-month emergency buffer, get your legal situation clear. Savings come second.',
+    heroText: 'Cover essentials first: rent, food, kids costs, legal. Then build a $3–5k emergency buffer before anything else moves.',
+  },
+  rebuild: {
+    label: 'Rebuild',
+    note: 'Your numbers are mapped. Start building savings — emergency fund first, then housing deposit. Super catch-up becomes relevant. Look for income growth.',
+    heroText: 'The basics are covered. Now close the gaps — lift your savings rate, cut what\'s drifting, and set a real 12-month target.',
+  },
+  'new-chapter': {
+    label: 'New Chapter',
+    note: 'Thriving, not just surviving. Financial goals are active, investments are in motion. You\'re building a life you\'re proud to show your kids.',
+    heroText: 'You\'re out of recovery mode. Use this budget to build forward on your own terms.',
+  }
+};
+
+let currentPhase = 'stabilise';
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+
+function setPhase(phase) {
+  phase = normalisePhase(phase);
+  if (!phaseData[phase]) phase = 'stabilise';
+  currentPhase = phase;
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  const data = phaseData[phase];
+  $('dossier-phase').textContent = data.label;
+  $('flow-note-text').textContent = data.note;
+  $('phase-context-text').textContent = data.heroText;
+  try {
+    localStorage.setItem('atlas_phase', phase);
+    localStorage.setItem('dad_atlas_phase', phase);
+    localStorage.setItem('atlas_budget_phase', phase);
+    localStorage.setItem('dad_budget_phase', phase);
+  } catch(e) {}
+  // Re-render cards + snap panel for the new phase (skip during init — render() will fire it)
+  // Guard: total-income only exists after the first render() has run
+  if (typeof render === 'function' && document.getElementById('total-income')) {
+    render();
+  }
+  // Re-render transition costs copy for the new phase
+  if (typeof renderTransitionCosts === 'function' && document.getElementById('tc-section')) {
+    renderTransitionCosts();
+  }
+}
+
+window.addEventListener('storage', e => {
+  const nextPhase = normalisePhase(e.newValue);
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && nextPhase !== currentPhase && phaseData[nextPhase]) {
+    setPhase(nextPhase);
+  }
+});
+
+// ── VIEW TOGGLE ──
+function setView(v) {
+  viewMode = v;
+  $('btn-monthly').classList.toggle('active', v === 'monthly');
+  $('btn-annual').classList.toggle('active', v === 'annual');
+  render();
+  try {
+    localStorage.setItem('atlas_budget_view', v);
+    localStorage.setItem('dad_budget_view', v);
+  } catch(e) {}
+}
+
+// ── AUSTRALIAN TAX ──
+function calcAusTax(gross) {
+  let tax = 0;
+  if (gross <= 18200) tax = 0;
+  else if (gross <= 45000) tax = (gross - 18200) * 0.16;
+  else if (gross <= 135000) tax = 4288 + (gross - 45000) * 0.30;
+  else if (gross <= 190000) tax = 31288 + (gross - 135000) * 0.37;
+  else tax = 51638 + (gross - 190000) * 0.45;
+  const lito = gross <= 37500 ? 700 : gross <= 45000 ? 700 - (gross - 37500) * 0.05 : gross <= 66667 ? 325 - (gross - 45000) * 0.015 : 0;
+  tax = Math.max(0, tax - lito);
+  const medicare = gross > 26000 ? gross * 0.02 : 0;
+  const totalTax = tax + medicare;
+  const netAnnual = gross - totalTax;
+  return { tax, medicare, totalTax, netAnnual, netMonthly: netAnnual / 12 };
+}
+
+// ── CSA CALCULATION ──
+// Basic formula (Formula 1) for child support periods starting in 2026, one case, two parents.
+// Sources: DSS Child Support Guide 2.3.2 (basic values), 2.3.1.10 and 2.3.1.20 (Costs of the Children
+// Table), 2.3.4 (minimum annual rate), 2.3.5 (fixed annual rate); Child Support (Assessment) Act 1989.
+// Update every January: every figure below moves with MTAWE or the Parenting Payment rate.
+//
+// Rounding (all integer arithmetic, so no floating-point drift):
+//  - Care %: under 50% rounds down, 50% and over rounds up (s54D).
+//  - Income %: two decimal places, third decimal 5 or more rounds up (s55B). Held as basis points.
+//  - Money: nearest whole dollar, 50c rounds up, at each step (Guide 2.3.1.10): the marginal amount
+//    in the COTC bracket, the cost per child, and each child's annual rate.
+const CSA_2026 = {
+  SSA: 31046,              // self-support amount (1/3 of annualised MTAWE $93,137)
+  CAP: 232843,             // combined child support income cap (2.5 x MTAWE)
+  BRACKETS: [0, 46569, 93137, 139706, 186274],
+  MIN_RATE: 551,           // minimum annual rate, per case
+  FIXED_RATE: 1825,        // fixed annual rate, per child, up to 3 children
+  FIXED_RATE_ATI: 26720,   // fixed rate threshold: Parenting Payment (single) maximum basic amount
+  // Costs of the Children Table 2026. Rates are per mille (170 = 17c in the dollar). Bases are the
+  // published amounts at the start of each bracket; max is the figure at and above the cap.
+  COTC: {
+    under13: {
+      1: { rates: [170, 150, 120, 100, 70],  bases: [0, 7917, 14902, 20490, 25147],  max: 28407 },
+      2: { rates: [240, 230, 200, 180, 100], bases: [0, 11177, 21888, 31202, 39584], max: 44241 },
+      3: { rates: [270, 260, 250, 240, 180], bases: [0, 12574, 24682, 36324, 47500], max: 55882 },
+    },
+    over13: {
+      1: { rates: [230, 220, 120, 100, 90],  bases: [0, 10711, 20956, 26544, 31201], max: 35392 },
+      2: { rates: [290, 280, 250, 200, 130], bases: [0, 13505, 26544, 38186, 47500], max: 53554 },
+      3: { rates: [320, 310, 300, 290, 200], bases: [0, 14902, 29338, 43309, 56814], max: 66128 },
+    },
+    mixed: {
+      2: { rates: [265, 255, 225, 190, 115], bases: [0, 12341, 24216, 34694, 43542], max: 48897 },
+      3: { rates: [295, 285, 275, 265, 190], bases: [0, 13738, 27010, 39816, 52157], max: 61005 },
+    },
+  },
+};
+
+// Integer division rounded to the nearest whole number, halves up. num >= 0, den > 0, both integers.
+function csaDivRound(num, den) { return Math.floor((2 * num + den) / (2 * den)); }
+
+// Whole dollars from any input: blank, negative or invalid income counts as $0.
+function csaDollars(value) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? csaDivRound(Math.round(n * 100), 100) : 0;
+}
+
+// Nights per fortnight to percentage of care.
+function csaCarePercent(nights) {
+  const n = Math.max(0, Math.min(14, Math.round(Number(nights) || 0)));
+  return n * 100 < 50 * 14 ? Math.floor(n * 100 / 14) : Math.ceil(n * 100 / 14);
+}
+
+// Percentage of care to cost percentage (s55C).
+function csaCostPercent(care) {
+  if (care < 14) return 0;
+  if (care < 35) return 24;
+  if (care < 48) return 25 + 2 * (care - 35);
+  if (care <= 52) return 50;
+  if (care < 66) return 51 + 2 * (care - 53);
+  if (care < 87) return 76;
+  return 100;
+}
+
+// Which column of the table applies. With 4 or more children only the 3 oldest count (Guide 2.3.1.10).
+function csaAgeBand(ages) {
+  const older = ages.filter(a => a === 'over13').length;
+  const counted = Math.min(ages.length, 3);
+  const oldestOlder = Math.min(older, counted);
+  if (oldestOlder === 0) return 'under13';
+  if (oldestOlder === counted) return 'over13';
+  return 'mixed';
+}
+
+// Total costs of the children, whole dollars. ages: array of 'under13' | 'over13'.
+function csaCostOfChildren(combinedCSI, ages) {
+  if (!ages.length) return 0;
+  const row = CSA_2026.COTC[csaAgeBand(ages)][Math.min(ages.length, 3)];
+  const income = Math.max(0, Math.floor(combinedCSI));
+  if (income >= CSA_2026.CAP) return row.max;
+  const b = CSA_2026.BRACKETS;
+  let i = b.length - 1;
+  while (i > 0 && income <= b[i]) i--;
+  return row.bases[i] + csaDivRound(row.rates[i] * (income - b[i]), 1000);
+}
+
+// Income percentage in basis points (6450 = 64.50%), rounded to two decimals, halves up.
+function csaIncomeBp(csi, combined) { return combined > 0 ? csaDivRound(csi * 10000, combined) : 0; }
+
+// input: { myATI, otherATI, ages, myNights, myIncomeSupport, otherIncomeSupport }
+// incomeSupport: 'yes' | 'no' | 'unknown' — only matters for the fixed annual rate.
+// Assumes: one case, two parents, the same care for every child, no other dependent children,
+// no court order, agreement, change of assessment, or decision that the fixed rate shouldn't apply.
+function calcChildSupport(input) {
+  const ages = (Array.isArray(input.ages) ? input.ages : []).filter(a => a === 'under13' || a === 'over13');
+  const n = ages.length;
+  const empty = { annual: 0, monthly: 0, paying: false, receiving: false, warnings: [] };
+  if (!n) return empty;
+
+  const nights = Math.max(0, Math.min(14, Math.round(Number(input.myNights) || 0)));
+  const parents = [
+    { ati: csaDollars(input.myATI), care: csaCarePercent(nights), support: input.myIncomeSupport },
+    { ati: csaDollars(input.otherATI), care: csaCarePercent(14 - nights), support: input.otherIncomeSupport },
+  ];
+  // Each parent's care is worked out from their own nights; with 7 each both are 50%.
+  for (const p of parents) {
+    p.cost = csaCostPercent(p.care);
+    p.csi = Math.max(0, p.ati - CSA_2026.SSA);
+  }
+  const combined = parents[0].csi + parents[1].csi;
+  const cotc = csaCostOfChildren(combined, ages);
+  const perChildCost = csaDivRound(cotc, n);
+  const perChildFixed = n <= 3 ? CSA_2026.FIXED_RATE : csaDivRound(3 * CSA_2026.FIXED_RATE, n);
+  const warnings = [];
+
+  for (const [index, p] of parents.entries()) {
+    p.incomeBp = csaIncomeBp(p.csi, combined);
+    p.csBp = p.incomeBp - p.cost * 100;
+    // Step 8: child support % x cost per child, rounded per child.
+    p.formulaPerChild = p.csBp > 0 ? csaDivRound(p.csBp * perChildCost, 10000) : 0;
+    p.formula = p.formulaPerChild * n;
+    p.method = 'formula';
+    p.perChild = p.formulaPerChild;
+    const fixedTest = p.ati < CSA_2026.FIXED_RATE_ATI && p.care < 35;
+    if (fixedTest && p.support === 'no') {
+      p.method = 'fixed';
+      p.perChild = perChildFixed;
+    } else {
+      if (fixedTest && p.support !== 'yes') p.fixedPossible = true;
+      // Minimum annual rate: formula below $551 and below regular care of every child (same care for all).
+      if (p.care < 14 && p.formula < CSA_2026.MIN_RATE) {
+        p.method = 'minimum';
+        p.perChild = CSA_2026.MIN_RATE / n; // per case; kept exact, the case total is $551
+      }
+    }
+    p.total = p.method === 'minimum' ? CSA_2026.MIN_RATE : p.perChild * n;
+    if (p.fixedPossible) {
+      const who = index === 0 ? 'you' : 'they';
+      warnings.push(`If ${who} didn’t get an income support payment last financial year, the official assessment may use the fixed annual rate instead: ${fmtCSADollars(perChildFixed * n)} a year for ${who === 'you' ? 'you' : 'them'} to pay.`);
+    }
+  }
+
+  // Offset each parent's liability for the case.
+  const net = parents[0].total - parents[1].total;
+  const annual = Math.abs(net);
+  const me = parents[0], them = parents[1];
+  return {
+    annual, monthly: annual / 12,
+    paying: net > 0, receiving: net < 0,
+    cost: cotc, costPerChild: perChildCost, capped: combined > CSA_2026.CAP, band: csaAgeBand(ages),
+    myCare: me.care, myCost: me.cost, myIncomePct: me.incomeBp / 100, myPct: me.csBp / 100,
+    mine: { method: me.method, total: me.total, formula: me.formula },
+    theirs: { method: them.method, total: them.total, formula: them.formula },
+    warnings,
+  };
+}
+
+function fmtCSADollars(n) { return '$' + Math.round(n).toLocaleString('en-AU'); }
+
+// Children's ages for the estimator. Prefilled from Week (kids' ages, custody pattern) when set.
+let csaAges = ['under13', 'under13'];
+
+function readCSAKids() {
+  try {
+    const week = JSON.parse(localStorage.getItem('atlas_kidsweek') || localStorage.getItem('dad_kidsweek') || 'null');
+    if (!week) return;
+    const kids = (Array.isArray(week.kids) ? week.kids : []).filter(k => k && k.name);
+    if (kids.length) {
+      csaAges = kids.map(k => (parseInt(k.age, 10) >= 13 ? 'over13' : 'under13'));
+      $('csa-children').value = String(Math.min(kids.length, 5));
+    }
+    const pattern = week.cycle && week.cycle.pattern;
+    if (Array.isArray(pattern) && pattern.length === 14) $('csa-nights').value = String(pattern.filter(x => x === 1).length);
+  } catch (e) {}
+}
+
+function renderCSAAges() {
+  const box = $('csa-ages');
+  if (!box) return;
+  const n = parseInt($('csa-children').value, 10) || 1;
+  while (csaAges.length < n) csaAges.push('under13');
+  csaAges = csaAges.slice(0, n);
+  box.innerHTML = csaAges.map((age, i) => `<div class="csa-age-row"><span>Child ${i + 1}</span><span class="csa-seg">` +
+    `<button type="button" data-age-index="${i}" data-age="under13" aria-pressed="${age === 'under13'}">Under 13</button>` +
+    `<button type="button" data-age-index="${i}" data-age="over13" aria-pressed="${age === 'over13'}">13 and over</button></span></div>`).join('');
+}
+
+document.addEventListener('click', (event) => {
+  const btn = event.target.closest && event.target.closest('#csa-ages button[data-age]');
+  if (!btn) return;
+  csaAges[Number(btn.dataset.ageIndex)] = btn.dataset.age;
+  renderCSAAges();
+  calcCSA();
+  const again = document.querySelector(`#csa-ages button[data-age-index="${btn.dataset.ageIndex}"][data-age="${btn.dataset.age}"]`);
+  if (again) again.focus();
+});
+
+function csaInputs() {
+  const n = parseInt($('csa-children')?.value, 10) || 2;
+  const ages = csaAges.slice(0, n);
+  while (ages.length < n) ages.push('under13');
+  const nights = parseInt($('csa-nights')?.value, 10);
+  return {
+    myATI: $('csa-my-income')?.value, otherATI: $('csa-other-income')?.value, ages,
+    myNights: Number.isFinite(nights) ? nights : 7,
+    myIncomeSupport: $('csa-my-support')?.value || 'unknown',
+    otherIncomeSupport: $('csa-other-support')?.value || 'unknown',
+  };
+}
+
+// Ask about income support only where it could change the answer: a parent with an income entered,
+// ATI under the fixed-rate threshold and less than 35% care.
+function syncCSASupportFields(input) {
+  const care = { my: csaCarePercent(input.myNights), other: csaCarePercent(14 - input.myNights) };
+  for (const who of ['my', 'other']) {
+    const field = $(`csa-${who}-support-field`);
+    if (!field) continue;
+    const raw = $(`csa-${who}-income`)?.value;
+    field.hidden = !(raw !== '' && raw != null && csaDollars(raw) < CSA_2026.FIXED_RATE_ATI && care[who] < 35);
+  }
+}
+
+const csaEsc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function describeCSAParent(label, part) {
+  if (part.method === 'minimum') return `${label} the minimum annual rate of $551 for the case (formula: ${fmtCSADollars(part.formula)}), because it’s under $551 and ${label === 'You pay' ? 'you have' : 'they have'} less than 14% care.`;
+  if (part.method === 'fixed') return `${label} the fixed annual rate: $1,825 a child, capped at 3 children (${fmtCSADollars(part.total)} a year), offset against any formula amount the other way.`;
+  return '';
+}
+
+function calcCSA() {
+  const input = csaInputs();
+  syncCSASupportFields(input);
+  const result = calcChildSupport(input);
+  $('csa-result-val').textContent = fmt(result.monthly) + '/mo';
+  $('csa-result-sub').textContent = result.paying
+    ? `You pay · ${fmtCSADollars(result.annual)}/yr`
+    : result.receiving
+    ? `You receive · ${fmtCSADollars(result.annual)}/yr`
+    : 'No child support liability';
+  const bd = $('csa-breakdown');
+  if (bd) {
+    const lines = [];
+    if (result.cost) {
+      lines.push(`Your income share ${result.myIncomePct.toFixed(2)}% − your cost share ${result.myCost}% (${result.myCare}% care) = ${result.myPct.toFixed(2)}% of ${fmtCSADollars(result.costPerChild)} a child (costs of ${fmtCSADollars(result.cost)}/yr).`);
+      if (result.capped) lines.push('Combined income is over the $232,843 cap, so costs stop rising. Income shares still use your full incomes.');
+    }
+    const mine = describeCSAParent('You pay', result.mine || {}), theirs = describeCSAParent('They pay', result.theirs || {});
+    if (mine) lines.push(mine);
+    if (theirs) lines.push(theirs);
+    bd.innerHTML = lines.map(t => `<p>${csaEsc(t)}</p>`).join('') + (result.warnings || []).map(t => `<p class="csa-warn">${csaEsc(t)}</p>`).join('');
+  }
+  updateCSAEstimateNote(result);
+  return result;
+}
+
+function syncCSAIncome() {
+  const gross = state.grossSalary || 0;
+  const csaIncomeField = $('csa-my-income');
+  if (!csaIncomeField) return;
+  csaIncomeField.value = gross;
+  calcCSA();
+}
+
+function getCurrentCSAEstimate() {
+  return calcChildSupport(csaInputs());
+}
+
+function getCSMode() {
+  if (state.csMode === 'receiving' || state.csMode === 'paying') return state.csMode;
+  return (state.csReceived || 0) > 0 && (state.csOut || 0) === 0 ? 'receiving' : 'paying';
+}
+
+function getCSBudgetAmount() {
+  return getCSMode() === 'receiving' ? (state.csReceived || 0) : (state.csOut || 0);
+}
+
+function setCSMode(mode) {
+  state.csMode = mode;
+  if (mode === 'receiving') state.csOut = 0;
+  if (mode === 'paying') state.csReceived = 0;
+  syncCSCardControls();
+  updateCSAEstimateNote(getCurrentCSAEstimate());
+  updateTotals();
+  scheduleSave();
+}
+
+function syncCSCardControls() {
+  const mode = getCSMode();
+  $('cs-mode-paying')?.classList.toggle('active', mode === 'paying');
+  $('cs-mode-receiving')?.classList.toggle('active', mode === 'receiving');
+  if ($('cs-direction-label')) $('cs-direction-label').textContent = mode === 'receiving' ? 'Child Support Received (monthly)' : 'Child Support Payment (monthly)';
+  const amount = getCSBudgetAmount();
+  if ($('cs-out-slider')) $('cs-out-slider').value = amount;
+  if ($('cs-out-val')) $('cs-out-val').textContent = fmtView(amount);
+}
+
+function applyCSAEstimate() {
+  const result = calcChildSupport(csaInputs());
+  const estimateMonthly = Math.round(result.monthly);
+  if (result.paying) {
+    state.csMode = 'paying';
+    state.csOut = estimateMonthly;
+    state.csReceived = 0;
+  } else if (result.receiving) {
+    state.csMode = 'receiving';
+    state.csReceived = estimateMonthly;
+    state.csOut = 0;
+  } else {
+    state.csOut = 0;
+    state.csReceived = 0;
+  }
+  syncCSCardControls();
+  updateCSAEstimateNote(result);
+  updateTotals();
+  scheduleSave();
+}
+
+function updateCSAEstimateNote(result) {
+  const noteEl = $('cs-estimate-note');
+  if (!noteEl) return;
+  const estimateMonthly = Math.round(result.monthly || 0);
+  if (!result.paying && !result.receiving) {
+    if ((state.csOut || 0) === 0 && (state.csReceived || 0) === 0) {
+      noteEl.textContent = 'No child support is estimated right now, and your budget is set to zero.';
+    } else {
+      noteEl.textContent = 'Estimator shows no child support right now, but your budget still has a manual child support amount.';
+    }
+    return;
+  }
+
+  if (result.paying) {
+    const diff = Math.round((state.csOut || 0) - estimateMonthly);
+    if (Math.abs(diff) < 5) {
+      noteEl.textContent = 'Budgeted child support payment matches the current estimate.';
+    } else if (diff > 0) {
+      noteEl.textContent = `Budgeted child support payment is ${fmt(diff)}/mo above the current estimate.`;
+    } else {
+      noteEl.textContent = `Budgeted child support payment is ${fmt(Math.abs(diff))}/mo below the current estimate.`;
+    }
+    return;
+  }
+
+  const diff = Math.round((state.csReceived || 0) - estimateMonthly);
+  if (Math.abs(diff) < 5) {
+    noteEl.textContent = 'Budgeted child support received matches the current estimate.';
+  } else if (diff > 0) {
+    noteEl.textContent = `Budgeted child support received is ${fmt(diff)}/mo above the current estimate.`;
+  } else {
+    noteEl.textContent = `Budgeted child support received is ${fmt(Math.abs(diff))}/mo below the current estimate.`;
+  }
+}
+
+// ── STATE ──
+const DEFAULTS = {
+  grossSalary: 0,
+  salaryInputMode: 'annual',
+  salarySacrifice: 0,
+  ftbMonthly: 0,
+  csReceived: 0,
+  csOut: 0,
+  csMode: 'paying',
+
+  // Phase shorthands (not stored — metadata only)
+  // ALL = all 5 phases | SV = Survive+ | ST = Stabilise+ | RB = Rebuild+ | NC = New Chapter only
+  'kids-costs': [
+    { id: 'kids-food',      name: 'Food / Groceries (kids weeks)',                 val: 0, min: 0, max: 1500, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'kids-childcare', name: 'Childcare (nanny / babysitter / before school)', val: 0,   min: 0, max: 1000, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'kids-pocket',    name: 'Pocket Money',                                   val: 0,  min: 0, max: 200,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'kids-gifts',     name: 'Birthdays / Christmas',                          val: 0,  min: 0, max: 300,  phases: ['stabilise','rebuild','new-chapter'] },
+  ],
+  'shared': [
+    { id: 'kids-school',        name: 'School Fees &amp; Supplies',                       val: 0,  min: 0, max: 600,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'kids-activities',    name: 'Sports / Activities / Classes',               val: 0, min: 0, max: 800,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'kids-clothing',      name: 'School Clothing &amp; Shoes',                      val: 0,  min: 0, max: 400,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'kids-medical',       name: 'Medical / Dental (kids)',                     val: 0,  min: 0, max: 400,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'shared-health',      name: 'Health Insurance (kids portion)',             val: 0, min: 0, max: 400,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'shared-specialists', name: 'Major Medical / Specialists / Orthodontics', val: 0,   min: 0, max: 500,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'shared-devices',     name: 'Devices &amp; Electronics',                       val: 0,   min: 0, max: 300,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'shared-holidays',    name: 'Shared Holiday Costs',                        val: 0,   min: 0, max: 500,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'shared-extras',      name: 'Other Agreed Costs',                          val: 0,   min: 0, max: 500,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+  ],
+  'housing': [
+    { id: 'rent',           name: 'Rent / Mortgage',            val: 0, min: 0, max: 6000, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'utilities',      name: 'Utilities (elec/gas/water)', val: 0,  min: 0,  max: 700,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'internet',       name: 'Internet',                   val: 0,   min: 0,   max: 150,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'phone',          name: 'Phone',                      val: 0,   min: 0,   max: 150,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'insurance-home', name: 'Home / Contents Insurance',  val: 0,  min: 0,   max: 500,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'car',            name: 'Car Loan / Finance',         val: 0,    min: 0,   max: 1500, phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'fuel',           name: 'Fuel',                       val: 0,  min: 0,   max: 500,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'car-insurance',  name: 'Car Insurance / Rego',       val: 0,  min: 0,   max: 400,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+  ],
+  'personal': [
+    { id: 'debt-repayment', name: 'Debt Repayments',        val: 0,   min: 0, max: 3000, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'groceries',      name: 'Groceries (adult)',       val: 0, min: 0, max: 1200, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'personal-health',name: 'Health / Appointments',  val: 0,  min: 0, max: 300,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'therapy',        name: 'Therapy / Counselling',  val: 0,   min: 0, max: 500,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'clothing-self',  name: 'Clothing (self)',         val: 0,  min: 0, max: 400,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+    { id: 'gym',            name: 'Gym / Fitness',           val: 0,  min: 0, max: 200,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'dining',         name: 'Dining &amp; Social',     val: 0, min: 0, max: 600,  phases: ['stabilise','rebuild','new-chapter'] },
+  ],
+  'subs': [
+    { id: 'other-sub',  name: 'Other Subscriptions',         val: 0,  min: 0, max: 200, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'streaming1', name: 'Streaming (Netflix / Disney)', val: 0, min: 0, max: 60,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'streaming2', name: 'Music (Spotify)',              val: 0, min: 0, max: 30,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'software',   name: 'Software / Apps',              val: 0, min: 0, max: 150, phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'news',       name: 'News / Reading',               val: 0, min: 0, max: 60,  phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'cloud',      name: 'Cloud Storage',                val: 0,  min: 0, max: 30,  phases: ['stabilise','rebuild','new-chapter'] },
+  ],
+  'savings': [
+    { id: 'emergency',       name: 'Emergency Fund',    val: 0, min: 0, max: 3000, target: 15000, balance: 0, priority: true, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+    { id: 'general',         name: 'General Savings',   val: 0, min: 0, max: 3000, target: 0,     balance: 0, phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'holiday-kids',    name: 'Holiday with Kids', val: 0,   min: 0, max: 1000, target: 5000,  balance: 0, phases: ['stabilise','rebuild','new-chapter'] },
+    { id: 'housing-deposit', name: 'Housing Deposit',   val: 0,   min: 0, max: 5000, target: 80000, balance: 0, phases: ['rebuild','new-chapter'] },
+    { id: 'kids-future',     name: "Kids' Future Fund", val: 0,   min: 0, max: 2000, target: 20000, balance: 0, phases: ['rebuild','new-chapter'] },
+    { id: 'super-catchup',   name: 'Super Catch-up',    val: 0,   min: 0, max: 3000, target: 0,     balance: 0, phases: ['new-chapter'] },
+  ],
+  'networth': {
+    property: 0, superBal: 0, cashSavings: 0, investments: 0, otherAssets: 0,
+    mortgage: 0, carLoan: 0, otherDebt: 0, settlementDebt: 0,
+  }
+};
+
+// Saveable state groups
+const ARRAY_GROUPS = ['kids-costs','shared','legal','housing','personal','subs','savings'];
+let state = {};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('atlas_budget_state') || localStorage.getItem('dad_budget_state');
+    state = raw ? JSON.parse(raw) : deepClone(DEFAULTS);
+  } catch(e) { state = deepClone(DEFAULTS); }
+  // fill missing keys
+  for (const k in DEFAULTS) {
+    if (state[k] === undefined) state[k] = deepClone(DEFAULTS[k]);
+  }
+  if ((state.csReceived || 0) > 0 && (state.csOut || 0) === 0) state.csMode = 'receiving';
+  else if ((state.csOut || 0) > 0) state.csMode = 'paying';
+  mergeDefaultArrayMetadata();
+  migrateState();
+  mergeDefaultArrayMetadata(); // re-merge to pick up phases on newly added items
+}
+
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function getSalaryInputMode() {
+  if (state.salaryInputMode === 'weekly') return 'weekly';
+  if (state.salaryInputMode === 'monthly') return 'monthly';
+  return 'annual';
+}
+
+function getGrossInputValue() {
+  const gross = state.grossSalary || 0;
+  const mode = getSalaryInputMode();
+  if (mode === 'weekly') return Math.round(gross / 52);
+  if (mode === 'monthly') return Math.round(gross / 12);
+  return Math.round(gross);
+}
+
+function setSalaryInputMode(mode) {
+  state.salaryInputMode = mode === 'weekly' ? 'weekly' : mode === 'monthly' ? 'monthly' : 'annual';
+  buildCard(sections.find(s => s.type === 'income'));
+  updateTotals();
+  syncCSAIncome();
+  scheduleSave();
+}
+
+function updateGrossFromInput(value) {
+  const parsed = parseFloat(value) || 0;
+  const mode = getSalaryInputMode();
+  state.grossSalary = mode === 'weekly' ? Math.round(parsed * 52) : mode === 'monthly' ? Math.round(parsed * 12) : Math.round(parsed);
+  updateTotals();
+  syncCSAIncome();
+  scheduleSave();
+}
+
+function mergeDefaultArrayMetadata() {
+  ARRAY_GROUPS.forEach(groupKey => {
+    if (!Array.isArray(state[groupKey]) || !Array.isArray(DEFAULTS[groupKey])) return;
+    const defaultsById = new Map(DEFAULTS[groupKey].map(item => [item.id, item]));
+    state[groupKey] = state[groupKey].map(item => {
+      const defaultItem = defaultsById.get(item.id);
+      return defaultItem ? { ...defaultItem, ...item } : item;
+    });
+  });
+}
+
+// Migrate saved state: moves kids-school/activities/clothing/medical from kids-costs → shared,
+// and ensures any new DEFAULTS items are present in each group.
+function migrateState() {
+  const movedIds = ['kids-school','kids-activities','kids-clothing','kids-medical'];
+  const kidsArr = state['kids-costs'] || [];
+  const sharedArr = state['shared'] || [];
+  const sharedIdSet = new Set(sharedArr.map(i => i.id));
+
+  // Capture user values from old kids-costs location before removing
+  const savedVals = {};
+  movedIds.forEach(id => {
+    const item = kidsArr.find(i => i.id === id);
+    if (item) savedVals[id] = item.val;
+  });
+
+  // Strip moved items and removed items from kids-costs
+  const removedKidsIds = ['kids-transport'];
+  state['kids-costs'] = kidsArr.filter(i => !movedIds.includes(i.id) && !removedKidsIds.includes(i.id));
+
+  // Insert moved items into shared (preserving user values, skipping if already present)
+  movedIds.forEach(id => {
+    if (!sharedIdSet.has(id)) {
+      const def = DEFAULTS['shared'].find(i => i.id === id);
+      if (def) {
+        const newItem = deepClone(def);
+        if (savedVals[id] !== undefined) newItem.val = savedVals[id];
+        sharedArr.push(newItem);
+      }
+    }
+  });
+  state['shared'] = sharedArr;
+
+  // Ensure any new DEFAULTS items exist in every group (e.g. kids-childcare, debt-repayment)
+  ARRAY_GROUPS.forEach(groupKey => {
+    if (!Array.isArray(DEFAULTS[groupKey])) return;
+    const stateArr = state[groupKey] || [];
+    const stateIds = new Set(stateArr.map(i => i.id));
+    DEFAULTS[groupKey].forEach(def => {
+      if (!stateIds.has(def.id)) stateArr.push(deepClone(def));
+    });
+    state[groupKey] = stateArr;
+  });
+}
+
+let saveTimer;
+window.addEventListener('pagehide', () => { if(saveTimer) {clearTimeout(saveTimer);saveState();} });
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 800);
+}
+function saveState() {
+  try {
+    const serialised = JSON.stringify(state);
+    localStorage.setItem('atlas_budget_state', serialised);
+    localStorage.setItem('dad_budget_state', serialised);
+  } catch(e) {}
+}
+
+// ── SECTIONS CONFIG ──
+const sections = [
+  { id: 'income',     title: 'Income',                  dotClass: 'green',  type: 'income',     open: true,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+  { id: 'cs-out',     title: 'Child Support',           dotClass: 'purple', type: 'cs-out',     open: true,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+  { id: 'kids-costs', title: 'Kids — My Time',          dotClass: 'teal',   type: 'kids-costs', open: true,  phases: ['survive','stabilise','rebuild','new-chapter'] },
+  { id: 'shared',     title: 'Co-parenting Costs',      dotClass: 'orange', type: 'shared',     open: false, phases: ['survive','stabilise','rebuild','new-chapter'] },
+  { id: 'housing',    title: 'Housing &amp; Fixed',     dotClass: 'blue',   type: 'housing',    open: true,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+  { id: 'personal',   title: 'Personal',                dotClass: 'orange', type: 'personal',   open: false, phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+  { id: 'subs',       title: 'Subscriptions',           dotClass: 'blue',   type: 'subs',       open: false, phases: ['stabilise','rebuild','new-chapter'] },
+  { id: 'savings',    title: 'Savings &amp; Goals',     dotClass: 'yellow', type: 'savings',    open: true,  phases: ['waiting-room','survive','stabilise','rebuild','new-chapter'] },
+  { id: 'networth',   title: 'Net Worth',               dotClass: 'pink',   type: 'networth',   open: false, phases: ['stabilise','rebuild','new-chapter'] },
+];
+
+let openCards = new Set(sections.filter(s => s.open).map(s => s.id));
+
+function canReorderGroup(groupKey) {
+  return ARRAY_GROUPS.includes(groupKey);
+}
+
+function moveArrayItem(groupKey, itemId, direction) {
+  const arr = state[groupKey];
+  if (!Array.isArray(arr)) return;
+  const idx = arr.findIndex(i => i.id === itemId);
+  if (idx === -1) return;
+  const nextIdx = idx + direction;
+  if (nextIdx < 0 || nextIdx >= arr.length) return;
+  const [item] = arr.splice(idx, 1);
+  arr.splice(nextIdx, 0, item);
+  scheduleSave();
+  buildCard(sections.find(s => s.type === groupKey));
+  updateTotals();
+}
+
+// ── BUILD CARDS ──
+function buildSliderRow(item, groupKey) {
+  const div = document.createElement('div');
+  div.className = 'slider-row';
+  div.id = 'row-' + item.id;
+
+  const left = document.createElement('div');
+  const labelDiv = document.createElement('div');
+  labelDiv.className = 'slider-row-label';
+  labelDiv.innerHTML = item.name
+    + (item.priority ? ' <span class="badge priority">Priority</span>' : '');
+
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = item.min ?? 0;
+  slider.max = item.max ?? 2000;
+  slider.value = item.val;
+
+  left.appendChild(labelDiv);
+  left.appendChild(slider);
+
+  const right = document.createElement('div');
+  right.className = 'slider-tools';
+
+  if (canReorderGroup(groupKey)) {
+    const arr = state[groupKey] || [];
+    const idx = arr.findIndex(i => i.id === item.id);
+
+    const upBtn = document.createElement('button');
+    upBtn.className = 'reorder-btn';
+    upBtn.type = 'button';
+    upBtn.textContent = '↑';
+    upBtn.title = 'Move up';
+    upBtn.disabled = idx <= 0;
+    upBtn.onclick = () => moveArrayItem(groupKey, item.id, -1);
+    right.appendChild(upBtn);
+
+    const downBtn = document.createElement('button');
+    downBtn.className = 'reorder-btn';
+    downBtn.type = 'button';
+    downBtn.textContent = '↓';
+    downBtn.title = 'Move down';
+    downBtn.disabled = idx === -1 || idx >= arr.length - 1;
+    downBtn.onclick = () => moveArrayItem(groupKey, item.id, 1);
+    right.appendChild(downBtn);
+  }
+
+  if (groupKey === 'kids-costs' || groupKey === 'shared') {
+    const halfBtn = document.createElement('button');
+    halfBtn.className = 'helper-btn';
+    halfBtn.textContent = 'Use half';
+    halfBtn.onclick = () => {
+      item.val = Math.round(item.val / 2);
+      if (item._updateDisplay) item._updateDisplay();
+      updateTotals();
+      scheduleSave();
+    };
+    right.appendChild(halfBtn);
+  }
+
+  const valSpan = document.createElement('input');
+  valSpan.type = 'text';
+  valSpan.className = 'slider-val';
+  valSpan.inputMode = 'numeric';
+  valSpan.value = fmtView(item.val);
+  valSpan.title = 'Click to type a value';
+
+  // Update slider oninput to also update the input field
+  slider.oninput = () => {
+    item.val = parseInt(slider.value);
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+
+  valSpan.addEventListener('focus', () => {
+    // Show raw monthly number for editing (regardless of view mode)
+    valSpan.value = String(item.val);
+    setTimeout(() => valSpan.select(), 0);
+  });
+
+  const commitVal = () => {
+    const raw = valSpan.value.replace(/[^0-9.]/g, '');
+    let n = parseFloat(raw);
+    if (isNaN(n) || n < 0) n = 0;
+    n = Math.round(n);
+    // Expand slider max if user typed a larger number
+    const sliderMax = parseInt(slider.max) || 2000;
+    if (n > sliderMax) {
+      slider.max = n;
+      item.max = n;
+    }
+    item.val = n;
+    slider.value = Math.min(n, parseInt(slider.max));
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+
+  valSpan.addEventListener('blur', commitVal);
+  valSpan.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); valSpan.blur(); }
+    if (e.key === 'Escape') { valSpan.value = fmtView(item.val); valSpan.blur(); }
+  });
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-btn';
+  removeBtn.innerHTML = '×';
+  removeBtn.title = 'Remove';
+  removeBtn.onclick = () => {
+    const arr = state[groupKey];
+    const idx = arr.findIndex(i => i.id === item.id);
+    if (idx > -1) { arr.splice(idx, 1); scheduleSave(); buildCard(sections.find(s => s.type === groupKey || s.id === groupKey)); updateTotals(); }
+  };
+
+  right.appendChild(valSpan);
+  right.appendChild(removeBtn);
+
+  div.appendChild(left);
+  div.appendChild(right);
+
+  // update slider val display on view change or external update (e.g. Use half)
+  item._updateDisplay = () => {
+    if (document.activeElement !== valSpan) valSpan.value = fmtView(item.val);
+    slider.value = Math.min(item.val, parseInt(slider.max) || 2000);
+  };
+
+  return div;
+}
+
+function buildSavingsRow(item) {
+  const div = document.createElement('div');
+  div.className = 'savings-row';
+  div.id = 'row-' + item.id;
+
+  const top = document.createElement('div');
+  top.className = 'savings-row-top';
+
+  const tools = document.createElement('div');
+  tools.className = 'slider-tools';
+  const arr = state['savings'] || [];
+  const idx = arr.findIndex(i => i.id === item.id);
+
+  const upBtn = document.createElement('button');
+  upBtn.className = 'reorder-btn';
+  upBtn.type = 'button';
+  upBtn.textContent = '↑';
+  upBtn.title = 'Move up';
+  upBtn.disabled = idx <= 0;
+  upBtn.onclick = () => moveArrayItem('savings', item.id, -1);
+  tools.appendChild(upBtn);
+
+  const downBtn = document.createElement('button');
+  downBtn.className = 'reorder-btn';
+  downBtn.type = 'button';
+  downBtn.textContent = '↓';
+  downBtn.title = 'Move down';
+  downBtn.disabled = idx === -1 || idx >= arr.length - 1;
+  downBtn.onclick = () => moveArrayItem('savings', item.id, 1);
+  tools.appendChild(downBtn);
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-btn';
+  removeBtn.type = 'button';
+  removeBtn.innerHTML = '×';
+  removeBtn.title = 'Remove goal';
+  removeBtn.onclick = () => {
+    const savings = state['savings'] || [];
+    const itemIdx = savings.findIndex(i => i.id === item.id);
+    if (itemIdx > -1) {
+      savings.splice(itemIdx, 1);
+      scheduleSave();
+      buildCard(sections.find(s => s.type === 'savings'));
+      updateTotals();
+    }
+  };
+  tools.appendChild(removeBtn);
+
+  const nameEl = document.createElement('div');
+  nameEl.className = 'savings-name';
+  nameEl.innerHTML = item.name + (item.priority ? ' <span class="badge">First</span>' : '');
+
+  const valSpan = document.createElement('input');
+  valSpan.className = 'savings-val';
+  valSpan.inputMode = 'numeric';
+  valSpan.value = fmtView(item.val);
+  valSpan.title = 'Click to type a value';
+
+  top.appendChild(nameEl);
+  top.appendChild(tools);
+
+  const metaCard = document.createElement('div');
+  metaCard.className = 'savings-meta-card';
+  metaCard.innerHTML = `
+    <div class="savings-meta-item">
+      <label>Goal</label>
+      <input type="number" id="goal-${item.id}" value="${item.target || 0}">
+    </div>
+    <div class="savings-meta-item">
+      <label>Balance</label>
+      <input type="number" id="balance-${item.id}" value="${item.balance || 0}">
+    </div>
+  `;
+
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = 0;
+  slider.max = item.max ?? 3000;
+  slider.value = item.val;
+  slider.oninput = () => {
+    item.val = parseInt(slider.value);
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+
+  valSpan.addEventListener('focus', () => {
+    valSpan.value = String(item.val);
+    setTimeout(() => valSpan.select(), 0);
+  });
+  const commitSavingsVal = () => {
+    const raw = valSpan.value.replace(/[^0-9.]/g, '');
+    let n = Math.round(parseFloat(raw));
+    if (isNaN(n) || n < 0) n = 0;
+    if (n > parseInt(slider.max)) { slider.max = n; item.max = n; }
+    item.val = n;
+    slider.value = Math.min(n, parseInt(slider.max));
+    valSpan.value = fmtView(item.val);
+    updateTotals();
+    scheduleSave();
+  };
+  valSpan.addEventListener('blur', commitSavingsVal);
+  valSpan.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); valSpan.blur(); }
+    if (e.key === 'Escape') { valSpan.value = fmtView(item.val); valSpan.blur(); }
+  });
+
+  const sliderWrap = document.createElement('div');
+  sliderWrap.className = 'savings-slider-row';
+  sliderWrap.innerHTML = `<div><div class="savings-slider-meta">Monthly contribution</div></div>`;
+  sliderWrap.firstChild.appendChild(slider);
+  sliderWrap.appendChild(valSpan);
+
+  const progressLine = document.createElement('div');
+  progressLine.className = 'savings-progress-line';
+  progressLine.id = 'progress-' + item.id;
+
+  const goalInput = metaCard.querySelector('#goal-' + item.id);
+  const balanceInput = metaCard.querySelector('#balance-' + item.id);
+  goalInput.oninput = () => {
+    item.target = parseInt(goalInput.value) || 0;
+    updateSavingsRow(item, valSpan, progressLine, slider);
+    scheduleSave();
+  };
+  balanceInput.oninput = () => {
+    item.balance = parseInt(balanceInput.value) || 0;
+    updateSavingsRow(item, valSpan, progressLine, slider);
+    scheduleSave();
+  };
+
+  item._updateDisplay = () => updateSavingsRow(item, valSpan, progressLine, slider);
+
+  div.appendChild(top);
+  div.appendChild(sliderWrap);
+  div.appendChild(metaCard);
+  div.appendChild(progressLine);
+  updateSavingsRow(item, valSpan, progressLine, slider);
+  return div;
+}
+
+function updateSavingsRow(item, valSpan, progressLine, slider) {
+  const monthly = item.val || 0;
+  const target = item.target || 0;
+  const balance = item.balance || 0;
+  valSpan.value = fmtView(monthly);
+  slider.value = monthly;
+  const pct = target > 0 ? Math.min(100, Math.round((balance / target) * 100)) : 0;
+  const remaining = Math.max(0, target - balance);
+  if (target <= 0) {
+    progressLine.innerHTML = 'Add a goal amount to track progress and ETA.';
+    return;
+  }
+  if (remaining === 0) {
+    progressLine.innerHTML = `<strong>${pct}% funded</strong> — goal reached.`;
+    return;
+  }
+  if (monthly <= 0) {
+    progressLine.innerHTML = `<strong>${pct}% funded</strong> — ${fmt(remaining)} remaining — add a monthly contribution to project completion.`;
+    return;
+  }
+  const months = Math.ceil(remaining / monthly);
+  progressLine.innerHTML = `<strong>${pct}% funded</strong> — ${fmt(remaining)} to go — about ${months} month${months === 1 ? '' : 's'}.`;
+}
+
+function buildCard(section) {
+  const existing = document.getElementById('card-' + section.id);
+  const isOpen = openCards.has(section.id);
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.id = 'card-' + section.id;
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'card-header';
+  header.onclick = () => toggleCard(section.id);
+
+  const dot = document.createElement('div');
+  dot.className = 'card-dot dot-' + section.dotClass;
+
+  const title = document.createElement('div');
+  title.className = 'card-title';
+  title.innerHTML = section.title;
+
+  const total = document.createElement('div');
+  total.className = 'card-total';
+  if (section.type === 'income') total.classList.add('income-total');
+  if (section.type === 'savings') total.classList.add('saving-total');
+  total.id = 'total-' + section.id;
+  total.textContent = '—';
+
+  const chevron = document.createElement('div');
+  chevron.className = 'card-chevron' + (isOpen ? ' open' : '');
+  chevron.id = 'chev-' + section.id;
+  chevron.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+  header.appendChild(dot);
+  header.appendChild(title);
+  header.appendChild(total);
+  header.appendChild(chevron);
+  card.appendChild(header);
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'card-body' + (isOpen ? ' open' : '');
+  body.id = 'body-' + section.id;
+
+  if (section.type === 'income') buildIncomeBody(body);
+  else if (section.type === 'cs-out') buildCSOutBody(body);
+  else if (section.type === 'networth') buildNetWorthBody(body);
+  else if (section.type === 'savings') {
+    const items = (state['savings'] || []).filter(showItem);
+    items.forEach(item => body.appendChild(buildSavingsRow(item)));
+    body.appendChild(buildAddSavingsBtn());
+  } else {
+    const items = (state[section.type] || []).filter(showItem);
+    items.forEach(item => body.appendChild(buildSliderRow(item, section.type)));
+    body.appendChild(buildAddItemBtn(section.type));
+  }
+
+  card.appendChild(body);
+
+  if (existing) existing.replaceWith(card);
+  else document.getElementById('cards-col').appendChild(card);
+}
+
+function buildIncomeBody(body) {
+  const wrap = document.createElement('div');
+  const salaryMode = getSalaryInputMode();
+  wrap.innerHTML = `
+    <div class="income-inputs">
+      <div class="income-input-group">
+        <div class="income-label-row">
+          <label>Gross Salary (${salaryMode})</label>
+          <div class="input-mode-toggle">
+            <button type="button" class="input-mode-btn ${salaryMode === 'annual' ? 'active' : ''}" onclick="setSalaryInputMode('annual')">Annual</button>
+            <button type="button" class="input-mode-btn ${salaryMode === 'monthly' ? 'active' : ''}" onclick="setSalaryInputMode('monthly')">Monthly</button>
+            <button type="button" class="input-mode-btn ${salaryMode === 'weekly' ? 'active' : ''}" onclick="setSalaryInputMode('weekly')">Weekly</button>
+          </div>
+        </div>
+        <input type="number" id="inp-gross" value="${getGrossInputValue()}" oninput="updateGrossFromInput(this.value)">
+      </div>
+      ${['stabilise','rebuild','new-chapter'].includes(currentPhase) ? `
+      <div class="income-input-group">
+        <label>Salary Sacrifice (monthly)</label>
+        <input type="number" id="inp-sacrifice" value="${state.salarySacrifice}" oninput="state.salarySacrifice=parseInt(this.value)||0;updateTotals();scheduleSave();">
+      </div>` : ''}
+      <div class="income-input-group">
+        <label>FTB (Family Tax Benefit) / Other Income (monthly)</label>
+        <input type="number" id="inp-ftb" value="${state.ftbMonthly}" oninput="state.ftbMonthly=parseInt(this.value)||0;updateTotals();scheduleSave();">
+      </div>
+    </div>
+    <div class="income-breakdown" id="income-breakdown">
+      <div class="ib-item"><div class="ib-label">Tax + Medicare</div><div class="ib-val" id="ib-tax">—</div></div>
+      <div class="ib-item"><div class="ib-label">Super (SGC)</div><div class="ib-val" id="ib-super">—</div></div>
+      <div class="ib-item"><div class="ib-label">Take-Home/mo</div><div class="ib-val" id="ib-takehome">—</div></div>
+      <div class="ib-item"><div class="ib-label">Effective Rate</div><div class="ib-val" id="ib-rate">—</div></div>
+    </div>
+  `;
+  body.appendChild(wrap);
+}
+
+function buildCSOutBody(body) {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="cs-mode-toggle">
+      <button type="button" class="cs-mode-btn" id="cs-mode-paying" onclick="setCSMode('paying')">Paying</button>
+      <button type="button" class="cs-mode-btn" id="cs-mode-receiving" onclick="setCSMode('receiving')">Receiving</button>
+    </div>
+    <div class="slider-row">
+      <div>
+        <div class="slider-row-label"><span id="cs-direction-label">Child Support Payment (monthly)</span> <span class="badge">CSA</span></div>
+        <input type="range" id="cs-out-slider" min="0" max="3000" value="${getCSBudgetAmount()}" oninput="const val=parseInt(this.value)||0;if(getCSMode()==='receiving'){state.csReceived=val;state.csOut=0;}else{state.csOut=val;state.csReceived=0;}syncCSCardControls();updateCSAEstimateNote(getCurrentCSAEstimate());updateTotals();scheduleSave();">
+      </div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span class="slider-val" id="cs-out-val">${fmtView(getCSBudgetAmount())}</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-muted);padding-top:10px;line-height:1.6;">Use the <strong style="color:var(--ink)">CSA Estimator</strong> in the panel to calculate your assessment, then apply it here. Switch between <strong style="color:var(--ink)">paying</strong> and <strong style="color:var(--ink)">receiving</strong> so child support flows to the right side of the budget automatically.</p>
+    <div class="cs-estimate-note" id="cs-estimate-note">Budgeted child support matches the current estimate.</div>
+  `;
+  body.appendChild(wrap);
+  syncCSCardControls();
+}
+
+function buildNetWorthBody(body) {
+  const nw = state.networth;
+  body.innerHTML = `
+    <div class="nw-grid">
+      <div class="nw-item"><label>Property Value</label><input type="number" value="${nw.property}" oninput="state.networth.property=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Super Balance</label><input type="number" value="${nw.superBal}" oninput="state.networth.superBal=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Cash / Savings</label><input type="number" value="${nw.cashSavings}" oninput="state.networth.cashSavings=parseInt(this.value)||0;updateNetWorth();updateTotals();scheduleSave();"></div>
+      <div class="nw-item"><label>Investments</label><input type="number" value="${nw.investments}" oninput="state.networth.investments=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Other Assets</label><input type="number" value="${nw.otherAssets}" oninput="state.networth.otherAssets=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-divider"></div>
+      <div class="nw-item"><label>Mortgage / Rent Arrears</label><input type="number" value="${nw.mortgage}" oninput="state.networth.mortgage=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Settlement Debt</label><input type="number" value="${nw.settlementDebt}" oninput="state.networth.settlementDebt=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Car Loan</label><input type="number" value="${nw.carLoan}" oninput="state.networth.carLoan=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+      <div class="nw-item"><label>Other Debt</label><input type="number" value="${nw.otherDebt}" oninput="state.networth.otherDebt=parseInt(this.value)||0;updateNetWorth();scheduleSave();"></div>
+    </div>
+    <div class="nw-summary">
+      <div class="nw-stat"><div class="nw-stat-label">Total Assets</div><div class="nw-stat-val pos" id="nw-assets">—</div></div>
+      <div class="nw-stat"><div class="nw-stat-label">Total Liabilities</div><div class="nw-stat-val neg" id="nw-liabilities">—</div></div>
+      <div class="nw-stat"><div class="nw-stat-label">Net Worth</div><div class="nw-stat-val" id="nw-total">—</div></div>
+    </div>
+  `;
+}
+
+function buildAddItemBtn(groupKey) {
+  const wrap = document.createElement('div');
+  wrap.className = 'add-item-row';
+  const btn = document.createElement('button');
+  btn.className = 'add-item-btn';
+  btn.innerHTML = '+ Add Item';
+  btn.onclick = () => {
+    const name = prompt('Item name:');
+    if (!name) return;
+    const id = groupKey + '-' + Date.now();
+    const newItem = {
+      id,
+      name,
+      val: 0,
+      min: 0,
+      max: 1000,
+    };
+    state[groupKey].push(newItem);
+    scheduleSave();
+    buildCard(sections.find(s => s.type === groupKey));
+    updateTotals();
+  };
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function buildAddSavingsBtn() {
+  const wrap = document.createElement('div');
+  wrap.className = 'add-item-row';
+  const btn = document.createElement('button');
+  btn.className = 'add-item-btn';
+  btn.innerHTML = '+ Add Goal';
+  btn.onclick = () => {
+    const name = prompt('Savings goal name:');
+    if (!name) return;
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+    state['savings'].push({
+      id: 'savings-' + Date.now(),
+      name: trimmedName,
+      val: 0,
+      min: 0,
+      max: 3000,
+      target: 0,
+      balance: 0,
+    });
+    scheduleSave();
+    buildCard(sections.find(s => s.type === 'savings'));
+    updateTotals();
+  };
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function toggleCard(id) {
+  const body = $('body-' + id);
+  const chev = $('chev-' + id);
+  const isOpen = openCards.has(id);
+  if (isOpen) { openCards.delete(id); body.classList.remove('open'); chev.classList.remove('open'); }
+  else { openCards.add(id); body.classList.add('open'); chev.classList.add('open'); }
+}
+
+// ── UPDATE FUNCTIONS ──
+function updateNetWorth() {
+  const nw = state.networth;
+  const assets = (nw.property||0) + (nw.superBal||0) + (nw.cashSavings||0) + (nw.investments||0) + (nw.otherAssets||0);
+  const liabilities = (nw.mortgage||0) + (nw.carLoan||0) + (nw.otherDebt||0) + (nw.settlementDebt||0);
+  const total = assets - liabilities;
+  if ($('nw-assets')) {
+    $('nw-assets').textContent = fmt(assets);
+    $('nw-liabilities').textContent = fmt(liabilities);
+    $('nw-total').textContent = fmt(total);
+    $('nw-total').className = 'nw-stat-val ' + (total >= 0 ? 'pos' : 'neg');
+  }
+}
+
+// Phase only decides which EMPTY suggestions are offered.
+// Anything with an amount always shows and always counts, whatever the phase.
+function hasValue(item) { return (Number(item && item.val) || 0) !== 0; }
+function showItem(item) { return !item.phases || item.phases.includes(currentPhase) || hasValue(item); }
+function sectionHasValues(section) {
+  if (section.type === 'networth') return Object.values(state.networth || {}).some(v => (Number(v) || 0) !== 0);
+  return Array.isArray(state[section.type]) && state[section.type].some(hasValue);
+}
+function showSection(section) { return !section.phases || section.phases.includes(currentPhase) || sectionHasValues(section); }
+
+function sumGroup(groupKey) {
+  return (state[groupKey] || []).reduce((a, i) => a + (Number(i.val) || 0), 0);
+}
+
+// ── PHASE-AWARE SNAP PANEL ──
+function renderSnapPanel(m) {
+  const { takeHome, totalExpenses, surplus, savings, csOut, kids, shared, housing, personal, subs } = m;
+  const cash = (state.networth && state.networth.cashSavings) || 0;
+  const investments = ((state.networth && state.networth.investments) || 0) + ((state.networth && state.networth.superBal) || 0);
+  const nwAssets = (state.networth?.property||0) + (state.networth?.superBal||0) + (state.networth?.cashSavings||0) + (state.networth?.investments||0) + (state.networth?.otherAssets||0);
+  const nwLiab = (state.networth?.mortgage||0) + (state.networth?.carLoan||0) + (state.networth?.otherDebt||0) + (state.networth?.settlementDebt||0);
+  const netWorth = nwAssets - nwLiab;
+  const essentials = Math.max(0, housing + kids + shared + csOut + (personal + subs) * 0.5);
+  const runwayMo = (cash > 0 && essentials > 0) ? cash / essentials : 0;
+  const sepLoadPct = takeHome > 0 ? Math.round(((csOut + kids + shared) / takeHome) * 100) : 0;
+  const transitionSpent = getTCTotalSpent();
+  const transitionEst = getTCTotalEstimated();
+  const savingsRate = takeHome > 0 ? Math.round((savings / takeHome) * 100) : 0;
+  const annualSavings = savings * 12;
+
+  // Helpers
+  const setTile = (slot, label, val, sub, valClass) => {
+    const lbl = $('ss-' + slot + '-label');
+    const v = $('ss-' + slot + '-val');
+    const s = $('ss-' + slot + '-sub');
+    if (lbl) lbl.textContent = label;
+    if (v) {
+      v.textContent = val;
+      v.className = 'snap-stat-val' + (valClass ? ' ' + valClass : '');
+    }
+    if (s) s.textContent = sub;
+  };
+  const fmtRunway = () => {
+    if (cash <= 0) return ['—', 'add cash to net worth'];
+    if (essentials <= 0) return ['∞', 'no essentials mapped'];
+    return [(runwayMo >= 12 ? '12+' : runwayMo.toFixed(1)) + ' mo', 'if income stopped'];
+  };
+  const fmtNetWorth = () => netWorth === 0 ? ['—', 'set net worth'] : [fmt(netWorth), 'assets − liabilities'];
+
+  switch (currentPhase) {
+    case 'survive': {
+      // Hero: Surplus (binary signal — bleeding or not)
+      const heroClass = surplus < 0 ? 'negative' : 'positive';
+      setTile('hero', 'Surplus', fmtView(surplus), surplus < 0 ? 'short this month' : 'this month', heroClass);
+      // Tile 1: Take-Home
+      setTile('t1', 'Take-Home', fmtView(takeHome), 'after tax & super');
+      // Tile 2: Essentials Out — must-pay floor
+      setTile('t2', 'Essentials Out', fmtView(essentials), 'must-pay floor');
+      // Tile 3: Transition burn — survive cost meter
+      setTile('t3', 'Transition Burn', transitionSpent > 0 ? fmt(transitionSpent) : '—',
+        transitionEst > 0 ? 'of ' + fmt(transitionEst) + ' planned' : 'log lump-sum costs below');
+      // Tile 4: Runway
+      const [rwVal, rwSub] = fmtRunway();
+      setTile('t4', 'Runway', rwVal, rwSub);
+      break;
+    }
+    case 'rebuild': {
+      // Hero: Annual Savings
+      setTile('hero', 'Annual Savings', fmt(annualSavings) + '/yr', 'building wealth', annualSavings > 0 ? 'positive' : '');
+      // Tile 1: Savings Rate
+      setTile('t1', 'Savings Rate', savingsRate + '%', 'of take-home');
+      // Tile 2: Surplus / mo
+      setTile('t2', 'Surplus / mo', fmtView(surplus), 'after everything', surplus >= 0 ? 'positive' : 'negative');
+      // Tile 3: Net Worth
+      const [nwVal, nwSub] = fmtNetWorth();
+      setTile('t3', 'Net Worth', nwVal, nwSub);
+      // Tile 4: Separation Load
+      setTile('t4', 'Separation Load', sepLoadPct + '%', 'still the constraint?');
+      break;
+    }
+    case 'new-chapter': {
+      // Hero: Net Worth
+      const [nwVal, nwSub] = fmtNetWorth();
+      setTile('hero', 'Net Worth', nwVal, nwSub, netWorth > 0 ? 'positive' : (netWorth < 0 ? 'negative' : ''));
+      // Tile 1: Annual Savings
+      setTile('t1', 'Annual Savings', fmt(annualSavings) + '/yr', 'compounding');
+      // Tile 2: Savings Rate
+      setTile('t2', 'Savings Rate', savingsRate + '%', 'of take-home');
+      // Tile 3: Investments
+      setTile('t3', 'Investments', investments > 0 ? fmt(investments) : '—', investments > 0 ? 'super + invested' : 'set in net worth');
+      // Tile 4: Surplus / mo
+      setTile('t4', 'Surplus / mo', fmtView(surplus), 'after everything', surplus >= 0 ? 'positive' : 'negative');
+      break;
+    }
+    case 'stabilise':
+    default: {
+      // Hero: Surplus — amber threshold if drifting low (< $400 = under savings target)
+      let heroClass = 'positive';
+      if (surplus < 0) heroClass = 'negative';
+      else if (surplus < 400) heroClass = 'warn';
+      const heroSub = savings > 0
+        ? 'after everything · ' + fmtView(savings) + ' to savings'
+        : 'after everything';
+      setTile('hero', 'Surplus', fmtView(surplus), heroSub, heroClass);
+      // Tile 1: Take-Home
+      setTile('t1', 'Take-Home', fmtView(takeHome), 'after tax & super');
+      // Tile 2: Total Out
+      setTile('t2', 'Total Out', fmtView(totalExpenses), 'all expenses & CS');
+      // Tile 3: Separation Load
+      setTile('t3', 'Separation Load', sepLoadPct + '%', 'CS + kids monthly');
+      // Tile 4: Runway against 3-mo target
+      if (cash <= 0) {
+        setTile('t4', 'Runway', '—', 'add cash to net worth');
+      } else if (essentials <= 0) {
+        setTile('t4', 'Runway', '∞', 'no essentials mapped');
+      } else {
+        const cap = runwayMo >= 12 ? '12+' : runwayMo.toFixed(1);
+        setTile('t4', 'Runway', cap + ' / 3.0 mo', 'target: 3-month buffer');
+      }
+      break;
+    }
+  }
+}
+
+function updateTotals() {
+  const gross = state.grossSalary || 0;
+  const sacrifice = state.salarySacrifice || 0;
+  const taxable = gross - (sacrifice * 12);
+  const { tax, medicare, totalTax, netMonthly } = calcAusTax(Math.max(0, taxable));
+  const superMonthly = gross * 0.12 / 12;
+  const ftb = state.ftbMonthly || 0;
+  const csReceived = state.csReceived || 0;
+  const takeHome = netMonthly + ftb + csReceived;
+  const csOut = state.csOut || 0;
+  const csMode = getCSMode();
+  const csBudgetAmount = getCSBudgetAmount();
+  const kids = sumGroup('kids-costs');
+  const shared = sumGroup('shared');
+  const housing = sumGroup('housing');
+  const personal = sumGroup('personal');
+  const subs = sumGroup('subs');
+  const savings = sumGroup('savings');
+  const totalExpenses = csOut + kids + shared + housing + personal + subs + savings;
+  const surplus = takeHome - totalExpenses;
+
+  // Update income card breakdown
+  if ($('ib-tax')) {
+    $('ib-tax').textContent = fmtView(totalTax / 12);
+    $('ib-super').textContent = fmtView(superMonthly);
+    $('ib-takehome').textContent = fmt(netMonthly) + '/mo';
+    const effRate = gross > 0 ? Math.round(totalTax / gross * 100) : 0;
+    $('ib-rate').textContent = effRate + '%';
+  }
+
+  // Card totals (null-guard: some cards are hidden in certain phases)
+  const setCardTotal = (id, txt) => { const el = $(id); if (el) el.textContent = txt; };
+  setCardTotal('total-income', fmtView(takeHome));
+  setCardTotal('total-cs-out', csMode === 'receiving' ? fmtView(csBudgetAmount) + ' in' : fmtView(csBudgetAmount));
+  setCardTotal('total-kids-costs', fmtView(kids));
+  setCardTotal('total-shared', fmtView(shared));
+  setCardTotal('total-housing', fmtView(housing));
+  setCardTotal('total-personal', fmtView(personal));
+  setCardTotal('total-subs', fmtView(subs));
+  setCardTotal('total-savings', fmtView(savings));
+
+  // Update cs-out slider display if view changed
+  syncCSCardControls();
+
+  // Update all slider display values on view change
+  ['kids-costs','shared','housing','personal','subs'].forEach(g => {
+    (state[g] || []).forEach(item => { if (item._updateDisplay) item._updateDisplay(); });
+  });
+  (state['savings'] || []).forEach(item => { if (item._updateDisplay) item._updateDisplay(); });
+
+  // Dossier
+  $('d-gross').textContent = fmt(gross) + '/yr';
+  if ($('d-ftb-label')) $('d-ftb-label').textContent = csMode === 'receiving' ? 'FTB / CS Received' : 'FTB / Other Income';
+  $('d-ftb').textContent = fmtView(ftb + (csMode === 'receiving' ? csReceived : 0));
+  $('d-tax').textContent = '-' + fmtView(totalTax / 12);
+  $('d-super').textContent = fmtView(superMonthly);
+  $('d-takehome').textContent = fmtView(takeHome);
+  if ($('d-cs-label')) $('d-cs-label').textContent = csMode === 'receiving' ? 'Child Support In' : 'Child Support Out';
+  $('d-cs').textContent = fmtView(csBudgetAmount);
+  $('d-kids').textContent = fmtView(kids + shared);
+  $('d-housing').textContent = fmtView(housing);
+  $('d-personal').textContent = fmtView(personal + subs);
+  $('d-savings').textContent = fmtView(savings);
+  const surplusEl = $('d-surplus');
+  surplusEl.textContent = fmtView(surplus);
+  surplusEl.className = 'dossier-row-val' + (surplus >= 0 ? ' green' : ' red');
+  surplusEl.style.fontSize = '1rem';
+  const surplusPct = takeHome > 0 ? Math.max(0, Math.min(100, surplus / takeHome * 100)) : 0;
+  $('d-surplus-bar').style.width = surplusPct + '%';
+  $('d-surplus-bar').style.background = surplus >= 0 ? 'var(--green)' : 'var(--coral)';
+
+  // Snap panel — phase-aware
+  renderSnapPanel({ takeHome, totalExpenses, surplus, savings, csOut, kids, shared, housing, personal, subs });
+
+  // Snap bar — Spent vs Surplus
+  if (takeHome > 0) {
+    const spentPct = Math.max(0, Math.min(100, Math.round((totalExpenses / takeHome) * 100)));
+    $('bar-spent').style.width = spentPct + '%';
+    $('bar-spent-pct').textContent = spentPct + '%';
+    $('bar-surplus-pct').textContent = Math.max(0, 100 - spentPct) + '%';
+  } else {
+    $('bar-spent').style.width = '0%';
+    $('bar-spent-pct').textContent = '0%';
+    $('bar-surplus-pct').textContent = '0%';
+  }
+
+  updateNetWorth();
+}
+
+// ── NAV ──
+
+// ── TRANSITION COSTS ──
+const TC_DEFAULTS = [
+  { label: 'Legal / Solicitor', estimated: 0, trackOnly: true },
+  { label: 'Mediation', estimated: 0, trackOnly: true },
+  { label: 'Setting up new home', estimated: 0, trackOnly: true },
+  { label: 'Moving costs', estimated: 0, trackOnly: true },
+];
+const TC_PHASE_COPY = {
+  'waiting-room': {
+    title: 'Separation Costs',
+    sub: 'Start logging lump-sum costs now — legal advice, mediation, moving. Tracked separately so they don\'t distort your monthly budget.',
+    totals: 'Logged so far',
+  },
+  survive: {
+    title: 'Separation Costs',
+    sub: "Lawyers, mediation, the new place. Lump-sum payments hit hard right now — track them here so they don't poison your monthly view.",
+    totals: 'Logged so far',
+  },
+  stabilise: {
+    title: 'Separation Costs',
+    sub: 'Lump-sum payments — legal, mediation, setting up the new place. Tracked separately from your monthly budget so they don\'t distort cash flow.',
+    totals: 'Logged so far',
+  },
+  rebuild: {
+    title: 'Separation Costs',
+    sub: 'Most of the big costs are behind you. Keep logging until all categories are settled and closed.',
+    totals: 'Logged so far',
+  },
+  'new-chapter': {
+    title: 'Separation Costs',
+    sub: "Archive categories as they're settled — this becomes a permanent record of what the separation cost.",
+    totals: 'Logged so far',
+  },
+};
+
+let transitionCosts = [];
+let editingTCRowId = null;
+let editingTCPaymentRowId = null;
+let editingTCPaymentId = null;
+
+function loadTC() {
+  try {
+    const raw = localStorage.getItem('atlas_transition_costs') || localStorage.getItem('dad_atlas_transition_costs');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        transitionCosts = parsed.map(r => ({
+          id: r.id || ('tc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)),
+          label: r.label || 'Untitled',
+          estimated: Number(r.estimated) || 0,
+          // trackOnly defaults to true for new rows; for legacy rows infer from estimated
+          trackOnly: typeof r.trackOnly === 'boolean' ? r.trackOnly : !(Number(r.estimated) > 0),
+          payments: Array.isArray(r.payments) ? r.payments.map(p => ({
+            id: p.id || ('p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)),
+            date: p.date || '',
+            amount: Number(p.amount) || 0,
+            note: p.note || '',
+          })) : [],
+          archived: !!r.archived,
+          open: !!r.open,
+        }));
+        return;
+      }
+    }
+  } catch(e) {}
+  // First load — seed with defaults
+  transitionCosts = TC_DEFAULTS.map((d, i) => ({
+    id: 'tc-default-' + i,
+    label: d.label,
+    estimated: d.estimated,
+    trackOnly: !!d.trackOnly,
+    payments: [],
+    archived: false,
+    open: false,
+  }));
+}
+
+function saveTC() {
+  try {
+    const persist = transitionCosts.map(r => ({
+      id: r.id, label: r.label, estimated: r.estimated, trackOnly: !!r.trackOnly, payments: r.payments, archived: r.archived, open: r.open,
+    }));
+    const s = JSON.stringify(persist);
+    localStorage.setItem('atlas_transition_costs', s);
+    localStorage.setItem('dad_atlas_transition_costs', s);
+  } catch(e) {}
+}
+
+function getTCRowSpent(row) {
+  return (row.payments || []).reduce((a, p) => a + (Number(p.amount) || 0), 0);
+}
+function getTCRowLastPayment(row) {
+  const sorted = (row.payments || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  return sorted[0] || null;
+}
+function getTCTotalSpent() {
+  return transitionCosts.filter(r => !r.archived).reduce((a, r) => a + getTCRowSpent(r), 0);
+}
+function getTCTotalEstimated() {
+  return transitionCosts.filter(r => !r.archived && !r.trackOnly).reduce((a, r) => a + (Number(r.estimated) || 0), 0);
+}
+function hasAnyTCBudget() {
+  return transitionCosts.some(r => !r.archived && !r.trackOnly && (Number(r.estimated) || 0) > 0);
+}
+
+function fmtTCDate(s) {
+  if (!s) return '—';
+  const d = new Date(s + 'T12:00:00');
+  if (isNaN(d.getTime())) return s;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()];
+}
+
+function renderTransitionCosts() {
+  const copy = TC_PHASE_COPY[currentPhase] || TC_PHASE_COPY.stabilise;
+  if ($('tc-title')) $('tc-title').textContent = copy.title;
+  if ($('tc-sub')) $('tc-sub').textContent = copy.sub;
+  if ($('tc-totals-label')) $('tc-totals-label').textContent = copy.totals;
+
+  const spent = getTCTotalSpent();
+  const est = getTCTotalEstimated();
+  const anyBudget = hasAnyTCBudget();
+  if ($('tc-spent-total')) $('tc-spent-total').textContent = fmt(spent);
+  if ($('tc-est-total')) $('tc-est-total').textContent = fmt(est);
+  if ($('tc-of-suffix')) $('tc-of-suffix').style.display = anyBudget ? '' : 'none';
+  const pct = est > 0 ? Math.min(100, Math.round((spent / est) * 100)) : (spent > 0 ? 100 : 0);
+  const totalsFill = $('tc-totals-bar-fill');
+  if (totalsFill) {
+    totalsFill.style.width = pct + '%';
+    totalsFill.classList.toggle('no-est', !anyBudget && spent > 0);
+    totalsFill.classList.toggle('over', anyBudget && spent > est);
+  }
+
+  const rowsEl = $('tc-rows');
+  if (!rowsEl) return;
+  rowsEl.innerHTML = '';
+
+  const active = transitionCosts.filter(r => !r.archived);
+  const archived = transitionCosts.filter(r => r.archived);
+
+  if (transitionCosts.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'tc-empty';
+    empty.textContent = 'No transition costs yet. Add one to start tracking.';
+    rowsEl.appendChild(empty);
+  } else {
+    active.forEach(row => rowsEl.appendChild(buildTCRow(row)));
+    archived.forEach(row => rowsEl.appendChild(buildTCRow(row)));
+  }
+}
+
+function buildTCRow(row) {
+  const spent = getTCRowSpent(row);
+  const est = Number(row.estimated) || 0;
+  const trackOnly = !!row.trackOnly;
+  const hasBudget = !trackOnly && est > 0;
+  const remaining = est - spent;
+  const last = getTCRowLastPayment(row);
+  const over = hasBudget && spent > est;
+  const barPct = hasBudget ? Math.min(100, (spent / est) * 100) : (spent > 0 ? 100 : 0);
+  const barClass = hasBudget ? (over ? 'over' : '') : 'no-est';
+
+  const el = document.createElement('div');
+  el.className = 'tc-row' + (row.open ? ' open' : '') + (row.archived ? ' archived' : '');
+  el.dataset.id = row.id;
+
+  // Collapsed
+  const collapsed = document.createElement('div');
+  collapsed.className = 'tc-row-collapsed';
+  collapsed.style.cursor = 'pointer';
+  collapsed.onclick = () => toggleTCRow(row.id);
+
+  const main = document.createElement('div');
+  main.className = 'tc-row-main';
+  const title = document.createElement('div');
+  title.className = 'tc-row-title';
+  title.textContent = row.label;
+  const meta = document.createElement('div');
+  meta.className = 'tc-row-meta';
+  meta.innerHTML = (row.payments || []).length === 0
+    ? 'No payments yet'
+    : (row.payments.length + (row.payments.length === 1 ? ' payment' : ' payments') +
+       (last ? '<span class="sep">·</span>last: ' + fmtTCDate(last.date) + ' — ' + fmt(last.amount) : ''));
+  main.appendChild(title);
+  main.appendChild(meta);
+
+  const numbers = document.createElement('div');
+  numbers.className = 'tc-row-numbers';
+  numbers.innerHTML = '<div class="tc-row-spent' + (over ? ' over' : '') + '">' + fmt(spent) + '</div>'
+    + (hasBudget
+        ? '<div class="tc-row-est">of ' + fmt(est) + ' budget</div>'
+        : (trackOnly
+            ? '<div class="tc-row-est">Tracking spend</div>'
+            : '<button class="tc-row-est tc-set-est" type="button" data-tc-setest="' + row.id + '">Set budget →</button>'));
+
+  const actions = document.createElement('div');
+  actions.className = 'tc-row-actions';
+  const addBtn = document.createElement('button');
+  addBtn.className = 'tc-row-action-btn';
+  addBtn.type = 'button';
+  addBtn.textContent = '+ Payment';
+  addBtn.onclick = (e) => { e.stopPropagation(); openTCAddPayment(row.id); };
+  const expandBtn = document.createElement('button');
+  expandBtn.className = 'tc-row-action-btn icon';
+  expandBtn.type = 'button';
+  expandBtn.innerHTML = row.open ? '&#9650;' : '&#9660;';
+  expandBtn.onclick = (e) => { e.stopPropagation(); toggleTCRow(row.id); };
+  actions.appendChild(addBtn);
+  actions.appendChild(expandBtn);
+
+  collapsed.appendChild(main);
+  collapsed.appendChild(numbers);
+  collapsed.appendChild(actions);
+  el.appendChild(collapsed);
+
+  // Bar
+  const bar = document.createElement('div');
+  bar.className = 'tc-row-bar';
+  bar.innerHTML = '<div class="tc-row-bar-fill ' + barClass + '" style="width:' + barPct + '%"></div>';
+  el.appendChild(bar);
+
+  // Expanded
+  const expanded = document.createElement('div');
+  expanded.className = 'tc-row-expanded';
+
+  // Track-only toggle
+  const toggleWrap = document.createElement('label');
+  toggleWrap.className = 'tc-trackonly-row';
+  toggleWrap.innerHTML =
+    '<input type="checkbox" class="tc-trackonly-cb" data-tc-trackonly="' + row.id + '"' + (trackOnly ? ' checked' : '') + ' />' +
+    '<span class="tc-trackonly-text">Just track what I spend (no budget for this)</span>';
+  expanded.appendChild(toggleWrap);
+
+  // Fields row
+  const fields = document.createElement('div');
+  fields.className = 'tc-row-fields' + (trackOnly ? ' tc-fields-trackonly' : '');
+  if (trackOnly) {
+    fields.innerHTML =
+      '<div>' +
+        '<div class="tc-field-label">Spent to date</div>' +
+        '<div class="tc-field-val' + (spent > 0 ? ' green' : '') + '">' + fmt(spent) + '</div>' +
+      '</div>';
+  } else {
+    fields.innerHTML =
+      '<div>' +
+        '<div class="tc-field-label">Budget</div>' +
+        '<input type="number" min="0" step="100" class="tc-field-input" value="' + (est || 0) + '" data-tc-est="' + row.id + '" />' +
+      '</div>' +
+      '<div>' +
+        '<div class="tc-field-label">Spent</div>' +
+        '<div class="tc-field-val' + (spent > 0 ? ' green' : '') + '">' + fmt(spent) + '</div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="tc-field-label">Remaining</div>' +
+        '<div class="tc-field-val' + (remaining < 0 ? ' red' : '') + '">' + (est > 0 ? fmt(remaining) : '—') + '</div>' +
+      '</div>';
+  }
+  expanded.appendChild(fields);
+
+  // Payments
+  const paymentsHead = document.createElement('div');
+  paymentsHead.className = 'tc-payments-head';
+  paymentsHead.textContent = 'Payments (' + (row.payments || []).length + ')';
+  expanded.appendChild(paymentsHead);
+
+  const list = document.createElement('div');
+  list.className = 'tc-payments-list';
+  if ((row.payments || []).length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'tc-payments-empty';
+    empty.textContent = 'No payments logged yet.';
+    list.appendChild(empty);
+  } else {
+    const sorted = row.payments.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    sorted.forEach(p => {
+      const pr = document.createElement('div');
+      pr.className = 'tc-payment-row';
+      pr.style.cursor = 'pointer';
+      pr.onclick = () => openTCEditPayment(row.id, p.id);
+      pr.innerHTML =
+        '<div class="tc-payment-date">' + fmtTCDate(p.date) + '</div>' +
+        '<div class="tc-payment-amount">' + fmt(p.amount) + '</div>' +
+        '<div class="tc-payment-note' + (p.note ? '' : ' empty') + '">' + (p.note || 'no note') + '</div>' +
+        '<div class="tc-payment-actions"><button class="tc-payment-x" type="button" data-tc-pdel="' + row.id + ':' + p.id + '" title="Remove">×</button></div>';
+      list.appendChild(pr);
+    });
+  }
+  expanded.appendChild(list);
+
+  // Buttons
+  const buttons = document.createElement('div');
+  buttons.className = 'tc-row-buttons';
+  const left = document.createElement('div');
+  left.className = 'tc-row-buttons-left';
+  const addPay2 = document.createElement('button');
+  addPay2.className = 'tc-row-action-btn';
+  addPay2.type = 'button';
+  addPay2.textContent = '+ Add payment';
+  addPay2.onclick = () => openTCAddPayment(row.id);
+  left.appendChild(addPay2);
+  const right = document.createElement('div');
+  right.className = 'tc-row-buttons-right';
+  const archBtn = document.createElement('button');
+  archBtn.className = 'tc-row-action-btn';
+  archBtn.type = 'button';
+  archBtn.textContent = row.archived ? 'Unarchive' : 'Archive';
+  archBtn.onclick = () => toggleTCArchive(row.id);
+  const delBtn = document.createElement('button');
+  delBtn.className = 'tc-row-action-btn';
+  delBtn.type = 'button';
+  delBtn.textContent = 'Delete row';
+  delBtn.onclick = () => deleteTCRow(row.id);
+  right.appendChild(archBtn);
+  right.appendChild(delBtn);
+  buttons.appendChild(left);
+  buttons.appendChild(right);
+  expanded.appendChild(buttons);
+
+  el.appendChild(expanded);
+
+  // Wire estimate input
+  setTimeout(() => {
+    const estInput = el.querySelector('[data-tc-est="' + row.id + '"]');
+    if (estInput) {
+      const commit = () => {
+        const v = Math.max(0, Number(estInput.value) || 0);
+        const r = transitionCosts.find(x => x.id === row.id);
+        if (r) { r.estimated = v; saveTC(); renderTransitionCosts(); updateTotals(); }
+      };
+      estInput.addEventListener('blur', commit);
+      estInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); estInput.blur(); }});
+      estInput.addEventListener('click', e => e.stopPropagation());
+    }
+    el.querySelectorAll('[data-tc-pdel]').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const [rid, pid] = btn.dataset.tcPdel.split(':');
+        const r = transitionCosts.find(x => x.id === rid);
+        if (r) { r.payments = r.payments.filter(p => p.id !== pid); saveTC(); renderTransitionCosts(); updateTotals(); }
+      };
+    });
+    const setEstBtn = el.querySelector('[data-tc-setest="' + row.id + '"]');
+    if (setEstBtn) {
+      setEstBtn.onclick = (e) => {
+        e.stopPropagation();
+        const r = transitionCosts.find(x => x.id === row.id);
+        if (!r) return;
+        // Switching from "set budget" path implies the user wants a budget — flip trackOnly off
+        r.trackOnly = false;
+        if (!r.open) r.open = true;
+        saveTC();
+        renderTransitionCosts();
+        setTimeout(() => {
+          const card = document.querySelector('.tc-row[data-id="' + row.id + '"]');
+          const inp = card && card.querySelector('[data-tc-est="' + row.id + '"]');
+          if (inp) { inp.focus(); inp.select(); }
+        }, 30);
+      };
+    }
+    const trackCb = el.querySelector('[data-tc-trackonly="' + row.id + '"]');
+    if (trackCb) {
+      trackCb.onclick = (e) => e.stopPropagation();
+      trackCb.onchange = () => {
+        const r = transitionCosts.find(x => x.id === row.id);
+        if (!r) return;
+        r.trackOnly = trackCb.checked;
+        // If user just turned ON track-only, zero the budget so the maths stays clean
+        if (r.trackOnly) r.estimated = 0;
+        saveTC();
+        renderTransitionCosts();
+        updateTotals();
+      };
+    }
+  }, 0);
+
+  return el;
+}
+
+function toggleTCRow(id) {
+  const r = transitionCosts.find(x => x.id === id);
+  if (!r) return;
+  r.open = !r.open;
+  saveTC();
+  renderTransitionCosts();
+}
+
+function toggleTCArchive(id) {
+  const r = transitionCosts.find(x => x.id === id);
+  if (!r) return;
+  r.archived = !r.archived;
+  if (r.archived) r.open = false;
+  saveTC();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+function deleteTCRow(id) {
+  const r = transitionCosts.find(x => x.id === id);
+  if (!r) return;
+  const pmt = (r.payments || []).length;
+  if (pmt > 0 && !confirm('Delete "' + r.label + '"? This will remove ' + pmt + ' logged payment' + (pmt === 1 ? '' : 's') + '.')) return;
+  if (pmt === 0 && !confirm('Delete "' + r.label + '"?')) return;
+  transitionCosts = transitionCosts.filter(x => x.id !== id);
+  saveTC();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+/* Add row modal */
+function openTCAddRow() {
+  editingTCRowId = null;
+  $('tc-row-modal-title').textContent = 'Add transition cost';
+  $('tc-row-label').value = '';
+  $('tc-row-est').value = '';
+  $('tc-row-trackonly').checked = true;
+  $('tc-row-est-field').style.display = 'none';
+  $('tc-row-modal').classList.add('open');
+  setTimeout(() => $('tc-row-label').focus(), 50);
+}
+function closeTCRowModal() {
+  $('tc-row-modal').classList.remove('open');
+  editingTCRowId = null;
+}
+function saveTCRow() {
+  const label = ($('tc-row-label').value || '').trim();
+  if (!label) { $('tc-row-label').focus(); return; }
+  const trackOnly = $('tc-row-trackonly').checked;
+  const est = trackOnly ? 0 : Math.max(0, Number($('tc-row-est').value) || 0);
+  transitionCosts.push({
+    id: 'tc-' + Date.now(),
+    label,
+    estimated: est,
+    trackOnly,
+    payments: [],
+    archived: false,
+    open: true,
+  });
+  saveTC();
+  closeTCRowModal();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+/* Add / Edit payment modal */
+function openTCAddPayment(rowId) {
+  editingTCPaymentRowId = rowId;
+  editingTCPaymentId = null;
+  const today = new Date();
+  const ymd = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  $('tc-pay-modal-title').textContent = 'Add payment';
+  const r = transitionCosts.find(x => x.id === rowId);
+  $('tc-pay-modal-sub').textContent = r ? 'Logged against ' + r.label + '.' : 'Log a payment.';
+  $('tc-pay-date').value = ymd;
+  $('tc-pay-amount').value = '';
+  $('tc-pay-note').value = '';
+  $('tc-pay-delete').style.display = 'none';
+  $('tc-pay-modal').classList.add('open');
+  setTimeout(() => $('tc-pay-amount').focus(), 50);
+}
+function openTCEditPayment(rowId, payId) {
+  const r = transitionCosts.find(x => x.id === rowId);
+  if (!r) return;
+  const p = (r.payments || []).find(x => x.id === payId);
+  if (!p) return;
+  editingTCPaymentRowId = rowId;
+  editingTCPaymentId = payId;
+  $('tc-pay-modal-title').textContent = 'Edit payment';
+  $('tc-pay-modal-sub').textContent = 'Logged against ' + r.label + '.';
+  $('tc-pay-date').value = p.date || '';
+  $('tc-pay-amount').value = p.amount || '';
+  $('tc-pay-note').value = p.note || '';
+  $('tc-pay-delete').style.display = 'inline-block';
+  $('tc-pay-modal').classList.add('open');
+  setTimeout(() => $('tc-pay-amount').focus(), 50);
+}
+function closeTCPayModal() {
+  $('tc-pay-modal').classList.remove('open');
+  editingTCPaymentRowId = null;
+  editingTCPaymentId = null;
+}
+function saveTCPayment() {
+  const r = transitionCosts.find(x => x.id === editingTCPaymentRowId);
+  if (!r) { closeTCPayModal(); return; }
+  const date = $('tc-pay-date').value || '';
+  const amount = Math.max(0, Number($('tc-pay-amount').value) || 0);
+  const note = ($('tc-pay-note').value || '').trim();
+  if (amount <= 0) { $('tc-pay-amount').focus(); return; }
+  if (editingTCPaymentId) {
+    const p = (r.payments || []).find(x => x.id === editingTCPaymentId);
+    if (p) { p.date = date; p.amount = amount; p.note = note; }
+  } else {
+    if (!Array.isArray(r.payments)) r.payments = [];
+    r.payments.push({
+      id: 'p-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+      date, amount, note,
+    });
+  }
+  saveTC();
+  closeTCPayModal();
+  renderTransitionCosts();
+  updateTotals();
+}
+function deleteTCPayment() {
+  if (!editingTCPaymentRowId || !editingTCPaymentId) return;
+  const r = transitionCosts.find(x => x.id === editingTCPaymentRowId);
+  if (!r) return;
+  r.payments = (r.payments || []).filter(p => p.id !== editingTCPaymentId);
+  saveTC();
+  closeTCPayModal();
+  renderTransitionCosts();
+  updateTotals();
+}
+
+window.addEventListener('storage', e => {
+  if ((e.key === 'atlas_transition_costs' || e.key === 'dad_atlas_transition_costs') && e.newValue) {
+    loadTC();
+    renderTransitionCosts();
+    updateTotals();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('tc-row-modal')?.classList.contains('open')) closeTCRowModal();
+  if (document.getElementById('tc-pay-modal')?.classList.contains('open')) closeTCPayModal();
+});
+
+// Add-row modal: show Budget field only when trackOnly is unchecked
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'tc-row-trackonly') {
+    const field = document.getElementById('tc-row-est-field');
+    if (field) field.style.display = e.target.checked ? 'none' : '';
+  }
+});
+
+// ── RENDER ──
+function render() {
+  const col = $('cards-col');
+  col.innerHTML = '';
+  sections
+    .filter(showSection)
+    .forEach(s => buildCard(s));
+  updateTotals();
+  updateNetWorth();
+  renderTransitionCosts();
+}
+
+// ── INIT ──
+(function init() {
+  loadState();
+  loadTC();
+
+  // restore phase
+  try {
+    const savedPhase = normalisePhase(localStorage.getItem('atlas_budget_phase') || localStorage.getItem('dad_budget_phase') || localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase') || 'stabilise');
+    setPhase(savedPhase);
+  } catch(e) { setPhase('stabilise'); }
+
+  // restore view
+  try {
+    const savedView = localStorage.getItem('atlas_budget_view') || localStorage.getItem('dad_budget_view') || 'monthly';
+    setView(savedView);
+  } catch(e) {}
+
+  render();
+  readCSAKids();
+  renderCSAAges();
+  syncCSAIncome();
+  calcCSA();
+})();
+</script>
+<script>try{document.getElementById('at-money-setup').hidden=!!(localStorage.getItem('atlas_budget_state')||localStorage.getItem('dad_budget_state'));}catch(e){}</script>
+<script src="./assets/app/app.js"></script>
+<script src="./assets/app/data.js"></script>
+<script src="./assets/app/bills.js"></script>
+</body>
+</html>

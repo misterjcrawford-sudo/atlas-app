@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Records Dossier — Atlas</title>
+<meta name="robots" content="noindex,nofollow">
+<title>Records dossier · Atlas</title>
 <script src="./auth.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+  
 
   :root {
     --ink: #1a1814;
@@ -27,7 +30,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     background: var(--paper);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
@@ -52,7 +55,7 @@
     border: none;
     border-radius: 999px;
     padding: 10px 22px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -76,7 +79,7 @@
   .control-field { display: flex; align-items: center; gap: 7px; }
   .control-field label { font-size: 12px; font-weight: 600; color: var(--ink-muted); }
   .control-field select, .control-field input {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 12.5px;
     padding: 7px 10px;
     border: 1px solid var(--paper-edge);
@@ -108,9 +111,9 @@
     border-bottom: 2px solid var(--ink);
   }
   .print-logo {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.3px;
   }
@@ -125,9 +128,9 @@
 
   /* ── TITLE BLOCK ─────────────────────────────────────────────────────────── */
   .page-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 32px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.6px;
     line-height: 1;
@@ -153,16 +156,15 @@
   }
   .summary-cell-label {
     font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     margin-bottom: 4px;
   }
   .summary-cell-val {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 19px;
-    font-weight: 500;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.3px;
   }
@@ -178,7 +180,7 @@
     border-bottom: 1.5px solid var(--ink);
     margin-bottom: 2px;
   }
-  .month-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .month-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: -.025em}
   .month-meta { font-size: 10.5px; color: var(--ink-muted); }
 
   .entry {
@@ -195,9 +197,8 @@
   .entry-date { color: var(--ink); font-weight: 600; white-space: nowrap; }
   .entry-type {
     font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     padding: 2px 7px;
     border-radius: 999px;
     text-align: center;
@@ -218,7 +219,7 @@
 
   /* ── EMPTY / BOUNDARY ────────────────────────────────────────────────────── */
   .empty-msg {
-    border: 1.5px dashed var(--paper-edge);
+    border: 1.5px solid var(--paper-edge);
     border-radius: 10px;
     padding: 36px;
     text-align: center;
@@ -249,8 +250,8 @@
   /* ── KEY DATES & FACTS (page one) ────────────────────────────────────────── */
   .facts-table { width: 100%; border-collapse: collapse; margin-bottom: 22px; }
   .facts-table th {
-    text-align: left; font-size: 9.5px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--ink-muted);
+    text-align: left; font-size: 9.5px; font-weight: 600; 
+    letter-spacing: .01em; color: var(--ink-muted);
     padding: 0 8px 7px 2px; border-bottom: 1.5px solid var(--ink);
   }
   .facts-table td { padding: 8px 8px 8px 2px; border-bottom: 1px solid var(--paper-edge); font-size: 11.5px; vertical-align: baseline; }
@@ -258,11 +259,11 @@
   .facts-table .td-date { color: var(--ink); white-space: nowrap; width: 22%; }
   .facts-table .td-note { color: var(--ink-soft); }
   .fact-section-label {
-    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+    font-size: 10px; font-weight: 600;  letter-spacing: .01em;
     color: var(--ink-muted); margin: 18px 0 8px;
   }
   .fact-note-block { padding: 8px 2px; border-bottom: 1px solid var(--paper-edge); page-break-inside: avoid; break-inside: avoid; }
-  .fact-note-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 3px; }
+  .fact-note-label { font-size: 10px; font-weight: 600;  letter-spacing: .01em; color: var(--ink-muted); margin-bottom: 3px; }
   .fact-note-text { font-size: 11.5px; color: var(--ink-soft); line-height: 1.55; white-space: pre-wrap; }
 
   /* ── PRINT ───────────────────────────────────────────────────────────────── */
@@ -283,6 +284,7 @@
     .page:last-child { page-break-after: auto; break-after: auto; }
   }
 </style>
+<link rel="stylesheet" href="./assets/app/bento.css">
 </head>
 <body>
 

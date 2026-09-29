@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goals Snapshot — Atlas</title>
+<meta name="robots" content="noindex,nofollow">
+<title>Goals snapshot · Atlas</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+  
 
   :root {
     --ink: #1a1814;
@@ -26,7 +29,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     background: var(--paper);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
@@ -50,7 +53,7 @@
     border: none;
     border-radius: 999px;
     padding: 10px 22px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -94,9 +97,9 @@
     border-bottom: 2px solid var(--ink);
   }
   .print-logo {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.3px;
   }
@@ -111,9 +114,9 @@
 
   /* ── OVERVIEW ─────────────────────────────────────────────────────────────── */
   .page-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 34px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.06em;
     line-height: 1;
@@ -140,16 +143,15 @@
   }
   .stat-label {
     font-size: 9.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-muted);
     margin-bottom: 5px;
   }
   .stat-val {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 22px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.03em;
     line-height: 1.1;
@@ -185,20 +187,18 @@
   }
   .anchor-label {
     font-size: 9.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    font-weight: 600; 
+    letter-spacing: .01em;
     color: var(--ink-faded);
     margin-bottom: 4px;
   }
   .anchor-text {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-body);
     font-size: 14px;
-    font-style: italic;
-    font-weight: 300;
+    font-style: normal;
+    font-weight: 500;
     color: var(--ink);
-    line-height: 1.5;
-  }
+    line-height: 1.5; letter-spacing: 0}
 
   /* ── GOAL GROUPS ──────────────────────────────────────────────────────────── */
   .goal-group { margin-bottom: 18px; break-inside: avoid; }
@@ -218,9 +218,9 @@
     flex-shrink: 0;
   }
   .group-title {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 15px;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.2px;
     flex: 1;
@@ -323,6 +323,7 @@
     .anchor-block { break-inside: avoid; }
   }
 </style>
+<link rel="stylesheet" href="./assets/app/bento.css">
 </head>
 <body>
 
@@ -360,11 +361,11 @@ function isOverdue(dateStr) {
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const CATS = {
-  financial: { label: 'Financial',     color: '#0F4A3F', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
-  career:    { label: 'Career & Work', color: '#2A2A2A', tag_bg: '#F0F0EA', tag_color: '#0A0A0A' },
-  parenting: { label: 'Parenting',     color: '#DCBD8F', tag_bg: '#EAC995', tag_color: '#0A0A0A' },
-  fitness:   { label: 'Fitness',       color: '#0A332B', tag_bg: '#C9E0B6', tag_color: '#0A332B' },
-  personal:  { label: 'Personal',      color: '#E27B5A', tag_bg: '#F5D996', tag_color: '#0A0A0A' },
+  financial: { label: 'Financial',     color: '#9fc21a', tag_bg: '#eef8c6', tag_color: '#111111' },
+  career:    { label: 'Career & Work', color: '#111111', tag_bg: '#f2f2f0', tag_color: '#111111' },
+  parenting: { label: 'Parenting',     color: '#ff6a45', tag_bg: '#ffe3da', tag_color: '#111111' },
+  fitness:   { label: 'Fitness',       color: '#2743ff', tag_bg: '#dfe4ff', tag_color: '#111111' },
+  personal:  { label: 'Personal',      color: '#a58bff', tag_bg: '#ece6ff', tag_color: '#111111' },
 };
 
 const PHASE_LABEL = { survive: 'Survive', stabilise: 'Stabilise', rebuild: 'Rebuild', 'new-chapter': 'New Chapter' };

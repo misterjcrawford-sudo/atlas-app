@@ -2,30 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Atlas Works — Atlas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex,nofollow">
+<title>How Atlas works · Atlas</title>
 <style>
   :root {
     --paper: #FFFFFF;
-    --paper-card: #FAFAF7;
-    --paper-warm: #F0F0EA;
-    --paper-edge: #E8E8E0;
-    --ink: #0A0A0A;
+    --paper-card: #f7f7f5;
+    --paper-warm: #f2f2f0;
+    --paper-edge: #e7e7e4;
+    --ink: #111111;
     --ink-soft: #2A2A2A;
-    --ink-muted: #6E6E63;
-    --ink-faded: #A8A8A0;
-    --green: #0F4A3F;
-    --green-deep: #0A332B;
-    --amber: #EAC995;
-    --amber-deep: #DCBD8F;
-    --honey: #F5D996;
-    --sage: #C9E0B6;
-    --coral: #E27B5A;
-    --shadow-soft: 0 2px 8px rgba(15,74,63,0.05);
+    --ink-muted: #62626a;
+    --ink-faded: #9a9aa0;
+    --green: #111111;
+    --green-deep: #1a2ccc;
+    --amber: #d4f062;
+    --amber-deep: #b9d63a;
+    --honey: #eef8c6;
+    --sage: #eef8c6;
+    --coral: #e0532f;
+    --shadow-soft: 0 2px 8px rgba(17,17,17,0.05);
     --radius: 20px;
     --radius-lg: 28px;
   }
@@ -33,50 +32,12 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-body);
     background: var(--paper);
     color: var(--ink);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-  }
-
-  /* TOP STRIP */
-  .top-strip { background: var(--green); color: var(--paper); padding: 11px 24px; text-align: center; font-size: 13px; font-weight: 500; }
-
-  /* NAV */
-  .nav-wrap { padding: 16px 24px 0; display: flex; justify-content: center; }
-  .atlas-nav {
-    background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: 999px;
-    padding: 8px 8px 8px 22px; display: flex; align-items: center; gap: 24px;
-    box-shadow: var(--shadow-soft); max-width: 1100px; width: 100%; height: 60px;
-  }
-  .nav-wordmark { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.45rem; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-  .nav-wordmark svg { width: 24px; height: 24px; flex-shrink: 0; }
-  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex: 1; justify-content: center; }
-  .nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 999px; transition: background 0.15s; }
-  .nav-links a:hover { background: var(--paper-warm); }
-  .nav-links a.active { background: var(--paper-warm); color: var(--ink); font-weight: 600; }
-  .nav-cta { background: var(--amber); color: var(--ink); text-decoration: none; padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
-  .nav-cta:hover { background: var(--amber-deep); transform: translateY(-1px); }
-  .nav-cta-outline { background: transparent; color: var(--ink); text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 600; font-size: 14px; border: 1.5px solid var(--ink); white-space: nowrap; transition: background 0.15s, color 0.15s; }
-  .nav-cta-outline:hover { background: var(--ink); color: var(--paper); }
-  .nav-cta.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 12px; background: none; border: none; margin-left: auto; }
-  .hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.22s; }
-  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-  .mobile-nav { display: none; background: var(--paper-card); margin: 8px 24px 0; border-radius: 24px; padding: 14px; border: 1px solid var(--paper-edge); }
-  .mobile-nav.open { display: block; }
-  .mobile-nav a { display: block; color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 12px; }
-  .mobile-nav a:hover, .mobile-nav a.active { background: var(--paper-warm); color: var(--ink); }
-  @media (max-width: 760px) {
-    .nav-links { display: none; }
-    .nav-cta { display: none; }
-    .nav-cta-outline { display: none; }
-    .hamburger { display: flex; }
-    .atlas-nav { padding: 6px 6px 6px 18px; height: 56px; }
   }
 
   /* LAYOUT */
@@ -90,8 +51,7 @@
   .eyebrow {
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: .01em; 
     color: var(--ink-muted);
     margin-bottom: 14px;
   }
@@ -99,8 +59,8 @@
   /* ── HERO ── */
   .hero { padding: 80px 0 72px; }
   .hero h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: clamp(3.2rem, 7vw, 5.6rem);
     line-height: 0.95;
     letter-spacing: -0.04em;
@@ -112,13 +72,7 @@
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
-  .hero-sub {
-    font-size: 19px;
-    line-height: 1.65;
-    color: var(--ink-soft);
-    max-width: 48ch;
-    margin-bottom: 36px;
-  }
+  
   .hero-stats {
     display: flex;
     flex-wrap: wrap;
@@ -155,8 +109,8 @@
   }
   .promise-band .eyebrow { color: rgba(255,255,255,0.35); }
   .promise-lead {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: clamp(1.1rem, 2vw, 1.35rem);
     color: rgba(255,255,255,0.5);
     letter-spacing: -0.01em;
@@ -166,9 +120,9 @@
   }
   .promise-questions { list-style: none; }
   .promise-q {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 300;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 500;
     font-size: clamp(1.15rem, 2.2vw, 1.65rem);
     color: var(--paper);
     line-height: 1.2;
@@ -184,13 +138,12 @@
   .promise-q:last-child { border-bottom: none; padding-bottom: 0; }
   .promise-q:hover { color: var(--amber); }
   .promise-q-num {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-style: normal;
     font-size: 11px;
     font-weight: 700;
     color: var(--amber);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: .01em; 
     flex-shrink: 0;
     opacity: 0.65;
     padding-top: 8px;
@@ -200,8 +153,8 @@
   /* ── JOBS SECTION ── */
   .light-section { padding: 72px 0; }
   .section-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: clamp(1.8rem, 3.5vw, 2.6rem);
     letter-spacing: -0.03em;
     line-height: 1.1;
@@ -227,7 +180,7 @@
     transition: box-shadow 0.18s, border-color 0.18s;
   }
   .job-item:hover {
-    box-shadow: 0 6px 24px rgba(15,74,63,0.09);
+    box-shadow: 0 6px 24px rgba(17,17,17,0.09);
     border-color: var(--amber-deep);
   }
   .job-accent {
@@ -243,7 +196,7 @@
     flex: 1;
   }
   .job-num {
-    font-family: 'Fraunces', serif;
+    font-family: var(--font-display);
     font-size: 1rem;
     font-weight: 600;
     color: var(--amber-deep);
@@ -251,8 +204,7 @@
     flex-shrink: 0;
     width: 24px;
     text-align: right;
-    padding-top: 3px;
-  }
+    padding-top: 3px; letter-spacing: -.025em}
   .job-content { flex: 1; }
   .job-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .job-tag {
@@ -260,10 +212,10 @@
     font-weight: 600;
     letter-spacing: 0.06em;
     color: var(--green);
-    background: rgba(15,74,63,0.07);
+    background: rgba(17,17,17,0.07);
     padding: 3px 10px;
     border-radius: 999px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
   }
   .job-desc { font-size: 13.5px; line-height: 1.65; color: var(--ink-muted); }
 
@@ -271,8 +223,8 @@
   .rhythm-band { background: var(--green); padding: 72px 64px; border-radius: 40px; }
   .rhythm-band .eyebrow { color: rgba(255,255,255,0.35); }
   .rhythm-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: clamp(1.8rem, 3.5vw, 2.6rem);
     letter-spacing: -0.03em;
     line-height: 1.1;
@@ -296,7 +248,7 @@
   }
   .rhythm-card:hover { background: rgba(255,255,255,0.10); }
   .rhythm-card-num {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-body);
     font-size: 11px;
     font-weight: 700;
     color: var(--honey);
@@ -315,9 +267,9 @@
     text-align: center;
   }
   .rhythm-callout-text {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 300;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 500;
     font-size: clamp(1.2rem, 2.5vw, 1.75rem);
     color: var(--paper);
     letter-spacing: -0.02em;
@@ -403,9 +355,8 @@
   }
   .is-col-label {
     font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    font-weight: 700; 
+    letter-spacing: .01em;
     margin-bottom: 22px;
     display: block;
   }
@@ -434,8 +385,8 @@
   }
   .cta-band-inner { max-width: 520px; margin: 0 auto; }
   .cta-heading {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: clamp(2rem, 4vw, 2.8rem);
     letter-spacing: -0.03em;
     line-height: 1.15;
@@ -470,24 +421,6 @@
   .cta-btn:hover { background: var(--green); transform: translateY(-2px); }
   .cta-btn-arrow { font-size: 18px; line-height: 1; }
 
-  /* SITE FOOTER */
-  .site-footer { background: var(--paper); border-top: 1px solid var(--paper-edge); padding: 64px 24px 0; }
-  .footer-top { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 64px; }
-  .footer-tagline { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); letter-spacing: -0.01em; }
-  .footer-col-heading { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin-bottom: 16px; letter-spacing: 0.02em; font-family: 'Fraunces', serif; }
-  .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-col-links a { color: var(--ink-soft); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.15s; }
-  .footer-col-links a:hover { color: var(--ink); }
-  .footer-mark { border-top: 1px solid var(--paper-edge); padding: 40px 24px; }
-  .footer-mark-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
-  .footer-mark-word { font-family: 'Fraunces', serif; font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 400; letter-spacing: -0.04em; color: var(--ink); line-height: 1; }
-  .footer-bottom { border-top: 1px solid var(--paper-edge); padding: 20px 24px; }
-  .footer-bottom-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-  .footer-copy { font-size: 13px; color: var(--ink-faded); }
-  .footer-legal { display: flex; gap: 20px; }
-  .footer-legal a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
-  .footer-legal a:hover { color: var(--ink); }
-
   /* RESPONSIVE */
   @media (max-width: 760px) {
     .page-wrap { padding: 0 16px; }
@@ -508,7 +441,7 @@
     .cta-band { padding: 60px 24px; }
   }
   @media (max-width: 480px) {
-    .footer-top { grid-template-columns: 1fr; }
+    
     .promise-band { padding: 28px 20px; border-radius: 24px; }
     .rhythm-band { padding: 40px 24px; border-radius: 24px; }
     .rhythm-callout { padding: 22px 20px; }
@@ -516,57 +449,22 @@
     .phase-label-wrap { min-width: unset; }
   }
 </style>
+<link rel="stylesheet" href="./assets/app/interface.css">
+<link rel="stylesheet" href="./assets/app/bento.css">
 </head>
-<body>
+<body class="atlas-app" data-module="how-it-works">
 
-<div class="top-strip">Atlas runs entirely in your browser — nothing leaves your device.</div>
-
-<div class="nav-wrap">
-  <nav class="atlas-nav">
-    <a href="./index.html" class="nav-wordmark">
-      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="24" cy="7" r="2" fill="#D97757"/>
-      </svg>
-      Atlas
-    </a>
-    <ul class="nav-links">
-      <li><a href="./index.html">Home</a></li>
-      <li><a href="./budget.html">Finances</a></li>
-      <li><a href="./kids-week.html">Week</a></li>
-      <li><a href="./admin.html">Admin</a></li>
-      <li><a href="./records.html">Records</a></li>
-      <li><a href="./goals.html">Goals</a></li>
-      <li><a href="./guides.html">Guides</a></li>
-    </ul>
-    <a href="./companion-pack.html" class="nav-cta-outline">Companion Pack</a>
-    <a href="./how-it-works.html" class="nav-cta active">How Atlas Works</a>
-    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleNav()">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-</div>
-<div class="mobile-nav" id="mobile-nav">
-  <a href="./index.html">Home</a>
-  <a href="./budget.html">Finances</a>
-  <a href="./kids-week.html">Week</a>
-  <a href="./admin.html">Admin</a>
-  <a href="./records.html">Records</a>
-  <a href="./goals.html">Goals</a>
-  <a href="./guides.html">Guides</a>
-  <a href="./companion-pack.html">Companion Pack</a>
-  <a href="./how-it-works.html" class="active">How Atlas Works</a>
-</div>
-
-<!-- HERO -->
-<div class="page-wrap">
+<a class="at-skip" href="#at-content">Skip to content</a>
+<header class="at-header">
+ <div class="at-nav"><a class="at-brand" href="./index.html" aria-label="Atlas, Today">Atlas<b>.</b></a><nav class="at-links" aria-label="Main navigation"><a href="./index.html">Today</a><a href="./money.html">Money</a><a href="./week.html">Week</a><a href="./records.html">Records</a><a href="./admin.html">Admin</a><a href="./scripts.html">Scripts</a></nav>
+ <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="./goals.html">Goals</a><a href="./companion-pack.html">Companion pack</a><a href="./admin.html#move-data">Back up / import data</a><a href="./how-it-works.html">How Atlas works</a></div></details></div>
+ <div class="at-heading"><div><div class="at-kicker">How Atlas works</div><h1>Organise your side. Ten minutes a week.</h1><p>Use what helps. Start small. Come back when you need to.</p></div></div>
+</header>
+<main class="page-wrap" id="at-content">
   <div class="container">
     <section class="hero">
-      <div class="eyebrow">How Atlas works</div>
-      <h1>A structure for the<br>week you're <span class="soft">living in.</span></h1>
-      <p class="hero-sub">Not therapy. Not legal advice. Not another folder of PDFs. A structure for turning separation chaos into a practical weekly plan.</p>
       <div class="hero-stats">
-        <span class="hero-stat"><span class="hero-stat-dot"></span>5 modules</span>
+        <span class="hero-stat"><span class="hero-stat-dot"></span>6 tools</span>
         <span class="hero-stat"><span class="hero-stat-dot"></span>5 phases</span>
         <span class="hero-stat"><span class="hero-stat-dot"></span>~10 minutes a week</span>
         <span class="hero-stat"><span class="hero-stat-dot"></span>Private by design</span>
@@ -593,13 +491,13 @@
   </div>
 </div>
 
-<!-- THE 5 JOBS -->
+<!-- THE 6 JOBS -->
 <div class="page-wrap">
   <div class="container">
     <div class="light-section">
       <div class="eyebrow">What Atlas does</div>
-      <div class="section-title">Five jobs. No extras.</div>
-      <p class="section-lead">Every tool in Atlas exists to do one of these five things.</p>
+      <div class="section-title">Six jobs. No extras.</div>
+      <p class="section-lead">Every tool in Atlas exists to do one of these six things.</p>
       <div class="jobs-list">
 
         <div class="job-item">
@@ -607,8 +505,8 @@
           <div class="job-body">
             <div class="job-num">1</div>
             <div class="job-content">
-              <div class="job-title">Show me where I am <span class="job-tag">Dashboard</span></div>
-              <div class="job-desc">Choose your current phase. Your dashboard, checklists and priorities update to match where you actually are — not where you wish you were.</div>
+              <div class="job-title">Show me where I am <span class="job-tag">Today</span></div>
+              <div class="job-desc">Choose your current phase on Today. Your next step, tasks and scripts update to match where you actually are — not where you wish you were.</div>
             </div>
           </div>
         </div>
@@ -618,8 +516,8 @@
           <div class="job-body">
             <div class="job-num">2</div>
             <div class="job-content">
-              <div class="job-title">Show me my real numbers <span class="job-tag">Finances</span></div>
-              <div class="job-desc">Use the Finances tool to reduce money fog. Map what comes in, what goes out, and what's left — without needing to be a spreadsheet person.</div>
+              <div class="job-title">Show me my real numbers <span class="job-tag">Money</span></div>
+              <div class="job-desc">Use Money to cut through the fog. Map what comes in, what goes out, and what's left — without needing to be a spreadsheet person.</div>
             </div>
           </div>
         </div>
@@ -629,7 +527,7 @@
           <div class="job-body">
             <div class="job-num">3</div>
             <div class="job-content">
-              <div class="job-title">Help me run the week <span class="job-tag">Kids Week</span></div>
+              <div class="job-title">Help me run the week <span class="job-tag">Week</span></div>
               <div class="job-desc">Map custody, meals, routines, handovers and house rules. Make the week visible so it doesn't live in your head.</div>
             </div>
           </div>
@@ -640,6 +538,16 @@
           <div class="job-body">
             <div class="job-num">4</div>
             <div class="job-content">
+              <div class="job-title">Keep a clear record <span class="job-tag">Records</span></div>
+              <div class="job-desc">Payments, incidents, messages and schedule changes, dated and in one place. Export a clean PDF when someone official asks.</div>
+            </div>
+          </div>
+        </div>
+        <div class="job-item">
+          <div class="job-accent"></div>
+          <div class="job-body">
+            <div class="job-num">5</div>
+            <div class="job-content">
               <div class="job-title">Make sure I don't miss important admin <span class="job-tag">Admin</span></div>
               <div class="job-desc">Track the practical tasks that quietly become expensive later — documents, accounts, school, medical, legal, household.</div>
             </div>
@@ -649,7 +557,7 @@
         <div class="job-item">
           <div class="job-accent"></div>
           <div class="job-body">
-            <div class="job-num">5</div>
+            <div class="job-num">6</div>
             <div class="job-content">
               <div class="job-title">Help me rebuild deliberately <span class="job-tag">Goals</span></div>
               <div class="job-desc">Set goals, routines and next actions. When you're ready to look forward, Atlas helps you do it without overwhelming yourself.</div>
@@ -677,12 +585,12 @@
         </div>
         <div class="rhythm-card">
           <div class="rhythm-card-num">STEP 02</div>
-          <div class="rhythm-card-title">Check your dashboard</div>
+          <div class="rhythm-card-title">Open Today</div>
           <div class="rhythm-card-desc">What's the headline for money, week, admin and goals? Get the picture before the week begins.</div>
         </div>
         <div class="rhythm-card">
           <div class="rhythm-card-num">STEP 03</div>
-          <div class="rhythm-card-title">Update Kids Week</div>
+          <div class="rhythm-card-title">Update your week</div>
           <div class="rhythm-card-desc">Custody, meals, handover, events — anything that's changed since last week.</div>
         </div>
         <div class="rhythm-card">
@@ -735,7 +643,7 @@
               <span class="phase-tag survive">Survive</span>
             </div>
             <div class="phase-divider"></div>
-            <div class="phase-action">Start with <strong>Budget + Kids Week + urgent admin</strong></div>
+            <div class="phase-action">Start with <strong>Money + Week + urgent admin</strong></div>
           </div>
         </div>
 
@@ -795,7 +703,7 @@
           <span class="is-col-label">Atlas is</span>
           <ul class="is-list">
             <li>a structure</li>
-            <li>a dashboard</li>
+            <li>a private place to organise your side</li>
             <li>a weekly reset system</li>
             <li>a practical guide through the mess</li>
           </ul>
@@ -810,76 +718,13 @@
 <div class="cta-band">
   <div class="cta-band-inner">
     <div class="cta-heading">You know where<br>to <span class="soft">start.</span></div>
-    <p class="cta-sub">Pick your phase, open the dashboard, and run through the weekly checklist. That's all it takes to begin.</p>
+    <p class="cta-sub">Pick your phase on Today and work through the week one step at a time. That's all it takes to begin.</p>
     <a href="./index.html" class="cta-btn">Open Atlas <span class="cta-btn-arrow">→</span></a>
   </div>
-</div>
+</main>
 
-<footer class="site-footer">
-  <div class="footer-top">
-    <div class="footer-tagline">Private tools for getting financially and practically stable after separation.</div>
-    <div>
-      <div class="footer-col-heading">Modules</div>
-      <ul class="footer-col-links">
-        <li><a href="./budget.html">Finances</a></li>
-        <li><a href="./kids-week.html">Kids Week</a></li>
-        <li><a href="./goals.html">Goals</a></li>
-        <li><a href="./admin.html">Admin</a></li>
-        <li><a href="./records.html">Records</a></li>
-        <li><a href="./guides.html">Guides</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-heading">About</div>
-      <ul class="footer-col-links">
-        <li><a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About Johnnie</a></li>
-        <li><a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a></li>
-        <li><a href="./admin.html#move-data">Move to another device</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-heading">Reading</div>
-      <ul class="footer-col-links">
-        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">All articles</a></li>
-        <li><a href="https://www.get-atlas.com.au/tag/articles/" target="_blank" rel="noopener">The Sunday email</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-mark">
-    <div class="footer-mark-inner">
-      <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:clamp(48px,8vw,80px);height:auto;flex-shrink:0">
-        <path d="M4 44 Q18 10 32 34 T58 14" stroke="#D97757" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="58" cy="14" r="5" fill="#D97757"/>
-      </svg>
-      <div class="footer-mark-word">Atlas</div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="footer-bottom-inner">
-      <div class="footer-copy">&copy; Atlas 2026 &middot; Life After Separation</div>
-      <div class="footer-legal">
-        <a href="https://www.get-atlas.com.au/privacy/" target="_blank" rel="noopener">Privacy &amp; Terms</a>
-        <a href="https://get-atlas.com.au/about" target="_blank" rel="noopener">About</a>
-      </div>
-    </div>
-  </div>
-</footer>
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="./admin.html#move-data">Back up your data</a><a href="./terms.html">Privacy &amp; terms</a><a href="./how-it-works.html">How it works</a></nav></footer>
 
-<script>
-function toggleNav() {
-  const nav = document.getElementById('mobile-nav');
-  const ham = document.getElementById('hamburger');
-  const open = nav.classList.toggle('open');
-  ham.classList.toggle('open', open);
-}
-document.addEventListener('click', e => {
-  const nav = document.getElementById('mobile-nav');
-  const ham = document.getElementById('hamburger');
-  if (!e.target.closest('.atlas-nav') && !e.target.closest('.mobile-nav')) {
-    nav.classList.remove('open');
-    ham.classList.remove('open');
-  }
-});
-</script>
+<script src="./assets/app/app.js"></script>
 </body>
 </html>

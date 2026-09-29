@@ -22,11 +22,12 @@ const ATLAS_AUTH_KEY = 'atlas_auth_v1';
   overlay.id = 'atlas-gate';
   overlay.innerHTML = [
     '<div id="atlas-gate-card">',
-      '<svg id="atlas-gate-logo" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">',
-        '<path d="M2 19 Q8 5 14 15 T24 7" stroke="#D97757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
-        '<circle cx="24" cy="7" r="2" fill="#D97757"/>',
+      '<svg id="atlas-gate-logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">',
+        '<rect width="64" height="64" rx="14" fill="#2743ff"/>',
+        '<path d="M10.5 50 L24.5 14 H31.5 L45.5 50 H37.4 L34.6 42.2 H21.4 L18.6 50 Z M23.8 35.4 H32.2 L28 23.6 Z" fill="#fff"/>',
+        '<circle cx="51.5" cy="45.5" r="4.5" fill="#d4f062"/>',
       '</svg>',
-      '<h1 id="atlas-gate-wordmark">Atlas</h1>',
+      '<h1 id="atlas-gate-wordmark">Atlas<span style="color:#2743ff">.</span></h1>',
       '<p id="atlas-gate-sub">Private beta &mdash; enter the password to continue.</p>',
       '<form id="atlas-gate-form" autocomplete="off">',
         '<input id="atlas-gate-input" type="password" placeholder="Password" autocomplete="current-password" spellcheck="false">',
@@ -42,59 +43,59 @@ const ATLAS_AUTH_KEY = 'atlas_auth_v1';
   gStyle.textContent = [
     '#atlas-gate {',
       'position:fixed;inset:0;z-index:99999;',
-      'background:#FAFAF7;',
+      'background:#f7f7f5;',
       'display:flex;align-items:center;justify-content:center;',
-      'font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;',
+      'font-family:var(--font-body);',
     '}',
     '#atlas-gate-card {',
       'width:100%;max-width:380px;',
       'background:#FFFFFF;',
-      'border:1px solid #E8E8E0;',
+      'border:1px solid #e7e7e4;',
       'border-radius:24px;',
       'padding:40px 36px 36px;',
       'box-shadow:0 8px 40px rgba(15,74,63,0.08);',
       'text-align:center;',
     '}',
-    '#atlas-gate-logo { width:32px;height:32px;margin:0 auto 12px; }',
+    '#atlas-gate-logo { width:48px;height:48px;margin:0 auto 14px;display:block; }',
     '#atlas-gate-wordmark {',
-      'font-family:"Fraunces",Georgia,serif;',
-      'font-weight:500;font-size:1.8rem;letter-spacing:-0.03em;',
-      'color:#0A0A0A;margin:0 0 8px;',
+      'font-family:var(--font-display);font-weight:700;letter-spacing:-.03em;',
+      'font-size:2rem;',
+      'color:#111111;margin:0 0 8px;',
     '}',
     '#atlas-gate-sub {',
-      'font-size:13.5px;color:#6E6E63;line-height:1.5;margin:0 0 24px;',
+      'font-size:13.5px;color:#62626a;line-height:1.5;margin:0 0 24px;',
     '}',
     '#atlas-gate-input {',
       'width:100%;padding:12px 16px;',
-      'border:1px solid #E8E8E0;border-radius:12px;',
+      'border:1px solid #e7e7e4;border-radius:14px;',
       'font-size:15px;font-family:inherit;',
-      'background:#FAFAF7;color:#0A0A0A;',
+      'background:#f7f7f5;color:#111111;',
       'outline:none;box-sizing:border-box;',
       'transition:border-color 0.15s;',
     '}',
-    '#atlas-gate-input:focus { border-color:#0F4A3F; }',
+    '#atlas-gate-input:focus { border-color:#111111; }',
     '#atlas-gate-btn {',
       'width:100%;margin-top:10px;padding:13px;',
-      'background:#0F4A3F;color:#FFFFFF;',
-      'border:none;border-radius:12px;',
+      'background:#111111;color:#FFFFFF;',
+      'border:none;border-radius:999px;',
       'font-size:14px;font-weight:600;font-family:inherit;',
       'cursor:pointer;transition:background 0.15s;',
     '}',
-    '#atlas-gate-btn:hover { background:#0A332B; }',
+    '#atlas-gate-btn:hover { background:#1a2ccc; }',
     '#atlas-gate-error {',
-      'font-size:13px;color:#E27B5A;margin:10px 0 0;',
+      'font-size:13px;color:#e0532f;margin:10px 0 0;',
       'display:none;',
     '}',
     '#atlas-gate-access {',
       'margin-top:20px;font-size:13px;',
     '}',
     '#atlas-gate-access a {',
-      'color:#6E6E63;text-decoration:none;',
-      'border-bottom:1px solid #E8E8E0;padding-bottom:1px;',
+      'color:#62626a;text-decoration:none;',
+      'border-bottom:1px solid #e7e7e4;padding-bottom:1px;',
       'transition:color 0.15s,border-color 0.15s;',
     '}',
     '#atlas-gate-access a:hover {',
-      'color:#0F4A3F;border-color:#0F4A3F;',
+      'color:#111111;border-color:#111111;',
     '}',
   ].join('');
   document.head.appendChild(gStyle);
@@ -152,18 +153,20 @@ function _injectLockLink() {
     a.style.cssText = [
       'position:fixed;bottom:14px;right:16px;',
       'font-size:11px;font-weight:500;',
-      'color:#A8A8A0;text-decoration:none;',
-      'font-family:"Space Grotesk",-apple-system,sans-serif;',
+      'color:#6a6a70;text-decoration:none;',
+      'font-family:var(--font-body);',
       'z-index:9998;',
       'transition:color 0.15s;',
     ].join('');
-    a.addEventListener('mouseenter', function () { a.style.color = '#0A0A0A'; });
-    a.addEventListener('mouseleave', function () { a.style.color = '#A8A8A0'; });
+    a.addEventListener('mouseenter', function () { a.style.color = '#111111'; });
+    a.addEventListener('mouseleave', function () { a.style.color = '#6a6a70'; });
     a.addEventListener('click', function (e) {
       e.preventDefault();
       localStorage.removeItem(ATLAS_AUTH_KEY);
       location.reload();
     });
-    document.body.appendChild(a);
+    var footer = document.querySelector('.at-footer-links');
+    if (footer) { a.removeAttribute('style'); footer.appendChild(a); }
+    else document.body.appendChild(a);
   }
 }
