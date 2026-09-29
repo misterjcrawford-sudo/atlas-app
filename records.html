@@ -533,7 +533,7 @@
         <button class="save-btn" id="save-btn" onclick="saveEntry()">Save entry</button>
         <button class="cancel-edit-btn" onclick="cancelEdit()">Cancel edit</button>
       </div>
-      <p class="capture-note">Stays in your browser like everything else in Atlas. Nothing is sent anywhere. Back it up from <a href="./admin.html#move-data" style="color:var(--ink-muted)">Admin → Move data</a>.</p>
+      <p class="capture-note">Stays in your browser like everything else in Atlas. Nothing is sent anywhere. Save a copy from <a href="./admin.html#move-data" style="color:var(--ink-muted)">More → Back up / import data</a>.</p>
     </div>
 
     <aside class="summary-panel">
@@ -635,7 +635,7 @@
 
 <div class="records-toast" id="records-toast"></main>
 
-<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="./admin.html#move-data">Back up your data</a><a href="./terms.html">Privacy &amp; terms</a><a href="./how-it-works.html">How it works</a></nav></footer>
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="./admin.html#move-data">Back up / import data</a><a href="./terms.html">Privacy &amp; terms</a><a href="./how-it-works.html">How it works</a></nav></footer>
 
 <script>
 /* ─── Phase handling (standard Atlas pattern) ─────────────────────────────── */
@@ -810,7 +810,7 @@ function deleteEntry(id) {
 
 function resetRecords() {
   if (!records.entries.length) { showToast('Nothing to delete.'); return; }
-  if (!confirm('Delete ALL ' + records.entries.length + ' entries?\n\nThis cannot be undone. Consider exporting your data first (Admin → Move data).')) return;
+  if (!confirm('Delete ALL ' + records.entries.length + ' entries?\n\nThis cannot be undone. Consider backing up first (More → Back up / import data).')) return;
   if (!confirm('Last check — permanently delete the entire record?')) return;
   records = { entries: [] };
   saveRecords(records);
