@@ -36,7 +36,7 @@
       localStorage.setItem(key, JSON.stringify(value));
       return true;
     } catch (_) {
-      notify('This browser couldn’t save the change. Export a backup and check available storage.');
+      notify('This browser couldn’t save the change. Back up your data and check available storage.');
       return false;
     }
   }
