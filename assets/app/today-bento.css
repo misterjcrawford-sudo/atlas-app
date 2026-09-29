@@ -179,7 +179,10 @@ button { cursor: pointer; }
 .num-tile.is-empty .at-number { font-size: 28px; letter-spacing: -.03em; line-height: 1.1; }
 .at-negative { color: #a11212; }
 .num-tile .small { color: #1d1d1f; }
-.num-tile .go { font-size: 13px; font-weight: 600; }
+/* Money and Records tiles: the whole tile is the link; the top-right label says where it goes, like "Open Week →" */
+.num-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.num-tile .go { flex: none; font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.num-tile:hover .go, .num-tile:focus-visible .go { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Scripts, list, support, backup */
 .at-script-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }

@@ -460,13 +460,13 @@
       $('at-second-kicker').textContent = 'Separation costs so far';
       $('at-second-value').textContent = D.currency(ctx.separationCosts);
       $('at-second-detail').textContent = 'Legal, mediation, moving and setting up.';
-      $('at-second-action').textContent = 'See the breakdown →';
+      $('at-second-action').textContent = 'See costs →';
     } else {
       card.href = './records.html';
       $('at-second-kicker').textContent = 'Your record';
       $('at-second-value').textContent = ctx.records.count ? `${ctx.records.count} ${ctx.records.count === 1 ? 'entry' : 'entries'}` : 'No entries yet';
       $('at-second-detail').textContent = ctx.records.last ? `Last entry ${dayMonth(parseIso(ctx.records.last))}.` : 'Payments, incidents and agreements, dated.';
-      $('at-second-action').textContent = 'Open Records →';
+      $('at-second-action').textContent = ctx.records.count ? 'Open Records →' : 'Start your record →';
     }
   }
 
