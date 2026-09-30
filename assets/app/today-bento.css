@@ -203,6 +203,9 @@ button { cursor: pointer; }
 .support ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .support a { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 44px; padding: 10px 14px; border-radius: 14px; background: var(--bg); text-decoration: none; font-weight: 600; }
 .support a span { color: var(--cobalt-ink); }
+.support a b { font-weight: 600; }
+.support a small { display: block; margin-top: 1px; font-size: 12px; font-weight: 400; color: var(--mute); }
+.support a span { flex: none; white-space: nowrap; }
 .backup strong { display: block; font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin: 6px 0; }
 .backup .btn { margin-top: 14px; }
 
