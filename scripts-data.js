@@ -2539,7 +2539,7 @@ window.ATLAS_SCRIPTS = [
     "situation": "Things have gotten to a point where you need to talk to someone and there's no one available right now. You've found a number. Here's what to say when it connects.",
     "before": [
       "You don't need to be in a defined crisis to call. These lines exist for people who are struggling — not just people at the edge.",
-      "In Australia: Lifeline 13 11 14. Beyond Blue 1300 22 4636. MensLine 1300 78 99 78.",
+      "In Australia: Lifeline 13 11 14. Beyond Blue 1300 22 4636. MensLine 1300 78 99 78. If you're not safe: 1800RESPECT 1800 737 732, or 000 in an emergency.",
       "You can hang up at any point."
     ],
     "opening": "I'm going through a separation. I'm not doing well tonight and I needed someone to talk to.",
