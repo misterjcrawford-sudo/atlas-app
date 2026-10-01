@@ -372,8 +372,8 @@
   }
   .is-col.not .is-list li { color: var(--ink-muted); }
   .is-col.is  .is-list li { color: rgba(255,255,255,0.9); font-weight: 500; }
-  .is-col.not .is-list li::before { content: '✕'; font-size: 10px; color: var(--coral); flex-shrink: 0; }
-  .is-col.is  .is-list li::before { content: '✓'; font-size: 10px; color: var(--sage); flex-shrink: 0; }
+  .is-col.not .is-list li::before { content: '✕'; font-size: 10px; color: var(--ink-muted); flex-shrink: 0; }
+  .is-col.is  .is-list li::before { content: '✓'; font-size: 10px; color: #d4f062; flex-shrink: 0; }
 
   /* ── CTA BAND ── */
   .cta-band {
@@ -449,13 +449,80 @@
     .phase-label-wrap { min-width: unset; }
   }
   /* User guide download */
-  .guide-tile { margin-top: 28px; background: #eef8c6; border-radius: 26px; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
-  .guide-tile h2 { margin: 0 0 4px; font-size: 21px; line-height: 1.15; letter-spacing: -.03em; color: #111; }
-  .guide-tile p { margin: 0; font-size: 14px; color: #3a3a40; max-width: 52ch; }
-  .guide-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 12px 20px; border-radius: 999px; background: #111; color: #fff; font-weight: 650; font-size: 14.5px; text-decoration: none; white-space: nowrap; }
-  .guide-btn:hover { background: #2743ff; }
-  .guide-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 3px; }
+  .guide-tile { margin-top: 28px; background: #2743ff; border-radius: 26px; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
+  .guide-tile h2 { margin: 0 0 4px; font-size: 21px; line-height: 1.15; letter-spacing: -.03em; color: #fff; }
+  .guide-tile p { margin: 0; font-size: 14px; color: rgba(255,255,255,.86); max-width: 52ch; }
+  .guide-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 12px 20px; border-radius: 999px; background: #d4f062; color: #111; font-weight: 650; font-size: 14.5px; text-decoration: none; white-space: nowrap; }
+  .guide-btn:hover { background: #fff; }
+  .guide-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
   .guide-btn small { font-weight: 500; opacity: .75; font-size: 12.5px; }
+  /* ── Bento sections (Oct 2026) ── */
+  .hero-stat-dot { background: var(--ink) !important; }
+  .is-col.not { background: #fff; border-color: transparent; }
+  .is-grid { gap: 12px; }
+  .hiw-sec { padding: 64px 0 0; }
+  .hiw-sec .section-title { margin-bottom: 8px; }
+  .hiw-sec .section-lead { margin-bottom: 24px; }
+
+  /* Six questions */
+  .q-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .q-tile { display: flex; flex-direction: column; gap: 10px; min-height: 230px; padding: 22px 22px 20px; border-radius: 26px; color: #111; text-decoration: none; transition: transform .15s ease; }
+  .q-tile:hover { transform: translateY(-2px); }
+  .q-tile:focus-visible { outline: 3px solid #2743ff; outline-offset: 3px; }
+  .q-tool { align-self: flex-start; font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.7); }
+  .q-tile h3 { margin: 4px 0 0; font-size: 23px; line-height: 1.1; letter-spacing: -.03em; font-weight: 700; }
+  .q-tile p { margin: 0; font-size: 14px; line-height: 1.5; color: #3a3a40; }
+  .q-go { margin-top: auto; padding-top: 6px; font-size: 13.5px; font-weight: 650; }
+  .q-today { background: #111; color: #fff; }
+  .q-today .q-tool { background: rgba(255,255,255,.14); color: #fff; }
+  .q-today p { color: rgba(255,255,255,.75); }
+  .q-today .q-go { color: #d4f062; }
+  .q-money { background: #d4f062; }
+  .q-week { background: #2743ff; color: #fff; }
+  .q-week .q-tool { background: rgba(255,255,255,.18); color: #fff; }
+  .q-week p { color: rgba(255,255,255,.86); }
+  .q-records { background: #e6ddff; }
+  .q-admin { background: #ffe1d6; }
+  .q-goals { background: #bfe8d6; }
+
+  /* Weekly reset */
+  .ritual { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; counter-reset: step; }
+  .ritual li { background: #fff; border-radius: 22px; padding: 20px 22px; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: start; counter-increment: step; }
+  .ritual li::before { content: counter(step); grid-row: span 2; width: 34px; height: 34px; border-radius: 999px; background: #111; color: #fff; display: grid; place-items: center; font-size: 14px; font-weight: 700; }
+  .ritual b { font-size: 16px; letter-spacing: -.01em; padding-top: 6px; }
+  .ritual span { font-size: 13.5px; line-height: 1.5; color: var(--ink-muted); }
+  .ritual-close { margin-top: 12px; background: #d4f062; border-radius: 22px; padding: 22px 24px; font-size: 21px; line-height: 1.25; letter-spacing: -.02em; font-weight: 500; }
+  .ritual-close strong { font-weight: 750; }
+
+  /* Phases */
+  .phase-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .phase-pick { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 8px; min-height: 190px; padding: 18px 18px 16px; background: #fff; border-radius: 22px; color: #111; transition: background .15s ease; }
+  .phase-pick:hover { background: #dfe4ff; }
+  .phase-pick:focus-visible { outline: 3px solid #2743ff; outline-offset: 3px; }
+  .phase-pick .ph-num { font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+  .phase-pick .ph-name { font-size: 20px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+  .phase-pick .ph-start { font-size: 13.5px; line-height: 1.45; color: #3a3a40; }
+  .phase-pick .ph-start em { display: block; font-style: normal; font-size: 12px; font-weight: 600; color: var(--ink-muted); margin-bottom: 2px; }
+  .phase-pick .ph-state { margin-top: auto; align-self: flex-start; font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; background: #f2f2f0; }
+  .phase-pick[aria-pressed="true"] { background: #111; color: #fff; }
+  .phase-pick[aria-pressed="true"] .ph-num, .phase-pick[aria-pressed="true"] .ph-start em { color: rgba(255,255,255,.6); }
+  .phase-pick[aria-pressed="true"] .ph-start { color: rgba(255,255,255,.85); }
+  .phase-pick[aria-pressed="true"] .ph-state { background: #d4f062; color: #111; }
+  .phase-note { margin-top: 12px; font-size: 13px; color: var(--ink-muted); }
+
+  @media (max-width: 960px) {
+    .q-grid, .ritual { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .phase-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .phase-row > :last-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 600px) {
+    .hiw-sec { padding-top: 48px; }
+    .q-grid, .ritual, .phase-row { grid-template-columns: minmax(0, 1fr); }
+    .q-tile { min-height: 0; }
+    .q-tile h3 { font-size: 21px; }
+    .phase-pick { min-height: 0; }
+    .ritual-close { font-size: 18px; }
+  }
 </style>
 <link rel="stylesheet" href="./assets/app/interface.css">
 <link rel="stylesheet" href="./assets/app/bento.css">
@@ -468,7 +535,8 @@
  <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="./scripts.html">Scripts</a><a href="./goals.html">Goals</a><a href="./companion-pack.html">Companion pack</a><a href="./admin.html#move-data">Back up / import data</a><a href="./how-it-works.html">How Atlas works</a></div></details></div>
  <div class="at-heading"><div><div class="at-kicker">How Atlas works</div><h1>Organise your side. Ten minutes a week.</h1><p>Use what helps. Start small. Come back when you need to.</p></div></div>
 </header>
-<main class="page-wrap" id="at-content">
+<main id="at-content">
+<div class="page-wrap">
   <div class="container">
     <section class="hero">
       <div class="hero-stats">
@@ -488,218 +556,56 @@
   </div>
 </div>
 
-<!-- THE PROMISE — dark card -->
-<div class="band-wrap">
-  <div class="container">
-    <div class="promise-band">
-      <div class="eyebrow">The questions Atlas answers</div>
-      <p class="promise-lead">The questions that feel impossible to hold in your head all at once.</p>
-      <ul class="promise-questions">
-        <li class="promise-q"><span class="promise-q-num">01</span>Where am I right now?</li>
-        <li class="promise-q"><span class="promise-q-num">02</span>What needs attention first?</li>
-        <li class="promise-q"><span class="promise-q-num">03</span>What does the week look like?</li>
-        <li class="promise-q"><span class="promise-q-num">04</span>What money do I actually have?</li>
-        <li class="promise-q"><span class="promise-q-num">05</span>What admin can't slip?</li>
-        <li class="promise-q"><span class="promise-q-num">06</span>What am I rebuilding toward?</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- THE 6 JOBS -->
+<!-- SIX QUESTIONS, ONE TOOL EACH -->
 <div class="page-wrap">
   <div class="container">
-    <div class="light-section">
+    <section class="hiw-sec" aria-labelledby="hiw-questions">
       <div class="eyebrow">What Atlas does</div>
-      <div class="section-title">Six jobs. No extras.</div>
-      <p class="section-lead">Every tool in Atlas exists to do one of these six things.</p>
-      <div class="jobs-list">
-
-        <div class="job-item">
-          <div class="job-accent"></div>
-          <div class="job-body">
-            <div class="job-num">1</div>
-            <div class="job-content">
-              <div class="job-title">Show me where I am <span class="job-tag">Today</span></div>
-              <div class="job-desc">Choose your current phase on Today. Your next step, tasks and scripts update to match where you actually are — not where you wish you were.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="job-item">
-          <div class="job-accent"></div>
-          <div class="job-body">
-            <div class="job-num">2</div>
-            <div class="job-content">
-              <div class="job-title">Show me my real numbers <span class="job-tag">Money</span></div>
-              <div class="job-desc">Use Money to cut through the fog. Map what comes in, what goes out, and what's left — without needing to be a spreadsheet person.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="job-item">
-          <div class="job-accent"></div>
-          <div class="job-body">
-            <div class="job-num">3</div>
-            <div class="job-content">
-              <div class="job-title">Help me run the week <span class="job-tag">Week</span></div>
-              <div class="job-desc">Map custody, meals, routines, handovers and house rules. Make the week visible so it doesn't live in your head.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="job-item">
-          <div class="job-accent"></div>
-          <div class="job-body">
-            <div class="job-num">4</div>
-            <div class="job-content">
-              <div class="job-title">Keep a clear record <span class="job-tag">Records</span></div>
-              <div class="job-desc">Payments, incidents, messages and schedule changes, dated and in one place. Export a clean PDF when someone official asks.</div>
-            </div>
-          </div>
-        </div>
-        <div class="job-item">
-          <div class="job-accent"></div>
-          <div class="job-body">
-            <div class="job-num">5</div>
-            <div class="job-content">
-              <div class="job-title">Make sure I don't miss important admin <span class="job-tag">Admin</span></div>
-              <div class="job-desc">Track the practical tasks that quietly become expensive later — documents, accounts, school, medical, legal, household.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="job-item">
-          <div class="job-accent"></div>
-          <div class="job-body">
-            <div class="job-num">6</div>
-            <div class="job-content">
-              <div class="job-title">Help me rebuild deliberately <span class="job-tag">Goals</span></div>
-              <div class="job-desc">Set goals, routines and next actions. When you're ready to look forward, Atlas helps you do it without overwhelming yourself.</div>
-            </div>
-          </div>
-        </div>
-
+      <h2 class="section-title" id="hiw-questions">Six questions. One tool each.</h2>
+      <p class="section-lead">The things that feel impossible to hold in your head all at once.</p>
+      <div class="q-grid">
+        <a class="q-tile q-today" href="./index.html"><span class="q-tool">Today</span><h3>Where am I, and what needs me first?</h3><p>Pick your phase. Your next step, tasks and scripts change to match where you actually are.</p><span class="q-go">Open Today →</span></a>
+        <a class="q-tile q-money" href="./money.html"><span class="q-tool">Money</span><h3>What money do I actually have?</h3><p>Map what comes in, what goes out and what’s left. No spreadsheet skills needed.</p><span class="q-go">Open Money →</span></a>
+        <a class="q-tile q-week" href="./week.html"><span class="q-tool">Week</span><h3>What does the week look like?</h3><p>Custody, handovers, meals and routines, so the week stops living in your head.</p><span class="q-go">Open Week →</span></a>
+        <a class="q-tile q-records" href="./records.html"><span class="q-tool">Records</span><h3>What happened, and when?</h3><p>Payments, incidents, messages and changes, dated in one place. Print a clean PDF when someone official asks.</p><span class="q-go">Open Records →</span></a>
+        <a class="q-tile q-admin" href="./admin.html"><span class="q-tool">Admin</span><h3>What admin can’t slip?</h3><p>Documents, accounts, school, medical and legal tasks that get expensive when they’re missed.</p><span class="q-go">Open Admin →</span></a>
+        <a class="q-tile q-goals" href="./goals.html"><span class="q-tool">Goals</span><h3>What am I rebuilding toward?</h3><p>Goals, routines and next actions for when you’re ready to look forward.</p><span class="q-go">Open Goals →</span></a>
       </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- THE WEEKLY RHYTHM — green card -->
-<div class="band-wrap">
-  <div class="container">
-    <div class="rhythm-band">
-      <div class="eyebrow">The weekly ritual</div>
-      <div class="rhythm-title">Done weekly, this becomes<br>the whole system.</div>
-      <p class="rhythm-lead">Done consistently, this turns Atlas from an app into a ritual.</p>
-      <div class="rhythm-grid">
-        <div class="rhythm-card">
-          <div class="rhythm-card-num">STEP 01</div>
-          <div class="rhythm-card-title">Review your phase</div>
-          <div class="rhythm-card-desc">Are you still in the same phase, or has something shifted? It takes 30 seconds and anchors everything else.</div>
-        </div>
-        <div class="rhythm-card">
-          <div class="rhythm-card-num">STEP 02</div>
-          <div class="rhythm-card-title">Open Today</div>
-          <div class="rhythm-card-desc">What's the headline for money, week, admin and goals? Get the picture before the week begins.</div>
-        </div>
-        <div class="rhythm-card">
-          <div class="rhythm-card-num">STEP 03</div>
-          <div class="rhythm-card-title">Update your week</div>
-          <div class="rhythm-card-desc">Custody, meals, handover, events — anything that's changed since last week.</div>
-        </div>
-        <div class="rhythm-card">
-          <div class="rhythm-card-num">STEP 04</div>
-          <div class="rhythm-card-title">Review money</div>
-          <div class="rhythm-card-desc">Is anything urgent? Any new expenses to log? One look is enough to stay across it.</div>
-        </div>
-        <div class="rhythm-card">
-          <div class="rhythm-card-num">STEP 05</div>
-          <div class="rhythm-card-title">Clear urgent admin</div>
-          <div class="rhythm-card-desc">Tick off what's done. Add what's new. Keep the list honest.</div>
-        </div>
-        <div class="rhythm-card">
-          <div class="rhythm-card-num">STEP 06</div>
-          <div class="rhythm-card-title">Pick 1–3 next actions</div>
-          <div class="rhythm-card-desc">Not a to-do list. Just what actually matters this week. Three is plenty.</div>
-        </div>
-      </div>
-      <div class="rhythm-callout">
-        <div class="rhythm-callout-text">Once a week. <strong>Before the week starts.</strong> Ten minutes at most. That's the whole system.</div>
-      </div>
-    </div>
-  </div>
-</div>
+    <!-- WEEKLY RESET -->
+    <section class="hiw-sec" aria-labelledby="hiw-reset">
+      <div class="eyebrow">The weekly reset</div>
+      <h2 class="section-title" id="hiw-reset">Ten minutes, once a week.</h2>
+      <p class="section-lead">Done consistently, this turns Atlas from an app into a habit.</p>
+      <ol class="ritual">
+        <li><b>Check your phase</b><span>Same phase, or has something shifted? Thirty seconds, and it sets up everything else.</span></li>
+        <li><b>Open Today</b><span>Get the headline for money, the week, admin and goals before the week begins.</span></li>
+        <li><b>Update your week</b><span>Custody, meals, handovers, events. Anything that’s changed since last week.</span></li>
+        <li><b>Review money</b><span>Anything urgent? Any new expenses to log? One look is enough to stay across it.</span></li>
+        <li><b>Clear urgent admin</b><span>Tick off what’s done. Add what’s new. Keep the list honest.</span></li>
+        <li><b>Pick 1–3 next actions</b><span>Not a to-do list. Just what matters this week. Three is plenty.</span></li>
+      </ol>
+      <p class="ritual-close">Once a week. <strong>Before the week starts.</strong> Ten minutes at most. That’s the whole system.</p>
+    </section>
 
-<!-- WHAT TO DO FIRST -->
-<div class="page-wrap">
-  <div class="container">
-    <div class="light-section">
+    <!-- START WHERE YOU ARE -->
+    <section class="hiw-sec" aria-labelledby="hiw-phase">
       <div class="eyebrow">Where to begin</div>
-      <div class="section-title">Start where you are.</div>
-      <p class="section-lead">Where you start depends on where you are. Find your phase below.</p>
-      <div class="phase-stack">
-
-        <div class="phase-card">
-          <div class="phase-stripe waiting-room"></div>
-          <div class="phase-card-body">
-            <div class="phase-label-wrap">
-              <span class="phase-tag waiting-room">Waiting Room</span>
-            </div>
-            <div class="phase-divider"></div>
-            <div class="phase-action">Start with <strong>financial snapshot + private notes</strong></div>
-          </div>
-        </div>
-
-        <div class="phase-card">
-          <div class="phase-stripe survive"></div>
-          <div class="phase-card-body">
-            <div class="phase-label-wrap">
-              <span class="phase-tag survive">Survive</span>
-            </div>
-            <div class="phase-divider"></div>
-            <div class="phase-action">Start with <strong>Money + Week + urgent admin</strong></div>
-          </div>
-        </div>
-
-        <div class="phase-card">
-          <div class="phase-stripe stabilise"></div>
-          <div class="phase-card-body">
-            <div class="phase-label-wrap">
-              <span class="phase-tag stabilise">Stabilise</span>
-            </div>
-            <div class="phase-divider"></div>
-            <div class="phase-action">Start with <strong>weekly rhythm + documents + routines</strong></div>
-          </div>
-        </div>
-
-        <div class="phase-card">
-          <div class="phase-stripe rebuild"></div>
-          <div class="phase-card-body">
-            <div class="phase-label-wrap">
-              <span class="phase-tag rebuild">Rebuild</span>
-            </div>
-            <div class="phase-divider"></div>
-            <div class="phase-action">Start with <strong>goals + money plan + co-parenting systems</strong></div>
-          </div>
-        </div>
-
-        <div class="phase-card">
-          <div class="phase-stripe new-chapter"></div>
-          <div class="phase-card-body">
-            <div class="phase-label-wrap">
-              <span class="phase-tag new-chapter">New Chapter</span>
-            </div>
-            <div class="phase-divider"></div>
-            <div class="phase-action">Start with <strong>long-term goals + future planning</strong></div>
-          </div>
-        </div>
-
+      <h2 class="section-title" id="hiw-phase">Start where you are.</h2>
+      <p class="section-lead">Find your phase and tap it. Today, Admin and Scripts change to match.</p>
+      <div class="phase-row" role="group" aria-label="Choose your phase">
+        <button class="phase-pick" type="button" data-phase="waiting-room" aria-pressed="false"><span class="ph-num">1 of 5</span><span class="ph-name">Waiting Room</span><span class="ph-start"><em>Start with</em>A financial snapshot and private notes.</span><span class="ph-state">Set as my phase</span></button>
+        <button class="phase-pick" type="button" data-phase="survive" aria-pressed="false"><span class="ph-num">2 of 5</span><span class="ph-name">Survive</span><span class="ph-start"><em>Start with</em>Money, Week and urgent admin.</span><span class="ph-state">Set as my phase</span></button>
+        <button class="phase-pick" type="button" data-phase="stabilise" aria-pressed="false"><span class="ph-num">3 of 5</span><span class="ph-name">Stabilise</span><span class="ph-start"><em>Start with</em>A weekly rhythm, documents and routines.</span><span class="ph-state">Set as my phase</span></button>
+        <button class="phase-pick" type="button" data-phase="rebuild" aria-pressed="false"><span class="ph-num">4 of 5</span><span class="ph-name">Rebuild</span><span class="ph-start"><em>Start with</em>Goals, a money plan and co-parenting systems.</span><span class="ph-state">Set as my phase</span></button>
+        <button class="phase-pick" type="button" data-phase="new-chapter" aria-pressed="false"><span class="ph-num">5 of 5</span><span class="ph-name">New Chapter</span><span class="ph-start"><em>Start with</em>Long-term goals and future planning.</span><span class="ph-state">Set as my phase</span></button>
       </div>
-    </div>
+      <p class="phase-note">You can change it any time from the phase menu at the top of each page.</p>
+    </section>
 
     <!-- WHAT ATLAS IS NOT -->
-    <div class="light-section" style="padding-top: 0; padding-bottom: 80px;">
+    <div class="light-section" style="padding-top: 64px; padding-bottom: 80px;">
       <div class="eyebrow">For trust</div>
       <div class="section-title">What Atlas is — and isn't.</div>
       <p class="section-lead">Atlas works best when you're clear about what it is and what it isn't.</p>
@@ -736,10 +642,36 @@
     <p class="cta-sub">Pick your phase on Today and work through the week one step at a time. That's all it takes to begin.</p>
     <a href="./index.html" class="cta-btn">Open Atlas <span class="cta-btn-arrow">→</span></a>
   </div>
+</div>
 </main>
 
 <footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="./admin.html#move-data">Back up / import data</a><a href="./terms.html">Privacy &amp; terms</a><a href="./how-it-works.html">How it works</a></nav></footer>
 
 <script src="./assets/app/app.js"></script>
+<script>
+(function () {
+  var picks = document.querySelectorAll('.phase-pick');
+  function sync(current) {
+    picks.forEach(function (b) {
+      var on = b.dataset.phase === current;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.querySelector('.ph-state').textContent = on ? 'Your phase' : 'Set as my phase';
+    });
+  }
+  function ready() {
+    if (!window.AtlasApp) return;
+    sync(AtlasApp.phase());
+    picks.forEach(function (b) {
+      b.addEventListener('click', function () {
+        AtlasApp.setPhase(b.dataset.phase);
+        sync(AtlasApp.phase());
+        AtlasApp.notify('Phase set to ' + b.querySelector('.ph-name').textContent + '.');
+      });
+    });
+    document.addEventListener('atlas:phase', function (e) { sync(e.detail); });
+  }
+  ready();
+})();
+</script>
 </body>
 </html>
