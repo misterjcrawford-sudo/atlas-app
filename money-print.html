@@ -885,7 +885,7 @@ function buildPage2(m) {
           <span class="exp-section-total">${fmtM(total)}</span>
         </div>
         ${items.map(item => `<div class="exp-item">
-          <span class="exp-item-name">${String(item.name || '').replace(/&amp;/g,'&')}</span>
+          <span class="exp-item-name">${String(item.name || '').replace(/&amp;/g,'&')}${item.est ? ' <em style="font-style:normal;color:var(--ink-faded)">(estimate)</em>' : ''}</span>
           <span class="exp-item-val ${(item.val||0) === 0 ? 'zero' : ''}">${fmtM(item.val || 0)}</span>
         </div>`).join('')}
         ${!items.length ? '<div class="exp-item"><span class="exp-item-name" style="color:var(--ink-faded);font-style:italic">No items</span></div>' : ''}

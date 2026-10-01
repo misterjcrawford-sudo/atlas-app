@@ -523,6 +523,23 @@
     color: var(--ink);
   }
   .slider-row-label .badge.priority { background: var(--honey); color: var(--ink); }
+  .slider-row-label .badge.est { background: #ffe1d6; color: var(--ink); }
+  .est-keep { border: 0; background: none; padding: 0 0 0 6px; font: inherit; font-size: 11px; font-weight: 600; color: var(--ink-muted); text-decoration: underline; cursor: pointer; }
+  .est-keep:hover { color: var(--ink); }
+  .est-open-btn { display: inline-flex; align-items: center; border-radius: 999px; border: 0; padding: 10px 18px; background: #ffe1d6; color: var(--ink); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; }
+  .est-open-btn:hover { background: #ffd0bf; }
+  .est-open-btn:focus-visible { outline: 3px solid var(--cobalt, #2743ff); outline-offset: 2px; }
+  .est-note { margin: 4px 0 10px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,.7); font-size: 12.5px; line-height: 1.4; color: var(--ink); }
+  .est-choice { display: flex; flex-wrap: wrap; gap: 8px; }
+  .est-choice label { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; background: var(--paper-warm, #f2f2f0); font-size: 14px; cursor: pointer; }
+  .est-choice label:has(input:checked) { background: var(--ink); color: #fff; }
+  .est-choice input { accent-color: #d4f062; margin: 0; }
+  .est-row select.tc-modal-input { width: 100%; background: var(--paper-warm, #f2f2f0); border-radius: 12px; }
+  #est-modal .tc-modal { max-height: calc(100vh - 32px); overflow-y: auto; }
+  .est-row { display: grid; grid-template-columns: 90px 1fr; gap: 12px; }
+  .est-row label { display: block; }
+  .est-from-week { margin: -6px 0 12px; font-size: 12px; color: var(--ink-muted); }
+  .est-fine { margin: 4px 0 14px; font-size: 12px; line-height: 1.45; color: var(--ink-muted); }
   .slider-tools { display: flex; align-items: center; gap: 6px; }
   .reorder-btn {
     appearance: none;
@@ -1373,11 +1390,13 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               Print snapshot
             </a>
+            <button type="button" class="est-open-btn" onclick="openEstimateModal()">Fill gaps with typical costs</button>
           </div>
         </div>
 
         <div class="snap-panel" id="snap-panel">
           <div class="snap-panel-head">This month at a glance</div>
+          <p class="est-note" id="est-note" hidden></p>
           <div class="snap-bar" id="snap-bar">
             <div class="snap-bar-spent" id="bar-spent"></div>
           </div>
@@ -1415,6 +1434,44 @@
         </div>
       </div>
     </section>
+
+    <!-- TYPICAL COSTS MODAL -->
+    <div class="tc-modal-overlay" id="est-modal" onclick="if(event.target===this)closeEstimateModal()">
+      <div class="tc-modal" role="dialog" aria-modal="true" aria-labelledby="est-modal-title">
+        <div class="tc-modal-title" id="est-modal-title">Fill gaps with typical costs</div>
+        <div class="tc-modal-sub">Australian averages for the costs that are hard to pin down. Only empty rows are filled, and each one is tagged Estimate until you change it.</div>
+        <div class="tc-modal-field">
+          <span class="tc-modal-field-label">Where do you live?</span>
+          <div class="est-choice">
+            <label><input type="radio" name="est-area" value="city" checked> City</label>
+            <label><input type="radio" name="est-area" value="regional"> Regional</label>
+          </div>
+        </div>
+        <div class="tc-modal-field">
+          <span class="tc-modal-field-label">Your home</span>
+          <div class="est-choice">
+            <label><input type="radio" name="est-home" value="rent" checked> Renting</label>
+            <label><input type="radio" name="est-home" value="own"> Own or paying a mortgage</label>
+          </div>
+        </div>
+        <div class="tc-modal-field est-row">
+          <label><span class="tc-modal-field-label">Kids</span>
+            <select class="tc-modal-input" id="est-kids"><option value="0">0</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>
+          <label><span class="tc-modal-field-label">Nights with you, per fortnight</span>
+            <select class="tc-modal-input" id="est-nights"></select></label>
+        </div>
+        <p class="est-from-week" id="est-from-week" hidden>From your Week page.</p>
+        <label class="tc-trackonly-row" style="margin-bottom: 12px;">
+          <input type="checkbox" class="tc-trackonly-cb" id="est-car" checked />
+          <span class="tc-trackonly-text">I run a car</span>
+        </label>
+        <p class="est-fine">Never estimated: rent or mortgage, loans, debt, therapy, child support, school fees. Sources: Canstar, Finder, AAA, ING and Selectra, 2024–26.</p>
+        <div class="tc-modal-buttons">
+          <button class="tc-modal-btn" type="button" onclick="closeEstimateModal()">Cancel</button>
+          <button class="tc-modal-btn primary" type="button" onclick="applyEstimates()">Fill empty rows</button>
+        </div>
+      </div>
+    </div>
 
     <!-- TC ADD ROW MODAL -->
     <div class="tc-modal-overlay" id="tc-row-modal" onclick="if(event.target===this)closeTCRowModal()">
@@ -2341,6 +2398,140 @@ function moveArrayItem(groupKey, itemId, direction) {
   updateTotals();
 }
 
+// ── TYPICAL COSTS ──
+// Australian averages for the rows people find hardest to pin down. Monthly, one adult household, one car.
+// Research: Atlas project doc atlas-money-estimates-research-2026-10.md. Refresh every July.
+const TYPICAL_COSTS_AS_AT = 'Oct 2026';
+const TYPICAL_COSTS = {
+  electricityBySize: [104, 129, 159, 168, 204],  // 1, 2, 3, 4, 5+ people. Canstar data 2024-25 (published Jul 2026)
+  gas: 75,                                       // ~$900/yr national average. Selectra 2026
+  waterOwner: 73,                                // ~$870/yr. Canstar Blue survey Jan 2024
+  internet: 86,                                  // Average NBN bill. Canstar 2026
+  phone: 42,                                     // Average SIM-only postpaid. Canstar Blue 2024
+  homeContentsOwner: 248,                        // $2,970/yr home & contents. Canstar 2026
+  carInsuranceRego: { city: 186, regional: 167 },// AAA Transport Affordability Index Dec Q 2025, two-car household halved
+  fuel: { city: 200, regional: 206 },            // AAA Dec Q 2025, two-car household halved
+  groceriesAdult: 659,                           // Single person $152/wk. Finder, Mar 2026
+  kidsFoodFullTime: 334,                         // Single parent with kids $229/wk minus single $152/wk. Finder, Mar 2026
+  activitiesPerChildShare: 74,                   // $1,779 per child per year, halved for a shared row. ING
+};
+
+// Pure: which rows get which estimate, given the answers. Returns { id: { val, source } }.
+function typicalCostPlan({ area = 'city', home = 'rent', kids = 0, nights = 0, car = true } = {}) {
+  const T = TYPICAL_COSTS;
+  const care = Math.max(0, Math.min(14, nights)) / 14;
+  const people = Math.max(1, Math.min(5, Math.round(1 + kids * care)));
+  const plan = {};
+  const add = (id, val, source) => { if (val > 0) plan[id] = { val: Math.round(val), source }; };
+  add('utilities', T.electricityBySize[people - 1] + T.gas + (home === 'own' ? T.waterOwner : 0),
+    `Electricity for ${people} ${people === 1 ? 'person' : 'people'} (Canstar), gas (Selectra)` + (home === 'own' ? ', water (Canstar Blue)' : '. Renters: add water usage if you pay it'));
+  add('internet', T.internet, 'Average NBN bill, Canstar 2026');
+  add('phone', T.phone, 'Average SIM-only plan, Canstar Blue');
+  if (home === 'own') add('insurance-home', T.homeContentsOwner, 'Average home & contents, Canstar 2026');
+  if (car) {
+    add('car-insurance', T.carInsuranceRego[area] || T.carInsuranceRego.city, 'Insurance, rego and CTP for one car, AAA Dec 2025');
+    add('fuel', T.fuel[area] || T.fuel.city, 'One car, AAA Dec 2025');
+  }
+  add('groceries', T.groceriesAdult, 'Single person, Finder Mar 2026');
+  if (kids > 0 && care > 0) {
+    add('kids-food', T.kidsFoodFullTime * care, `Kids' food at ${Math.round(nights)} of 14 nights, Finder Mar 2026`);
+    add('kids-activities', T.activitiesPerChildShare * kids, `Your half for ${kids} ${kids === 1 ? 'child' : 'kids'}, ING`);
+  }
+  return plan;
+}
+
+function findBudgetItem(id) {
+  for (const g of ARRAY_GROUPS) {
+    const item = (state[g] || []).find(i => i && i.id === id);
+    if (item) return item;
+  }
+  return null;
+}
+
+function countEstimates() {
+  return ARRAY_GROUPS.reduce((n, g) => n + (state[g] || []).filter(i => i && i.est).length, 0);
+}
+
+function renderEstimateNote() {
+  const el = $('est-note');
+  if (!el) return;
+  const n = countEstimates();
+  el.hidden = n === 0;
+  el.textContent = n ? `Includes ${n} estimate${n === 1 ? '' : 's'}. Replace them with your real numbers as bills come in.` : '';
+}
+
+function clearEstimate(item, silent) {
+  if (!item || !item.est) return;
+  delete item.est;
+  delete item.estSource;
+  scheduleSave();
+  renderEstimateNote();
+  const row = $('row-' + item.id);
+  if (row) row.querySelectorAll('.badge.est, .est-keep').forEach(el => el.remove());
+  if (!silent && window.AtlasApp && AtlasApp.notify) AtlasApp.notify('Kept. ' + item.name.replace(/&amp;/g, '&') + ' is now your number.');
+}
+
+function openEstimateModal() {
+  const nights = $('est-nights');
+  if (nights && !nights.options.length) {
+    for (let i = 0; i <= 14; i++) nights.add(new Option(String(i), String(i)));
+    nights.value = '7';
+  }
+  let fromWeek = false;
+  try {
+    const week = JSON.parse(localStorage.getItem('atlas_kidsweek') || localStorage.getItem('dad_kidsweek') || 'null');
+    const kids = week && Array.isArray(week.kids) ? week.kids.filter(k => k && k.name).length : 0;
+    if (kids) { $('est-kids').value = String(Math.min(kids, 5)); fromWeek = true; }
+    const pattern = week && week.cycle && week.cycle.pattern;
+    if (Array.isArray(pattern) && pattern.length === 14) { nights.value = String(pattern.filter(x => x === 1).length); fromWeek = true; }
+  } catch (e) {}
+  $('est-from-week').hidden = !fromWeek;
+  const prev = state.estimateAnswers;
+  if (prev) {
+    const area = document.querySelector(`input[name="est-area"][value="${prev.area}"]`); if (area) area.checked = true;
+    const home = document.querySelector(`input[name="est-home"][value="${prev.home}"]`); if (home) home.checked = true;
+    $('est-car').checked = prev.car !== false;
+  }
+  $('est-modal').classList.add('open');
+  const first = document.querySelector('#est-modal input[name="est-area"]:checked');
+  if (first) first.focus();
+}
+
+function closeEstimateModal() {
+  $('est-modal').classList.remove('open');
+}
+
+function applyEstimates() {
+  const answers = {
+    area: (document.querySelector('input[name="est-area"]:checked') || {}).value || 'city',
+    home: (document.querySelector('input[name="est-home"]:checked') || {}).value || 'rent',
+    kids: parseInt($('est-kids').value, 10) || 0,
+    nights: parseInt($('est-nights').value, 10) || 0,
+    car: $('est-car').checked,
+  };
+  const plan = typicalCostPlan(answers);
+  let filled = 0;
+  Object.entries(plan).forEach(([id, { val, source }]) => {
+    const item = findBudgetItem(id);
+    if (!item || (Number(item.val) || 0) > 0) return; // never overwrite a real number
+    const group = ARRAY_GROUPS.find(g => (state[g] || []).includes(item));
+    if (group) openCards.add(group); // open the card so the Estimate tags are visible
+    item.val = val;
+    if (val > (item.max ?? 2000)) item.max = val;
+    item.est = true;
+    item.estSource = source + ' · as at ' + TYPICAL_COSTS_AS_AT;
+    filled++;
+  });
+  state.estimateAnswers = answers;
+  closeEstimateModal();
+  render();
+  saveState();
+  const msg = filled
+    ? `Filled ${filled} empty row${filled === 1 ? '' : 's'} with typical costs. Each is tagged Estimate until you change it.`
+    : 'Nothing to fill. Every row it covers already has a number.';
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify(msg);
+}
+
 // ── BUILD CARDS ──
 function buildSliderRow(item, groupKey) {
   const div = document.createElement('div');
@@ -2352,6 +2543,19 @@ function buildSliderRow(item, groupKey) {
   labelDiv.className = 'slider-row-label';
   labelDiv.innerHTML = item.name
     + (item.priority ? ' <span class="badge priority">Priority</span>' : '');
+  if (item.est) {
+    const tag = document.createElement('span');
+    tag.className = 'badge est';
+    tag.textContent = 'Estimate';
+    tag.title = item.estSource || 'Australian average';
+    const keep = document.createElement('button');
+    keep.type = 'button';
+    keep.className = 'est-keep';
+    keep.textContent = 'Keep';
+    keep.title = 'This number is right for me';
+    keep.onclick = () => clearEstimate(item);
+    labelDiv.append(' ', tag, keep);
+  }
 
   const slider = document.createElement('input');
   slider.type = 'range';
@@ -2393,6 +2597,7 @@ function buildSliderRow(item, groupKey) {
     halfBtn.className = 'helper-btn';
     halfBtn.textContent = 'Use half';
     halfBtn.onclick = () => {
+      clearEstimate(item, true);
       item.val = Math.round(item.val / 2);
       if (item._updateDisplay) item._updateDisplay();
       updateTotals();
@@ -2410,6 +2615,7 @@ function buildSliderRow(item, groupKey) {
 
   // Update slider oninput to also update the input field
   slider.oninput = () => {
+    clearEstimate(item, true);
     item.val = parseInt(slider.value);
     valSpan.value = fmtView(item.val);
     updateTotals();
@@ -2433,6 +2639,7 @@ function buildSliderRow(item, groupKey) {
       slider.max = n;
       item.max = n;
     }
+    if (n !== item.val) clearEstimate(item, true);
     item.val = n;
     slider.value = Math.min(n, parseInt(slider.max));
     valSpan.value = fmtView(item.val);
@@ -2453,7 +2660,7 @@ function buildSliderRow(item, groupKey) {
   removeBtn.onclick = () => {
     const arr = state[groupKey];
     const idx = arr.findIndex(i => i.id === item.id);
-    if (idx > -1) { arr.splice(idx, 1); scheduleSave(); buildCard(sections.find(s => s.type === groupKey || s.id === groupKey)); updateTotals(); }
+    if (idx > -1) { arr.splice(idx, 1); scheduleSave(); buildCard(sections.find(s => s.type === groupKey || s.id === groupKey)); updateTotals(); renderEstimateNote(); }
   };
 
   right.appendChild(valSpan);
@@ -3595,6 +3802,7 @@ document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (document.getElementById('tc-row-modal')?.classList.contains('open')) closeTCRowModal();
   if (document.getElementById('tc-pay-modal')?.classList.contains('open')) closeTCPayModal();
+  if (document.getElementById('est-modal')?.classList.contains('open')) closeEstimateModal();
 });
 
 // Add-row modal: show Budget field only when trackOnly is unchecked
@@ -3615,6 +3823,7 @@ function render() {
   updateTotals();
   updateNetWorth();
   renderTransitionCosts();
+  renderEstimateNote();
 }
 
 // ── INIT ──
