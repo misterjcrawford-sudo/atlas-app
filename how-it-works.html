@@ -448,6 +448,14 @@
     .hero-stats { gap: 8px; }
     .phase-label-wrap { min-width: unset; }
   }
+  /* User guide download */
+  .guide-tile { margin-top: 28px; background: #eef8c6; border-radius: 26px; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
+  .guide-tile h2 { margin: 0 0 4px; font-size: 21px; line-height: 1.15; letter-spacing: -.03em; color: #111; }
+  .guide-tile p { margin: 0; font-size: 14px; color: #3a3a40; max-width: 52ch; }
+  .guide-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 12px 20px; border-radius: 999px; background: #111; color: #fff; font-weight: 650; font-size: 14.5px; text-decoration: none; white-space: nowrap; }
+  .guide-btn:hover { background: #2743ff; }
+  .guide-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 3px; }
+  .guide-btn small { font-weight: 500; opacity: .75; font-size: 12.5px; }
 </style>
 <link rel="stylesheet" href="./assets/app/interface.css">
 <link rel="stylesheet" href="./assets/app/bento.css">
@@ -468,6 +476,13 @@
         <span class="hero-stat"><span class="hero-stat-dot"></span>5 phases</span>
         <span class="hero-stat"><span class="hero-stat-dot"></span>~10 minutes a week</span>
         <span class="hero-stat"><span class="hero-stat-dot"></span>Private by design</span>
+      </div>
+      <div class="guide-tile">
+        <div>
+          <h2>The Atlas user guide</h2>
+          <p>Twenty pages on setting up, using each tool, backing up and moving to a new device. Save it or print it.</p>
+        </div>
+        <a class="guide-btn" href="./assets/Atlas%20-%20User%20guide.pdf" download>Download the guide <small>PDF · 1.5 MB</small></a>
       </div>
     </section>
   </div>
