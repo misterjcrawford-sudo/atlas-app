@@ -195,7 +195,7 @@ function upcomingDays(saved,now=new Date(),count=7){
   const weekday=(date.getDay()+6)%7; // Week stores Monday as 0
   days.push({
    date,iso:isoDate(date),kids,handover,
-   events:events.filter(e=>e&&typeof e.text==='string'&&((e.recurring!==false&&!e.date)?e.day===weekday:e.date===isoDate(date))).sort((a,b)=>String(a.time||'').localeCompare(String(b.time||''))).map(e=>({time:e.time||'',text:e.text})),
+   events:events.filter(e=>e&&typeof e.text==='string'&&((e.recurring!==false&&!e.date)?e.day===weekday&&(e.repeat!=='kids'||!isKids||kids):e.date===isoDate(date))).sort((a,b)=>String(a.time||'').localeCompare(String(b.time||''))).map(e=>({time:e.time||'',text:e.text})),
    dates:dates.filter(d=>d&&d.date===isoDate(date)&&typeof d.label==='string').map(d=>({label:d.label,type:d.type||''})),
   });
  }
