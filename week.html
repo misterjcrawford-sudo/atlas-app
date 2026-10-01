@@ -593,6 +593,10 @@
     margin-bottom: 10px;
   }
   .day-block.away { border-left-color: var(--ink-faded); }
+  .card-help { font-size: 13px; line-height: 1.45; color: var(--ink-muted); margin: 0 0 12px; }
+  .day-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px; }
+  .day-title .day-name { margin-bottom: 0; }
+  .day-title .date-row-type { font-size: 11px; }
   .day-block.child2 { border-left-color: var(--ink-faded); }
   .day-name {
     font-family: var(--font-display);
@@ -1310,6 +1314,7 @@
             <svg class="card-chevron open" id="chev-schedule" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="card-body open" id="body-schedule">
+            <p class="card-help">Things with a time: routines and one-off appointments. All-day dates go in Term &amp; key dates below.</p>
             <div class="schedule-add-form">
               <input type="time" id="ev-time" value="07:00">
               <select id="ev-day" aria-label="Day of the week">
@@ -1328,6 +1333,32 @@
             </div>
             <div id="day-schedule"></div>
             <button class="schedule-add-btn" style="margin-top:12px;" onclick="exportScheduleToICS()">⤓ Export to calendar (.ics)</button>
+          </div>
+        </div>
+
+        <!-- IMPORTANT DATES -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('dates')">
+            <div class="card-dot dot-coral"></div>
+            <div class="card-title">Term &amp; key dates</div>
+            <div class="card-meta" id="dates-meta">All-day dates</div>
+            <svg class="card-chevron open" id="chev-dates" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-dates">
+            <p class="card-help">All-day dates: terms, holidays, pupil-free days, birthdays. Add the school calendar once a term.</p>
+            <div class="dates-add-form">
+              <input type="date" id="dt-date">
+              <input type="text" id="dt-label" placeholder="e.g. Term 4 ends, a birthday">
+              <select id="dt-type">
+                <option value="break-start">Term break starts</option>
+                <option value="break-end">Term break ends</option>
+                <option value="pupil-free">Pupil-free day</option>
+                <option value="school">School event</option>
+                <option value="personal">Personal</option>
+              </select>
+              <button class="schedule-add-btn" onclick="addImportantDate()">+ Add</button>
+            </div>
+            <div id="dates-list"></div>
           </div>
         </div>
 
@@ -1411,34 +1442,9 @@
       </aside>
     </div>
 
-    <!-- MORE: the rest of the household plan, full width -->
+    <!-- MORE: meals, rules, chores, notes — full width -->
         <details class="at-more">
-      <summary><span>Dates, meals, house rules, chores and notes<br><span class="at-more-hint">The rest of the household plan, when you need it.</span></span></summary>
-        <!-- IMPORTANT DATES -->
-        <div class="card">
-          <div class="card-header" onclick="toggleSection('dates')">
-            <div class="card-dot dot-coral"></div>
-            <div class="card-title">Term &amp; special dates</div>
-            <div class="card-meta" id="dates-meta">School and one-off events</div>
-            <svg class="card-chevron open" id="chev-dates" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
-          <div class="card-body open" id="body-dates">
-            <div class="dates-add-form">
-              <input type="date" id="dt-date">
-              <input type="text" id="dt-label" placeholder="e.g. Term 1 ends, sports carnival, a birthday">
-              <select id="dt-type">
-                <option value="break-start">Term break starts</option>
-                <option value="break-end">Term break ends</option>
-                <option value="pupil-free">Pupil-free day</option>
-                <option value="school">School event</option>
-                <option value="personal">Personal</option>
-              </select>
-              <button class="schedule-add-btn" onclick="addImportantDate()">+ Add</button>
-            </div>
-            <div id="dates-list"></div>
-          </div>
-        </div>
-
+      <summary><span>Meals, house rules, chores and notes<br><span class="at-more-hint">The rest of the household plan, when you need it.</span></span></summary>
         <!-- MEALS -->
         <div class="card">
           <div class="card-header" onclick="toggleSection('meals')">
@@ -2315,15 +2321,20 @@ function renderSchedule() {
   let totalEvents = 0;
   DAY_NAMES.forEach((dayName, i) => {
     const dayEvents = eventsByDay[i];
-    if (dayEvents.length === 0) return;
-    totalEvents += dayEvents.length;
     const date = new Date(monday);
     date.setDate(monday.getDate() + i);
+    const keyDates = getDatesOn(ymd(date));
+    if (dayEvents.length === 0 && keyDates.length === 0) return;
+    totalEvents += dayEvents.length;
     const kidsHere = isKidsDate(date);
+    const dateTags = keyDates.map(d => {
+      const meta = DATE_TYPE_META[d.type] || { chipClass: '' };
+      return `<span class="date-row-type ${meta.chipClass}">${escapeHtml(d.label || meta.short || '')}</span>`;
+    }).join('');
 
     const block = document.createElement('div');
     block.className = 'day-block ' + (kidsHere ? 'both' : 'away');
-    block.innerHTML = `<div class="day-head"><span class="day-name">${dayName}</span><span class="day-tag ${kidsHere ? 'kids' : 'away'}">${kidsHere ? 'Kids with you' : 'Co-parent day'}</span></div><div class="day-events" id="events-${i}"></div>`;
+    block.innerHTML = `<div class="day-head"><span class="day-title"><span class="day-name">${dayName}</span>${dateTags}</span><span class="day-tag ${kidsHere ? 'kids' : 'away'}">${kidsHere ? 'Kids with you' : 'Co-parent day'}</span></div><div class="day-events" id="events-${i}"></div>`;
     el.appendChild(block);
 
     const evEl = block.querySelector('.day-events');
@@ -2351,7 +2362,7 @@ function renderSchedule() {
   if (!totalEvents) {
     const empty = document.createElement('p');
     empty.className = 'schedule-empty';
-    empty.textContent = later.length ? 'Nothing on this week.' : 'Nothing scheduled yet. Add school runs, activities and handovers above.';
+    empty.textContent = el.children.length ? 'No timed events this week.' : later.length ? 'Nothing on this week.' : 'Nothing scheduled yet. Add school runs, activities and handovers above.';
     el.appendChild(empty);
   }
 
@@ -2611,7 +2622,7 @@ function renderImportantDates() {
   if (sorted.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'dates-empty';
-    empty.textContent = 'Add term break dates, pupil-free days, sports carnivals, birthdays, or any one-off event you need on the radar.';
+    empty.textContent = 'Add the school calendar once a term: term breaks and pupil-free days, plus birthdays and other all-day dates.';
     list.appendChild(empty);
     return;
   }
@@ -2655,6 +2666,7 @@ function addImportantDate() {
   save();
   renderImportantDates();
   renderFortnight(); // re-render to update flags + status + upcoming
+  renderSchedule();
 }
 
 function removeImportantDate(id) {
@@ -2662,6 +2674,7 @@ function removeImportantDate(id) {
   save();
   renderImportantDates();
   renderFortnight();
+  renderSchedule();
 }
 
 /* CHECKLIST */
