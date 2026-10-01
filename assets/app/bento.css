@@ -52,7 +52,7 @@ body.atlas-app :is(h1, h2, h3) { font-family: var(--sans); }
 /* ---------- Header: the floating capsule ---------- */
 .at-header { max-width: 1180px; padding: 16px 28px 0; }
 .at-nav {
-  position: relative; gap: 16px; min-height: 0; padding: 8px 8px 8px 20px;
+  position: relative; z-index: 60; /* lift the nav (and its More menu) above page content */ gap: 16px; min-height: 0; padding: 8px 8px 8px 20px;
   background: #ffffffd9; border: 0; border-radius: 999px;
   -webkit-backdrop-filter: saturate(1.8) blur(20px); backdrop-filter: saturate(1.8) blur(20px);
   box-shadow: 0 1px 0 #0000000d, 0 8px 24px #0000000d;

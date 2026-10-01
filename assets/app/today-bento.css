@@ -235,7 +235,7 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12
 /* Phone: one column, in the order of the page. The countdown becomes a band. */
 @media (max-width: 720px) {
   .wrap { padding: 0 12px 40px; }
-  .top { flex-wrap: wrap; border-radius: 24px; padding: 10px 12px; position: static; margin: 12px 0 12px; gap: 8px 12px; }
+  .top { flex-wrap: wrap; border-radius: 24px; padding: 10px 12px; position: relative; margin: 12px 0 12px; gap: 8px 12px; }
   .brand { margin-right: auto; }
   .at-links { order: 3; flex-basis: 100%; justify-content: space-between; overflow-x: auto; }
   .at-links a { padding: 9px 11px; font-size: 13px; }
