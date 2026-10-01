@@ -611,11 +611,14 @@ function isKidsDate(date, state) {
 function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 
 // Events on a date: weekly events repeat on their weekday (0 = Monday); one-offs carry a date.
+// repeat: 'kids' keeps a weekly event to the days the kids are with you.
 // Shared by the family snapshot and the fridge sheet.
 function eventsOn(date, dayIdx, st) {
   const iso = ymd(date);
   return ((st && st.events) || [])
-    .filter(ev => ev && ((ev.recurring !== false && !ev.date) ? ev.day === dayIdx : ev.date === iso))
+    .filter(ev => ev && ((ev.recurring !== false && !ev.date)
+      ? ev.day === dayIdx && (ev.repeat !== 'kids' || isKidsDate(date, st))
+      : ev.date === iso))
     .sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')));
 }
 

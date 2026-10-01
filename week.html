@@ -551,6 +551,7 @@
   .schedule-add-form select#ev-day { width: 86px; flex: 0 0 86px; }
   .schedule-add-form input#ev-text { flex: 1 1 180px; min-width: 140px; }
   .schedule-add-form select#ev-who { width: 110px; flex: 0 0 110px; }
+  .schedule-add-form select#ev-repeat { width: 168px; flex: 0 0 168px; }
   .schedule-add-form input:focus,
   .schedule-add-form select:focus { border-color: var(--ink); }
   .schedule-add-form label {
@@ -1206,6 +1207,7 @@
     .schedule-add-form input[type="time"],
     .schedule-add-form select#ev-day,
     .schedule-add-form select#ev-who,
+    .schedule-add-form select#ev-repeat,
     .schedule-add-form input#ev-text { flex: 1 1 100%; width: 100%; }
     .schedule-add-btn { flex: 1 1 100%; }
     .dates-add-form input[type="date"],
@@ -1317,7 +1319,11 @@
               <input type="date" id="ev-date" aria-label="Date" hidden>
               <input type="text" id="ev-text" placeholder="What's happening?">
               <select id="ev-who"><option value="both">Both</option></select>
-              <label title="Weekly events repeat every week. Untick for a one-off on a specific date."><input type="checkbox" id="ev-recurring" checked onchange="syncEventForm()"> Every week</label>
+              <select id="ev-repeat" aria-label="Repeats" onchange="syncEventForm()">
+                <option value="weekly">Every week</option>
+                <option value="kids">On my kids days</option>
+                <option value="once">Once</option>
+              </select>
               <button class="schedule-add-btn" onclick="addEvent()">+ Add</button>
             </div>
             <div id="day-schedule"></div>
@@ -1706,16 +1712,36 @@ function getCyclePattern() {
   return Array.isArray(state.cycle.pattern) && state.cycle.pattern.length === 14 ? state.cycle.pattern : PRESET_PATTERNS['five-two'].slice();
 }
 
-/* EVENTS — weekly events repeat on their weekday (day: 0=Mon … 6=Sun); one-offs carry a date (YYYY-MM-DD). */
+/* EVENTS — weekly events repeat on their weekday (day: 0=Mon … 6=Sun); one-offs carry a date (YYYY-MM-DD).
+   repeat: 'kids' narrows a weekly event to the weekdays the custody cycle says the kids are with you. */
 function isWeeklyEvent(ev) {
   return ev.recurring !== false && !ev.date;
 }
 
+function isKidsDaysEvent(ev) {
+  return isWeeklyEvent(ev) && ev.repeat === 'kids';
+}
+
+function eventOccursOn(ev, date) {
+  if (!ev) return false;
+  if (!isWeeklyEvent(ev)) return ev.date === ymd(date);
+  return ev.day === (date.getDay() + 6) % 7 && (!isKidsDaysEvent(ev) || isKidsDate(date));
+}
+
+// The next date (from `from`, inclusive, up to 8 weeks out) this event happens.
+function nextOccurrence(ev, from) {
+  const d = new Date(from);
+  d.setHours(12, 0, 0, 0);
+  for (let i = 0; i < 56; i++) {
+    if (eventOccursOn(ev, d)) return new Date(d);
+    d.setDate(d.getDate() + 1);
+  }
+  return null;
+}
+
 function eventsOn(date) {
-  const dayIdx = (date.getDay() + 6) % 7;
-  const iso = ymd(date);
   return (state.events || [])
-    .filter(ev => ev && (isWeeklyEvent(ev) ? ev.day === dayIdx : ev.date === iso))
+    .filter(ev => eventOccursOn(ev, date))
     .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
 }
 
@@ -1733,7 +1759,7 @@ function dateLegacyOneOffs(s) {
 }
 
 function syncEventForm() {
-  const weekly = $('ev-recurring').checked;
+  const weekly = $('ev-repeat').value !== 'once';
   $('ev-day').hidden = !weekly;
   $('ev-date').hidden = weekly;
   if (!weekly && !$('ev-date').value) $('ev-date').value = ymd(new Date());
@@ -2306,18 +2332,47 @@ function renderSchedule() {
       row.className = 'event-row';
       row.innerHTML = `
         <span class="event-time">${ev.time}</span>
-        <span class="event-text">${escapeHtml(ev.text)}${isWeeklyEvent(ev) ? ' <span class="event-repeat" title="Every week">↻</span>' : ''}</span>
+        <span class="event-text">${escapeHtml(ev.text)}${isKidsDaysEvent(ev) ? ' <span class="event-repeat" title="On your kids days">↻ kids days</span>' : isWeeklyEvent(ev) ? ' <span class="event-repeat" title="Every week">↻</span>' : ''}</span>
         <span class="event-chip ${escapeHtml(ev.who)}">${escapeHtml(getEventWhoLabel(ev.who))}</span>
         <button class="event-remove" onclick="removeEvent('${ev.id}')">×</button>`;
       evEl.appendChild(row);
     });
   });
 
+  // Events that don't fall in this week (kids-day events on a solo week, future one-offs) stay visible and removable here.
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const later = (state.events || [])
+    .filter(ev => ev && (isKidsDaysEvent(ev) || !isWeeklyEvent(ev)))
+    .map(ev => ({ ev, next: nextOccurrence(ev, monday) || (!isWeeklyEvent(ev) ? parseDateLocal(ev.date) : null) }))
+    .filter(x => isKidsDaysEvent(x.ev) ? !eventsByDay.some(list => list.includes(x.ev)) : (x.next && x.next > sunday))
+    .sort((a, b) => (a.next ? a.next.getTime() : Infinity) - (b.next ? b.next.getTime() : Infinity));
+
   if (!totalEvents) {
     const empty = document.createElement('p');
     empty.className = 'schedule-empty';
-    empty.textContent = 'Nothing scheduled yet. Add school runs, activities and handovers above.';
+    empty.textContent = later.length ? 'Nothing on this week.' : 'Nothing scheduled yet. Add school runs, activities and handovers above.';
     el.appendChild(empty);
+  }
+
+  if (later.length) {
+    const label = d => d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const block = document.createElement('div');
+    block.className = 'day-block later';
+    block.innerHTML = '<div class="day-head"><span class="day-name">Later</span><span class="day-tag away">Not this week</span></div><div class="day-events"></div>';
+    const evEl = block.querySelector('.day-events');
+    later.forEach(({ ev, next }) => {
+      const when = next ? label(next) : DAY_NAMES[ev.day].slice(0, 3) + ', no kids days yet';
+      const row = document.createElement('div');
+      row.className = 'event-row';
+      row.innerHTML = `
+        <span class="event-time">${ev.time}</span>
+        <span class="event-text">${escapeHtml(ev.text)}${isKidsDaysEvent(ev) ? ' <span class="event-repeat" title="On your kids days">↻ kids days</span>' : ''} <span class="event-repeat">· ${escapeHtml(when)}</span></span>
+        <span class="event-chip ${escapeHtml(ev.who)}">${escapeHtml(getEventWhoLabel(ev.who))}</span>
+        <button class="event-remove" onclick="removeEvent('${ev.id}')" aria-label="Remove ${escapeHtml(ev.text)}">×</button>`;
+      evEl.appendChild(row);
+    });
+    el.appendChild(block);
   }
   if ($('d-events')) $('d-events').textContent = totalEvents;
   if ($('schedule-meta')) $('schedule-meta').textContent = totalEvents + ' event' + (totalEvents !== 1 ? 's' : '');
@@ -2326,10 +2381,11 @@ function renderSchedule() {
 function addEvent() {
   const text = $('ev-text').value.trim();
   if (!text) return;
-  const weekly = $('ev-recurring').checked;
+  const repeat = $('ev-repeat').value;
+  const weekly = repeat !== 'once';
   const date = weekly ? null : parseDateLocal($('ev-date').value);
   if (!weekly && !date) { $('ev-date').focus(); return; }
-  state.events.push({
+  const ev = {
     id: 'e' + Date.now(),
     day: weekly ? parseInt($('ev-day').value, 10) : (date.getDay() + 6) % 7,
     date: weekly ? undefined : ymd(date),
@@ -2337,11 +2393,35 @@ function addEvent() {
     text,
     who: $('ev-who').value,
     recurring: weekly,
-  });
+  };
+  if (repeat === 'kids') ev.repeat = 'kids';
+  state.events.push(ev);
   $('ev-text').value = '';
   save();
   renderSchedule();
   renderTomorrow();
+  confirmEventAdded(ev);
+}
+
+// The schedule lists this week only, so say when an event lands outside it.
+function confirmEventAdded(ev) {
+  if (!window.AtlasApp || !AtlasApp.notify) return;
+  const now = new Date();
+  now.setHours(12, 0, 0, 0);
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const next = nextOccurrence(ev, monday);
+  const label = d => d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  if (isKidsDaysEvent(ev)) {
+    const day = DAY_NAMES[ev.day];
+    if (!next) AtlasApp.notify('Added. Your custody cycle has no ' + day + 's with the kids, so it won’t show yet.');
+    else if (next > sunday) AtlasApp.notify('Added. It shows on ' + day + 's when the kids are with you. Next: ' + label(next) + '.');
+    else AtlasApp.notify('Added for ' + day + 's when the kids are with you.');
+  } else if (!isWeeklyEvent(ev) && next && next > sunday) {
+    AtlasApp.notify('Added for ' + label(next) + '. It’ll show here that week.');
+  }
 }
 
 function removeEvent(id) {
@@ -2383,6 +2463,22 @@ function exportScheduleToICS() {
   ];
 
   (state.events || []).forEach(ev => {
+    // Kids-day events follow the custody cycle, so export each date for the next 12 weeks.
+    if (isKidsDaysEvent(ev)) {
+      const d = new Date(monday);
+      for (let i = 0; i < 84; i++) {
+        if (eventOccursOn(ev, d)) {
+          lines.push('BEGIN:VEVENT');
+          lines.push('UID:' + ev.id + '-' + ymd(d) + '@atlas-kidsweek');
+          lines.push('DTSTAMP:' + icsDateStamp(now));
+          lines.push('DTSTART:' + icsLocalDateTime(d, ev.time));
+          lines.push('SUMMARY:' + icsEscape(ev.text));
+          lines.push('END:VEVENT');
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      return;
+    }
     let date;
     if (isWeeklyEvent(ev)) {
       if (!(ev.day >= 0 && ev.day <= 6)) return;
