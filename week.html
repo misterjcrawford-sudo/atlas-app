@@ -640,6 +640,13 @@
   .event-remove:hover { color: var(--coral); }
 
   /* IMPORTANT DATES */
+  .term-dates { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 12px; padding: 12px 14px; border-radius: 14px; background: #eef1ff; }
+  .term-dates-label { font-size: 13px; font-weight: 650; color: var(--ink); }
+  .term-dates select { border: 0; background: #fff; border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 14px; color: var(--ink); min-width: 0; }
+  .term-dates .schedule-add-btn { margin: 0; }
+  .term-dates-remove { border: 0; background: none; padding: 4px 2px; font: inherit; font-size: 13px; color: var(--ink-muted); text-decoration: underline; cursor: pointer; }
+  .term-dates-note { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.45; color: var(--ink-muted); }
+  .dates-more { margin: 8px 2px 0; font-size: 12.5px; color: var(--ink-muted); }
   .dates-add-form {
     display: flex;
     flex-wrap: wrap;
@@ -1346,6 +1353,24 @@
           </div>
           <div class="card-body open" id="body-dates">
             <p class="card-help">All-day dates: terms, holidays, pupil-free days, birthdays. Add the school calendar once a term.</p>
+            <div class="term-dates">
+              <label class="term-dates-label" for="term-state">School terms</label>
+              <select id="term-state" aria-label="State or territory for school term dates">
+                <option value="">Choose state</option>
+                <option value="NSW">NSW</option>
+                <option value="NSWW">NSW, Western Division</option>
+                <option value="VIC">VIC</option>
+                <option value="QLD">QLD</option>
+                <option value="SA">SA</option>
+                <option value="WA">WA</option>
+                <option value="TAS">TAS</option>
+                <option value="ACT">ACT</option>
+                <option value="NT">NT</option>
+              </select>
+              <button class="schedule-add-btn" type="button" id="term-apply" onclick="applyTermDates()">Add term dates</button>
+              <button class="term-dates-remove" type="button" id="term-remove" onclick="removeTermDates()" hidden>Remove</button>
+              <p class="term-dates-note" id="term-note">Government school terms and holidays to the end of 2027. Catholic and independent schools can differ, so check yours.</p>
+            </div>
             <div class="dates-add-form">
               <input type="date" id="dt-date">
               <input type="text" id="dt-label" placeholder="e.g. Term 4 ends, a birthday">
@@ -2603,6 +2628,76 @@ function getNextTermBreakStart(fromDate, withinDays) {
   return null;
 }
 
+/* SCHOOL TERM DATES — government schools, from each state's education department. Student days.
+   Checked Oct 2026: education.nsw.gov.au, vic.gov.au, education.qld.gov.au, education.sa.gov.au,
+   education.wa.edu.au, decyp.tas.gov.au, act.gov.au, nt.gov.au. Add the next year each spring. */
+const TERM_DATES_AS_AT = 'Oct 2026';
+const TERM_STATE_NAMES = { NSW: 'NSW', NSWW: 'NSW Western Division', VIC: 'VIC', QLD: 'QLD', SA: 'SA', WA: 'WA', TAS: 'TAS', ACT: 'ACT', NT: 'NT' };
+const TERM_DATES = {
+  NSW:  { 2026: [['02-02','04-02'],['04-22','07-03'],['07-21','09-25'],['10-13','12-17']], 2027: [['01-28','04-09'],['04-27','07-02'],['07-19','09-24'],['10-11','12-20']] },
+  NSWW: { 2026: [['02-09','04-02'],['04-22','07-03'],['07-21','09-25'],['10-13','12-17']], 2027: [['02-04','04-09'],['04-27','07-02'],['07-19','09-24'],['10-11','12-20']] },
+  VIC:  { 2026: [['01-28','04-02'],['04-20','06-26'],['07-13','09-18'],['10-05','12-18']], 2027: [['01-28','03-25'],['04-12','06-25'],['07-12','09-17'],['10-04','12-17']] },
+  QLD:  { 2026: [['01-27','04-02'],['04-20','06-26'],['07-13','09-18'],['10-06','12-11']], 2027: [['01-27','03-25'],['04-12','06-25'],['07-12','09-17'],['10-05','12-10']] },
+  SA:   { 2026: [['01-27','04-10'],['04-27','07-03'],['07-20','09-25'],['10-12','12-11']], 2027: [['01-27','04-09'],['04-26','07-02'],['07-19','09-24'],['10-11','12-10']] },
+  WA:   { 2026: [['02-02','04-02'],['04-20','07-03'],['07-20','09-25'],['10-12','12-17']], 2027: [['02-01','04-09'],['04-26','07-02'],['07-19','09-24'],['10-11','12-16']] },
+  TAS:  { 2026: [['02-05','04-17'],['05-04','07-10'],['07-27','10-02'],['10-19','12-18']], 2027: [['02-04','04-09'],['04-26','07-02'],['07-19','09-24'],['10-11','12-16']] },
+  ACT:  { 2026: [['02-02','04-02'],['04-21','07-03'],['07-21','09-25'],['10-13','12-18']], 2027: [['02-02','04-09'],['04-28','07-02'],['07-20','09-24'],['10-12','12-17']] },
+  NT:   { 2026: [['01-29','04-02'],['04-14','06-19'],['07-14','09-18'],['10-06','12-10']], 2027: [['01-27','04-02'],['04-13','06-18'],['07-13','09-17'],['10-05','12-09']] },
+};
+
+// Pure: holiday entries for a state. Each holiday is break-start (first day off) to break-end (first day back),
+// which is how getActiveTermBreak reads them. Keeps entries from a month ago onwards so a current holiday counts.
+function termDateEntries(code, today) {
+  const years = TERM_DATES[code];
+  if (!years) return [];
+  const terms = [];
+  Object.keys(years).sort().forEach(y => years[y].forEach(([a, b], i) => terms.push({ n: i + 1, start: y + '-' + a, end: y + '-' + b })));
+  const dayAfter = iso => { const d = parseDateLocal(iso); d.setDate(d.getDate() + 1); return ymd(d); };
+  const out = [];
+  terms.forEach((t, i) => {
+    out.push({ date: t.start, type: 'break-end', label: 'Term ' + t.n + ' starts' });
+    out.push({ date: dayAfter(t.end), type: 'break-start', label: t.n === 4 ? 'Summer holidays start' : 'Term ' + t.n + ' holidays start' });
+  });
+  const from = new Date(today); from.setDate(from.getDate() - 31);
+  const fromStr = ymd(from);
+  return out.filter(e => e.date >= fromStr).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function syncTermDatesUI() {
+  const code = state.termState || '';
+  if ($('term-state')) $('term-state').value = code;
+  if ($('term-apply')) $('term-apply').textContent = code ? 'Update' : 'Add term dates';
+  if ($('term-remove')) $('term-remove').hidden = !code;
+  if ($('term-note')) $('term-note').textContent = code
+    ? TERM_STATE_NAMES[code] + ' government school terms and holidays added to the end of 2027 (as at ' + TERM_DATES_AS_AT + '). Catholic and independent schools can differ.'
+    : 'Government school terms and holidays to the end of 2027. Catholic and independent schools can differ, so check yours.';
+}
+
+function applyTermDates() {
+  const code = $('term-state') ? $('term-state').value : '';
+  if (!code) { $('term-state').focus(); return; }
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  state.dates = (state.dates || []).filter(d => d.source !== 'term');
+  termDateEntries(code, today).forEach((e, i) => state.dates.push({ id: 'term-' + code + '-' + e.date + '-' + i, source: 'term', ...e }));
+  state.termState = code;
+  save();
+  syncTermDatesUI();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify(TERM_STATE_NAMES[code] + ' term dates added to the end of 2027.');
+}
+
+function removeTermDates() {
+  state.dates = (state.dates || []).filter(d => d.source !== 'term');
+  delete state.termState;
+  save();
+  syncTermDatesUI();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+}
+
 function renderImportantDates() {
   const list = $('dates-list');
   const meta = $('dates-meta');
@@ -2629,9 +2724,12 @@ function renderImportantDates() {
 
   const wrap = document.createElement('div');
   wrap.className = 'dates-list';
-  // Show upcoming first, then up to 3 most-recent past
-  const past = sorted.filter(d => (d.date || '') < todayStr).slice(-3);
-  const display = [...upcoming, ...past];
+  // Show upcoming first, then up to 3 most-recent past. Built-in term dates show the next two only.
+  let termShown = 0;
+  const upcomingShown = upcoming.filter(d => d.source !== 'term' || termShown++ < 2);
+  const termHidden = upcoming.length - upcomingShown.length;
+  const past = sorted.filter(d => (d.date || '') < todayStr && d.source !== 'term').slice(-3);
+  const display = [...upcomingShown, ...past];
   display.forEach(entry => {
     const dDate = parseDateLocal(entry.date);
     const isPast = (entry.date || '') < todayStr;
@@ -2644,11 +2742,17 @@ function renderImportantDates() {
     row.innerHTML = `
       <span class="date-row-date">${dateStr}</span>
       <span class="date-row-label">${(entry.label || '').replace(/</g, '&lt;')}</span>
-      <span class="date-row-type ${meta.chipClass}">${meta.label}</span>
+      <span class="date-row-type ${meta.chipClass}">${entry.source === 'term' ? (entry.type === 'break-end' ? 'Term' : 'Holidays') : meta.label}</span>
       <button class="date-row-remove" onclick="removeImportantDate('${entry.id}')">×</button>`;
     wrap.appendChild(row);
   });
   list.appendChild(wrap);
+  if (termHidden > 0) {
+    const more = document.createElement('p');
+    more.className = 'dates-more';
+    more.textContent = termHidden + ' more term dates to the end of 2027. They show on the calendar as they come up.';
+    list.appendChild(more);
+  }
 }
 
 function addImportantDate() {
@@ -3208,6 +3312,7 @@ function saveKids() {
   renderFortnight();
   renderSchedule();
   renderImportantDates();
+  syncTermDatesUI();
   renderChecklist();
   renderMeals();
   renderHouseRules();
