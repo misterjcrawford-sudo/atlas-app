@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Year planner · Atlas</title>
+<style>
+  :root {
+    --ink: #111; --mute: #62626a; --line: #e6e6e3; --bg: #f2f2f0;
+    --kids: #c9d1ff; --kids-ink: #1b2a9e; --break: #ff9f80; --hand: #b9d63a; --date: #ff6a45;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Screen controls */
+  .controls { max-width: 1120px; margin: 0 auto; padding: 16px 16px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .controls a.back { color: var(--ink); font-size: 14px; font-weight: 600; text-decoration: none; margin-right: auto; }
+  .controls label { font-size: 13px; font-weight: 600; color: var(--mute); }
+  .controls select { border: 0; background: #fff; border-radius: 999px; padding: 10px 14px; font: inherit; font-size: 14px; }
+  .controls button { border: 0; background: var(--ink); color: #fff; border-radius: 999px; padding: 11px 20px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+  .controls button:focus-visible, .controls select:focus-visible, .controls a:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  .screen-note { max-width: 1120px; margin: 8px auto 0; padding: 0 16px; font-size: 12.5px; color: var(--mute); }
+
+  /* Sheet: A4 landscape */
+  .sheet { width: 297mm; min-height: 210mm; margin: 16px auto 32px; padding: 9mm 11mm 7mm; background: #fff; box-shadow: 0 8px 30px #0000001a; display: flex; flex-direction: column; gap: 4mm; }
+  .sheet-head { display: flex; align-items: baseline; justify-content: space-between; gap: 6mm; }
+  .sheet-head h1 { font-size: 20pt; letter-spacing: -.03em; font-weight: 750; }
+  .sheet-head h1 b { color: #2743ff; }
+  .sheet-head p { font-size: 9pt; color: var(--mute); text-align: right; }
+  .months { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm 6mm; }
+  .mon h2 { font-size: 9.5pt; font-weight: 700; margin-bottom: 1mm; letter-spacing: -.01em; }
+  .mon-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.6mm; }
+  .mon-grid .dow { font-size: 6.5pt; font-weight: 600; color: var(--mute); text-align: center; padding-bottom: .4mm; }
+  .d { position: relative; height: 5.3mm; display: grid; place-items: center; font-size: 7.5pt; font-weight: 600; border-radius: 1.2mm; color: #3a3a40; }
+  .d.kids { background: var(--kids); color: var(--kids-ink); }
+  .d.brk::after { content: ""; position: absolute; left: .5mm; right: .5mm; bottom: .35mm; height: .8mm; border-radius: 1mm; background: var(--break); }
+  .d.hand::before { content: ""; position: absolute; top: .45mm; right: .45mm; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--hand); box-shadow: 0 0 0 .2mm #11111155; }
+  .d.key { box-shadow: inset 0 0 0 .35mm var(--date); }
+  .foot { margin-top: auto; display: grid; grid-template-columns: auto 1fr; gap: 3mm 8mm; align-items: start; }
+  .legend { display: flex; flex-direction: column; gap: 1.4mm; font-size: 8pt; color: #3a3a40; }
+  .legend span { display: flex; align-items: center; gap: 2mm; }
+  .legend i { position: relative; display: inline-block; width: 4.2mm; height: 4.2mm; border-radius: 1mm; background: #f2f2f0; }
+  .legend .l-kids { background: var(--kids); }
+  .legend .l-brk::after { content: ""; position: absolute; left: .4mm; right: .4mm; bottom: .3mm; height: .8mm; border-radius: 1mm; background: var(--break); }
+  .legend .l-hand::before { content: ""; position: absolute; top: .4mm; right: .4mm; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--hand); box-shadow: 0 0 0 .2mm #11111155; }
+  .legend .l-key { background: #fff; box-shadow: inset 0 0 0 .35mm var(--date); }
+  .legend .stat { margin-top: 1mm; font-weight: 650; color: var(--ink); }
+  .keydates h3 { font-size: 8.5pt; font-weight: 700; margin-bottom: 1.2mm; }
+  .keydates ul { list-style: none; columns: 3; column-gap: 6mm; font-size: 7.5pt; line-height: 1.45; color: #3a3a40; }
+  .keydates li { break-inside: avoid; }
+  .keydates li b { display: inline-block; min-width: 13mm; font-weight: 650; color: var(--ink); }
+  .keydates .none { font-size: 7.5pt; color: var(--mute); }
+  .made { font-size: 7pt; color: var(--mute); grid-column: 1 / -1; }
+
+  .empty { max-width: 560px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 22px; font-size: 15px; line-height: 1.5; }
+  .empty a { color: #2743ff; font-weight: 650; }
+
+  @media screen and (max-width: 1120px) {
+    .sheet-wrap { overflow-x: auto; padding: 0 16px; }
+  }
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    body { background: #fff; }
+    .controls, .screen-note { display: none; }
+    .sheet { margin: 0; box-shadow: none; width: 297mm; height: 210mm; min-height: 0; overflow: hidden; }
+    .sheet-wrap { overflow: visible; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a class="back" href="./week.html">← Back to Week</a>
+  <label for="yp-start">Start</label>
+  <select id="yp-start"></select>
+  <button type="button" onclick="window.print()">Print or save PDF</button>
+</div>
+<p class="screen-note">Prints on one A4 page, landscape. To keep a copy, choose Save as PDF in the print window.</p>
+<div class="sheet-wrap"><div id="yp"></div></div>
+
+<script>
+/* Same rules as week.html: a 14-day custody pattern from the next-kids date, and school breaks
+   running from a break-start date up to (not including) the next break-end date. */
+const PRESET_PATTERNS = {
+  'week-about': [1,1,1,1,1,1,1,0,0,0,0,0,0,0],
+  'five-two': [1,1,0,0,1,1,1,1,1,0,0,0,0,0],
+};
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem('atlas_kidsweek') || localStorage.getItem('dad_kidsweek') || 'null'); } catch (e) { return null; }
+}
+function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function parseDateLocal(s) {
+  if (!s || typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d, 12);
+}
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function makeIsKids(st) {
+  const pattern = st.cycle && Array.isArray(st.cycle.pattern) && st.cycle.pattern.length === 14
+    ? st.cycle.pattern : (PRESET_PATTERNS[(st.cycle && st.cycle.preset)] || PRESET_PATTERNS['five-two']);
+  const start = (st.cycle && parseDateLocal(st.cycle.nextKidsDate)) || (() => { const t = new Date(); t.setHours(12, 0, 0, 0); return t; })();
+  return d => {
+    const diff = Math.round((d - start) / 86400000);
+    return pattern[((diff % 14) + 14) % 14] === 1;
+  };
+}
+
+function makeInBreak(dates) {
+  const sorted = dates.filter(d => d && parseDateLocal(d.date)).slice().sort((a, b) => a.date.localeCompare(b.date));
+  return date => {
+    let lastStart = null;
+    for (const d of sorted) {
+      const dd = parseDateLocal(d.date);
+      if (dd > date) break;
+      if (d.type === 'break-start') lastStart = d;
+      if (d.type === 'break-end' && lastStart) lastStart = null;
+    }
+    if (!lastStart) return false;
+    const s = parseDateLocal(lastStart.date);
+    const end = sorted.find(d => d.type === 'break-end' && parseDateLocal(d.date) >= s);
+    return !!end && date <= parseDateLocal(end.date);
+  };
+}
+
+function fillStartOptions() {
+  const sel = document.getElementById('yp-start');
+  const now = new Date();
+  const opts = [];
+  for (let i = -1; i <= 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    opts.push(`<option value="${d.getFullYear()}-${d.getMonth()}">${MONTHS[d.getMonth()]} ${d.getFullYear()}</option>`);
+  }
+  sel.innerHTML = opts.join('');
+  sel.value = now.getFullYear() + '-' + now.getMonth();
+  sel.onchange = render;
+}
+
+function render() {
+  const root = document.getElementById('yp');
+  const st = loadState();
+  if (!st || !st.cycle || !st.cycle.nextKidsDate) {
+    root.innerHTML = '<div class="empty">Set up your custody cycle on the <a href="./week.html#cycle">Week page</a> first. The planner shades the days the kids are with you, so it needs that pattern to start from.</div>';
+    return;
+  }
+  const [y, m] = document.getElementById('yp-start').value.split('-').map(Number);
+  const first = new Date(y, m, 1, 12);
+  const lastMonth = new Date(y, m + 11, 1, 12);
+  const isKids = makeIsKids(st);
+  const dates = Array.isArray(st.dates) ? st.dates : [];
+  const inBreak = makeInBreak(dates);
+  const keyByDay = {};
+  dates.filter(d => d && d.source !== 'term' && parseDateLocal(d.date)).forEach(d => { (keyByDay[d.date] = keyByDay[d.date] || []).push(d); });
+
+  let withYou = 0, total = 0;
+  const monthsHtml = [];
+  for (let k = 0; k < 12; k++) {
+    const mStart = new Date(y, m + k, 1, 12);
+    const lead = (mStart.getDay() + 6) % 7;
+    const daysIn = new Date(mStart.getFullYear(), mStart.getMonth() + 1, 0).getDate();
+    let cells = ['M','T','W','T','F','S','S'].map(x => `<span class="dow">${x}</span>`).join('');
+    for (let i = 0; i < lead; i++) cells += '<span></span>';
+    for (let day = 1; day <= daysIn; day++) {
+      const d = new Date(mStart.getFullYear(), mStart.getMonth(), day, 12);
+      const prev = new Date(d); prev.setDate(day - 1);
+      const kids = isKids(d);
+      const hand = kids !== isKids(prev);
+      const key = keyByDay[ymd(d)];
+      if (kids) withYou++;
+      total++;
+      const title = key ? ' title="' + esc(key.map(x => x.label).join(', ')) + '"' : '';
+      cells += `<span class="d${kids ? ' kids' : ''}${inBreak(d) ? ' brk' : ''}${hand ? ' hand' : ''}${key ? ' key' : ''}"${title}>${day}</span>`;
+    }
+    monthsHtml.push(`<section class="mon"><h2>${MONTHS[mStart.getMonth()]} ${mStart.getFullYear()}</h2><div class="mon-grid">${cells}</div></section>`);
+  }
+
+  const rangeEnd = ymd(new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0, 12));
+  const keyList = dates
+    .filter(d => d && d.source !== 'term' && d.date >= ymd(first) && d.date <= rangeEnd)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const shown = keyList.slice(0, 27);
+  const keyHtml = shown.length
+    ? '<ul>' + shown.map(d => `<li><b>${parseDateLocal(d.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</b>${esc(d.label)}</li>`).join('') + '</ul>'
+      + (keyList.length > shown.length ? `<p class="none">+${keyList.length - shown.length} more on the Week page.</p>` : '')
+    : '<p class="none">No key dates in this period. Add birthdays and pupil-free days in Term &amp; key dates on the Week page.</p>';
+
+  const names = (Array.isArray(st.kids) ? st.kids : []).map(k => k && k.name).filter(Boolean);
+  const who = names.length ? (names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1]) : 'The kids';
+  const rangeLabel = `${MONTHS[first.getMonth()].slice(0, 3)} ${first.getFullYear()} – ${MONTHS[lastMonth.getMonth()].slice(0, 3)} ${lastMonth.getFullYear()}`;
+  const termNote = st.termState ? `School holidays: ${esc(st.termState === 'NSWW' ? 'NSW Western Division' : st.termState)} government schools.` : 'No school holidays added.';
+  const printed = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  root.innerHTML = `<div class="sheet">
+    <div class="sheet-head"><h1>Year planner<b>.</b></h1><p>${esc(who)} · ${rangeLabel}<br>${termNote}</p></div>
+    <div class="months">${monthsHtml.join('')}</div>
+    <div class="foot">
+      <div class="legend">
+        <span><i class="l-kids"></i>With you</span>
+        <span><i class="l-brk"></i>School holidays</span>
+        <span><i class="l-hand"></i>Handover day</span>
+        <span><i class="l-key"></i>Key date</span>
+        <span class="stat">${withYou} of ${total} days with you</span>
+      </div>
+      <div class="keydates"><h3>Key dates</h3>${keyHtml}</div>
+      <p class="made">Made with Atlas on ${printed}. Based on the custody cycle and dates saved on this device. A plan, not a court order.</p>
+    </div>
+  </div>`;
+}
+
+fillStartOptions();
+render();
+</script>
+</body>
+</html>

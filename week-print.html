@@ -571,8 +571,10 @@ const DEFAULT_CHORES = [
   { id: 'ch3', text: 'Tidy bedroom', who: 'both', when: 'Sunday', done: false },
   { id: 'ch4', text: 'Put dirty clothes in basket', who: 'both', when: 'Every kids day', done: false },
 ];
+// Kept in step with week.html, which writes the saved pattern.
 const PRESET_PATTERNS = {
-  'five-two':  [1,1,1,1,1,0,0, 1,1,1,1,1,0,0],
+  'five-two':  [1,1,0,0,1,1,1, 1,1,0,0,0,0,0],
+  'week-about': [1,1,1,1,1,1,1, 0,0,0,0,0,0,0],
   'two-two-three': [1,1,0,0,1,1,1, 0,0,1,1,0,0,0],
   'week-on-week-off': [1,1,1,1,1,1,1, 0,0,0,0,0,0,0],
 };

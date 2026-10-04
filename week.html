@@ -1110,6 +1110,97 @@
   .cycle-update-btn:hover { opacity: 0.9; }
 
   /* PRINT ACTION ROW */
+  /* Calendar import */
+  .ics-import { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: -4px 0 12px; padding: 12px 14px; border-radius: 14px; background: #f5f5f3; }
+  .ics-pick { cursor: pointer; margin: 0; }
+  .ics-pick:focus-within, #ics-file:focus + .ics-pick { outline: 3px solid #2743ff; }
+  .ics-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(17,17,17,.45); display: grid; place-items: center; padding: 16px; }
+  .ics-overlay[hidden] { display: none; }
+  .ics-modal { width: min(640px, 100%); max-height: calc(100vh - 32px); display: flex; flex-direction: column; background: #fff; border-radius: 26px; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+  .ics-title { margin: 0 0 4px; font-size: 22px; letter-spacing: -.03em; }
+  .ics-sub { margin: 0 0 12px; font-size: 14px; color: var(--ink-muted); line-height: 1.45; }
+  .ics-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; margin-bottom: 10px; font-size: 13.5px; }
+  .ics-controls select { border: 0; background: #f2f2f0; border-radius: 10px; padding: 7px 10px; font: inherit; margin-left: 6px; }
+  .ics-all { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; }
+  .ics-list { overflow-y: auto; flex: 1 1 auto; min-height: 120px; border-radius: 16px; background: #f5f5f3; padding: 6px; }
+  .ics-group { font-size: 12px; font-weight: 700; color: var(--ink-muted); padding: 10px 10px 4px; }
+  .ics-row { display: grid; grid-template-columns: auto 92px 1fr; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; font-size: 14px; cursor: pointer; }
+  .ics-row:hover { background: #fff; }
+  .ics-row .when { font-size: 12.5px; font-weight: 600; color: var(--ink-muted); }
+  .ics-row .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ics-row .what small { color: var(--ink-muted); }
+  .ics-row.dupe .what::after { content: " · already added"; color: var(--ink-muted); font-size: 12px; }
+  .ics-fine { margin: 10px 0 0; font-size: 12px; color: var(--ink-muted); line-height: 1.45; }
+  .ics-fine:empty { display: none; }
+  .ics-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+  .ics-btn { border: 0; border-radius: 999px; padding: 12px 20px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; background: #f2f2f0; color: var(--ink); }
+  .ics-btn.primary { background: var(--ink); color: #fff; }
+  .ics-btn:disabled { opacity: .4; cursor: default; }
+  .ics-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  @media (max-width: 600px) {
+    .ics-modal { padding: 18px; border-radius: 22px; }
+    .ics-row { grid-template-columns: auto 72px 1fr; gap: 8px; font-size: 13.5px; }
+  }
+
+  /* Month view */
+  .month-card { background: #fff; border-radius: 26px; padding: 22px 22px 18px; margin: 0 0 16px; }
+  .month-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .month-title { margin: 0; font-size: 24px; letter-spacing: -.03em; font-weight: 700; color: var(--ink); }
+  .month-nav { display: flex; gap: 6px; }
+  .month-btn { border: 0; background: #f2f2f0; color: var(--ink); border-radius: 999px; min-width: 40px; height: 40px; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .month-btn:hover { background: #e6e6e3; }
+  .month-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  .month-btn-today { font-size: 13px; }
+  .month-dow, .month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .month-dow { margin-bottom: 6px; }
+  .month-dow span { font-size: 11.5px; font-weight: 600; color: var(--ink-muted); padding-left: 8px; }
+  .m-day { all: unset; box-sizing: border-box; position: relative; display: flex; flex-direction: column; gap: 3px; min-height: 96px; padding: 7px 8px; border-radius: 12px; background: #f5f5f3; cursor: pointer; overflow: hidden; }
+  .m-day.kids { background: #dfe4ff; }
+  .m-day.in-break { box-shadow: inset 0 4px 0 #ff9f80; }
+  .m-day.out { opacity: .38; }
+  .m-day.today .m-num { background: var(--ink); color: #fff; }
+  .m-day[aria-pressed="true"] { outline: 2px solid #2743ff; outline-offset: 1px; }
+  .m-day:focus-visible { outline: 3px solid #2743ff; outline-offset: 1px; }
+  .m-top { display: flex; align-items: center; gap: 5px; }
+  .m-num { display: inline-grid; place-items: center; min-width: 24px; height: 24px; border-radius: 999px; font-size: 13px; font-weight: 650; color: var(--ink); }
+  .m-hand { width: 9px; height: 9px; border-radius: 999px; background: #d4f062; box-shadow: 0 0 0 1px #11111133; }
+  .m-item { font-size: 11px; line-height: 1.25; color: #2a2a30; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .m-item.date { font-weight: 650; }
+  .m-item.date::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 999px; background: #ff6a45; margin-right: 4px; vertical-align: 1px; }
+  .m-more { font-size: 10.5px; color: var(--ink-muted); }
+  .m-dots { display: none; gap: 3px; }
+  .m-dots i { width: 6px; height: 6px; border-radius: 999px; background: #2743ff; }
+  .m-dots i.date { background: #ff6a45; }
+  .month-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12px; color: var(--ink-muted); }
+  .month-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .month-legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .month-legend .lg-kids { background: #dfe4ff; }
+  .month-legend .lg-break { background: #f5f5f3; box-shadow: inset 0 4px 0 #ff9f80; }
+  .month-legend .lg-hand { width: 10px; height: 10px; border-radius: 999px; background: #d4f062; box-shadow: 0 0 0 1px #11111133; }
+  .month-legend .lg-date { width: 8px; height: 8px; border-radius: 999px; background: #ff6a45; }
+  .month-detail:empty { display: none; }
+  .month-detail { margin-top: 14px; padding: 16px 18px; border-radius: 18px; background: #f5f5f3; }
+  .md-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 8px; }
+  .md-date { font-size: 17px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+  .md-tag { font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; background: #fff; color: var(--ink); }
+  .md-tag.kids { background: #2743ff; color: #fff; }
+  .month-detail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .month-detail li { font-size: 14px; color: var(--ink); }
+  .month-detail li b { display: inline-block; min-width: 52px; font-weight: 650; color: var(--ink-muted); }
+  .md-empty { font-size: 13.5px; color: var(--ink-muted); }
+  @media (max-width: 700px) {
+    .month-card { padding: 18px 14px 14px; border-radius: 22px; }
+    .month-title { font-size: 20px; }
+    .month-btn-today { display: none; }
+    .month-dow, .month-grid { gap: 4px; }
+    .month-dow span { padding-left: 0; text-align: center; font-size: 10.5px; }
+    .m-day { min-height: 52px; padding: 5px 4px; align-items: center; border-radius: 10px; }
+    .m-item, .m-more { display: none; }
+    .m-dots { display: flex; }
+    .m-top { flex-direction: column; gap: 3px; }
+    .m-num { min-width: 22px; height: 22px; font-size: 12.5px; }
+  }
+
   .print-action-row {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     margin: 0 0 28px;
@@ -1305,7 +1396,44 @@
         Print fridge sheet
       </a>
       <a href="./week-print.html" class="fridge-sheet-btn">Family snapshot</a>
+      <a href="./year-print.html" class="fridge-sheet-btn">Year planner</a>
       <span class="print-action-sub">Custody, schedule, meals, handover, house rules.</span>
+    </div>
+
+    <!-- MONTH: custody, school holidays, key dates and events, a month at a time -->
+    <section class="month-card" id="month-card" aria-labelledby="month-title">
+      <div class="month-head">
+        <h2 class="month-title" id="month-title">Month</h2>
+        <div class="month-nav">
+          <button type="button" class="month-btn" onclick="shiftMonth(-1)" aria-label="Previous month">‹</button>
+          <button type="button" class="month-btn month-btn-today" onclick="shiftMonth(0)">This month</button>
+          <button type="button" class="month-btn" onclick="shiftMonth(1)" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <div class="month-dow" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div class="month-grid" id="month-grid"></div>
+      <div class="month-legend" aria-hidden="true"><span><i class="lg-kids"></i>With you</span><span><i class="lg-break"></i>School holidays</span><span><i class="lg-hand"></i>Handover</span><span><i class="lg-date"></i>Key date</span></div>
+      <div class="month-detail" id="month-detail" aria-live="polite"></div>
+    </section>
+
+    <!-- CALENDAR IMPORT PREVIEW -->
+    <div class="ics-overlay" id="ics-modal" hidden onclick="if(event.target===this)closeICSModal()">
+      <div class="ics-modal" role="dialog" aria-modal="true" aria-labelledby="ics-title">
+        <h2 class="ics-title" id="ics-title">Import calendar</h2>
+        <p class="ics-sub" id="ics-sub"></p>
+        <div class="ics-controls">
+          <label class="ics-all"><input type="checkbox" id="ics-all" checked onchange="toggleAllICS(this.checked)"> Select all</label>
+          <label class="ics-type">All-day dates as
+            <select id="ics-type"><option value="school">School event</option><option value="personal">Personal</option><option value="pupil-free">Pupil-free day</option></select>
+          </label>
+        </div>
+        <div class="ics-list" id="ics-list"></div>
+        <p class="ics-fine" id="ics-fine"></p>
+        <div class="ics-buttons">
+          <button type="button" class="ics-btn" onclick="closeICSModal()">Cancel</button>
+          <button type="button" class="ics-btn primary" id="ics-go" onclick="importICS()">Import</button>
+        </div>
+      </div>
     </div>
 
     <!-- MASTHEAD -->
@@ -1370,6 +1498,12 @@
               <button class="schedule-add-btn" type="button" id="term-apply" onclick="applyTermDates()">Add term dates</button>
               <button class="term-dates-remove" type="button" id="term-remove" onclick="removeTermDates()" hidden>Remove</button>
               <p class="term-dates-note" id="term-note">Government school terms and holidays to the end of 2027. Catholic and independent schools can differ, so check yours.</p>
+            </div>
+            <div class="ics-import">
+              <span class="term-dates-label">Import a calendar</span>
+              <label class="schedule-add-btn ics-pick" for="ics-file">Choose .ics file</label>
+              <input type="file" id="ics-file" accept=".ics,text/calendar" onchange="readICSFile(this)" hidden>
+              <p class="term-dates-note">From the school app, Google, Apple or Outlook. The file is read on this device and never uploaded. All-day dates come here, timed events go to Schedule.</p>
             </div>
             <div class="dates-add-form">
               <input type="date" id="dt-date">
@@ -1855,7 +1989,244 @@ function applyCyclePreset(preset) {
 }
 
 /* FORTNIGHT CALENDAR */
+/* CALENDAR IMPORT (.ics) — read on the device, nothing is uploaded.
+   Single events only: repeating events (RRULE) are counted and skipped, cancelled ones ignored. */
+function parseICS(text, today) {
+  const lines = String(text || '').replace(/\r\n?/g, '\n').replace(/\n[ \t]/g, '').split('\n');
+  const unescape = v => v.replace(/\\n/gi, ' ').replace(/\\([,;\\])/g, '$1').replace(/\s+/g, ' ').trim();
+  const pad = n => String(n).padStart(2, '0');
+  const isoOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const parseWhen = (params, value) => {
+    const m = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?(Z)?)?$/.exec(value.trim());
+    if (!m) return null;
+    const [, y, mo, d, h, mi, , z] = m;
+    if (h === undefined || /VALUE=DATE(?!-)/i.test(params)) return { date: `${y}-${mo}-${d}`, allDay: true };
+    if (z) { // UTC: show in this device's local time
+      const t = new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi));
+      return { date: isoOf(t), time: pad(t.getHours()) + ':' + pad(t.getMinutes()), allDay: false };
+    }
+    return { date: `${y}-${mo}-${d}`, time: `${h}:${mi}`, allDay: false }; // floating or TZID: wall-clock time
+  };
+  const from = new Date(today); from.setDate(from.getDate() - 30);
+  const to = new Date(today); to.setMonth(to.getMonth() + 18);
+  const fromStr = isoOf(from), toStr = isoOf(to);
+  const out = { events: [], recurring: 0, outOfRange: 0, total: 0 };
+  let cur = null;
+  for (const line of lines) {
+    if (line === 'BEGIN:VEVENT') { cur = {}; continue; }
+    if (line === 'END:VEVENT') {
+      if (cur) {
+        out.total++;
+        if (cur.rrule) out.recurring++;
+        else if (cur.start && !cur.cancelled) {
+          if (cur.start.date < fromStr || cur.start.date > toStr) out.outOfRange++;
+          else {
+            let endDate = null;
+            if (cur.start.allDay && cur.end && cur.end.allDay) {
+              const e = new Date(cur.end.date + 'T12:00:00'); e.setDate(e.getDate() - 1); // DTEND is exclusive for all-day
+              if (isoOf(e) > cur.start.date) endDate = isoOf(e);
+            }
+            out.events.push({ uid: cur.uid || (cur.start.date + '|' + (cur.title || '')), title: cur.title || 'Untitled', date: cur.start.date, time: cur.start.time || '', allDay: cur.start.allDay, endDate });
+          }
+        }
+      }
+      cur = null; continue;
+    }
+    if (!cur) continue;
+    const colon = line.indexOf(':');
+    if (colon < 0) continue;
+    const head = line.slice(0, colon), value = line.slice(colon + 1);
+    const name = head.split(';')[0].toUpperCase(), params = head.slice(name.length);
+    if (name === 'SUMMARY') cur.title = unescape(value);
+    else if (name === 'UID') cur.uid = value.trim();
+    else if (name === 'DTSTART') cur.start = parseWhen(params, value);
+    else if (name === 'DTEND') cur.end = parseWhen(params, value);
+    else if (name === 'RRULE') cur.rrule = true;
+    else if (name === 'STATUS' && /CANCELLED/i.test(value)) cur.cancelled = true;
+  }
+  out.events.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  return out;
+}
+
+let icsPending = null;
+
+function readICSFile(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const today = new Date(); today.setHours(12, 0, 0, 0);
+    const parsed = parseICS(reader.result, today);
+    if (!parsed.total) {
+      if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('That file has no calendar events in it. Check it is an .ics calendar file.');
+      return;
+    }
+    icsPending = parsed;
+    openICSModal(file.name);
+  };
+  reader.onerror = () => { if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('That file could not be read.'); };
+  reader.readAsText(file);
+}
+
+function icsExisting() {
+  const ids = new Set();
+  (state.dates || []).forEach(d => d.importUid && ids.add(d.importUid));
+  (state.events || []).forEach(e => e.importUid && ids.add(e.importUid));
+  return ids;
+}
+
+function openICSModal(fileName) {
+  const p = icsPending;
+  const existing = icsExisting();
+  const fmt = iso => parseDateLocal(iso).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  const allDay = p.events.filter(e => e.allDay), timed = p.events.filter(e => !e.allDay);
+  const row = (e, i) => `<label class="ics-row${existing.has(e.uid) ? ' dupe' : ''}"><input type="checkbox" data-ics="${i}" ${existing.has(e.uid) ? '' : 'checked'} onchange="syncICSCount()"><span class="when">${fmt(e.date)}${e.time ? '<br>' + e.time : ''}</span><span class="what">${escapeHtml(e.title)}${e.endDate ? ' <small>to ' + fmt(e.endDate) + '</small>' : ''}</span></label>`;
+  let html = '';
+  if (allDay.length) html += `<div class="ics-group">All-day · go to Term &amp; key dates (${allDay.length})</div>` + allDay.map(e => row(e, p.events.indexOf(e))).join('');
+  if (timed.length) html += `<div class="ics-group">Timed · go to Schedule as one-off events (${timed.length})</div>` + timed.map(e => row(e, p.events.indexOf(e))).join('');
+  if (!p.events.length) html = '<div class="ics-group">Nothing between last month and the next 18 months to import.</div>';
+  $('ics-list').innerHTML = html;
+  $('ics-sub').textContent = `${fileName}: ${p.events.length} event${p.events.length === 1 ? '' : 's'} from last month to 18 months ahead. Untick anything you don't want.`;
+  const notes = [];
+  if (p.recurring) notes.push(`${p.recurring} repeating event${p.recurring === 1 ? ' was' : 's were'} skipped. Add regular things like sport or pickups in Schedule, where they can follow your kids days.`);
+  if (p.outOfRange) notes.push(`${p.outOfRange} older or far-off event${p.outOfRange === 1 ? '' : 's'} left out.`);
+  notes.push('Importing again later updates what you brought in, without doubling up.');
+  $('ics-fine').textContent = notes.join(' ');
+  $('ics-all').checked = true;
+  $('ics-modal').hidden = false;
+  syncICSCount();
+  $('ics-go').focus();
+}
+
+function toggleAllICS(on) {
+  document.querySelectorAll('#ics-list input[data-ics]').forEach(cb => { cb.checked = on; });
+  syncICSCount();
+}
+
+function syncICSCount() {
+  const n = document.querySelectorAll('#ics-list input[data-ics]:checked').length;
+  const all = document.querySelectorAll('#ics-list input[data-ics]').length;
+  $('ics-all').checked = all > 0 && n === all;
+  $('ics-go').textContent = n ? 'Import ' + n : 'Import';
+  $('ics-go').disabled = !n;
+}
+
+function closeICSModal() {
+  $('ics-modal').hidden = true;
+  icsPending = null;
+}
+
+function importICS() {
+  if (!icsPending) return;
+  const type = $('ics-type').value || 'school';
+  const fmt = iso => parseDateLocal(iso).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  let added = 0, updated = 0;
+  document.querySelectorAll('#ics-list input[data-ics]:checked').forEach(cb => {
+    const e = icsPending.events[+cb.dataset.ics];
+    if (!e) return;
+    if (e.allDay) {
+      const label = e.title + (e.endDate ? ' (to ' + fmt(e.endDate) + ')' : '');
+      const hit = (state.dates || []).find(d => d.importUid === e.uid);
+      if (hit) { Object.assign(hit, { date: e.date, label }); updated++; }
+      else {
+        const t = /pupil.?free|student.?free|staff development|school development|professional learning day/i.test(e.title) ? 'pupil-free' : type;
+        state.dates.push({ id: 'ics' + Date.now() + '-' + added, date: e.date, label, type: t, importUid: e.uid }); added++;
+      }
+    } else {
+      const hit = (state.events || []).find(x => x.importUid === e.uid);
+      const fields = { date: e.date, day: (parseDateLocal(e.date).getDay() + 6) % 7, time: e.time, text: e.title };
+      if (hit) { Object.assign(hit, fields); updated++; }
+      else { state.events.push({ id: 'ics' + Date.now() + '-' + added, who: 'both', recurring: false, importUid: e.uid, ...fields }); added++; }
+    }
+  });
+  closeICSModal();
+  save();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify(`Imported ${added} new` + (updated ? `, updated ${updated}` : '') + '. They show on the month view and in Term & key dates or Schedule.');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('ics-modal') && !$('ics-modal').hidden) closeICSModal(); });
+
+/* MONTH VIEW */
+let monthOffset = 0;
+let monthSelected = null;
+
+function shiftMonth(step) {
+  monthOffset = step === 0 ? 0 : monthOffset + step;
+  if (step === 0) monthSelected = ymd(new Date());
+  renderMonth();
+}
+
+function monthDayInfo(d) {
+  const prev = new Date(d); prev.setDate(d.getDate() - 1);
+  const kids = isKidsDate(d);
+  const handover = kids !== isKidsDate(prev) ? (kids ? 'arrive' : 'leave') : null;
+  return { kids, handover, inBreak: !!getActiveTermBreak(d), dates: getDatesOn(ymd(d)), events: eventsOn(d) };
+}
+
+function renderMonth() {
+  const grid = $('month-grid');
+  if (!grid) return;
+  const now = new Date(); now.setHours(12, 0, 0, 0);
+  const first = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1, 12);
+  $('month-title').textContent = first.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+  const start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0, 12);
+  const cells = Math.ceil((((first.getDay() + 6) % 7) + last.getDate()) / 7) * 7;
+  if (!monthSelected || parseDateLocal(monthSelected).getMonth() !== first.getMonth() || parseDateLocal(monthSelected).getFullYear() !== first.getFullYear()) {
+    monthSelected = (monthOffset === 0) ? ymd(now) : null;
+  }
+  grid.innerHTML = '';
+  for (let i = 0; i < cells; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    const iso = ymd(d);
+    const info = monthDayInfo(d);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'm-day' + (info.kids ? ' kids' : '') + (info.inBreak ? ' in-break' : '')
+      + (d.getMonth() !== first.getMonth() ? ' out' : '') + (iso === ymd(now) ? ' today' : '');
+    btn.setAttribute('aria-pressed', iso === monthSelected ? 'true' : 'false');
+    const label = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })
+      + (info.kids ? ', kids with you' : ', co-parent day')
+      + (info.handover ? ', handover' : '') + (info.inBreak ? ', school holidays' : '')
+      + (info.dates.length ? ', ' + info.dates.map(x => x.label).join(', ') : '')
+      + (info.events.length ? ', ' + info.events.length + ' event' + (info.events.length === 1 ? '' : 's') : '');
+    btn.setAttribute('aria-label', label);
+    const items = [
+      ...info.dates.map(x => `<span class="m-item date">${escapeHtml(x.label || '')}</span>`),
+      ...info.events.map(e => `<span class="m-item">${escapeHtml((e.time ? e.time + ' ' : '') + e.text)}</span>`),
+    ];
+    const shown = items.slice(0, 3).join('');
+    const more = items.length > 3 ? `<span class="m-more">+${items.length - 3} more</span>` : '';
+    const dots = (info.dates.length ? '<i class="date"></i>' : '') + (info.events.length ? '<i></i>' : '');
+    btn.innerHTML = `<span class="m-top"><span class="m-num">${d.getDate()}</span>${info.handover ? '<span class="m-hand"></span>' : ''}</span>${shown}${more}<span class="m-dots">${dots}</span>`;
+    btn.onclick = () => { monthSelected = iso; renderMonth(); };
+    grid.appendChild(btn);
+  }
+  renderMonthDetail();
+}
+
+function renderMonthDetail() {
+  const el = $('month-detail');
+  if (!el) return;
+  if (!monthSelected) { el.innerHTML = ''; return; }
+  const d = parseDateLocal(monthSelected);
+  const info = monthDayInfo(d);
+  const rows = [];
+  if (info.handover) rows.push(`<li><b>Handover</b>${info.handover === 'arrive' ? 'Kids arrive' : 'Kids go back'}</li>`);
+  if (info.inBreak) rows.push('<li><b>School</b>Holidays</li>');
+  info.dates.forEach(x => rows.push(`<li><b>Date</b>${escapeHtml(x.label || '')}</li>`));
+  info.events.forEach(e => rows.push(`<li><b>${escapeHtml(e.time || 'All day')}</b>${escapeHtml(e.text)}</li>`));
+  el.innerHTML = `<div class="md-head"><span class="md-date">${d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })}</span>`
+    + `<span class="md-tag${info.kids ? ' kids' : ''}">${info.kids ? 'Kids with you' : 'Co-parent day'}</span></div>`
+    + (rows.length ? `<ul>${rows.join('')}</ul>` : '<p class="md-empty">Nothing planned.</p>');
+}
+
 function renderFortnight() {
+  renderMonth();
   const el = $('fortnight-grid');
   if (!el) return;
   el.innerHTML = '';
@@ -2397,7 +2768,7 @@ function renderSchedule() {
     block.className = 'day-block later';
     block.innerHTML = '<div class="day-head"><span class="day-name">Later</span><span class="day-tag away">Not this week</span></div><div class="day-events"></div>';
     const evEl = block.querySelector('.day-events');
-    later.forEach(({ ev, next }) => {
+    later.slice(0, 6).forEach(({ ev, next }) => {
       const when = next ? label(next) : DAY_NAMES[ev.day].slice(0, 3) + ', no kids days yet';
       const row = document.createElement('div');
       row.className = 'event-row';
@@ -2408,8 +2779,15 @@ function renderSchedule() {
         <button class="event-remove" onclick="removeEvent('${ev.id}')" aria-label="Remove ${escapeHtml(ev.text)}">×</button>`;
       evEl.appendChild(row);
     });
+    if (later.length > 6) {
+      const more = document.createElement('p');
+      more.className = 'schedule-empty';
+      more.textContent = `+${later.length - 6} more later on. See them on the month view.`;
+      evEl.appendChild(more);
+    }
     el.appendChild(block);
   }
+  renderMonth();
   if ($('d-events')) $('d-events').textContent = totalEvents;
   if ($('schedule-meta')) $('schedule-meta').textContent = totalEvents + ' event' + (totalEvents !== 1 ? 's' : '');
 }
