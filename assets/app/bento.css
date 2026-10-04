@@ -326,3 +326,14 @@ details.at-more { display: block; width: 100%; max-width: none; margin: 0 0 14px
 .fn-legend b { width: 14px; height: 14px; border-radius: 4px; background: #fff; }
 .fn-legend b.solo { background: #ffffff33; }
 .fn-legend b.hand { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+
+/* Week fortnight: solo days need a visible shape on the blue, holidays included */
+.fort-day.empty, .fort-day.in-break.empty { background: rgba(255,255,255,.14); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.32); color: #fff; }
+.fort-day.today.empty { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.32); }
+
+/* Week add forms: fields need a fill to read on the white card, and iOS shows an empty date input as a blank box */
+.schedule-add-form input, .schedule-add-form select, .dates-add-form input, .dates-add-form select { background: #f2f2f0 !important; min-height: 44px; }
+.schedule-add-form input[type="date"], .schedule-add-form input[type="time"], .dates-add-form input[type="date"] { -webkit-appearance: none; appearance: none; display: block; text-align: left; line-height: 1.2; }
+.fn-legend b.solo { background: rgba(255,255,255,.14); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.32); }
+.fn-legend b.hol { background: rgba(212,240,98,.85); }
+.fn-legend span[hidden] { display: none; }
