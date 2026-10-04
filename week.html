@@ -1349,7 +1349,7 @@
             <div class="fortnight-panel-sub" id="fortnight-balance">14-day view</div>
           </div>
           <div class="fortnight-grid" id="fortnight-grid"></div>
-          <div class="fn-legend" aria-hidden="true"><span><b></b>With you</span><span><b class="solo"></b>Solo</span><span><b class="hand"></b>Handover</span></div>
+          <div class="fn-legend" aria-hidden="true"><span><b></b>With you</span><span><b class="solo"></b>Solo</span><span id="fn-legend-hol" hidden><b class="hol"></b>With you, school holidays</span><span><b class="hand"></b>Handover</span></div>
           <div class="fortnight-status" id="fortnight-status">Loading…</div>
           <div class="upcoming-line" id="upcoming-line" style="display:none;"></div>
           </div>
@@ -1506,7 +1506,7 @@
               <p class="term-dates-note">From the school app, Google, Apple or Outlook. The file is read on this device and never uploaded. All-day dates come here, timed events go to Schedule.</p>
             </div>
             <div class="dates-add-form">
-              <input type="date" id="dt-date">
+              <input type="date" id="dt-date" aria-label="Date">
               <input type="text" id="dt-label" placeholder="e.g. Term 4 ends, a birthday">
               <select id="dt-type">
                 <option value="break-start">Term break starts</option>
@@ -2276,6 +2276,8 @@ function renderFortnight() {
       + `<div class="fort-day-num">${d.getDate()}</div>`;
     el.appendChild(div);
   }
+
+  if ($('fn-legend-hol')) $('fn-legend-hol').hidden = !el.querySelector('.fort-day.in-break.kids');
 
   // Tier 2 — balance chip in the head row
   if ($('fortnight-balance')) {
@@ -3144,7 +3146,6 @@ function addImportantDate() {
   if (!date || !label) return;
   state.dates.push({ id: 'dt' + Date.now(), date, label, type });
   labelEl.value = '';
-  dateEl.value = '';
   save();
   renderImportantDates();
   renderFortnight(); // re-render to update flags + status + upcoming
@@ -3691,6 +3692,7 @@ function saveKids() {
   renderSchedule();
   renderImportantDates();
   syncTermDatesUI();
+  if ($('dt-date') && !$('dt-date').value) $('dt-date').value = ymd(new Date());
   renderChecklist();
   renderMeals();
   renderHouseRules();
