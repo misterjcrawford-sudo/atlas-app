@@ -40,6 +40,8 @@
   .d.brk::after { content: ""; position: absolute; left: .5mm; right: .5mm; bottom: .35mm; height: .8mm; border-radius: 1mm; background: var(--break); }
   .d.hand::before { content: ""; position: absolute; top: .45mm; right: .45mm; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--hand); box-shadow: 0 0 0 .2mm #11111155; }
   .d.key { box-shadow: inset 0 0 0 .35mm var(--date); }
+  .d.swap { font-style: italic; text-decoration: underline; text-decoration-color: var(--date); text-decoration-thickness: .3mm; }
+  .legend .l-swap { background: none; font-style: normal; font-size: 8pt; font-weight: 800; color: var(--date); display: inline-grid; place-items: center; }
   .foot { margin-top: auto; display: grid; grid-template-columns: auto 1fr; gap: 3mm 8mm; align-items: start; }
   .legend { display: flex; flex-direction: column; gap: 1.4mm; font-size: 8pt; color: #3a3a40; }
   .legend span { display: flex; align-items: center; gap: 2mm; }
@@ -105,7 +107,10 @@ function makeIsKids(st) {
   const pattern = st.cycle && Array.isArray(st.cycle.pattern) && st.cycle.pattern.length === 14
     ? st.cycle.pattern : (PRESET_PATTERNS[(st.cycle && st.cycle.preset)] || PRESET_PATTERNS['five-two']);
   const start = (st.cycle && parseDateLocal(st.cycle.nextKidsDate)) || (() => { const t = new Date(); t.setHours(12, 0, 0, 0); return t; })();
+  const overrides = st.overrides && typeof st.overrides === 'object' ? st.overrides : {};
   return d => {
+    const ov = overrides[ymd(d)];
+    if (ov && typeof ov.kids === 'boolean') return ov.kids;
     const diff = Math.round((d - start) / 86400000);
     return pattern[((diff % 14) + 14) % 14] === 1;
   };
@@ -157,7 +162,7 @@ function render() {
   const keyByDay = {};
   dates.filter(d => d && d.source !== 'term' && parseDateLocal(d.date)).forEach(d => { (keyByDay[d.date] = keyByDay[d.date] || []).push(d); });
 
-  let withYou = 0, total = 0;
+  let withYou = 0, total = 0, swaps = 0;
   const monthsHtml = [];
   for (let k = 0; k < 12; k++) {
     const mStart = new Date(y, m + k, 1, 12);
@@ -174,7 +179,9 @@ function render() {
       if (kids) withYou++;
       total++;
       const title = key ? ' title="' + esc(key.map(x => x.label).join(', ')) + '"' : '';
-      cells += `<span class="d${kids ? ' kids' : ''}${inBreak(d) ? ' brk' : ''}${hand ? ' hand' : ''}${key ? ' key' : ''}"${title}>${day}</span>`;
+      const swap = st.overrides && st.overrides[ymd(d)];
+      if (swap) swaps++;
+      cells += `<span class="d${kids ? ' kids' : ''}${inBreak(d) ? ' brk' : ''}${hand ? ' hand' : ''}${key ? ' key' : ''}${swap ? ' swap' : ''}"${title}>${day}</span>`;
     }
     monthsHtml.push(`<section class="mon"><h2>${MONTHS[mStart.getMonth()]} ${mStart.getFullYear()}</h2><div class="mon-grid">${cells}</div></section>`);
   }
@@ -204,6 +211,7 @@ function render() {
         <span><i class="l-brk"></i>School holidays</span>
         <span><i class="l-hand"></i>Handover day</span>
         <span><i class="l-key"></i>Key date</span>
+        ${swaps ? '<span><i class="l-swap">⇄</i>Changed from usual</span>' : ''}
         <span class="stat">${withYou} of ${total} days with you</span>
       </div>
       <div class="keydates"><h3>Key dates</h3>${keyHtml}</div>

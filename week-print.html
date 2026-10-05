@@ -600,6 +600,8 @@ function getCyclePattern(state) {
 }
 
 function isKidsDate(date, state) {
+  const ov = state.overrides && state.overrides[ymd(date)];
+  if (ov && typeof ov.kids === 'boolean') return ov.kids;
   const cycleStart = state.cycle && state.cycle.nextKidsDate
     ? new Date(state.cycle.nextKidsDate + 'T12:00:00')
     : new Date();

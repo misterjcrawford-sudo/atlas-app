@@ -699,6 +699,19 @@
     color: var(--ink-soft);
   }
   .date-row.past { opacity: 0.5; }
+  button.date-row-date { all: unset; cursor: pointer; font-weight: 600; text-decoration: underline; text-decoration-color: #c9c9c4; text-underline-offset: 3px; border-radius: 6px; }
+  button.date-row-date:hover { text-decoration-color: var(--ink); }
+  button.date-row-date:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  button.date-row-date small { font-size: 10.5px; font-weight: 600; color: #ff6a45; text-decoration: none; display: inline-block; }
+  .date-row.editing { display: block; background: #f5f5f3; border-color: transparent; padding: 12px; }
+  .dr-edit { display: grid; gap: 8px; }
+  .dr-edit-date { display: grid; grid-template-columns: auto 1fr auto; gap: 6px; }
+  .dr-edit input { border: 0; background: #fff; border-radius: 12px; padding: 10px 12px; min-height: 44px; font: inherit; font-size: 14px; color: var(--ink); min-width: 0; -webkit-appearance: none; appearance: none; }
+  .dr-nudge, .dr-cancel, .dr-save { border: 0; border-radius: 999px; padding: 10px 14px; min-height: 44px; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer; background: #fff; color: var(--ink); white-space: nowrap; }
+  .dr-save { background: var(--ink); color: #fff; }
+  .dr-edit-actions { display: flex; justify-content: flex-end; gap: 6px; }
+  .dr-nudge:focus-visible, .dr-cancel:focus-visible, .dr-save:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  button.dates-more { all: unset; cursor: pointer; display: block; margin: 8px 2px 0; font-size: 12.5px; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .date-row-date {
     font-family: var(--font-display);
     font-size: 12.5px;
@@ -1142,6 +1155,17 @@
     .ics-row { grid-template-columns: auto 72px 1fr; gap: 8px; font-size: 13.5px; }
   }
 
+  /* Swaps */
+  .m-swap { font-size: 11px; font-weight: 700; color: #ff6a45; line-height: 1; }
+  .md-swap { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e6e6e3; display: grid; gap: 8px; }
+  .md-swap p { margin: 0; font-size: 13.5px; color: var(--ink); line-height: 1.45; }
+  .md-swap-q { font-weight: 700; }
+  .md-swap input[type="text"] { border: 0; background: #fff; border-radius: 12px; padding: 11px 12px; font: inherit; font-size: 14px; min-height: 44px; }
+  .md-log { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink); }
+  .md-btn { justify-self: start; border: 0; border-radius: 999px; padding: 11px 18px; min-height: 44px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; background: #fff; color: var(--ink); }
+  .md-btn.primary { background: var(--ink); color: #fff; }
+  .md-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+
   /* Month view */
   .month-card { background: #fff; border-radius: 26px; padding: 22px 22px 18px; margin: 0 0 16px; }
   .month-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
@@ -1177,6 +1201,7 @@
   .month-legend .lg-kids { background: #dfe4ff; }
   .month-legend .lg-break { background: #f5f5f3; box-shadow: inset 0 4px 0 #ff9f80; }
   .month-legend .lg-hand { width: 10px; height: 10px; border-radius: 999px; background: #d4f062; box-shadow: 0 0 0 1px #11111133; }
+  .month-legend .lg-swap { width: auto; height: auto; font-style: normal; font-weight: 800; color: #ff6a45; }
   .month-legend .lg-date { width: 8px; height: 8px; border-radius: 999px; background: #ff6a45; }
   .month-detail:empty { display: none; }
   .month-detail { margin-top: 14px; padding: 16px 18px; border-radius: 18px; background: #f5f5f3; }
@@ -1186,7 +1211,7 @@
   .md-tag.kids { background: #2743ff; color: #fff; }
   .month-detail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   .month-detail li { font-size: 14px; color: var(--ink); }
-  .month-detail li b { display: inline-block; min-width: 52px; font-weight: 650; color: var(--ink-muted); }
+  .month-detail li b { display: inline-block; min-width: 52px; margin-right: 10px; font-weight: 650; color: var(--ink-muted); }
   .md-empty { font-size: 13.5px; color: var(--ink-muted); }
   @media (max-width: 700px) {
     .month-card { padding: 18px 14px 14px; border-radius: 22px; }
@@ -1412,7 +1437,7 @@
       </div>
       <div class="month-dow" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
       <div class="month-grid" id="month-grid"></div>
-      <div class="month-legend" aria-hidden="true"><span><i class="lg-kids"></i>With you</span><span><i class="lg-break"></i>School holidays</span><span><i class="lg-hand"></i>Handover</span><span><i class="lg-date"></i>Key date</span></div>
+      <div class="month-legend" aria-hidden="true"><span><i class="lg-kids"></i>With you</span><span><i class="lg-break"></i>School holidays</span><span><i class="lg-hand"></i>Handover</span><span><i class="lg-date"></i>Key date</span><span><i class="lg-swap">⇄</i>Changed from usual</span></div>
       <div class="month-detail" id="month-detail" aria-live="polite"></div>
     </section>
 
@@ -1930,7 +1955,18 @@ function syncEventForm() {
   if (!weekly && !$('ev-date').value) $('ev-date').value = ymd(new Date());
 }
 
+// One-off swaps override the cycle for a single day: state.overrides['YYYY-MM-DD'] = { kids, note, recordId }.
+function dayOverride(date) {
+  return (state.overrides && state.overrides[ymd(date)]) || null;
+}
+
 function isKidsDate(date) {
+  const ov = dayOverride(date);
+  if (ov) return !!ov.kids;
+  return isCycleKidsDate(date);
+}
+
+function isCycleKidsDate(date) {
   const cycleStart = state.cycle.nextKidsDate ? new Date(state.cycle.nextKidsDate + 'T12:00:00') : new Date();
   cycleStart.setHours(12, 0, 0, 0);
   const msPerDay = 86400000;
@@ -2164,7 +2200,7 @@ function monthDayInfo(d) {
   const prev = new Date(d); prev.setDate(d.getDate() - 1);
   const kids = isKidsDate(d);
   const handover = kids !== isKidsDate(prev) ? (kids ? 'arrive' : 'leave') : null;
-  return { kids, handover, inBreak: !!getActiveTermBreak(d), dates: getDatesOn(ymd(d)), events: eventsOn(d) };
+  return { kids, handover, swapped: !!dayOverride(d), inBreak: !!getActiveTermBreak(d), dates: getDatesOn(ymd(d)), events: eventsOn(d) };
 }
 
 function renderMonth() {
@@ -2186,12 +2222,12 @@ function renderMonth() {
     const info = monthDayInfo(d);
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'm-day' + (info.kids ? ' kids' : '') + (info.inBreak ? ' in-break' : '')
+    btn.className = 'm-day' + (info.kids ? ' kids' : '') + (info.inBreak ? ' in-break' : '') + (info.swapped ? ' swapped' : '')
       + (d.getMonth() !== first.getMonth() ? ' out' : '') + (iso === ymd(now) ? ' today' : '');
     btn.setAttribute('aria-pressed', iso === monthSelected ? 'true' : 'false');
     const label = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })
       + (info.kids ? ', kids with you' : ', co-parent day')
-      + (info.handover ? ', handover' : '') + (info.inBreak ? ', school holidays' : '')
+      + (info.handover ? ', handover' : '') + (info.swapped ? ', changed from usual' : '') + (info.inBreak ? ', school holidays' : '')
       + (info.dates.length ? ', ' + info.dates.map(x => x.label).join(', ') : '')
       + (info.events.length ? ', ' + info.events.length + ' event' + (info.events.length === 1 ? '' : 's') : '');
     btn.setAttribute('aria-label', label);
@@ -2202,7 +2238,7 @@ function renderMonth() {
     const shown = items.slice(0, 3).join('');
     const more = items.length > 3 ? `<span class="m-more">+${items.length - 3} more</span>` : '';
     const dots = (info.dates.length ? '<i class="date"></i>' : '') + (info.events.length ? '<i></i>' : '');
-    btn.innerHTML = `<span class="m-top"><span class="m-num">${d.getDate()}</span>${info.handover ? '<span class="m-hand"></span>' : ''}</span>${shown}${more}<span class="m-dots">${dots}</span>`;
+    btn.innerHTML = `<span class="m-top"><span class="m-num">${d.getDate()}</span>${info.handover ? '<span class="m-hand"></span>' : ''}${info.swapped ? '<span class="m-swap" title="Changed from usual">⇄</span>' : ''}</span>${shown}${more}<span class="m-dots">${dots}</span>`;
     btn.onclick = () => { monthSelected = iso; renderMonth(); };
     grid.appendChild(btn);
   }
@@ -2220,9 +2256,67 @@ function renderMonthDetail() {
   if (info.inBreak) rows.push('<li><b>School</b>Holidays</li>');
   info.dates.forEach(x => rows.push(`<li><b>Date</b>${escapeHtml(x.label || '')}</li>`));
   info.events.forEach(e => rows.push(`<li><b>${escapeHtml(e.time || 'All day')}</b>${escapeHtml(e.text)}</li>`));
+  const ov = dayOverride(d);
+  const usual = isCycleKidsDate(d);
+  const swap = ov
+    ? `<div class="md-swap is-set"><p><b>Changed from usual.</b> Normally ${usual ? 'with you' : 'a co-parent day'}${ov.note ? ': ' + escapeHtml(ov.note.replace(/[.!]$/, '')) + '.' : '.'}${ov.recordId ? ' Logged in Records.' : ''}</p><button type="button" class="md-btn" onclick="undoSwap('${monthSelected}')">Undo change</button></div>`
+    : `<div class="md-swap"><p class="md-swap-q">Change this day</p>
+        <input type="text" id="swap-note" maxlength="120" placeholder="Reason (optional), e.g. swapped for her work trip" aria-label="Reason for the change">
+        <label class="md-log"><input type="checkbox" id="swap-log" checked> Log it in Records</label>
+        <button type="button" class="md-btn primary" onclick="applySwap('${monthSelected}', ${usual ? 'false' : 'true'})">${usual ? 'Kids not with me this day' : 'Kids with me this day'}</button></div>`;
   el.innerHTML = `<div class="md-head"><span class="md-date">${d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })}</span>`
     + `<span class="md-tag${info.kids ? ' kids' : ''}">${info.kids ? 'Kids with you' : 'Co-parent day'}</span></div>`
-    + (rows.length ? `<ul>${rows.join('')}</ul>` : '<p class="md-empty">Nothing planned.</p>');
+    + (rows.length ? `<ul>${rows.join('')}</ul>` : '<p class="md-empty">Nothing planned.</p>')
+    + swap;
+}
+
+const SWAP_RECORDS_KEY = 'atlas_records';
+
+function applySwap(iso, kids) {
+  const note = ($('swap-note') && $('swap-note').value.trim()) || '';
+  const log = $('swap-log') ? $('swap-log').checked : false;
+  if (!state.overrides || typeof state.overrides !== 'object') state.overrides = {};
+  const entry = { kids: !!kids, note };
+  if (log) {
+    try {
+      const data = JSON.parse(localStorage.getItem(SWAP_RECORDS_KEY) || '{"entries":[]}');
+      if (!Array.isArray(data.entries)) data.entries = [];
+      const day = parseDateLocal(iso).toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
+      const rec = {
+        id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7), type: 'handover', date: iso,
+        title: (kids ? 'Kids with me on ' : 'Kids with their other parent on ') + day + ' (swap)',
+        amount: null, paidBy: null, kids: '', receipt: '', note, created: new Date().toISOString(),
+      };
+      data.entries.push(rec);
+      localStorage.setItem(SWAP_RECORDS_KEY, JSON.stringify(data));
+      entry.recordId = rec.id;
+    } catch (e) {}
+  }
+  state.overrides[iso] = entry;
+  save();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('Day changed' + (entry.recordId ? ' and logged in Records.' : '.') + ' Your usual cycle carries on after it.');
+}
+
+function undoSwap(iso) {
+  const ov = state.overrides && state.overrides[iso];
+  if (!ov) return;
+  let removedRecord = false;
+  if (ov.recordId) {
+    try {
+      const data = JSON.parse(localStorage.getItem(SWAP_RECORDS_KEY) || '{"entries":[]}');
+      const before = (data.entries || []).length;
+      data.entries = (data.entries || []).filter(e => e.id !== ov.recordId);
+      removedRecord = data.entries.length < before;
+      localStorage.setItem(SWAP_RECORDS_KEY, JSON.stringify(data));
+    } catch (e) {}
+  }
+  delete state.overrides[iso];
+  save();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('Change undone' + (removedRecord ? ', and its Records entry removed.' : '.'));
 }
 
 function renderFortnight() {
@@ -2262,7 +2356,8 @@ function renderFortnight() {
       + (kids ? ' kids' : ' empty')
       + (isToday ? ' today' : '')
       + (handover ? ' handover' : '')
-      + (inBreak ? ' in-break' : '');
+      + (inBreak ? ' in-break' : '')
+      + (dayOverride(d) ? ' swapped' : '');
     let flagsHtml = '';
     if (flagsForDay.length) {
       const dots = flagsForDay.slice(0, 3).map(f => {
@@ -2914,17 +3009,47 @@ function exportScheduleToICS() {
     lines.push('END:VEVENT');
   });
 
+  // Reminder on an all-day event: -PT6H is 6pm the evening before; -P7D a week before.
+  const alarm = (trigger, text) => ['BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEscape(text), 'TRIGGER:' + trigger, 'END:VALARM'];
+  const dayAfter = d => { const n = new Date(d); n.setDate(n.getDate() + 1); return ymd(n).replace(/-/g, ''); };
+
   (state.dates || []).forEach(d => {
     const date = parseDateLocal(d.date);
     if (!date) return;
     const meta = DATE_TYPE_META[d.type] || { short: d.type };
+    const title = d.label || meta.short;
     lines.push('BEGIN:VEVENT');
     lines.push('UID:' + d.id + '@atlas-kidsweek');
     lines.push('DTSTAMP:' + icsDateStamp(now));
     lines.push('DTSTART;VALUE=DATE:' + ymd(date).replace(/-/g, ''));
-    lines.push('SUMMARY:' + icsEscape((d.label || meta.short)));
+    lines.push('DTEND;VALUE=DATE:' + dayAfter(date));
+    lines.push('SUMMARY:' + icsEscape(title));
+    const weekAhead = d.type === 'pupil-free' || d.type === 'break-start';
+    lines.push(...alarm(weekAhead ? '-P7D' : '-PT6H', title + (weekAhead ? ' next week' : ' tomorrow')));
     lines.push('END:VEVENT');
   });
+
+  // Handovers for the next 12 weeks, swaps included, each with a reminder the evening before.
+  if (state.cycle && state.cycle.nextKidsDate) {
+    const d = new Date(monday);
+    for (let i = 0; i < 84; i++) {
+      const prev = new Date(d); prev.setDate(d.getDate() - 1);
+      const kids = isKidsDate(d);
+      if (kids !== isKidsDate(prev)) {
+        const title = kids ? 'Kids arrive' : 'Kids go back';
+        lines.push('BEGIN:VEVENT');
+        lines.push('UID:handover-' + ymd(d) + '@atlas-kidsweek');
+        lines.push('DTSTAMP:' + icsDateStamp(now));
+        lines.push('DTSTART;VALUE=DATE:' + ymd(d).replace(/-/g, ''));
+        lines.push('DTEND;VALUE=DATE:' + dayAfter(d));
+        lines.push('SUMMARY:' + icsEscape(title));
+        lines.push('TRANSP:TRANSPARENT');
+        lines.push(...alarm('-PT6H', title + ' tomorrow. Check the handover list.'));
+        lines.push('END:VEVENT');
+      }
+      d.setDate(d.getDate() + 1);
+    }
+  }
 
   lines.push('END:VCALENDAR');
 
@@ -3057,8 +3182,13 @@ function applyTermDates() {
   const code = $('term-state') ? $('term-state').value : '';
   if (!code) { $('term-state').focus(); return; }
   const today = new Date(); today.setHours(12, 0, 0, 0);
+  // Your edits to this state's dates survive an update; switching state starts fresh.
+  const kept = code === state.termState ? (state.dates || []).filter(d => d.source === 'term' && d.edited && d.termOrig) : [];
   state.dates = (state.dates || []).filter(d => d.source !== 'term');
-  termDateEntries(code, today).forEach((e, i) => state.dates.push({ id: 'term-' + code + '-' + e.date + '-' + i, source: 'term', ...e }));
+  termDateEntries(code, today).forEach((e, i) => {
+    const edit = kept.find(k => k.termOrig === e.date && k.type === e.type);
+    state.dates.push(edit || { id: 'term-' + code + '-' + e.date + '-' + i, source: 'term', ...e });
+  });
   state.termState = code;
   save();
   syncTermDatesUI();
@@ -3073,6 +3203,47 @@ function removeTermDates() {
   delete state.termState;
   save();
   syncTermDatesUI();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+}
+
+let showAllTermDates = false;
+let editingDateId = null;
+
+function editImportantDate(id) {
+  editingDateId = id;
+  renderImportantDates();
+  const input = $('dr-date');
+  if (input) input.focus();
+}
+
+function cancelEditDate() {
+  editingDateId = null;
+  renderImportantDates();
+}
+
+function nudgeEditDate(days) {
+  const input = $('dr-date');
+  const d = input && parseDateLocal(input.value);
+  if (!d) return;
+  d.setDate(d.getDate() + days);
+  input.value = ymd(d);
+}
+
+function saveEditDate(id) {
+  const entry = (state.dates || []).find(d => d.id === id);
+  const date = $('dr-date') ? $('dr-date').value : '';
+  const label = $('dr-label') ? $('dr-label').value.trim() : '';
+  if (!entry || !parseDateLocal(date)) return;
+  if (entry.date !== date || (label && label !== entry.label)) {
+    if (entry.source === 'term' && !entry.termOrig) entry.termOrig = entry.date;
+    entry.edited = true;
+  }
+  entry.date = date;
+  if (label) entry.label = label;
+  editingDateId = null;
+  save();
   renderImportantDates();
   renderFortnight();
   renderSchedule();
@@ -3106,7 +3277,7 @@ function renderImportantDates() {
   wrap.className = 'dates-list';
   // Show upcoming first, then up to 3 most-recent past. Built-in term dates show the next two only.
   let termShown = 0;
-  const upcomingShown = upcoming.filter(d => d.source !== 'term' || termShown++ < 2);
+  const upcomingShown = upcoming.filter(d => d.source !== 'term' || showAllTermDates || termShown++ < 2);
   const termHidden = upcoming.length - upcomingShown.length;
   const past = sorted.filter(d => (d.date || '') < todayStr && d.source !== 'term').slice(-3);
   const display = [...upcomingShown, ...past];
@@ -3119,18 +3290,37 @@ function renderImportantDates() {
     const dateStr = dDate
       ? dDate.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })
       : (entry.date || '—');
-    row.innerHTML = `
-      <span class="date-row-date">${dateStr}</span>
+    if (editingDateId === entry.id) {
+      row.className += ' editing';
+      row.innerHTML = `
+        <div class="dr-edit">
+          <div class="dr-edit-date">
+            <button type="button" class="dr-nudge" onclick="nudgeEditDate(-1)" aria-label="One day earlier">−1 day</button>
+            <input type="date" id="dr-date" value="${entry.date}" aria-label="Date">
+            <button type="button" class="dr-nudge" onclick="nudgeEditDate(1)" aria-label="One day later">+1 day</button>
+          </div>
+          <input type="text" id="dr-label" value="${escapeHtml(entry.label || '')}" maxlength="80" aria-label="Label">
+          <div class="dr-edit-actions">
+            <button type="button" class="dr-cancel" onclick="cancelEditDate()">Cancel</button>
+            <button type="button" class="dr-save" onclick="saveEditDate('${entry.id}')">Save</button>
+          </div>
+        </div>`;
+    } else {
+      row.innerHTML = `
+      <button type="button" class="date-row-date" onclick="editImportantDate('${entry.id}')" title="Edit this date">${dateStr}${entry.edited ? ' <small>edited</small>' : ''}</button>
       <span class="date-row-label">${(entry.label || '').replace(/</g, '&lt;')}</span>
       <span class="date-row-type ${meta.chipClass}">${entry.source === 'term' ? (entry.type === 'break-end' ? 'Term' : 'Holidays') : meta.label}</span>
-      <button class="date-row-remove" onclick="removeImportantDate('${entry.id}')">×</button>`;
+      <button class="date-row-remove" onclick="removeImportantDate('${entry.id}')" aria-label="Remove">×</button>`;
+    }
     wrap.appendChild(row);
   });
   list.appendChild(wrap);
-  if (termHidden > 0) {
-    const more = document.createElement('p');
+  if (termHidden > 0 || showAllTermDates) {
+    const more = document.createElement('button');
+    more.type = 'button';
     more.className = 'dates-more';
-    more.textContent = termHidden + ' more term dates to the end of 2027. They show on the calendar as they come up.';
+    more.textContent = showAllTermDates ? 'Show fewer term dates' : 'Show all ' + (termHidden + 2) + ' term dates to edit them';
+    more.onclick = () => { showAllTermDates = !showAllTermDates; renderImportantDates(); };
     list.appendChild(more);
   }
 }
