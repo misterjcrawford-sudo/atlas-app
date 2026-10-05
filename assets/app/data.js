@@ -167,7 +167,9 @@ function cycleReader(saved){
  const [y,m,d]=anchor.split('-').map(Number),start=new Date(y,m-1,d,12);
  if(start.getFullYear()!==y||start.getMonth()!==m-1||start.getDate()!==d)return null;
  const dayNumber=date=>Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())/86400000;
- return date=>pattern[((dayNumber(date)-dayNumber(start))%14+14)%14]===1;
+ const overrides=saved?.overrides&&typeof saved.overrides==='object'?saved.overrides:{}; // one-off swaps from Week
+ const iso=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+ return date=>{const ov=overrides[iso(date)];if(ov&&typeof ov.kids==='boolean')return ov.kids;return pattern[((dayNumber(date)-dayNumber(start))%14+14)%14]===1;};
 }
 
 const noon=date=>new Date(date.getFullYear(),date.getMonth(),date.getDate(),12);
