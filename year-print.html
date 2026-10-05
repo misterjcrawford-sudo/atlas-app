@@ -21,7 +21,7 @@
   .controls a.back { color: var(--ink); font-size: 14px; font-weight: 600; text-decoration: none; margin-right: auto; }
   .controls label { font-size: 13px; font-weight: 600; color: var(--mute); }
   .controls select { border: 0; background: #fff; border-radius: 999px; padding: 10px 14px; font: inherit; font-size: 14px; }
-  .controls button { border: 0; background: var(--ink); color: #fff; border-radius: 999px; padding: 11px 20px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+  .controls button { display: inline-flex; align-items: center; gap: 8px; border: 0; background: var(--ink); color: #fff; border-radius: 999px; padding: 11px 20px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
   .controls button:focus-visible, .controls select:focus-visible, .controls a:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
   .screen-note { max-width: 1120px; margin: 8px auto 0; padding: 0 16px; font-size: 12.5px; color: var(--mute); }
 
@@ -78,7 +78,7 @@
   <a class="back" href="./week.html">← Back to Week</a>
   <label for="yp-start">Start</label>
   <select id="yp-start"></select>
-  <button type="button" onclick="window.print()">Print or save PDF</button>
+  <button type="button" onclick="window.print()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print or save PDF</button>
 </div>
 <p class="screen-note">Prints on one A4 page, landscape. To keep a copy, choose Save as PDF in the print window.</p>
 <div class="sheet-wrap"><div id="yp"></div></div>
