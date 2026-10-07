@@ -339,3 +339,19 @@ details.at-more { display: block; width: 100%; max-width: none; margin: 0 0 14px
 .fn-legend span[hidden] { display: none; }
 /* Week fortnight: a swapped day (changed from the usual cycle) */
 .fort-day.swapped::before { content: "⇄"; position: absolute; top: 5px; left: 7px; font-size: 11px; font-weight: 800; line-height: 1; color: #ff6a45; }
+
+/* ---------- Wordmark full stop (brand rule, 7 Oct 2026) ----------
+   The full stop in "Atlas." is a SQUARE, matching Geist (social, PDFs, pitch) and the app icon.
+   It's drawn here rather than left to the font, because system fonts disagree
+   (SF Pro = round on Apple, Arial = square on Windows). The "." stays in the markup for
+   copy/paste and screen readers; it is hidden inside the box.
+   Cobalt on light, lime on cobalt: set --stop on the parent to change it. */
+.at-brand b, .brand b, .print-logo span, .print-logo-accent, .cover-logo-accent,
+.print-header-logo-accent, .atlas-stop {
+  display: inline-block; width: .18em; height: .18em; margin-left: .06em;
+  background: var(--stop, var(--cobalt, #2743ff));
+  color: transparent !important; overflow: hidden; vertical-align: baseline;
+  line-height: 1; font-style: normal; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+/* The app header link is a flex row; align the square to the text baseline, not the middle */
+.at-brand { align-items: baseline; }

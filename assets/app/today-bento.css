@@ -280,3 +280,19 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12
 /* Six nav items on phones: tighter pills, no scrolling at 360px and up */
 @media (max-width: 720px) { .at-links { gap: 2px; justify-content: space-between; flex-wrap: nowrap; overflow: visible; } .at-links a { padding: 9px 12px; font-size: 14px; line-height: 1.2; white-space: nowrap; } }
 @media (max-width: 380px) { .at-links a { padding: 8px 9px; font-size: 13px; } }
+
+/* ---------- Wordmark full stop (brand rule, 7 Oct 2026) ----------
+   The full stop in "Atlas." is a SQUARE, matching Geist (social, PDFs, pitch) and the app icon.
+   It's drawn here rather than left to the font, because system fonts disagree
+   (SF Pro = round on Apple, Arial = square on Windows). The "." stays in the markup for
+   copy/paste and screen readers; it is hidden inside the box.
+   Cobalt on light, lime on cobalt: set --stop on the parent to change it. */
+.at-brand b, .brand b, .print-logo span, .print-logo-accent, .cover-logo-accent,
+.print-header-logo-accent, .atlas-stop {
+  display: inline-block; width: .18em; height: .18em; margin-left: .06em;
+  background: var(--stop, var(--cobalt, #2743ff));
+  color: transparent !important; overflow: hidden; vertical-align: baseline;
+  line-height: 1; font-style: normal; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+/* The app header link is a flex row; align the square to the text baseline, not the middle */
+.at-brand { align-items: baseline; }
