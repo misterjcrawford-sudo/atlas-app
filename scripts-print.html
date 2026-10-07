@@ -469,7 +469,7 @@ function renderScriptPage(script, catLabel, index, total) {
   return `
     <div class="page">
       <div class="print-header">
-        <div class="print-header-logo">Atlas<span class="print-header-logo-accent"> · </span>Conversation Scripts</div>
+        <div class="print-header-logo">Atlas<span class="print-header-logo-accent">.</span> Conversation Scripts</div>
         <div class="print-header-right">${esc(catLabel)} · Script ${esc(String(index + 1))} of ${esc(String(total))}<br>Printed ${todayStr()}</div>
       </div>
 
@@ -530,7 +530,7 @@ function renderCoverPage(cat, scripts) {
   return `
     <div class="page cover-page">
       <div class="cover-header">
-        <div class="cover-logo">Atlas<span class="cover-logo-accent"> · </span>Conversation Scripts</div>
+        <div class="cover-logo">Atlas<span class="cover-logo-accent">.</span> Conversation Scripts</div>
         <div class="cover-date">Printed ${todayStr()}</div>
       </div>
 

@@ -2,5 +2,5 @@
   <!-- Atlas. — a bold A and the wordmark's full stop, white on the cobalt signature colour -->
   <rect width="64" height="64" rx="14" fill="#2743ff"/>
   <path d="M10.5 50 L24.5 14 H31.5 L45.5 50 H37.4 L34.6 42.2 H21.4 L18.6 50 Z M23.8 35.4 H32.2 L28 23.6 Z" fill="#fff"/>
-  <circle cx="51.5" cy="45.5" r="4.5" fill="#d4f062"/>
+  <rect x="47" y="41" width="9" height="9" fill="#d4f062"/>
 </svg>
