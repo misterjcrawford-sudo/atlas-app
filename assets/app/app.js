@@ -145,11 +145,16 @@
 
     document.querySelectorAll('[data-current-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
-    // The beta gate adds a lock link; keep it in the footer rather than over the content.
-    const lock = [...document.querySelectorAll('a')].find(el => el.title === 'Clear access and return to password screen');
+    // Lock app: only for people who've unlocked on this device (the key is saved at activation).
+    // Public pages (terms, how-it-works, for-professionals) load this file too, so check first.
+    let unlocked = false;
+    try { unlocked = !!localStorage.getItem('atlas_access_key'); } catch (_) {}
     const footerLinks = document.querySelector('.at-footer-links');
-    if (lock && footerLinks) {
-      lock.removeAttribute('style');
+    if (unlocked && footerLinks && !footerLinks.querySelector('[data-lock-app]')) {
+      const lock = document.createElement('a');
+      lock.href = '/activate.html?lock=1';
+      lock.textContent = 'Lock app';
+      lock.dataset.lockApp = '';
       footerLinks.append(lock);
     }
 
