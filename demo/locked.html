@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>In the full toolkit · Atlas</title>
+<link rel="icon" href="/favicon.svg">
+<style>
+  :root { --ink:#111; --page:#f2f2f0; --tile:#fff; --cobalt:#2743ff; --lime:#d4f062; --muted:#55554f; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--page); color:var(--ink); font:16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif; padding:24px 16px 48px; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .brand { font-weight: 800; letter-spacing: -.02em; font-size: 22px; text-decoration: none; color: var(--ink); }
+  .brand b { display:inline-block; width:.18em; height:.18em; background:var(--cobalt); margin-left:.04em; }
+  .tile { background:var(--tile); border-radius:28px; padding:32px; margin-top:20px; }
+  .eyebrow { font-size:13px; font-weight:600; color:var(--muted); }
+  h1 { font-size: clamp(28px, 6vw, 40px); line-height:1.08; letter-spacing:-.02em; margin:.3em 0 .4em; }
+  p { margin:0 0 1em; }
+  ul { padding:0; margin:0 0 1.2em; list-style:none; display:grid; gap:8px; }
+  li { background:var(--page); border-radius:14px; padding:10px 14px; display:flex; justify-content:space-between; gap:12px; font-size:15px; }
+  li span { color:var(--muted); white-space:nowrap; }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+  .btn { display:inline-block; border-radius:999px; padding:12px 22px; font-weight:650; text-decoration:none; font-size:15px; }
+  .btn.buy { background:var(--lime); color:var(--ink); }
+  .btn.back { background:var(--page); color:var(--ink); }
+  .small { font-size:13px; color:var(--muted); margin-top:16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="brand" href="/demo/index.html">Atlas<b></b></a>
+  <div class="tile">
+    <div class="eyebrow" id="eyebrow">In the full toolkit</div>
+    <h1 id="title">This part is in the full toolkit.</h1>
+    <p id="body">You can try Today, Week, Money and Records here, plus a few scripts. The rest is behind the door.</p>
+    <div id="extra"></div>
+    <div class="actions">
+      <a class="btn buy" href="/buy/demo">Get Atlas · $79 once</a>
+      <a class="btn back" id="back" href="/demo/index.html">Back to the demo</a>
+    </div>
+    <p class="small">One payment. No subscription. No account. 30-day refund, no questions. Atlas never knows who you are.</p>
+  </div>
+</div>
+<script>
+(function () {
+  var from = (new URLSearchParams(location.search).get('from') || '').split('#')[0].replace(/\.html$/, '');
+  var C = {"default":{"eyebrow":"In the full toolkit","title":"This part is in the full toolkit.","body":"You can try Today, Week, Money and Records here, plus a few scripts. The rest sits behind this door.","list":null},"admin":{"eyebrow":"Admin · in the full toolkit","title":"119 separation admin items, in the order they matter.","body":"Admin keeps the paperwork in order: what to do in the first 30 days, then the documents, banks, tax, home and school. Tick it off as you go. Today pulls your next task from it. Ticks stay on your device.","list":[["First 30 days","17 items"],["Identity, legal & documents","32 items"],["Bank, super & insurance","18 items"],["Government, tax & payments","16 items"],["Home, property & utilities","18 items"],["Kids, school & medical","18 items"]]},"goals":{"eyebrow":"Goals · in the full toolkit","title":"Small goals for the next six months.","body":"Goals is for when the dust settles: a few things to build toward, a few that can wait. It is in the full toolkit.","list":null},"companion-pack":{"eyebrow":"Companion pack · in the full toolkit","title":"Six printable packs for when you need paper.","body":"Start Here, the first 30 days, kids and co-parenting, legal and admin, personal reset and rebuild goals. Printable PDFs that match what is in the app.","list":null},"scripts":{"eyebrow":"Scripts · in the full toolkit","title":"The rest of the scripts are in the full toolkit.","body":"The demo opens three. The full library has 68, for the conversations people avoid: your ex, the kids’ school, work, family, money, new relationships.","list":null}};
+  var c = C[from] || C.default;
+  document.getElementById('eyebrow').textContent = c.eyebrow;
+  document.getElementById('title').textContent = c.title;
+  document.getElementById('body').textContent = c.body;
+  if (c.list && c.list.length) {
+    var ul = document.createElement('ul');
+    c.list.forEach(function (row) { var li = document.createElement('li'); var a = document.createElement('div'); a.textContent = row[0]; var b = document.createElement('span'); b.textContent = row[1]; li.append(a, b); ul.append(li); });
+    document.getElementById('extra').append(ul);
+  }
+})();
+</script>
+</body>
+</html>

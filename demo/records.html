@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="/demo/demo-shim.js"></script>
+<script src="/demo/demo-seed.js"></script>
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Demo · Records · Atlas</title>
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #f7f7f5;
+    --paper-warm: #f2f2f0;
+    --paper-edge: #e7e7e4;
+    --ink: #111111;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #62626a;
+    --ink-faded: #9a9aa0;
+    --green: #111111;
+    --green-deep: #1a2ccc;
+    --amber: #d4f062;
+    --amber-deep: #b9d63a;
+    --honey: #eef8c6;
+    --sage: #eef8c6;
+    --coral: #e0532f;
+    --black: #111111;
+    --red: #C44A3A;
+    --shadow-card: 0 12px 40px rgba(17,17,17,0.08);
+    --shadow-soft: 0 2px 8px rgba(17,17,17,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 760px) {
+
+    .page-wrap { padding: 0 16px; }
+  }
+
+  /* PAGE */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 48px; }
+  
+  .hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.04em; margin-bottom: 18px; }
+  .hero h1 .soft { background: linear-gradient(180deg, transparent 72%, var(--amber) 72%); padding: 0 6px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+  .phase-pill {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper-card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .phase-pill[data-phase="rebuild"].active { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
+  .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+  .phase-context { font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.55; color: var(--ink-muted); margin-bottom: 8px; max-width: 58ch; letter-spacing: -.025em}
+
+  /* LAYOUT: form + summary side by side, timeline below */
+  .records-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; margin-bottom: 40px; }
+  @media (max-width: 900px) { .records-grid { grid-template-columns: 1fr; } }
+
+  /* CAPTURE CARD */
+  .capture-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: var(--shadow-soft);
+  }
+  .capture-title { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .capture-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 18px; }
+
+  .type-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+  @media (max-width: 560px) { .type-row { grid-template-columns: repeat(2, 1fr); } }
+  .type-btn {
+    border: 1px solid var(--paper-edge);
+    background: var(--paper);
+    border-radius: 999px;
+    padding: 11px 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .type-btn:hover { border-color: var(--ink-faded); }
+  .type-btn.active[data-type="cost"] { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+  .type-btn.active[data-type="incident"] { background: var(--coral); border-color: var(--coral); color: var(--paper); }
+  .type-btn.active[data-type="communication"] { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .type-btn.active[data-type="handover"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  .type-hint { font-size: 12.5px; color: var(--ink-muted); margin: -6px 0 16px; line-height: 1.5; }
+
+  .field-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .field { flex: 1; min-width: 130px; }
+  .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .01em;  color: var(--ink-muted); margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--amber-deep); }
+  .field textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+  .field-amount { max-width: 150px; }
+  .field-date { max-width: 170px; }
+
+  .cost-only { display: none; }
+  .capture-card.type-cost .cost-only { display: flex; }
+
+  .more-toggle {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    padding: 4px 0; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .more-toggle:hover { color: var(--ink); }
+  .more-toggle .chev { transition: transform 0.2s; display: inline-block; }
+  .more-fields { display: none; }
+  .more-fields.open { display: block; }
+  .more-toggle.open .chev { transform: rotate(90deg); }
+
+  .capture-actions { display: flex; gap: 10px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+  .save-btn {
+    background: var(--amber);
+    color: var(--ink);
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 999px;
+    padding: 12px 26px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .save-btn:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .cancel-edit-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    display: none;
+  }
+  .cancel-edit-btn:hover { color: var(--ink); }
+  .capture-card.editing .cancel-edit-btn { display: inline; }
+  .capture-card.editing .save-btn::after { content: ""; }
+
+  .capture-note { font-size: 12px; color: var(--ink-faded); margin-top: 14px; line-height: 1.55; }
+
+  /* SUMMARY DOSSIER PANEL */
+  .summary-panel {
+    background: var(--green);
+    color: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: var(--shadow-card);
+    position: sticky;
+    top: 20px;
+  }
+  .summary-label { font-size: 11px; font-weight: 700; letter-spacing: .01em;  color: rgba(255,255,255,0.55); margin-bottom: 18px; }
+  .summary-stat { margin-bottom: 16px; }
+  .summary-stat-label { font-size: 12.5px; color: rgba(255,255,255,0.65); margin-bottom: 2px; }
+  .summary-stat-val { font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.02em; line-height: 1.1; }
+  .summary-stat-val.small { font-size: 1.15rem; }
+  .summary-divider { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 18px 0; }
+  .summary-balance-note { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; margin-top: 4px; }
+  .summary-export {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--amber);
+    color: var(--ink);
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .summary-export:hover { background: var(--amber-deep); transform: translateY(-1px); }
+  .summary-export-hint { font-size: 11.5px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+  /* FILTERS */
+  .timeline-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .timeline-title { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; letter-spacing: -0.02em; }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-pill {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--paper-edge);
+    background: var(--paper-card);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-pill:hover { background: var(--paper-warm); }
+  .filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .filter-pill .count { color: inherit; opacity: 0.55; margin-left: 4px; }
+
+  /* TIMELINE */
+  .month-group { margin-bottom: 28px; }
+  .month-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 0 4px 10px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 4px;
+  }
+  .month-name { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; }
+  .month-meta { font-size: 12.5px; color: var(--ink-muted); font-weight: 500; }
+
+  .entry-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 14px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--paper-edge);
+    align-items: start;
+  }
+  .entry-row:hover { background: var(--paper-card); }
+  .entry-date { text-align: center; padding-top: 2px; }
+  .entry-date-day { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; line-height: 1; letter-spacing: -.025em}
+  .entry-date-mon { font-size: 10.5px; font-weight: 700; letter-spacing: .01em;  color: var(--ink-muted); margin-top: 2px; }
+  .entry-main { min-width: 0; }
+  .entry-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+  .entry-badge {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .01em; 
+    padding: 3px 9px; border-radius: 999px;
+  }
+  .entry-badge.cost { background: var(--sage); color: var(--ink); }
+  .entry-badge.incident { background: var(--coral); color: var(--paper); }
+  .entry-badge.communication { background: var(--honey); color: var(--ink); }
+  .entry-badge.handover { background: var(--paper-warm); color: var(--ink-soft); border: 1px solid var(--paper-edge); }
+  .entry-kid { font-size: 11px; font-weight: 600; color: var(--ink-muted); background: var(--paper-warm); padding: 3px 9px; border-radius: 999px; }
+  .entry-title { font-size: 14.5px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+  .entry-note { font-size: 13px; color: var(--ink-muted); line-height: 1.5; margin-top: 3px; max-width: 64ch; }
+  .entry-receipt { font-size: 12px; color: var(--ink-faded); margin-top: 3px; }
+  .entry-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .entry-amount { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; white-space: nowrap; }
+  .entry-paidby { font-size: 11px; color: var(--ink-muted); font-weight: 600; }
+  .entry-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+  .entry-row:hover .entry-actions { opacity: 1; }
+  @media (hover: none) { .entry-actions { opacity: 1; } }
+  .entry-action-btn {
+    background: none; border: 1px solid var(--paper-edge); border-radius: 999px;
+    width: 28px; height: 28px; cursor: pointer; color: var(--ink-muted);
+    font-size: 13px; line-height: 1; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+  .entry-action-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--paper-warm); }
+  .entry-action-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+  @media (max-width: 560px) {
+    .entry-row { grid-template-columns: 44px 1fr; }
+    .entry-side { grid-column: 2; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+    .entry-date-day { font-size: 1.05rem; }
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    border: 1.5px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .empty-state-title { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; margin-bottom: 8px; letter-spacing: -.025em}
+  .empty-state-sub { font-size: 14px; color: var(--ink-muted); line-height: 1.6; max-width: 46ch; margin: 0 auto; }
+
+  /* GUIDANCE STRIP */
+  .guidance-strip {
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 32px 0 56px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .guidance-strip strong { font-weight: 600; }
+
+  /* RESET ROW */
+  .danger-row { margin: 0 0 56px; }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* TOAST */
+  .records-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 9999;
+    box-shadow: var(--shadow-card);
+  }
+  .records-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* MILESTONES & KEY FACTS */
+  .kd-card { background: var(--paper-card); border: 1px solid var(--paper-edge); border-radius: var(--radius-lg); margin: 40px 0 0; overflow: hidden; box-shadow: var(--shadow-soft); }
+  .kd-card-header { width: 100%; display: flex; align-items: center; gap: 12px; padding: 18px 24px; background: none; border: none; cursor: pointer; text-align: left; font-family: var(--font-body); }
+  .kd-card-header:hover { background: var(--paper-warm); }
+  .kd-card-title { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.01em; color: var(--ink); flex: 1; }
+  .kd-card-sub { font-size: 12px; color: var(--ink-muted); font-weight: 500; }
+  .kd-card-chevron { font-size: 18px; color: var(--ink-faded); transition: transform 0.2s; line-height: 1; }
+  .kd-card.open .kd-card-chevron { transform: rotate(90deg); }
+  .kd-card-body { display: none; padding-bottom: 10px; }
+  .kd-card.open .kd-card-body { display: block; }
+
+  .cl-add-input {
+    flex: 1; font-family: var(--font-body); font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid transparent; border-radius: 14px;
+    padding: 8px 16px; outline: none; transition: border-color 0.15s;
+  }
+  .cl-add-input:focus { border-color: var(--ink-faded); }
+  .cl-add-input::placeholder { color: var(--ink-faded); }
+  .cl-add-btn {
+    font-family: var(--font-body); font-size: 13px; font-weight: 600;
+    color: var(--ink); background: var(--paper-warm); border: 1px solid var(--paper-edge);
+    border-radius: 999px; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+  }
+  .cl-add-btn:hover { background: var(--paper-edge); }
+
+  .kd-subheader {
+    font-family: var(--font-body); font-style: normal; font-weight: 500;
+    font-size: 14px; color: var(--ink-muted); padding: 4px 24px 4px; line-height: 1.6; letter-spacing: 0}
+  .kd-subsection { padding: 18px 24px 8px; }
+  .kd-subsection-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-muted);
+    letter-spacing: .01em; 
+  }
+  .key-date-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 24px; transition: background 0.12s;
+  }
+  .key-date-item:hover { background: var(--paper-warm); }
+  .kd-label {
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    min-width: 220px; padding-top: 9px; line-height: 1.4; flex-shrink: 0;
+  }
+  .kd-inputs { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .kd-date-input {
+    font-family: var(--font-body); font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid transparent; border-radius: 14px;
+    padding: 7px 12px; outline: none; transition: border-color 0.15s; width: 180px;
+  }
+  .kd-date-input:focus { border-color: var(--ink-faded); }
+  .kd-inline-note {
+    font-family: var(--font-body); font-size: 13px; color: var(--ink-soft);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 10px;
+    padding: 6px 12px; outline: none; transition: border-color 0.15s; width: 100%; max-width: 340px;
+  }
+  .kd-inline-note:focus { border-color: var(--ink-faded); }
+  .kd-inline-note::placeholder { color: var(--ink-faded); font-size: 12px; }
+  .key-note-item { padding: 10px 24px 14px; transition: background 0.12s; }
+  .key-note-item:hover { background: var(--paper-warm); }
+  .kd-note-label-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+  }
+  .kd-note-label { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .kd-textarea {
+    width: 100%; font-family: var(--font-body); font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid transparent; border-radius: 14px;
+    padding: 10px 14px; outline: none; resize: vertical; min-height: 76px; line-height: 1.55;
+    transition: border-color 0.15s;
+  }
+  .kd-textarea:focus { border-color: var(--ink-faded); }
+  .kd-textarea::placeholder { color: var(--ink-faded); }
+  .kd-delete-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-faded); font-size: 16px; padding: 0 4px; line-height: 1; flex-shrink: 0;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .key-date-item:hover .kd-delete-btn,
+  .key-note-item:hover .kd-delete-btn { opacity: 1; }
+  .kd-add-row {
+    display: flex; align-items: center; gap: 8px; padding: 10px 24px 14px;
+    border-top: 1px solid var(--paper-edge); flex-wrap: wrap;
+  }
+  .kd-add-label { flex: 1; min-width: 140px; }
+  .kd-add-date {
+    font-family: var(--font-body); font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 999px;
+    padding: 8px 12px; outline: none; transition: border-color 0.15s; flex-shrink: 0;
+  }
+  .kd-add-date:focus { border-color: var(--ink-faded); }
+  .kd-add-note { flex: 1; min-width: 120px; }
+  .kd-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 4px 0 0; }
+  @media (max-width: 640px) {
+    .key-date-item { flex-wrap: wrap; }
+    .kd-label { min-width: unset; padding-top: 0; flex: 1; }
+    .kd-inputs { width: 100%; }
+    .kd-date-input { width: 100%; }
+  }
+
+</style>
+<link rel="stylesheet" href="/demo/assets/app/interface.css">
+<link rel="stylesheet" href="/demo/assets/app/bento.css">
+</head>
+<body class="atlas-app" data-module="records">
+
+<a class="at-skip" href="#at-content">Skip to content</a>
+<header class="at-header">
+ <div class="at-nav"><a class="at-brand" href="/demo/index.html" aria-label="Atlas, Today">Atlas<b>.</b></a><nav class="at-links" aria-label="Main navigation"><a href="/demo/index.html">Today</a><a href="/demo/week.html">Week</a><a href="/demo/money.html">Money</a><a href="/demo/records.html" aria-current="page">Records</a><a href="/demo/locked.html?from=admin">Admin</a></nav>
+ <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="/demo/scripts.html">Scripts</a><a href="/demo/locked.html?from=goals">Goals</a><a href="/demo/locked.html?from=companion-pack">Companion pack</a><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/how-it-works.html">How Atlas works</a></div></details></div>
+ <div class="at-heading"><div><div class="at-kicker">Records</div><h1>Less to keep in your head.</h1><p id="phase-context">Dates, payments and what happened, in your own words.</p></div><a class="at-phase-chip" href="/demo/index.html#at-phase"><span class="at-phase-chip-label">Phase</span> <strong data-phase-label>Stabilise</strong><span class="at-phase-chip-action">Change</span></a></div>
+</header>
+
+<main class="page-wrap" id="at-content">
+<div class="container">
+
+  <!-- CAPTURE + SUMMARY -->
+  <div class="records-grid">
+
+    <div class="capture-card type-cost" id="capture-card">
+      <div class="capture-title" id="capture-title">Add an entry</div>
+      <div class="capture-sub">Twenty seconds. Date, what happened, done.</div>
+
+      <div class="type-row" id="type-row">
+        <button class="type-btn active" data-type="cost" onclick="setType('cost')">Payment</button>
+        <button class="type-btn" data-type="incident" onclick="setType('incident')">Incident</button>
+        <button class="type-btn" data-type="communication" onclick="setType('communication')">Communication</button>
+        <button class="type-btn" data-type="handover" onclick="setType('handover')">Schedule change</button>
+      </div>
+      <p class="type-hint" id="type-hint"></p>
+
+      <div class="field-row">
+        <div class="field field-date">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date">
+        </div>
+        <div class="field">
+          <label for="f-title">What happened</label>
+          <input type="text" id="f-title" maxlength="140" placeholder="School shoes">
+        </div>
+      </div>
+
+      <div class="field-row cost-only">
+        <div class="field field-amount">
+          <label for="f-amount">Amount</label>
+          <input type="number" id="f-amount" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label for="f-paidby">Who paid</label>
+          <select id="f-paidby">
+            <option value="me">I paid</option>
+            <option value="them">They paid</option>
+            <option value="split">Split at the time</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="more-toggle" id="more-toggle" onclick="toggleMore()" type="button">
+        <span class="chev">›</span> More detail (optional)
+      </button>
+      <div class="more-fields" id="more-fields">
+        <div class="field-row">
+          <div class="field">
+            <label for="f-kids">Which kid(s)</label>
+            <input type="text" id="f-kids" maxlength="60" placeholder="Optional">
+          </div>
+          <div class="field cost-only" style="display:none" id="f-receipt-wrap">
+            <label for="f-receipt">Where the receipt lives</label>
+            <input type="text" id="f-receipt" maxlength="120" placeholder="Email, drawer, photos — optional">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-note">Notes</label>
+            <textarea id="f-note" maxlength="600" placeholder="Plain facts. What was said, what was agreed, what changed."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="capture-actions">
+        <button class="save-btn" id="save-btn" onclick="saveEntry()">Save entry</button>
+        <button class="cancel-edit-btn" onclick="cancelEdit()">Cancel edit</button>
+      </div>
+      <p class="capture-note">Stays in your browser like everything else in Atlas. Nothing is sent anywhere. Save a copy from <a href="/demo/locked.html?from=admin" style="color:var(--ink-muted)">More → Back up / import data</a>.</p>
+    </div>
+
+    <aside class="summary-panel">
+      <div class="summary-label">The record so far</div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">Entries</div>
+        <div class="summary-stat-val" id="sum-entries">0</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">Covering</div>
+        <div class="summary-stat-val small" id="sum-range">—</div>
+      </div>
+      <hr class="summary-divider">
+      <div class="summary-label">Payments</div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">You've paid</div>
+        <div class="summary-stat-val" id="sum-mine">$0</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">They've paid</div>
+        <div class="summary-stat-val" id="sum-theirs">$0</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-label">Difference</div>
+        <div class="summary-stat-val small" id="sum-diff">—</div>
+        <div class="summary-balance-note">Raw totals only. What's owed depends on what you've agreed — the record just keeps the numbers honest.</div>
+      </div>
+      <hr class="summary-divider">
+      <a href="/demo/locked.html?from=records-print" class="summary-export">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Export the dossier
+      </a>
+      <div class="summary-export-hint">A clean, dated PDF of everything — built for lawyers, mediators and your own peace of mind.</div>
+    </aside>
+
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline-head">
+    <div class="timeline-title">The record.</div>
+    <div class="filter-row" id="filter-row">
+      <button class="filter-pill active" data-filter="all" onclick="setFilter('all')">All <span class="count" id="count-all"></span></button>
+      <button class="filter-pill" data-filter="cost" onclick="setFilter('cost')">Payments <span class="count" id="count-cost"></span></button>
+      <button class="filter-pill" data-filter="incident" onclick="setFilter('incident')">Incidents <span class="count" id="count-incident"></span></button>
+      <button class="filter-pill" data-filter="communication" onclick="setFilter('communication')">Communications <span class="count" id="count-communication"></span></button>
+      <button class="filter-pill" data-filter="handover" onclick="setFilter('handover')">Schedule changes <span class="count" id="count-handover"></span></button>
+    </div>
+  </div>
+
+  <div id="timeline"></div>
+
+<details class="at-more">
+      <summary><span>Milestones, key facts and data<br><span class="at-more-hint">Key dates worth keeping, plus the option to clear this record.</span></span></summary>
+  <!-- MILESTONES & KEY FACTS (moved from Admin — data keys unchanged) -->
+  <div class="kd-card" id="kd-card">
+    <button class="kd-card-header" onclick="toggleKdCard()" aria-expanded="false">
+      <span class="kd-card-title">Milestones &amp; key facts</span>
+      <span class="kd-card-sub" id="kd-card-sub"></span>
+      <span class="kd-card-chevron">›</span>
+    </button>
+    <div class="kd-card-body">
+      <p class="kd-subheader"><em>These aren't events. They're the dates and facts worth keeping — for yourself, for legal conversations, or just to remember where you started. They print as page one of the dossier.</em></p>
+
+      <div class="kd-subsection">
+        <div class="kd-subsection-label">Your Timeline</div>
+      </div>
+      <div id="kd-timeline-items"></div>
+      <div class="kd-add-row">
+        <input type="text" class="cl-add-input kd-add-label" id="kd-new-label" placeholder="Name this date…" maxlength="80">
+        <input type="date" class="kd-add-date" id="kd-new-date">
+        <input type="text" class="cl-add-input kd-add-note" id="kd-new-note" placeholder="Optional note" maxlength="120">
+        <button class="cl-add-btn" onclick="addCustomDate()">Add</button>
+      </div>
+
+      <hr class="kd-divider">
+
+      <div class="kd-subsection">
+        <div class="kd-subsection-label">Key Notes</div>
+      </div>
+      <div id="kd-notes-items"></div>
+      <div class="kd-add-row">
+        <input type="text" class="cl-add-input kd-add-label" id="kd-new-note-label" placeholder="Note title…" maxlength="80">
+        <button class="cl-add-btn" onclick="addCustomNote()">Add note</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="guidance-strip">
+    <strong>Keeping it useful:</strong> short entries beat long ones. Dates and amounts beat adjectives. If it involves money, log it the day it happens. If it involves the kids, log what changed — not how you felt about it. The Companion pack's <em>What to write down</em> guidance covers what's worth recording and what's overkill.
+  </div>
+
+  <div class="danger-row">
+    <button class="reset-btn" onclick="resetRecords()">Delete all records</button>
+  </div>
+    </details>
+
+</div>
+</div>
+
+<div class="records-toast" id="records-toast"></main>
+
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/terms.html">Privacy &amp; terms</a><a href="/how-it-works.html">How it works</a></nav></footer>
+
+<script>
+/* ─── Phase handling (standard Atlas pattern) ─────────────────────────────── */
+const phaseContexts = {
+  'waiting-room': 'Start the record now — dates and amounts are easiest to capture while they’re fresh, and hardest to reconstruct later.',
+  'survive': 'Log shared costs and anything involving the kids. Short entries. Facts and dates only — the rest can wait.',
+  'stabilise': 'This is where the record earns its keep — costs, changes to arrangements, what was agreed and when.',
+  'rebuild': 'Keep logging shared costs. Log the rest only when something is off-pattern.',
+  'new-chapter': 'Maintenance mode. Costs and the occasional note. The record is now mostly history — keep it that way.'
+};
+
+let currentPhase = 'survive';
+
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+function getCurrentPhase() {
+  const savedPhase = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+  return normalisePhase(savedPhase || 'survive');
+}
+function setCurrentPhase(phase) {
+  phase = normalisePhase(phase);
+  localStorage.setItem('atlas_phase', phase);
+  localStorage.setItem('dad_atlas_phase', phase);
+  localStorage.setItem('atlas_budget_phase', phase);
+  localStorage.setItem('dad_budget_phase', phase);
+  window.dispatchEvent(new StorageEvent('storage', { key: 'atlas_phase', newValue: phase }));
+}
+function setPhase(phase) {
+  phase = normalisePhase(phase);
+  currentPhase = phase;
+  setCurrentPhase(phase);
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  document.getElementById('phase-context').textContent = phaseContexts[phase] || '';
+}
+window.addEventListener('storage', e => {
+  const nextPhase = normalisePhase(e.newValue);
+  if (e.key === 'atlas_phase' && nextPhase && nextPhase !== currentPhase) setPhase(nextPhase);
+});
+
+/* ─── Mobile nav ──────────────────────────────────────────────────────────── */
+
+/* ─── Data layer ──────────────────────────────────────────────────────────── */
+const RECORDS_KEY = 'atlas_records';
+
+function loadRecords() {
+  try {
+    const data = JSON.parse(localStorage.getItem(RECORDS_KEY) || '{"entries":[]}');
+    return Array.isArray(data.entries) ? data : { entries: [] };
+  } catch (e) { return { entries: [] }; }
+}
+function saveRecords(data) {
+  localStorage.setItem(RECORDS_KEY, JSON.stringify(data));
+}
+
+let records = loadRecords();
+let currentType = 'cost';
+let currentFilter = 'all';
+let editingId = null;
+
+/* ─── Capture form ────────────────────────────────────────────────────────── */
+const typeHints = {
+  cost: 'Amount, who paid, what it was for. Note where the receipt lives if it matters.',
+  incident: 'What happened and when. Facts only — no commentary, no adjectives.',
+  communication: 'What was said or sent, and through what channel — text, email, app, in person.',
+  handover: 'Changes to the schedule — date swaps, late pickups, missed handovers. Only log what was off-pattern.'
+};
+const typeLabels = { cost: 'Payment', incident: 'Incident', communication: 'Communication', handover: 'Schedule change' };
+
+function setType(type) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  const card = document.getElementById('capture-card');
+  card.classList.toggle('type-cost', type === 'cost');
+  document.getElementById('f-receipt-wrap').style.display = (type === 'cost') ? 'block' : 'none';
+  document.getElementById('type-hint').textContent = typeHints[type];
+  const placeholders = {
+    cost: 'School shoes',
+    incident: 'Pickup missed — no notice given',
+    communication: 'Text agreeing to swap weekends 20–21 June',
+    handover: 'Weekend swap agreed — moved from 14 June to 21 June'
+  };
+  document.getElementById('f-title').placeholder = placeholders[type];
+}
+
+function toggleMore() {
+  document.getElementById('more-fields').classList.toggle('open');
+  document.getElementById('more-toggle').classList.toggle('open');
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function clearForm() {
+  document.getElementById('f-date').value = todayStr();
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-amount').value = '';
+  document.getElementById('f-paidby').value = 'me';
+  document.getElementById('f-kids').value = '';
+  document.getElementById('f-receipt').value = '';
+  document.getElementById('f-note').value = '';
+  editingId = null;
+  document.getElementById('capture-card').classList.remove('editing');
+  document.getElementById('capture-title').textContent = 'Add an entry';
+  document.getElementById('save-btn').textContent = 'Save entry';
+}
+
+function saveEntry() {
+  const title = document.getElementById('f-title').value.trim();
+  const date = document.getElementById('f-date').value;
+  if (!title) { showToast('Give it a few words — what happened?'); document.getElementById('f-title').focus(); return; }
+  if (!date) { showToast('It needs a date.'); document.getElementById('f-date').focus(); return; }
+
+  const entry = {
+    id: editingId || ('r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
+    type: currentType,
+    date: date,
+    title: title,
+    amount: currentType === 'cost' ? (parseFloat(document.getElementById('f-amount').value) || 0) : null,
+    paidBy: currentType === 'cost' ? document.getElementById('f-paidby').value : null,
+    kids: document.getElementById('f-kids').value.trim(),
+    receipt: currentType === 'cost' ? document.getElementById('f-receipt').value.trim() : '',
+    note: document.getElementById('f-note').value.trim(),
+    created: editingId ? (records.entries.find(e => e.id === editingId) || {}).created || new Date().toISOString() : new Date().toISOString()
+  };
+
+  if (editingId) {
+    const i = records.entries.findIndex(e => e.id === editingId);
+    if (i > -1) records.entries[i] = entry; else records.entries.push(entry);
+    showToast('Entry updated.');
+  } else {
+    records.entries.push(entry);
+    showToast('Saved. ' + (records.entries.length === 1 ? 'The record has started.' : records.entries.length + ' entries on the record.'));
+  }
+  saveRecords(records);
+  clearForm();
+  render();
+}
+
+function editEntry(id) {
+  const e = records.entries.find(x => x.id === id);
+  if (!e) return;
+  setType(e.type);
+  document.getElementById('f-date').value = e.date;
+  document.getElementById('f-title').value = e.title;
+  document.getElementById('f-amount').value = e.amount != null && e.amount !== 0 ? e.amount : '';
+  document.getElementById('f-paidby').value = e.paidBy || 'me';
+  document.getElementById('f-kids').value = e.kids || '';
+  document.getElementById('f-receipt').value = e.receipt || '';
+  document.getElementById('f-note').value = e.note || '';
+  if ((e.kids || e.receipt || e.note) && !document.getElementById('more-fields').classList.contains('open')) toggleMore();
+  editingId = id;
+  document.getElementById('capture-card').classList.add('editing');
+  document.getElementById('capture-title').textContent = 'Edit entry';
+  document.getElementById('save-btn').textContent = 'Update entry';
+  document.getElementById('capture-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEdit() { clearForm(); }
+
+function deleteEntry(id) {
+  const e = records.entries.find(x => x.id === id);
+  if (!e) return;
+  if (!confirm('Delete this entry?\n\n"' + e.title + '" — ' + formatDateLong(e.date) + '\n\nThe record is most useful when it’s complete.')) return;
+  records.entries = records.entries.filter(x => x.id !== id);
+  saveRecords(records);
+  showToast('Entry deleted.');
+  render();
+}
+
+function resetRecords() {
+  if (!records.entries.length) { showToast('Nothing to delete.'); return; }
+  if (!confirm('Delete ALL ' + records.entries.length + ' entries?\n\nThis cannot be undone. Consider backing up first (More → Back up / import data).')) return;
+  if (!confirm('Last check — permanently delete the entire record?')) return;
+  records = { entries: [] };
+  saveRecords(records);
+  showToast('Record cleared.');
+  render();
+}
+
+/* ─── Rendering ───────────────────────────────────────────────────────────── */
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function money(n) {
+  return '$' + (Math.round(n * 100) / 100).toLocaleString('en-AU', { minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2 });
+}
+function formatDateLong(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function monthKey(ds) { return ds.slice(0, 7); }
+function monthLabel(key) {
+  const d = new Date(key + '-15T12:00:00');
+  return d.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p.dataset.filter === f));
+  renderTimeline();
+}
+
+function render() {
+  renderSummary();
+  renderCounts();
+  renderTimeline();
+}
+
+function renderSummary() {
+  const es = records.entries;
+  document.getElementById('sum-entries').textContent = es.length;
+
+  if (es.length) {
+    const dates = es.map(e => e.date).sort();
+    const first = new Date(dates[0] + 'T12:00:00');
+    const last = new Date(dates[dates.length - 1] + 'T12:00:00');
+    const opts = { month: 'short', year: 'numeric' };
+    const a = first.toLocaleDateString('en-AU', opts);
+    const b = last.toLocaleDateString('en-AU', opts);
+    document.getElementById('sum-range').textContent = a === b ? a : a + ' – ' + b;
+  } else {
+    document.getElementById('sum-range').textContent = '—';
+  }
+
+  let mine = 0, theirs = 0;
+  es.filter(e => e.type === 'cost' && e.amount).forEach(e => {
+    if (e.paidBy === 'me') mine += e.amount;
+    else if (e.paidBy === 'them') theirs += e.amount;
+    else if (e.paidBy === 'split') { mine += e.amount / 2; theirs += e.amount / 2; }
+  });
+  document.getElementById('sum-mine').textContent = money(mine);
+  document.getElementById('sum-theirs').textContent = money(theirs);
+  const diff = mine - theirs;
+  const diffEl = document.getElementById('sum-diff');
+  if (!mine && !theirs) diffEl.textContent = '—';
+  else if (Math.abs(diff) < 0.005) diffEl.textContent = 'Even';
+  else diffEl.textContent = money(Math.abs(diff)) + (diff > 0 ? ' more from you' : ' more from them');
+}
+
+function renderCounts() {
+  const counts = { all: records.entries.length, cost: 0, incident: 0, communication: 0, handover: 0 };
+  records.entries.forEach(e => { if (counts[e.type] != null) counts[e.type]++; });
+  for (const k of ['all', 'cost', 'incident', 'communication', 'handover']) {
+    document.getElementById('count-' + k).textContent = counts[k] ? counts[k] : '';
+  }
+}
+
+function renderTimeline() {
+  const wrap = document.getElementById('timeline');
+  let es = records.entries.slice();
+  if (currentFilter !== 'all') es = es.filter(e => e.type === currentFilter);
+  es.sort((a, b) => b.date.localeCompare(a.date) || String(b.created).localeCompare(String(a.created)));
+
+  if (!es.length) {
+    wrap.innerHTML =
+      '<div class="empty-state">' +
+        '<div class="empty-state-title">' + (records.entries.length ? 'Nothing under this filter.' : 'No entries yet.') + '</div>' +
+        '<div class="empty-state-sub">' + (records.entries.length
+          ? 'Switch filters, or add a new entry above.'
+          : 'The first one takes 20 seconds — a school fee, a missed handover, an agreement made by text. Future you will be glad it’s dated.') +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  const groups = {};
+  es.forEach(e => {
+    const k = monthKey(e.date);
+    (groups[k] = groups[k] || []).push(e);
+  });
+
+  let html = '';
+  Object.keys(groups).sort().reverse().forEach(k => {
+    const list = groups[k];
+    const costTotal = list.filter(e => e.type === 'cost' && e.amount).reduce((s, e) => s + e.amount, 0);
+    html += '<div class="month-group">';
+    html += '<div class="month-head"><span class="month-name">' + monthLabel(k) + '</span>' +
+            '<span class="month-meta">' + list.length + (list.length === 1 ? ' entry' : ' entries') +
+            (costTotal ? ' · ' + money(costTotal) + ' in shared costs' : '') + '</span></div>';
+    list.forEach(e => {
+      const d = new Date(e.date + 'T12:00:00');
+      html += '<div class="entry-row">';
+      html += '<div class="entry-date"><div class="entry-date-day">' + d.getDate() + '</div><div class="entry-date-mon">' + d.toLocaleDateString('en-AU', { month: 'short' }) + '</div></div>';
+      html += '<div class="entry-main"><div class="entry-top">';
+      html += '<span class="entry-badge ' + e.type + '">' + typeLabels[e.type] + '</span>';
+      if (e.kids) html += '<span class="entry-kid">' + esc(e.kids) + '</span>';
+      html += '</div>';
+      html += '<div class="entry-title">' + esc(e.title) + '</div>';
+      if (e.note) html += '<div class="entry-note">' + esc(e.note) + '</div>';
+      if (e.receipt) html += '<div class="entry-receipt">Receipt: ' + esc(e.receipt) + '</div>';
+      html += '</div>';
+      html += '<div class="entry-side">';
+      if (e.type === 'cost' && e.amount) {
+        html += '<div class="entry-amount">' + money(e.amount) + '</div>';
+        html += '<div class="entry-paidby">' + (e.paidBy === 'me' ? 'I paid' : e.paidBy === 'them' ? 'They paid' : 'Split') + '</div>';
+      }
+      html += '<div class="entry-actions">' +
+        '<button class="entry-action-btn" title="Edit" onclick="editEntry(\'' + e.id + '\')">&#9998;</button>' +
+        '<button class="entry-action-btn del" title="Delete" onclick="deleteEntry(\'' + e.id + '\')">&times;</button>' +
+        '</div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+
+  wrap.innerHTML = html;
+}
+
+/* ─── Milestones & key facts (moved from Admin — data keys unchanged) ─────── */
+const DATES_KEY = 'atlas_admin_dates';
+const NOTES_KEY = 'atlas_admin_notes';
+
+const BUILTIN_DATES = [
+  { id: 'date-separation',          label: 'Date of separation' },
+  { id: 'date-moved-out',           label: 'Date you moved out' },
+  { id: 'date-parenting-agreement', label: 'Date parenting agreement signed', notePlaceholder: 'e.g. Informal / Consent orders / Court orders' },
+  { id: 'date-property-settlement', label: 'Date property settlement finalised' },
+  { id: 'date-divorce-lodged',      label: 'Date divorce application lodged' },
+  { id: 'date-divorce-final',       label: 'Date divorce finalised' },
+  { id: 'date-own-place',           label: 'First night in your own place' },
+  { id: 'date-kids-week',           label: "First kids' week at your place" }
+];
+
+const BUILTIN_NOTES = [
+  { id: 'note-parenting',     label: 'Current parenting arrangement',     placeholder: 'e.g. Week on / week off, holiday schedule, drop-off arrangements' },
+  { id: 'note-child-support', label: 'Child support status',              placeholder: 'Self-managed / Services Australia / amount and review date' },
+  { id: 'note-property',      label: 'Property situation',                placeholder: 'Who has the family home, your rental details, settlement notes' },
+  { id: 'note-lawyer',        label: 'Your lawyer',                       placeholder: 'Name, firm, phone/email' },
+  { id: 'note-mediator',      label: 'Mediator or family dispute contact', placeholder: 'Name and contact details' },
+  { id: 'note-court',         label: 'Family court case number',          placeholder: 'If applicable' },
+  { id: 'note-memory',        label: 'One thing I want to remember about this time', placeholder: 'Private note — just for you (never printed in the dossier)' }
+];
+
+function getDatesData() {
+  try { return JSON.parse(localStorage.getItem(DATES_KEY) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch(e) { return { hidden: [], values: {}, custom: [] }; }
+}
+function saveDatesData(data) { localStorage.setItem(DATES_KEY, JSON.stringify(data)); }
+
+function getNotesData() {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{"hidden":[],"values":{},"custom":[]}'); }
+  catch(e) { return { hidden: [], values: {}, custom: [] }; }
+}
+function saveNotesData(data) { localStorage.setItem(NOTES_KEY, JSON.stringify(data)); }
+
+function makeDateItemEl(label, dateVal, noteVal, notePlaceholder, onDate, onNote, onDelete) {
+  const div = document.createElement('div');
+  div.className = 'key-date-item';
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'kd-label';
+  labelEl.textContent = label;
+
+  const inputs = document.createElement('div');
+  inputs.className = 'kd-inputs';
+
+  const dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.className = 'kd-date-input';
+  dateInput.value = dateVal || '';
+  dateInput.oninput = () => onDate(dateInput.value);
+
+  const noteInput = document.createElement('input');
+  noteInput.type = 'text';
+  noteInput.className = 'kd-inline-note';
+  noteInput.value = noteVal || '';
+  noteInput.placeholder = notePlaceholder || 'Optional note';
+  noteInput.maxLength = 120;
+  noteInput.oninput = () => onNote(noteInput.value);
+
+  inputs.appendChild(dateInput);
+  inputs.appendChild(noteInput);
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = onDelete;
+
+  div.appendChild(labelEl);
+  div.appendChild(inputs);
+  div.appendChild(del);
+  return div;
+}
+
+function renderBuiltinDate(entry, data) {
+  const val = data.values[entry.id] || {};
+  const el = makeDateItemEl(
+    entry.label, val.date, val.note, entry.notePlaceholder,
+    v => saveBuiltinDateValue(entry.id, 'date', v),
+    v => saveBuiltinDateValue(entry.id, 'note', v),
+    () => hideBuiltinDate(entry.id)
+  );
+  el.dataset.dateId = entry.id;
+  return el;
+}
+
+function renderCustomDate(item) {
+  const el = makeDateItemEl(
+    item.label, item.date, item.note, 'Optional note',
+    v => saveCustomDateValue(item.id, 'date', v),
+    v => saveCustomDateValue(item.id, 'note', v),
+    () => deleteCustomDate(item.id)
+  );
+  el.dataset.customDateId = item.id;
+  return el;
+}
+
+function renderBuiltinNote(entry, data) {
+  const val = data.values[entry.id] || '';
+  const div = document.createElement('div');
+  div.className = 'key-note-item';
+  div.dataset.noteId = entry.id;
+
+  const row = document.createElement('div');
+  row.className = 'kd-note-label-row';
+
+  const label = document.createElement('div');
+  label.className = 'kd-note-label';
+  label.textContent = entry.label;
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = () => hideBuiltinNote(entry.id);
+
+  row.appendChild(label);
+  row.appendChild(del);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'kd-textarea';
+  ta.rows = 3;
+  ta.placeholder = entry.placeholder;
+  ta.value = val;
+  ta.oninput = () => saveBuiltinNoteValue(entry.id, ta.value);
+
+  div.appendChild(row);
+  div.appendChild(ta);
+  return div;
+}
+
+function saveBuiltinDateValue(id, field, value) {
+  const data = getDatesData();
+  if (!data.values[id]) data.values[id] = {};
+  data.values[id][field] = value;
+  saveDatesData(data);
+}
+
+function saveCustomDateValue(id, field, value) {
+  const data = getDatesData();
+  const item = (data.custom || []).find(c => c.id === id);
+  if (item) { item[field] = value; saveDatesData(data); }
+}
+
+function saveBuiltinNoteValue(id, value) {
+  const data = getNotesData();
+  data.values[id] = value;
+  saveNotesData(data);
+}
+
+function hideBuiltinDate(id) {
+  const data = getDatesData();
+  if (!data.hidden.includes(id)) data.hidden.push(id);
+  saveDatesData(data);
+  document.querySelector(`.key-date-item[data-date-id="${id}"]`)?.remove();
+}
+
+function hideBuiltinNote(id) {
+  const data = getNotesData();
+  if (!data.hidden.includes(id)) data.hidden.push(id);
+  saveNotesData(data);
+  document.querySelector(`.key-note-item[data-note-id="${id}"]`)?.remove();
+}
+
+function renderCustomNote(item) {
+  const div = document.createElement('div');
+  div.className = 'key-note-item';
+  div.dataset.customNoteId = item.id;
+
+  const row = document.createElement('div');
+  row.className = 'kd-note-label-row';
+
+  const label = document.createElement('div');
+  label.className = 'kd-note-label';
+  label.textContent = item.label;
+
+  const del = document.createElement('button');
+  del.className = 'kd-delete-btn';
+  del.title = 'Remove';
+  del.textContent = '×';
+  del.onclick = () => deleteCustomNote(item.id);
+
+  row.appendChild(label);
+  row.appendChild(del);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'kd-textarea';
+  ta.rows = 3;
+  ta.placeholder = 'Your note…';
+  ta.value = item.value || '';
+  ta.oninput = () => saveCustomNoteValue(item.id, ta.value);
+
+  div.appendChild(row);
+  div.appendChild(ta);
+  return div;
+}
+
+function saveCustomNoteValue(id, value) {
+  const data = getNotesData();
+  const item = (data.custom || []).find(c => c.id === id);
+  if (item) { item.value = value; saveNotesData(data); }
+}
+
+function deleteCustomNote(id) {
+  const data = getNotesData();
+  data.custom = (data.custom || []).filter(c => c.id !== id);
+  saveNotesData(data);
+  document.querySelector(`.key-note-item[data-custom-note-id="${id}"]`)?.remove();
+}
+
+function addCustomNote() {
+  const labelInput = document.getElementById('kd-new-note-label');
+  const label = labelInput.value.trim();
+  if (!label) return;
+  const data = getNotesData();
+  data.custom = data.custom || [];
+  const item = { id: `custom-note-${Date.now()}`, label, value: '' };
+  data.custom.push(item);
+  saveNotesData(data);
+  document.getElementById('kd-notes-items').appendChild(renderCustomNote(item));
+  labelInput.value = '';
+}
+
+function deleteCustomDate(id) {
+  const data = getDatesData();
+  data.custom = (data.custom || []).filter(c => c.id !== id);
+  saveDatesData(data);
+  document.querySelector(`.key-date-item[data-custom-date-id="${id}"]`)?.remove();
+}
+
+function addCustomDate() {
+  const labelInput = document.getElementById('kd-new-label');
+  const dateInput  = document.getElementById('kd-new-date');
+  const noteInput  = document.getElementById('kd-new-note');
+  const label = labelInput.value.trim();
+  if (!label) return;
+  const data = getDatesData();
+  const item = { id: `custom-date-${Date.now()}`, label, date: dateInput.value, note: noteInput.value.trim() };
+  data.custom = data.custom || [];
+  data.custom.push(item);
+  saveDatesData(data);
+  document.getElementById('kd-timeline-items').appendChild(renderCustomDate(item));
+  labelInput.value = '';
+  dateInput.value  = '';
+  noteInput.value  = '';
+}
+
+function loadKeyDates() {
+  const datesData = getDatesData();
+  const notesData = getNotesData();
+  const timeline  = document.getElementById('kd-timeline-items');
+  const notes     = document.getElementById('kd-notes-items');
+
+  BUILTIN_DATES.forEach(entry => {
+    if (!datesData.hidden.includes(entry.id))
+      timeline.appendChild(renderBuiltinDate(entry, datesData));
+  });
+  (datesData.custom || []).forEach(item => timeline.appendChild(renderCustomDate(item)));
+
+  BUILTIN_NOTES.forEach(entry => {
+    if (!notesData.hidden.includes(entry.id))
+      notes.appendChild(renderBuiltinNote(entry, notesData));
+  });
+  (notesData.custom || []).forEach(item => notes.appendChild(renderCustomNote(item)));
+
+  updateKdCardSub();
+}
+
+function updateKdCardSub() {
+  const datesData = getDatesData();
+  const notesData = getNotesData();
+  const dateCount = Object.values(datesData.values || {}).filter(v => v && (v.date || v.note)).length
+    + (datesData.custom || []).filter(c => c.date || c.note).length;
+  const noteCount = Object.values(notesData.values || {}).filter(v => v && String(v).trim()).length
+    + (notesData.custom || []).filter(c => c.value && c.value.trim()).length;
+  const parts = [];
+  if (dateCount) parts.push(dateCount + (dateCount === 1 ? ' date' : ' dates'));
+  if (noteCount) parts.push(noteCount + (noteCount === 1 ? ' note' : ' notes'));
+  document.getElementById('kd-card-sub').textContent = parts.join(' · ');
+}
+
+function toggleKdCard() {
+  const card = document.getElementById('kd-card');
+  const isOpen = card.classList.toggle('open');
+  card.querySelector('.kd-card-header').setAttribute('aria-expanded', isOpen);
+  localStorage.setItem('atlas_records_kd_open', isOpen ? '1' : '0');
+  if (isOpen) updateKdCardSub();
+}
+
+/* ─── Toast ───────────────────────────────────────────────────────────────── */
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('records-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ─── Init ────────────────────────────────────────────────────────────────── */
+(function init() {
+  setPhase(getCurrentPhase());
+  setType('cost');
+  document.getElementById('f-date').value = todayStr();
+  render();
+  loadKeyDates();
+  document.querySelectorAll('#kd-card .cl-add-input').forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const row = input.closest('.kd-add-row');
+        if (row && row.querySelector('#kd-new-label')) addCustomDate();
+        else if (row && row.querySelector('#kd-new-note-label')) addCustomNote();
+      }
+    });
+  });
+  if (localStorage.getItem('atlas_records_kd_open') !== '0') {
+    document.getElementById('kd-card').classList.add('open');
+    document.querySelector('#kd-card .kd-card-header').setAttribute('aria-expanded', 'true');
+  }
+})();
+</script>
+
+<script src="/demo/assets/app/app.js"></script>
+<script src="/demo/demo-banner.js" defer></script>
+</body>
+</html>

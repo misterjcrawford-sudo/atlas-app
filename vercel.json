@@ -29,7 +29,17 @@
   "redirects": [
     {
       "source": "/buy",
-      "destination": "https://buy.stripe.com/bJebJ02BF5mB2ff8RF6EU00",
+      "destination": "https://buy.stripe.com/bJebJ02BF5mB2ff8RF6EU00?client_reference_id=site",
+      "permanent": false
+    },
+    {
+      "source": "/buy/demo",
+      "destination": "https://buy.stripe.com/bJebJ02BF5mB2ff8RF6EU00?client_reference_id=demo",
+      "permanent": false
+    },
+    {
+      "source": "/demo",
+      "destination": "/demo/",
       "permanent": false
     },
     {
