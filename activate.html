@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Unlock Atlas</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<!-- Public page: self-contained on purpose, so it exposes nothing behind the gate. -->
+<style>
+  :root {
+    --page: #f7f7f5; --tile: #ffffff; --line: #e7e7e4; --ink: #111111; --muted: #5f5f5b;
+    --cobalt: #2743ff; --cobalt-ink: #ffffff; --lime: #d4f062; --coral: #ff6a45; --lilac: #e9e3ff;
+    --radius: 24px;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { min-height: 100vh; background: var(--page); color: var(--ink); font-family: var(--sans);
+    display: flex; align-items: center; justify-content: center; padding: 24px 16px; -webkit-font-smoothing: antialiased; }
+  main { width: 100%; max-width: 440px; }
+  .brand { display: flex; align-items: center; gap: 10px; margin: 0 0 18px 4px; font-weight: 700; font-size: 20px; letter-spacing: -.01em; }
+  .brand svg { width: 32px; height: 32px; }
+  .tile { background: var(--tile); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px 28px; box-shadow: 0 8px 40px rgba(17,17,17,.05); }
+  .tile + .tile { margin-top: 12px; }
+  h1 { font-size: 30px; line-height: 1.1; letter-spacing: -.02em; margin: 0 0 10px; }
+  p { font-size: 15.5px; line-height: 1.55; color: var(--muted); margin: 0 0 16px; }
+  p.small { font-size: 13.5px; margin: 14px 0 0; }
+  a { color: var(--cobalt); }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 0 0 6px; }
+  input { width: 100%; font: 500 16px/1.2 var(--mono); letter-spacing: .04em; text-transform: uppercase; padding: 14px 16px;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--page); color: var(--ink); }
+  input:focus { outline: 2px solid var(--cobalt); outline-offset: 1px; background: #fff; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 12px;
+    font: 600 16px/1 var(--sans); padding: 15px 20px; border-radius: 999px; border: 1px solid transparent; cursor: pointer; text-decoration: none; }
+  .btn-primary { background: var(--cobalt); color: var(--cobalt-ink); }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-quiet { background: var(--tile); color: var(--ink); border-color: var(--line); }
+  .btn-quiet:hover { background: var(--page); }
+  .btn[disabled] { opacity: .6; cursor: default; }
+  .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .row .btn { font-size: 14px; padding: 12px 8px; margin-top: 8px; }
+  .key { font: 600 17px/1.4 var(--mono); letter-spacing: .02em; word-break: break-all; text-align: center;
+    background: var(--lime); border-radius: 16px; padding: 18px 14px; margin: 4px 0 8px; user-select: all; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .02em; padding: 4px 10px; border-radius: 999px; background: var(--lilac); margin-bottom: 14px; }
+  .error { color: #b3261e; font-size: 14px; margin: 10px 0 0; }
+  .note { background: var(--page); border-radius: 14px; padding: 12px 14px; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  [hidden] { display: none !important; }
+  @media (max-width: 380px) { .row { grid-template-columns: 1fr; } .tile { padding: 26px 20px; } h1 { font-size: 26px; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" aria-label="Atlas">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#2743ff"/>
+      <path d="M10.5 50 L24.5 14 H31.5 L45.5 50 H37.4 L34.6 42.2 H21.4 L18.6 50 Z M23.8 35.4 H32.2 L28 23.6 Z" fill="#fff"/>
+      <rect x="47" y="41" width="9" height="9" fill="#d4f062"/>
+    </svg>
+    Atlas
+  </div>
+
+  <!-- State: just paid -->
+  <section id="s-paid" hidden>
+    <div class="tile">
+      <span class="tag">Payment complete</span>
+      <h1>You’re in.</h1>
+      <p>This is your Atlas key. It’s how you open Atlas on another phone or computer. Atlas doesn’t know who you are, so keep it somewhere safe.</p>
+      <div class="key" id="paid-key"></div>
+      <div class="row">
+        <button class="btn btn-quiet" type="button" id="copy-key">Copy</button>
+        <a class="btn btn-quiet" id="email-key" href="#">Email it</a>
+        <button class="btn btn-quiet" type="button" id="download-key">Download</button>
+      </div>
+      <a class="btn btn-primary" id="open-atlas" href="./index.html">Open Atlas →</a>
+      <p class="small">It’s saved on this device too, and in every Atlas backup you make.</p>
+    </div>
+  </section>
+
+  <!-- State: confirm lock (from the Lock app link) -->
+  <section id="s-lock" hidden>
+    <div class="tile">
+      <h1>Lock Atlas on this device?</h1>
+      <p>Anyone using this browser will need your Atlas key to get back in. Your information stays on this device.</p>
+      <div id="lock-key-wrap" hidden>
+        <p style="margin-bottom:8px">Make sure you have your key first:</p>
+        <div class="key" id="lock-key"></div>
+      </div>
+      <button class="btn btn-primary" type="button" id="lock-now">Lock now</button>
+      <a class="btn btn-quiet" href="./index.html">Cancel</a>
+    </div>
+  </section>
+
+  <!-- State: unlock (default) -->
+  <section id="s-unlock" hidden>
+    <div class="tile">
+      <div id="msg-locked" hidden><span class="tag">Locked</span></div>
+      <div id="msg-payment" class="note" hidden style="margin-bottom:16px">That payment didn’t go through, so you haven’t been charged. <a href="/buy">Try again →</a></div>
+      <h1>Unlock Atlas</h1>
+      <p>Bought Atlas already? Paste your key. It’s in the note you saved, or in any Atlas backup file.</p>
+      <form id="unlock-form" autocomplete="off" novalidate>
+        <label for="key-input">Your Atlas key</label>
+        <input id="key-input" name="key" placeholder="ATLAS-XXXX-XXXX-…" spellcheck="false" autocapitalize="characters" inputmode="text">
+        <button class="btn btn-primary" type="submit" id="unlock-btn">Unlock</button>
+        <p class="error" id="unlock-error" role="alert" hidden>That key doesn’t match. Check for typos, or reply to your Stripe receipt and we’ll sort it.</p>
+      </form>
+    </div>
+    <div class="tile">
+      <p style="margin:0 0 4px"><strong style="color:var(--ink)">New here?</strong> Atlas is a private toolkit for life after separation. One payment, no subscription, no account. 30-day refund if it isn’t useful.</p>
+      <a class="btn btn-quiet" href="/buy">Get Atlas — $79</a>
+      <p class="small"><a href="./how-it-works.html">How it works</a> · <a href="./terms.html">Privacy &amp; terms</a> · <a href="mailto:hello@get-atlas.com.au">hello@get-atlas.com.au</a></p>
+    </div>
+  </section>
+
+  <!-- State: quietly re-unlocking with a saved key -->
+  <section id="s-opening" hidden>
+    <div class="tile"><h1>Opening Atlas…</h1><p style="margin:0">One moment.</p></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var STORE = 'atlas_access_key';
+  var params = new URLSearchParams(location.search);
+  var $ = function (id) { return document.getElementById(id); };
+
+  function getSaved() { try { return localStorage.getItem(STORE); } catch (_) { return null; } }
+  function save(key) { try { localStorage.setItem(STORE, key); } catch (_) {} }
+  function forget() { try { localStorage.removeItem(STORE); } catch (_) {} }
+
+  // Only send people back to an Atlas page on this site.
+  function destination() {
+    var next = params.get('next') || '';
+    return /^\/[a-z0-9-]+\.html(\?[^#]*)?$/i.test(next) ? next : '/index.html';
+  }
+
+  function show(id) {
+    ['s-paid', 's-lock', 's-unlock', 's-opening'].forEach(function (s) { $(s).hidden = s !== id; });
+  }
+
+  function unlock(key) {
+    return fetch('/api/activate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ key: key })
+    }).then(function (r) { return r.status; }).catch(function () { return 0; });
+  }
+
+  // 1. Just paid: the key arrives in the URL fragment.
+  var m = /^#key=(ATLAS-[0-9A-F-]+)$/i.exec(location.hash);
+  if (m) {
+    var key = m[1].toUpperCase();
+    save(key);
+    history.replaceState(null, '', location.pathname);
+    $('paid-key').textContent = key;
+    var text = 'My Atlas key: ' + key + '\n\nUnlock Atlas on any device at https://app.get-atlas.com.au/activate.html\n';
+    $('email-key').href = 'mailto:?subject=' + encodeURIComponent('My Atlas key') + '&body=' + encodeURIComponent(text);
+    $('copy-key').addEventListener('click', function () {
+      var b = this;
+      (navigator.clipboard ? navigator.clipboard.writeText(key) : Promise.reject()).then(function () {
+        b.textContent = 'Copied';
+      }, function () {
+        var range = document.createRange(); range.selectNodeContents($('paid-key'));
+        var sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        b.textContent = 'Selected';
+      });
+      setTimeout(function () { b.textContent = 'Copy'; }, 2500);
+    });
+    $('download-key').addEventListener('click', function () {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      a.download = 'atlas-key.txt';
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+    show('s-paid');
+    return;
+  }
+
+  // 2. Confirm lock.
+  if (params.has('lock')) {
+    var saved = getSaved();
+    if (saved) { $('lock-key').textContent = saved; $('lock-key-wrap').hidden = false; }
+    $('lock-now').addEventListener('click', function () {
+      forget();
+      location.href = '/api/signout';
+    });
+    show('s-lock');
+    return;
+  }
+
+  // 3. Unlock form.
+  $('msg-locked').hidden = !params.has('locked');
+  $('msg-payment').hidden = params.get('error') !== 'payment';
+  $('unlock-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var key = $('key-input').value.trim();
+    var btn = $('unlock-btn');
+    $('unlock-error').hidden = true;
+    if (!key) { $('key-input').focus(); return; }
+    btn.disabled = true; btn.textContent = 'Checking…';
+    unlock(key).then(function (status) {
+      if (status === 200) { save(key.toUpperCase()); location.replace(destination()); return; }
+      btn.disabled = false; btn.textContent = 'Unlock';
+      $('unlock-error').textContent = status === 401
+        ? 'That key doesn’t match. Check for typos, or reply to your Stripe receipt and we’ll sort it.'
+        : 'Couldn’t reach Atlas just now. Check your connection and try again.';
+      $('unlock-error').hidden = false;
+    });
+  });
+
+  // 4. Same device, access expired: re-unlock quietly with the saved key.
+  var savedKey = getSaved();
+  if (savedKey && !params.has('locked') && !params.has('error')) {
+    show('s-opening');
+    unlock(savedKey).then(function (status) {
+      if (status === 200) { location.replace(destination()); return; }
+      if (status === 401) forget();          // key no longer valid; offline keeps it for next time
+      show('s-unlock');
+    });
+    return;
+  }
+
+  show('s-unlock');
+})();
+</script>
+</body>
+</html>

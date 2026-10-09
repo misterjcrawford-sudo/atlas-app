@@ -1,6 +1,6 @@
 # Atlas app
 
-The Atlas web app for separated Australian parents (app.get-atlas.com.au). Plain HTML, CSS and JavaScript: no build step, no server code, no analytics.
+The Atlas web app for separated Australian parents (app.get-atlas.com.au). Plain HTML, CSS and JavaScript: no build step, no analytics. The only server code is the paywall (`middleware.js`, `api/`).
 
 Everything a person enters stays in their own browser (localStorage). Nothing is sent anywhere.
 
@@ -11,9 +11,17 @@ Everything a person enters stays in their own browser (localStorage). Nothing is
 
 Every page is `noindex` (meta tag, `X-Robots-Tag` header and `robots.txt`). The marketing site and blog live on Ghost at www.get-atlas.com.au and are unaffected.
 
-## Access
+## Access (paywall)
 
-`auth.js` shows a password screen before any page. It is a soft gate for the beta, not security: the password is in the source.
+Paid access, no accounts and no database. Plan: `05 Strategy & plans/atlas-paywall-build-plan-v2.md`.
+
+- `middleware.js` runs before every request. No valid `atlas_access` cookie means a redirect to `/activate.html`. Public: activate, terms, how-it-works, for-professionals, the User guide PDF (short link `/user-guide`) and the shell CSS/JS they need.
+- `/buy` (in `vercel.json`) redirects to the Stripe Payment Link. Change the link there only.
+- `api/activate.js` checks a Stripe Checkout Session is paid in AUD, sets a signed 12-month cookie and shows the buyer their Atlas key. POSTing a key re-issues the cookie.
+- `api/signout.js` clears the cookie (Lock app).
+- `lib/tokens.js` signs keys and cookies with `SESSION_SECRET` (HMAC). Changing the secret invalidates every key ever issued.
+- `scripts/make-key.mjs` mints keys locally: `SESSION_SECRET=… node scripts/make-key.mjs [cs_live_… | --count 10]`.
+- Env vars (Vercel): `SESSION_SECRET`, `STRIPE_SECRET_KEY`.
 
 ## Structure
 

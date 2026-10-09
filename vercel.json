@@ -25,5 +25,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/buy",
+      "destination": "https://buy.stripe.com/bJebJ02BF5mB2ff8RF6EU00",
+      "permanent": false
+    },
+    {
+      "source": "/user-guide",
+      "destination": "/assets/Atlas%20-%20User%20guide.pdf",
+      "permanent": false
+    }
   ]
 }
