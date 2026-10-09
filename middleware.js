@@ -25,7 +25,7 @@ export default async function middleware(request) {
 
   const cookie = /(?:^|;\s*)atlas_access=([^;]+)/.exec(request.headers.get('cookie') || '')?.[1];
   try {
-    if (cookie && await verifyCookie(cookie, process.env.SESSION_SECRET)) return next();
+    if (cookie && await verifyCookie(cookie, (process.env.SESSION_SECRET || '').trim())) return next();
   } catch (_) { /* missing secret: fail closed */ }
 
   const gate = new URL('/activate.html', url);
