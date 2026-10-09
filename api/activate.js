@@ -5,7 +5,9 @@ import { keyFromSession, verifyKey, makeCookie } from '../lib/tokens.js';
 const cookie = v => `atlas_access=${v}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`;
 
 export default async function handler(req, res) {
-  const secret = process.env.SESSION_SECRET;
+  // .trim() guards against a stray space or line break pasted into the Vercel env var.
+  const secret = (process.env.SESSION_SECRET || '').trim();
+  const stripeKey = (process.env.STRIPE_SECRET_KEY || '').trim();
   res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'GET' && req.query?.session_id) {
@@ -14,14 +16,19 @@ export default async function handler(req, res) {
     let ok = false;
     try {
       const r = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(id)}`, {
-        headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+        headers: { Authorization: `Bearer ${stripeKey}` },
       });
       s = await r.json();
       ok = r.ok;
-    } catch (_) { ok = false; }
+    } catch (e) { ok = false; console.error('activate: Stripe request failed:', e.message); }
 
     // Any paid AUD session in this Stripe account is a buyer (promo codes allowed, so no amount check).
     if (!ok || s.payment_status !== 'paid' || s.currency !== 'aud') {
+      // Diagnostic only: Stripe's own error text (it masks keys) or the session status. No personal data.
+      console.error('activate: not verified', JSON.stringify({
+        httpOk: ok, stripeError: s?.error?.message, status: s?.payment_status, currency: s?.currency,
+        keyType: stripeKey.slice(0, 8),
+      }));
       return res.redirect(302, '/activate.html?error=payment');
     }
     res.setHeader('Set-Cookie', cookie(await makeCookie(secret)));
