@@ -22,6 +22,7 @@ Paid access, no accounts and no database. Plan: `05 Strategy & plans/atlas-paywa
 - `lib/tokens.js` signs keys and cookies with `SESSION_SECRET` (HMAC). Changing the secret invalidates every key ever issued.
 - `scripts/make-key.mjs` mints keys locally: `SESSION_SECRET=… node scripts/make-key.mjs [cs_live_… | --count 10]`.
 - Env vars (Vercel): `SESSION_SECRET`, `STRIPE_SECRET_KEY`.
+- `/demo/` is public: a generated, fictional-data copy of five app pages (Today, Week, Money, Records, 3 sample Scripts). It is built by `../demo-build` (`node scripts/build-demo.mjs`, then copy `out/demo` over `demo/`). Never edit `demo/` by hand; rebuild after changing any app page. `/buy/demo` and `/buy` redirect to the Stripe Payment Link with `client_reference_id=demo` / `site` so Stripe shows which door a sale came through (no analytics).
 
 ## Structure
 

@@ -1,0 +1,298 @@
+/* Today · Bento
+   Each area of life owns a colour: the week is cobalt, money is lime, costs are lilac,
+   what needs you is peach and anything urgent is coral. Big numbers, short words, soft corners.
+   Signature: the countdown tile, as big as the headline. */
+:root {
+  --bg: #f2f2f0;
+  --tile: #ffffff;
+  --ink: #111111;
+  --mute: #62626a;
+  --line: #e5e5e2;
+  --cobalt: #2743ff;
+  --cobalt-2: #dfe4ff;
+  --cobalt-ink: #1a2ccc;
+  --lime: #d4f062;
+  --coral: #ff6a45;
+  --peach: #ffe1d6;
+  --lilac: #cdbdff;
+  --bill: #b43a0c;
+  --r: 28px;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: var(--sans);
+  --font-display: var(--sans);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 var(--sans); -webkit-font-smoothing: antialiased; font-feature-settings: "tnum" 1; }
+a { color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; }
+.skip { position: absolute; left: 16px; top: -60px; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 12px; z-index: 40; }
+.skip:focus { top: 12px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px 48px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--mute); }
+.small { font-size: 13px; color: var(--mute); }
+
+/* Header: a floating capsule */
+.top { position: sticky; top: 12px; z-index: 20; display: flex; align-items: center; gap: 16px; margin: 16px 0 20px; padding: 8px 8px 8px 20px; background: #ffffffd9; backdrop-filter: saturate(1.8) blur(20px); -webkit-backdrop-filter: saturate(1.8) blur(20px); border-radius: 999px; box-shadow: 0 1px 0 #0000000d, 0 8px 24px #0000000d; }
+.brand { font-weight: 700; font-size: 19px; letter-spacing: -.03em; text-decoration: none; }
+.brand b { color: var(--cobalt); }
+.at-links { flex: 1; display: flex; justify-content: center; gap: 4px; }
+.at-links a { padding: 10px 14px; border-radius: 999px; text-decoration: none; font-size: 14px; color: var(--mute); font-weight: 500; }
+.at-links a:hover { color: var(--ink); }
+.at-links a[aria-current=page] { background: var(--ink); color: #fff; }
+.at-tools { position: relative; }
+.at-tools summary { list-style: none; cursor: pointer; padding: 10px 16px; border-radius: 999px; background: var(--bg); font-size: 14px; font-weight: 500; }
+.at-tools summary::-webkit-details-marker { display: none; }
+.at-tools-menu { position: absolute; right: 0; top: 50px; width: 240px; padding: 8px; background: #fff; border-radius: 20px; box-shadow: 0 20px 50px #00000026; }
+.at-tools-menu a { display: block; padding: 11px 12px; border-radius: 12px; text-decoration: none; }
+.at-tools-menu a:hover { background: var(--bg); }
+
+/* The grid */
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; }
+.tile { background: var(--tile); border-radius: var(--r); padding: 26px; min-width: 0; position: relative; overflow: hidden; }
+.s12 { grid-column: span 12; } .s8 { grid-column: span 8; } .s7 { grid-column: span 7; } .s6 { grid-column: span 6; }
+.s5 { grid-column: span 5; } .s4 { grid-column: span 4; } .s3 { grid-column: span 3; }
+.tile-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.tile-head h2 { font-size: 20px; font-weight: 700; letter-spacing: -.02em; margin: 0; }
+.tile-head a, .tile-head span { font-size: 13px; color: var(--mute); text-decoration: none; font-weight: 500; }
+.tile-head a { padding: 8px 0; margin: -8px 0; }
+.tile-head a:hover { color: var(--ink); }
+
+/* Status */
+.status { display: flex; flex-direction: column; justify-content: space-between; min-height: 330px; }
+.status h1 { font-size: clamp(44px, 6.2vw, 88px); line-height: .95; font-weight: 700; letter-spacing: -.05em; margin: 14px 0 16px; }
+.status p { margin: 0; font-size: 19px; color: var(--mute); max-width: 560px; letter-spacing: -.01em; }
+/* Phase: one capsule, same as the chip on every other page */
+.phase { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; justify-self: start; align-self: start; width: max-content; max-width: 100%; padding: 10px 16px; background: var(--bg); border-radius: 999px; font-size: 13px; color: var(--mute); font-weight: 500; cursor: pointer; }
+.phase select { appearance: none; -webkit-appearance: none; border: 0; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23111' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 2px center; padding: 2px 18px 2px 0; font-weight: 600; font-size: 14px; color: var(--ink); cursor: pointer; }
+.phase select:focus-visible { outline: none; }
+.phase:focus-within { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+
+/* Countdown: how long until the next handover, the checklist that gets you ready, and the fortnight at a glance.
+   Mid-stretch with the kids it becomes "day 3 of 7 together". */
+.count { background: var(--cobalt); color: #fff; display: flex; flex-direction: column; gap: 16px; min-height: 330px; }
+.count .eyebrow { color: #e3e7ff; }
+.count-head { display: flex; align-items: flex-end; gap: 14px; }
+.count-number { font-size: 104px; line-height: .8; font-weight: 700; letter-spacing: -.07em; }
+.count-number.is-word { font-size: 64px; letter-spacing: -.05em; line-height: .9; }
+.count-caption { font-size: 20px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; padding-bottom: 2px; }
+.count-fill { flex: 1; }
+.count a { color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; }
+.count a:hover { text-decoration: underline; }
+.count-note { font-size: 14px; color: #e3e7ff; margin: 0; }
+.count-empty { background: #ffffff1f; border-radius: 16px; padding: 12px 14px; font-size: 14px; display: grid; gap: 10px; justify-items: start; }
+.count-empty .btn { background: #fff; color: var(--ink); min-height: 40px; padding: 9px 16px; }
+.prep-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.prep-bar, .stretch-bar { height: 8px; border-radius: 4px; background: #ffffff33; overflow: hidden; }
+.prep-bar i { display: block; height: 100%; background: var(--lime); border-radius: 4px; transition: width .3s ease; }
+.prep-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.prep-list label { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; background: #ffffff1f; border-radius: 14px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.prep-list label:hover { background: #ffffff2b; }
+.prep-list input { appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border-radius: 7px; border: 2px solid #fff; display: grid; place-items: center; cursor: pointer; }
+.prep-list input:checked { background: var(--lime); border-color: var(--lime); }
+.prep-list input:checked::after { content: ""; width: 10px; height: 6px; border: solid var(--ink); border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg) translate(1px, -1px); }
+.prep-list input:checked + span { text-decoration: line-through; opacity: .8; }
+.prep-list input:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+.prep-done { background: #ffffff1f; border-radius: 14px; padding: 12px 14px; font-size: 14px; font-weight: 600; }
+.stretch { display: grid; gap: 6px; }
+.stretch-bar { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; background: none; height: 10px; }
+.stretch-bar i { border-radius: 5px; background: #ffffff33; }
+.stretch-bar i.done { background: #fff; }
+.stretch-bar i.now { background: var(--lime); }
+.strip { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 3px; }
+.strip span { display: grid; justify-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: #c9d0ff; }
+.strip i { width: 100%; height: 10px; border-radius: 5px; background: #ffffff33; }
+.strip .k i { background: #fff; }
+/* Handover: a lime dot under the day (the same dot Week's fortnight uses). Every day keeps the dot row so bars line up. */
+.strip em { width: 7px; height: 7px; border-radius: 50%; }
+.strip .h em { background: var(--lime); }
+/* Today: white letter and a white ring, so lime only ever means handover */
+.strip .t { color: #fff; }
+.strip .t i { outline: 2px solid #fff; outline-offset: 2px; }
+.strip .w { margin-left: 5px; }
+.strip-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 8px; font-size: 12px; color: #e3e7ff; }
+.strip-foot span { display: inline-flex; align-items: center; gap: 6px; }
+.strip-foot b { width: 16px; height: 8px; border-radius: 4px; background: #fff; }
+.strip-foot b.solo { background: #ffffff33; }
+.strip-foot b.hand { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); }
+.strip-foot a { margin-left: auto; padding: 8px 0; margin-top: -8px; margin-bottom: -8px; }
+
+/* Needs you */
+/* Needs you: peach, a soft tint of the urgent coral. Rows are white, the urgent row is coral,
+   type is black and every action is a black button. */
+.needs { background: var(--peach); color: var(--ink); }
+.needs .tile-head span { color: var(--mute); }
+.at-needs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.at-need { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; background: var(--tile); border-radius: 18px; padding: 16px 18px; }
+.at-need.is-urgent { background: var(--coral); color: var(--ink); }
+.at-need.is-calm { background: #ffffffb3; }
+.at-need strong { display: block; font-size: 18px; font-weight: 700; letter-spacing: -.02em; }
+.at-need span { display: block; font-size: 13px; color: #3a3a40; margin-top: 2px; }
+.at-need.is-urgent span { color: #2a0f06; }
+.at-need-action { border: 0; border-radius: 999px; background: var(--ink); color: #fff; padding: 11px 16px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+
+/* Log something */
+.log-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.log-grid button { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 18px; min-height: 104px; border: 0; border-radius: 20px; background: var(--bg); padding: 14px; font-weight: 600; font-size: 14px; text-align: left; }
+.log-grid button svg { width: 26px; height: 26px; }
+.log-grid button:hover { background: var(--line); }
+.log-grid button[aria-pressed=true] { background: var(--ink); color: #fff; }
+.at-capture-form { margin-top: 12px; display: grid; gap: 10px; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.field { display: grid; gap: 4px; font-size: 12px; font-weight: 600; color: var(--mute); }
+.field.wide { grid-column: 1 / -1; }
+.input { width: 100%; border: 0; background: var(--bg); border-radius: 14px; padding: 12px 13px; font-size: 16px; color: var(--ink); font-weight: 400; min-height: 44px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.btn { border: 0; border-radius: 999px; background: var(--ink); color: #fff; padding: 12px 18px; font-weight: 600; font-size: 14px; min-height: 44px; }
+.btn.blue { background: var(--cobalt); }
+.link { border: 0; background: none; padding: 8px 0; color: var(--cobalt-ink); font-weight: 500; font-size: 14px; }
+
+/* Next 7 days */
+.at-day-strip { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.at-day { border-radius: 20px; padding: 14px; background: var(--bg); min-height: 138px; display: flex; flex-direction: column; gap: 8px; }
+.at-day.is-kids { background: var(--cobalt-2); }
+.at-day.is-today { background: var(--ink); color: #fff; }
+.at-day.is-today.is-kids { background: var(--cobalt); }
+.at-day-head { display: flex; justify-content: space-between; align-items: baseline; }
+.at-day-name { font-size: 12px; font-weight: 600; color: var(--mute); }
+.at-day.is-today .at-day-name { color: #ffffffcc; }
+.at-day-number { font-size: 28px; font-weight: 700; letter-spacing: -.04em; }
+.at-day-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 12px; line-height: 1.3; }
+.at-day-handover { justify-self: start; background: var(--lime); color: var(--ink); border-radius: 999px; padding: 2px 8px; font-weight: 700; font-size: 11px; }
+.at-day-date { font-weight: 700; }
+.at-day-bill { color: var(--bill); font-weight: 600; }
+.at-day.is-today .at-day-bill { color: #ffc2ad; }
+.at-day-empty, .at-day-more { color: var(--mute); }
+.at-day.is-today .at-day-empty, .at-day.is-today .at-day-more { color: #ffffffb3; }
+.at-days-legend { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; font-size: 12px; color: var(--mute); }
+.at-legend-swatch { width: 14px; height: 14px; border-radius: 4px; background: var(--cobalt-2); }
+
+/* Numbers */
+.num-tile { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 200px; text-decoration: none; }
+.num-tile.lime { background: var(--lime); }
+.num-tile.lilac { background: var(--lilac); }
+.num-tile .eyebrow { color: var(--ink); }
+.at-number { font-size: clamp(42px, 5vw, 64px); font-weight: 700; letter-spacing: -.055em; line-height: 1; }
+.num-tile.is-empty .at-number { font-size: 28px; letter-spacing: -.03em; line-height: 1.1; }
+.at-negative { color: #a11212; }
+.num-tile .small { color: #1d1d1f; }
+/* Money and Records tiles: the whole tile is the link; the top-right label says where it goes, like "Open Week →" */
+.num-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.num-tile .go { flex: none; font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.num-tile:hover .go, .num-tile:focus-visible .go { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Scripts, list, support, backup */
+.at-script-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.at-script-list a { display: grid; gap: 2px; padding: 12px 14px; border-radius: 16px; background: var(--bg); text-decoration: none; }
+.at-script-list span { font-weight: 600; letter-spacing: -.01em; }
+.at-script-list small { font-size: 12px; color: var(--mute); }
+.at-script-list a:hover { background: var(--cobalt-2); }
+.at-tasks { list-style: none; margin: 0; padding: 0; }
+.at-task { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.at-task label { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; min-height: 28px; }
+.at-task input { accent-color: var(--cobalt); width: 20px; height: 20px; flex: none; }
+.at-task:has(input:checked) .at-task-name { color: var(--mute); text-decoration: line-through; }
+.at-icon-button { border: 0; background: none; color: var(--mute); font-size: 20px; width: 36px; height: 36px; border-radius: 50%; flex: none; }
+.at-icon-button:hover { background: var(--bg); color: var(--ink); }
+.add { display: flex; gap: 8px; margin-top: 12px; }
+.add .input { flex: 1; }
+.add .btn { width: 44px; padding: 0; font-size: 20px; }
+.support ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.support a { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 44px; padding: 10px 14px; border-radius: 14px; background: var(--bg); text-decoration: none; font-weight: 600; }
+.support a span { color: var(--cobalt-ink); }
+.support a b { font-weight: 600; }
+.support a small { display: block; margin-top: 1px; font-size: 12px; font-weight: 400; color: var(--mute); }
+.support a span { flex: none; white-space: nowrap; }
+.backup strong { display: block; font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin: 6px 0; }
+.backup .btn { margin-top: 14px; }
+
+/* First run */
+.welcome { background: var(--ink); color: #fff; }
+.welcome h2 { font-size: 34px; letter-spacing: -.04em; margin: 6px 0 8px; }
+.welcome p { color: #e8e8ea; max-width: 620px; }
+.welcome .eyebrow { color: var(--lime); }
+.welcome a.btn { background: #fff; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; margin: 0 8px 8px 0; }
+.welcome .small, .welcome .small a { color: #d6d6da; }
+.welcome .at-icon-button { position: absolute; top: 16px; right: 16px; color: #fff; }
+.welcome .at-icon-button:hover { background: #ffffff1f; }
+
+.notice { background: #fff4da; border-radius: 16px; padding: 12px 16px; margin-bottom: 14px; }
+.at-toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 999px; font-size: 14px; font-weight: 500; z-index: 30; max-width: calc(100vw - 32px); }
+footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 24px 4px 0; font-size: 13px; color: var(--mute); }
+.at-footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+.at-footer-links a { text-decoration: none; padding: 4px 0; }
+
+/* Tablet */
+@media (max-width: 1000px) {
+  .s8, .s7, .s6, .s5 { grid-column: span 12; }
+  .s4, .s3 { grid-column: span 6; }
+  .status { min-height: 0; }
+}
+
+/* Phone: one column, in the order of the page. The countdown becomes a band. */
+@media (max-width: 720px) {
+  .wrap { padding: 0 12px 40px; }
+  .top { flex-wrap: wrap; border-radius: 24px; padding: 10px 12px; position: relative; top: 0; margin: 12px 0 10px; gap: 8px 12px; }
+  .brand { margin-right: auto; }
+  .at-links { order: 3; flex-basis: 100%; justify-content: space-between; overflow-x: auto; }
+  .at-links a { padding: 9px 11px; font-size: 13px; }
+  .bento { gap: 10px; }
+  .s4, .s3 { grid-column: span 12; }
+  .tile { padding: 20px; border-radius: 24px; }
+  .status h1 { margin: 10px 0 10px; }
+  .status p { font-size: 17px; }
+  .phase { margin-top: 16px; }
+  .count { min-height: 0; gap: 12px; }
+  .count-number { font-size: 72px; }
+  .count-number.is-word { font-size: 48px; }
+  .count-caption { font-size: 18px; }
+  .at-need { grid-template-columns: 1fr; gap: 10px; }
+  .at-need-action { justify-self: start; }
+  .log-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .log-grid button { min-height: 76px; padding: 10px; gap: 8px; font-size: 13px; border-radius: 16px; }
+  .log-grid button svg { width: 22px; height: 22px; }
+  .fields { grid-template-columns: 1fr; }
+  .at-day-strip { grid-template-columns: 1fr; gap: 6px; }
+  .at-day { flex-direction: row; min-height: 0; align-items: baseline; padding: 11px 14px; border-radius: 14px; }
+  .at-day-head { flex: 0 0 70px; justify-content: flex-start; gap: 8px; }
+  .at-day-number { font-size: 20px; }
+  .num-tile { min-height: 150px; }
+}
+@media (max-width: 360px) {
+  .log-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media print {
+  .top, .log-grid, .at-capture-form, .add, .backup, .skip, .at-need-action { display: none !important; }
+  body { background: #fff; }
+  .tile { border: 1px solid #ccc; break-inside: avoid; }
+}
+
+/* Desktop: the log buttons fill their tile as a 2 × 2 block beside Needs you. */
+@media (min-width: 1001px) {
+  .log-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .log-grid button { min-height: 128px; font-size: 16px; }
+}
+/* Six nav items on phones: tighter pills, no scrolling at 360px and up */
+@media (max-width: 720px) { .at-links { gap: 2px; justify-content: space-between; flex-wrap: nowrap; overflow: visible; } .at-links a { padding: 9px 12px; font-size: 14px; line-height: 1.2; white-space: nowrap; } }
+@media (max-width: 380px) { .at-links a { padding: 8px 9px; font-size: 13px; } }
+
+/* ---------- Wordmark full stop (brand rule, 7 Oct 2026) ----------
+   The full stop in "Atlas." is a SQUARE, matching Geist (social, PDFs, pitch) and the app icon.
+   It's drawn here rather than left to the font, because system fonts disagree
+   (SF Pro = round on Apple, Arial = square on Windows). The "." stays in the markup for
+   copy/paste and screen readers; it is hidden inside the box.
+   Cobalt on light, lime on cobalt: set --stop on the parent to change it. */
+.at-brand b, .brand b, .print-logo span, .print-logo-accent, .cover-logo-accent,
+.print-header-logo-accent, .atlas-stop {
+  display: inline-block; width: .18em; height: .18em; margin-left: .06em;
+  background: var(--stop, var(--cobalt, #2743ff));
+  color: transparent !important; overflow: hidden; vertical-align: baseline;
+  line-height: 1; font-style: normal; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+/* The app header link is a flex row; align the square to the text baseline, not the middle */
+.at-brand { align-items: baseline; }

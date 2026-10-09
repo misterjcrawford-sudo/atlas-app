@@ -1,0 +1,3924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<script src="/demo/demo-shim.js"></script>
+<script src="/demo/demo-seed.js"></script>
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow">
+<title>Demo · Week · Atlas</title>
+<style>
+  :root {
+    --paper: #FFFFFF;
+    --paper-card: #f7f7f5;
+    --paper-warm: #f2f2f0;
+    --paper-edge: #e7e7e4;
+    --ink: #111111;
+    --ink-soft: #2A2A2A;
+    --ink-muted: #62626a;
+    --ink-faded: #9a9aa0;
+    --green: #111111;
+    --green-deep: #1a2ccc;
+    --amber: #d4f062;
+    --amber-deep: #b9d63a;
+    --honey: #eef8c6;
+    --sage: #eef8c6;
+    --coral: #e0532f;
+    --black: #111111;
+    --red: #C44A3A;
+    --shadow-card: 0 12px 40px rgba(17,17,17,0.08);
+    --shadow-soft: 0 2px 8px rgba(17,17,17,0.05);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 40px;
+
+    /* Aliases used by inline JS to keep behavior identical */
+    --kids-color: var(--amber-deep);
+    --accent: var(--green);
+    --accent-soft: var(--sage);
+    --gold: var(--honey);
+    --purple: var(--amber-deep);
+    --child1-color: #5C7AA6;
+    --child2-color: var(--coral);
+    --ink-mid: var(--ink-soft);
+    --navy: var(--ink);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  em { font-style: normal; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 760px) {
+
+    .page-wrap { padding: 0 16px; }
+  }
+
+  /* PAGE LAYOUT */
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { padding: 64px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 500px; gap: 44px; align-items: start; }
+  
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.8rem, 6.4vw, 5.4rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .soft {
+    color: var(--ink);
+    font-weight: 500;
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .hero h1 .bold { color: var(--ink); font-weight: 500; }
+
+  .phase-pill {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper-card);
+    transition: all 0.18s ease;
+    letter-spacing: -0.005em;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="waiting-room"].active { background: #EDE6F5; border-color: #D4C4E8; color: #2A1A40; }
+  .phase-pill[data-phase="survive"].active      { background: var(--coral);  border-color: var(--coral);  color: var(--paper); }
+  .phase-pill[data-phase="stabilise"].active    { background: var(--honey);  border-color: var(--honey);  color: var(--ink);   }
+  .phase-pill[data-phase="rebuild"].active      { background: #8BBAD8; border-color: #6A9ABE; color: #1A3048; }
+  .phase-pill[data-phase="new-chapter"].active  { background: var(--sage);   border-color: var(--sage);   color: var(--ink);   }
+  .phase-context {
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 580px;
+    font-style: normal;
+    font-family: var(--font-display);
+    font-weight: 700; letter-spacing: -.025em}
+
+  /* KIDS CHIPS */
+  .kids-chips-wrap { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .kids-chips-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .kids-empty { font-size: 13px; color: var(--ink-muted); margin: 0; }
+  .event-repeat { color: var(--ink-faded); }
+  .schedule-empty { font-size: 13px; color: var(--ink-muted); padding: 14px 4px; }
+  .kid-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px 6px 6px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .kid-chip-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: -.025em}
+  .kid-chip-info { line-height: 1.15; }
+  .kid-chip-name { font-size: 13px; }
+  .kid-chip-age { font-size: 11px; opacity: 0.78; font-weight: 500; }
+  .kids-edit-btn {
+    background: var(--canvas);
+    border: 1px solid transparent;
+    color: var(--ink-muted);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .kids-edit-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* FORTNIGHT PANEL (replaces snap-panel) */
+  .fortnight-panel {
+    background: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 28px;
+    padding: 28px;
+    box-shadow: 0 18px 50px rgba(10,10,10,0.18);
+    color: var(--paper);
+    overflow: hidden;
+    min-width: 0;
+  }
+  .fortnight-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+  .fortnight-panel-title {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-size: 18px;
+    color: var(--paper);
+    letter-spacing: -0.02em; font-weight: 700}
+  .fortnight-panel-sub {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: rgba(255,255,255,0.55);
+    white-space: nowrap;
+  }
+  .fortnight-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+  .fort-day {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 12px;
+    padding: 10px 4px;
+    text-align: center;
+    aspect-ratio: 1 / 1.05;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .fort-day.kids {
+    background: var(--amber);
+    border-color: var(--amber-deep);
+    color: var(--ink);
+  }
+  .fort-day.empty { color: var(--ink-faded); }
+  .fort-day.today { box-shadow: 0 0 0 2px var(--paper); }
+  .fort-day-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .01em; 
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+  .fort-day-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+  .fortnight-status {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    padding: 12px 14px;
+    background: var(--paper);
+    border-radius: 14px;
+    border: 1px solid var(--paper-edge);
+    margin-bottom: 12px;
+  }
+  .fortnight-status strong { color: var(--ink); font-weight: 600; }
+  .hero-reminder-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .hero-reminder-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .hero-reminder-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    outline: none;
+    min-height: 50px;
+  }
+  /* Tomorrow tile — auto-generated from schedule */
+  .tomorrow-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .tomorrow-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .tomorrow-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+  }
+  .tomorrow-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 2px 9px;
+    border-radius: 999px;
+  }
+  .tomorrow-tag.kids { background: var(--amber); color: var(--ink); }
+  .tomorrow-tag.solo { background: var(--paper-warm); color: var(--ink-muted); }
+  .tomorrow-events {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tomorrow-event {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 4px 0;
+  }
+  .tomorrow-event-time {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 12.5px;
+    letter-spacing: 0.01em;
+  }
+  .tomorrow-event-text { color: var(--ink-soft); }
+  .tomorrow-empty {
+    font-size: 13px;
+    color: var(--ink-muted);
+    font-style: normal;
+    padding: 4px 0;
+  }
+  .tomorrow-more {
+    font-size: 11.5px;
+    color: var(--ink-faded);
+    margin-top: 6px;
+    letter-spacing: 0.01em;
+  }
+  /* Handover sub-banner inside Tomorrow tile */
+  .tomorrow-handover {
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    padding: 9px 11px;
+    margin-bottom: 10px;
+  }
+  .tomorrow-handover.packing { background: rgba(212,240,98,0.32); border-color: var(--amber-deep); }
+  .tomorrow-handover.returning { background: rgba(212,240,98,0.4); border-color: var(--sage); }
+  .tomorrow-handover-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .01em; 
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tomorrow-handover-progress {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+  .tomorrow-handover-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tomorrow-handover-item {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+  }
+  .tomorrow-handover-item::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--ink-faded);
+    flex: 0 0 4px;
+    transform: translateY(-2px);
+  }
+  .tomorrow-handover-empty {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    font-style: normal;
+  }
+  /* "Coming up" line below status */
+  .upcoming-line {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.78);
+    padding: 8px 14px 0;
+    margin-bottom: 12px;
+    letter-spacing: 0.01em;
+  }
+  .upcoming-line strong {
+    color: var(--paper);
+    font-weight: 600; 
+    font-size: 10.5px;
+    letter-spacing: .01em;
+    margin-right: 8px;
+  }
+  .upcoming-line .upcoming-when {
+    color: rgba(255,255,255,0.55);
+    font-weight: 500;
+  }
+  /* Grid cell flag indicators */
+  .fort-day { position: relative; }
+  .fort-day-flags {
+    position: absolute;
+    top: 4px; right: 4px;
+    display: flex;
+    gap: 2px;
+    pointer-events: none;
+  }
+  .fort-day-flag {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+  }
+  .fort-day-flag.break { background: var(--coral); }
+  .fort-day-flag.pupil-free { background: var(--green-deep); }
+  .fort-day-flag.school { background: var(--green); }
+  .fort-day-flag.personal { background: var(--amber-deep); }
+  /* Term break shading on grid */
+  .fort-day.in-break.empty { background: rgba(255,106,69,0.06); border-color: rgba(255,106,69,0.2); }
+  .fort-day.in-break.kids { background: var(--lime, #d4f062); }
+
+  /* MASTHEAD */
+  .masthead { display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start; padding-bottom: 40px; }
+
+  /* DOSSIER */
+  .dossier {
+    position: sticky;
+    top: 24px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    padding: 26px 22px;
+    box-shadow: var(--shadow-card);
+  }
+  .dossier-title {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .dossier-status {
+    color: var(--paper);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    padding: 5px 12px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 18px;
+    width: fit-content;
+    background: var(--amber-deep);
+  }
+  .dossier-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--paper-edge);
+    font-size: 13.5px;
+  }
+  .dossier-row:last-of-type { border-bottom: none; }
+  .dossier-row-label { color: var(--ink-muted); font-weight: 500; }
+  .dossier-row-val { font-weight: 600; color: var(--ink); }
+  .dossier-divider { border: none; border-top: 1px solid var(--paper-edge); margin: 12px 0; }
+  .flow-note {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+    margin-top: 6px; letter-spacing: -.025em}
+
+  /* CARDS */
+  .cards-col { display: flex; flex-direction: column; gap: 14px; }
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+  .card:hover { box-shadow: var(--shadow-soft); }
+  .card-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer; user-select: none;
+    transition: background 0.15s ease;
+  }
+  .card-header:hover { background: var(--paper-warm); }
+  .card-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-purple { background: var(--amber-deep); }
+  .dot-green { background: var(--green); }
+  .dot-honey { background: var(--honey); }
+  .dot-sage { background: var(--sage); }
+  .dot-ink { background: var(--ink-soft); }
+  .dot-coral { background: var(--coral); }
+  .card-title {
+    font-family: var(--font-body);
+    font-size: 14px; font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    letter-spacing: -0.005em;
+  }
+  .card-meta {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-right: 8px;
+  }
+  .card-chevron {
+    width: 20px; height: 20px; flex-shrink: 0;
+    color: var(--ink-faded);
+    transition: transform 0.2s ease;
+  }
+  .card-chevron.open { transform: rotate(180deg); }
+  .card-body { display: none; padding: 0 24px 22px; }
+  .card-body.open { display: block; }
+
+  /* SCHEDULE */
+  .schedule-add-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    background: var(--paper);
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--paper-edge);
+    margin-bottom: 18px;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  .schedule-add-form input[type="text"],
+  .schedule-add-form input[type="time"],
+  .schedule-add-form select {
+    border: 1px solid transparent;
+    background: var(--paper-card);
+    border-radius: 14px;
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  .schedule-add-form input[type="time"] { width: 96px; flex: 0 0 96px; }
+  .schedule-add-form select#ev-day { width: 86px; flex: 0 0 86px; }
+  .schedule-add-form input#ev-text { flex: 1 1 180px; min-width: 140px; }
+  .schedule-add-form select#ev-who { width: 110px; flex: 0 0 110px; }
+  .schedule-add-form select#ev-repeat { width: 168px; flex: 0 0 168px; }
+  .schedule-add-form input:focus,
+  .schedule-add-form select:focus { border-color: var(--ink); }
+  .schedule-add-form label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .schedule-add-form label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    flex: 0 0 14px;
+  }
+  .schedule-add-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .schedule-add-btn:hover { opacity: 0.9; }
+  .day-block {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-left: 3px solid var(--amber-deep);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .day-block.away { border-left-color: var(--ink-faded); }
+  .card-help { font-size: 13px; line-height: 1.45; color: var(--ink-muted); margin: 0 0 12px; }
+  .day-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px; }
+  .day-title .day-name { margin-bottom: 0; }
+  .day-title .date-row-type { font-size: 11px; }
+  .day-block.child2 { border-left-color: var(--ink-faded); }
+  .day-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .event-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .event-time {
+    font-family: var(--font-display);
+    color: var(--ink-muted);
+    font-weight: 700; letter-spacing: -.025em}
+  .event-text { color: var(--ink-soft); }
+  .event-chip {
+    font-size: 10px;
+    font-weight: 700; 
+    letter-spacing: .01em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--paper-warm);
+    color: var(--ink-muted);
+  }
+  .event-chip.both { background: var(--cobalt-2, #dfe4ff); color: var(--ink); }
+  .event-chip.child1 { background: var(--child1-tint, #eef8c6); color: var(--ink); }
+  .event-chip.child2 { background: var(--child2-tint, #ffe3da); color: var(--ink); }
+  .event-remove {
+    border: none; background: transparent; cursor: pointer;
+    color: var(--ink-faded); font-size: 1.1rem; padding: 0 4px;
+    transition: color 0.15s;
+  }
+  .event-remove:hover { color: var(--coral); }
+
+  /* IMPORTANT DATES */
+  .term-dates { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 12px; padding: 12px 14px; border-radius: 14px; background: #eef1ff; }
+  .term-dates-label { font-size: 13px; font-weight: 650; color: var(--ink); }
+  .term-dates select { border: 0; background: #fff; border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 14px; color: var(--ink); min-width: 0; }
+  .term-dates .schedule-add-btn { margin: 0; }
+  .term-dates-remove { border: 0; background: none; padding: 4px 2px; font: inherit; font-size: 13px; color: var(--ink-muted); text-decoration: underline; cursor: pointer; }
+  .term-dates-note { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.45; color: var(--ink-muted); }
+  .dates-more { margin: 8px 2px 0; font-size: 12.5px; color: var(--ink-muted); }
+  .dates-add-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    background: var(--paper);
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--paper-edge);
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  .dates-add-form input[type="text"],
+  .dates-add-form input[type="date"],
+  .dates-add-form select {
+    border: 1px solid transparent;
+    background: var(--paper-card);
+    border-radius: 14px;
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  .dates-add-form input[type="date"] { width: 138px; flex: 0 0 138px; }
+  .dates-add-form input[type="text"] { flex: 1 1 180px; min-width: 140px; }
+  .dates-add-form select { flex: 0 0 auto; width: 150px; }
+  .dates-add-form input:focus,
+  .dates-add-form select:focus { border-color: var(--ink); }
+  .dates-empty {
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    font-style: normal;
+    padding: 6px 4px;
+  }
+  .dates-list { display: flex; flex-direction: column; gap: 6px; }
+  .date-row {
+    display: grid;
+    grid-template-columns: 96px 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .date-row.past { opacity: 0.5; }
+  button.date-row-date { all: unset; cursor: pointer; font-weight: 600; text-decoration: underline; text-decoration-color: #c9c9c4; text-underline-offset: 3px; border-radius: 6px; }
+  button.date-row-date:hover { text-decoration-color: var(--ink); }
+  button.date-row-date:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  button.date-row-date small { font-size: 10.5px; font-weight: 600; color: #ff6a45; text-decoration: none; display: inline-block; }
+  .date-row.editing { display: block; background: #f5f5f3; border-color: transparent; padding: 12px; }
+  .dr-edit { display: grid; gap: 8px; }
+  .dr-edit-date { display: grid; grid-template-columns: auto 1fr auto; gap: 6px; }
+  .dr-edit input { border: 0; background: #fff; border-radius: 12px; padding: 10px 12px; min-height: 44px; font: inherit; font-size: 14px; color: var(--ink); min-width: 0; -webkit-appearance: none; appearance: none; }
+  .dr-nudge, .dr-cancel, .dr-save { border: 0; border-radius: 999px; padding: 10px 14px; min-height: 44px; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer; background: #fff; color: var(--ink); white-space: nowrap; }
+  .dr-save { background: var(--ink); color: #fff; }
+  .dr-edit-actions { display: flex; justify-content: flex-end; gap: 6px; }
+  .dr-nudge:focus-visible, .dr-cancel:focus-visible, .dr-save:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  button.dates-more { all: unset; cursor: pointer; display: block; margin: 8px 2px 0; font-size: 12.5px; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .date-row-date {
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .date-row-label { color: var(--ink-soft); }
+  .date-row-type {
+    font-size: 10px;
+    font-weight: 700; 
+    letter-spacing: .01em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--paper-warm);
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+  .date-row-type.break { background: rgba(255,106,69,0.14); color: var(--coral); }
+  .date-row-type.pupil-free { background: rgba(17,17,17,0.1); color: var(--green); }
+  .date-row-type.school { background: rgba(17,17,17,0.08); color: var(--green); }
+  .date-row-type.personal { background: rgba(212,240,98,0.4); color: var(--ink); }
+  .date-row-remove {
+    border: none; background: transparent; cursor: pointer;
+    color: var(--ink-faded); font-size: 1.1rem; padding: 0 4px;
+    transition: color 0.15s;
+  }
+  .date-row-remove:hover { color: var(--coral); }
+
+  /* CHECKLIST */
+  .check-group { margin-bottom: 22px; }
+  .check-group:last-child { margin-bottom: 0; }
+  .check-group-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .check-group-title em {
+    font-style: normal;
+    color: var(--green);
+    font-weight: 400;
+  }
+  .check-list { background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 14px; padding: 6px; }
+  .check-item {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--paper-warm); }
+  .check-box {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--ink-faded);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: transparent;
+    background: var(--paper-card);
+    transition: all 0.15s;
+  }
+  .check-box.done {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--paper);
+  }
+  .check-text {
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .check-text.done {
+    text-decoration: line-through;
+    color: var(--ink-faded);
+  }
+  .check-remove {
+    border: none; background: transparent; cursor: pointer;
+    color: var(--ink-faded); font-size: 1.05rem; padding: 0 6px;
+    opacity: 0; transition: all 0.15s;
+  }
+  .check-item:hover .check-remove { opacity: 1; }
+  .check-remove:hover { color: var(--coral); }
+  .check-suggestions {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding: 10px 8px 4px;
+  }
+  .check-suggestion-btn {
+    border: 1px solid transparent;
+    background: var(--canvas);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 11.5px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-suggestion-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+    border-style: solid;
+  }
+  .check-add {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .check-add input {
+    border: 1px solid transparent;
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 9px 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+  }
+  .check-add input:focus { border-color: var(--ink); }
+  .check-add button {
+    border: 1px solid transparent;
+    background: var(--canvas);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-add button:hover { background: var(--ink); color: var(--paper); }
+  .checklist-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px 14px;
+  }
+  .checklist-pct-text {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--green);
+    letter-spacing: -0.01em;
+  }
+  .checklist-reset {
+    background: transparent;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-muted);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11.5px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .checklist-reset:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* MEALS */
+  .meal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .meal-day {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .meal-day-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .meal-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+  .meal-input {
+    width: 100%;
+    border: 1px solid transparent;
+    background: var(--paper-card);
+    border-radius: 14px;
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+  }
+  .meal-input:focus { border-color: var(--ink); }
+  .save-indicator {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--green);
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-left: 8px;
+  }
+  .save-indicator.show { opacity: 1; }
+
+  /* HOUSE RULES */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .rule-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .rule-card-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .rule-field { margin-bottom: 10px; }
+  .rule-field:last-child { margin-bottom: 0; }
+  .rule-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .rule-input {
+    width: 100%;
+    border: 1px solid transparent;
+    background: var(--paper-card);
+    border-radius: 14px;
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+  }
+  .rule-input:focus { border-color: var(--ink); }
+
+  /* CHORES */
+  .chores-summary { display: flex; justify-content: space-between; align-items: center; padding: 0 4px 14px; }
+  .chores-pct-text { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--green); letter-spacing: -0.01em; }
+  .chores-reset { background: transparent; border: 1px solid var(--paper-edge); color: var(--ink-muted); border-radius: 999px; padding: 6px 12px; font-size: 11.5px; font-family: var(--font-body); font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .chores-reset:hover { color: var(--ink); border-color: var(--ink); }
+  .chores-list { background: var(--paper); border: 1px solid var(--paper-edge); border-radius: 14px; padding: 6px; margin-bottom: 12px; }
+  .chore-item { display: grid; grid-template-columns: 22px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; transition: background 0.15s; }
+  .chore-item:hover { background: var(--paper-warm); }
+  .chore-box { width: 20px; height: 20px; border: 1.5px solid var(--ink-faded); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; color: transparent; background: var(--paper-card); transition: all 0.15s; }
+  .chore-box.done { background: var(--green); border-color: var(--green); color: var(--paper); }
+  .chore-main { min-width: 0; }
+  .chore-text { font-size: 13.5px; line-height: 1.4; color: var(--ink-soft); }
+  .chore-text.done { text-decoration: line-through; color: var(--ink-faded); }
+  .chore-sub { font-size: 11.5px; color: var(--ink-muted); margin-top: 2px; }
+  .chore-chip { font-size: 10px; font-weight: 700;  letter-spacing: .01em; padding: 3px 10px; border-radius: 999px; background: var(--paper-warm); color: var(--ink-muted); white-space: nowrap; }
+  .chore-chip.both { background: var(--amber); color: var(--ink); }
+  .chore-chip.child1 { background: var(--child1-tint, #eef8c6); color: var(--ink); }
+  .chore-chip.child2 { background: var(--child2-tint, #ffe3da); color: var(--ink); }
+  .chore-remove { border: none; background: transparent; cursor: pointer; color: var(--ink-faded); font-size: 1.05rem; padding: 0 6px; opacity: 0; transition: all 0.15s; }
+  .chore-item:hover .chore-remove { opacity: 1; }
+  .chore-remove:hover { color: var(--coral); }
+  .chores-add-form { display: grid; grid-template-columns: 1fr 130px 150px auto; gap: 8px; align-items: center; background: var(--paper); padding: 12px; border-radius: 14px; border: 1px solid var(--paper-edge); margin-bottom: 10px; }
+  .chores-add-form input, .chores-add-form select { border: 1px solid transparent; background: var(--paper-card); border-radius: 14px; padding: 8px 10px; font-family: var(--font-body); font-size: 13px; color: var(--ink); outline: none; min-width: 0; }
+  .chores-add-form input:focus, .chores-add-form select:focus { border-color: var(--ink); }
+  .chores-add-btn { background: var(--ink); color: var(--paper); border: none; border-radius: 999px; padding: 9px 14px; font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .chores-add-btn:hover { opacity: 0.9; }
+  .chores-suggestions { display: flex; gap: 6px; flex-wrap: wrap; padding: 2px 4px 0; }
+  .chore-suggestion-btn { border: 1px solid transparent; background: var(--canvas); color: var(--ink-muted); border-radius: 999px; padding: 5px 11px; font-size: 11.5px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .chore-suggestion-btn:hover { border-color: var(--green); color: var(--green); border-style: solid; }
+  .chores-empty { font-size: 12.5px; color: var(--ink-muted); padding: 8px 10px; }
+
+  /* NOTES */
+  .notes-textarea {
+    width: 100%;
+    min-height: 140px;
+    border: 1px solid transparent;
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    resize: vertical;
+    outline: none;
+  }
+  .notes-textarea:focus { border-color: var(--ink); }
+
+  /* CYCLE SETTINGS DRAWER */
+  .cycle-section {
+    margin: 0 0 56px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .cycle-section-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 24px;
+    cursor: pointer; user-select: none;
+  }
+  .cycle-section-head:hover { background: var(--paper-warm); }
+  .cycle-section-body { display: none; padding: 0 24px 26px; }
+  .cycle-section-body.open { display: block; }
+  .cycle-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .cycle-field { display: flex; flex-direction: column; gap: 4px; }
+  .cycle-field label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+  }
+  .cycle-field select,
+  .cycle-field input {
+    border: 1px solid transparent;
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 9px 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink);
+    outline: none;
+  }
+  .cycle-field select:focus,
+  .cycle-field input:focus { border-color: var(--ink); }
+  .pattern-help {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-bottom: 14px; letter-spacing: -.025em}
+  .pattern-week-label {
+    font-size: 11px;
+    font-weight: 600; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .pattern-day {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 10px;
+    padding: 8px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pattern-day.mine {
+    background: var(--amber);
+    border-color: var(--amber-deep);
+  }
+  .pattern-day-name {
+    font-size: 10px;
+    font-weight: 700; 
+    letter-spacing: .01em;
+    color: var(--ink-muted);
+  }
+  .pattern-day.mine .pattern-day-name { color: var(--ink); }
+  .pattern-day-owner {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 2px;
+    color: var(--ink-soft); letter-spacing: -.025em}
+  .pattern-day.mine .pattern-day-owner { color: var(--ink); }
+  .cycle-update-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 999px;
+    padding: 11px 22px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .cycle-update-btn:hover { opacity: 0.9; }
+
+  /* PRINT ACTION ROW */
+  /* Calendar import */
+  .ics-import { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: -4px 0 12px; padding: 12px 14px; border-radius: 14px; background: #f5f5f3; }
+  .ics-pick { cursor: pointer; margin: 0; }
+  .ics-pick:focus-within, #ics-file:focus + .ics-pick { outline: 3px solid #2743ff; }
+  .ics-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(17,17,17,.45); display: grid; place-items: center; padding: 16px; }
+  .ics-overlay[hidden] { display: none; }
+  .ics-modal { width: min(640px, 100%); max-height: calc(100vh - 32px); display: flex; flex-direction: column; background: #fff; border-radius: 26px; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+  .ics-title { margin: 0 0 4px; font-size: 22px; letter-spacing: -.03em; }
+  .ics-sub { margin: 0 0 12px; font-size: 14px; color: var(--ink-muted); line-height: 1.45; }
+  .ics-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; margin-bottom: 10px; font-size: 13.5px; }
+  .ics-controls select { border: 0; background: #f2f2f0; border-radius: 10px; padding: 7px 10px; font: inherit; margin-left: 6px; }
+  .ics-all { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; }
+  .ics-list { overflow-y: auto; flex: 1 1 auto; min-height: 120px; border-radius: 16px; background: #f5f5f3; padding: 6px; }
+  .ics-group { font-size: 12px; font-weight: 700; color: var(--ink-muted); padding: 10px 10px 4px; }
+  .ics-row { display: grid; grid-template-columns: auto 92px 1fr; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; font-size: 14px; cursor: pointer; }
+  .ics-row:hover { background: #fff; }
+  .ics-row .when { font-size: 12.5px; font-weight: 600; color: var(--ink-muted); }
+  .ics-row .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ics-row .what small { color: var(--ink-muted); }
+  .ics-row.dupe .what::after { content: " · already added"; color: var(--ink-muted); font-size: 12px; }
+  .ics-fine { margin: 10px 0 0; font-size: 12px; color: var(--ink-muted); line-height: 1.45; }
+  .ics-fine:empty { display: none; }
+  .ics-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+  .ics-btn { border: 0; border-radius: 999px; padding: 12px 20px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; background: #f2f2f0; color: var(--ink); }
+  .ics-btn.primary { background: var(--ink); color: #fff; }
+  .ics-btn:disabled { opacity: .4; cursor: default; }
+  .ics-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  @media (max-width: 600px) {
+    .ics-modal { padding: 18px; border-radius: 22px; }
+    .ics-row { grid-template-columns: auto 72px 1fr; gap: 8px; font-size: 13.5px; }
+  }
+
+  /* Swaps */
+  .m-swap { font-size: 11px; font-weight: 700; color: #ff6a45; line-height: 1; }
+  .md-swap { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e6e6e3; display: grid; gap: 8px; }
+  .md-swap p { margin: 0; font-size: 13.5px; color: var(--ink); line-height: 1.45; }
+  .md-swap-q { font-weight: 700; }
+  .md-swap input[type="text"] { border: 0; background: #fff; border-radius: 12px; padding: 11px 12px; font: inherit; font-size: 14px; min-height: 44px; }
+  .md-log { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink); }
+  .md-btn { justify-self: start; border: 0; border-radius: 999px; padding: 11px 18px; min-height: 44px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; background: #fff; color: var(--ink); }
+  .md-btn.primary { background: var(--ink); color: #fff; }
+  .md-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+
+  /* Month view */
+  .month-card { background: #fff; border-radius: 26px; padding: 22px 22px 18px; margin: 0 0 16px; }
+  .month-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .month-title { margin: 0; font-size: 24px; letter-spacing: -.03em; font-weight: 700; color: var(--ink); }
+  .month-nav { display: flex; gap: 6px; }
+  .month-btn { border: 0; background: #f2f2f0; color: var(--ink); border-radius: 999px; min-width: 40px; height: 40px; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .month-btn:hover { background: #e6e6e3; }
+  .month-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  .month-btn-today { font-size: 13px; }
+  .month-dow, .month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .month-dow { margin-bottom: 6px; }
+  .month-dow span { font-size: 11.5px; font-weight: 600; color: var(--ink-muted); padding-left: 8px; }
+  .m-day { all: unset; box-sizing: border-box; position: relative; display: flex; flex-direction: column; gap: 3px; min-height: 96px; padding: 7px 8px; border-radius: 12px; background: #f5f5f3; cursor: pointer; overflow: hidden; }
+  .m-day.kids { background: #dfe4ff; }
+  .m-day.in-break { box-shadow: inset 0 4px 0 #ff9f80; }
+  .m-day.out { opacity: .38; }
+  .m-day.today .m-num { background: var(--ink); color: #fff; }
+  .m-day[aria-pressed="true"] { outline: 2px solid #2743ff; outline-offset: 1px; }
+  .m-day:focus-visible { outline: 3px solid #2743ff; outline-offset: 1px; }
+  .m-top { display: flex; align-items: center; gap: 5px; }
+  .m-num { display: inline-grid; place-items: center; min-width: 24px; height: 24px; border-radius: 999px; font-size: 13px; font-weight: 650; color: var(--ink); }
+  .m-hand { width: 9px; height: 9px; border-radius: 999px; background: #d4f062; box-shadow: 0 0 0 1px #11111133; }
+  .m-item { font-size: 11px; line-height: 1.25; color: #2a2a30; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .m-item.date { font-weight: 650; }
+  .m-item.date::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 999px; background: #ff6a45; margin-right: 4px; vertical-align: 1px; }
+  .m-more { font-size: 10.5px; color: var(--ink-muted); }
+  .m-dots { display: none; gap: 3px; }
+  .m-dots i { width: 6px; height: 6px; border-radius: 999px; background: #2743ff; }
+  .m-dots i.date { background: #ff6a45; }
+  .month-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12px; color: var(--ink-muted); }
+  .month-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .month-legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .month-legend .lg-kids { background: #dfe4ff; }
+  .month-legend .lg-break { background: #f5f5f3; box-shadow: inset 0 4px 0 #ff9f80; }
+  .month-legend .lg-hand { width: 10px; height: 10px; border-radius: 999px; background: #d4f062; box-shadow: 0 0 0 1px #11111133; }
+  .month-legend .lg-swap { width: auto; height: auto; font-style: normal; font-weight: 800; color: #ff6a45; }
+  .month-legend .lg-date { width: 8px; height: 8px; border-radius: 999px; background: #ff6a45; }
+  .month-detail:empty { display: none; }
+  .month-detail { margin-top: 14px; padding: 16px 18px; border-radius: 18px; background: #f5f5f3; }
+  .md-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 8px; }
+  .md-date { font-size: 17px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+  .md-tag { font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; background: #fff; color: var(--ink); }
+  .md-tag.kids { background: #2743ff; color: #fff; }
+  .month-detail ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .month-detail li { font-size: 14px; color: var(--ink); }
+  .month-detail li b { display: inline-block; min-width: 52px; margin-right: 10px; font-weight: 650; color: var(--ink-muted); }
+  .md-empty { font-size: 13.5px; color: var(--ink-muted); }
+  @media (max-width: 700px) {
+    .month-card { padding: 18px 14px 14px; border-radius: 22px; }
+    .month-title { font-size: 20px; }
+    .month-btn-today { display: none; }
+    .month-dow, .month-grid { gap: 4px; }
+    .month-dow span { padding-left: 0; text-align: center; font-size: 10.5px; }
+    .m-day { min-height: 52px; padding: 5px 4px; align-items: center; border-radius: 10px; }
+    .m-item, .m-more { display: none; }
+    .m-dots { display: flex; }
+    .m-top { flex-direction: column; gap: 3px; }
+    .m-num { min-width: 22px; height: 22px; font-size: 12.5px; }
+  }
+
+  .print-action-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin: 0 0 28px;
+  }
+  .print-snapshot-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: var(--paper);
+    border: none; border-radius: 999px;
+    padding: 11px 20px;
+    font-family: var(--font-body); font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .print-snapshot-btn:hover { background: var(--green-deep); }
+  .fridge-sheet-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #e4e4e0; color: var(--ink);
+    border: 0; border-radius: 999px;
+    min-height: 44px; padding: 11px 20px;
+    font-family: var(--font-body); font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .fridge-sheet-btn small { font-size: 12px; font-weight: 500; color: var(--ink-muted); }
+  .fridge-sheet-btn:hover { background: #d6d6d1; }
+  .fridge-sheet-btn:focus-visible, .print-snapshot-btn:focus-visible { outline: 3px solid #2743ff; outline-offset: 2px; }
+  .print-action-sub {
+    flex-basis: 100%; font-size: 13px; line-height: 1.5; color: var(--ink-muted); font-weight: 400;
+  }
+
+  /* TODAY'S RUN CARD */
+  .todays-run-card {
+    background: var(--paper); border: 1px solid var(--paper-edge);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+    border-left: 3px solid var(--amber-deep);
+  }
+  .todays-run-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px; gap: 8px;
+  }
+  .todays-run-label {
+    font-size: 11px; font-weight: 600; 
+    letter-spacing: .01em; color: var(--ink-muted);
+  }
+
+  /* NEXT HANDOVER CARD */
+  .next-handover-card {
+    background: var(--paper); border: 1px solid var(--paper-edge);
+    border-radius: 14px; padding: 12px 14px; margin-top: 10px;
+  }
+  .next-handover-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px; gap: 8px;
+  }
+  .next-handover-label {
+    font-size: 11px; font-weight: 600; 
+    letter-spacing: .01em; color: var(--ink-muted);
+  }
+  .next-handover-progress {
+    font-size: 10.5px; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.04em;
+  }
+  .next-handover-day {
+    font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
+  }
+  .next-handover-dir {
+    font-size: 12.5px; color: var(--ink-soft); margin-bottom: 8px;
+  }
+  .next-handover-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .next-handover-item {
+    font-size: 12.5px; line-height: 1.4; color: var(--ink-soft);
+    display: flex; gap: 7px; align-items: baseline;
+  }
+  .next-handover-item::before {
+    content: ''; display: inline-block; width: 4px; height: 4px;
+    border-radius: 50%; background: var(--ink-faded);
+    flex: 0 0 4px; transform: translateY(-2px);
+  }
+  .next-handover-empty { font-size: 12.5px; color: var(--ink-muted); }
+
+  /* DOSSIER ALERTS */
+  .dossier-alert {
+    background: var(--paper-warm); border: 1px solid var(--paper-edge);
+    border-radius: 12px; padding: 10px 12px; margin-top: 12px;
+  }
+  .dossier-alert-label {
+    font-size: 10.5px; font-weight: 700; 
+    letter-spacing: .01em; color: var(--ink-muted); margin-bottom: 4px;
+  }
+  .dossier-alert-text { font-size: 13px; line-height: 1.45; color: var(--ink-soft); }
+  .dossier-alert.warning {
+    background: rgba(212,240,98,0.22); border-color: var(--amber-deep);
+  }
+  .dossier-alert.warning .dossier-alert-label { color: #7a5518; }
+
+  @media (max-width: 1120px) {
+    .hero-grid, .masthead { grid-template-columns: 1fr; gap: 28px; }
+    .dossier { position: static; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .cycle-controls { grid-template-columns: 1fr 1fr; }
+    .chores-add-form { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 760px) {
+    .chores-add-form { grid-template-columns: 1fr; }
+    .chore-item { grid-template-columns: 22px 1fr auto; }
+    .chore-chip { grid-column: 2; justify-self: start; }
+    .hero { padding: 36px 0 24px; }
+    .hero h1 { font-size: 3rem; }
+    .schedule-add-form input[type="time"],
+    .schedule-add-form select#ev-day,
+    .schedule-add-form select#ev-who,
+    .schedule-add-form select#ev-repeat,
+    .schedule-add-form input#ev-text { flex: 1 1 100%; width: 100%; }
+    .schedule-add-btn { flex: 1 1 100%; }
+    .dates-add-form input[type="date"],
+    .dates-add-form input[type="text"],
+    .dates-add-form select { flex: 1 1 100%; width: 100%; }
+    .date-row { grid-template-columns: 80px 1fr auto; }
+    .date-row-type { grid-column: 2; grid-row: 2; justify-self: start; }
+    .meal-grid { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .cycle-controls { grid-template-columns: 1fr; }
+    .pattern-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    
+  }
+</style>
+<link rel="stylesheet" href="/demo/assets/app/interface.css">
+<link rel="stylesheet" href="/demo/assets/app/bento.css">
+</head>
+<body class="atlas-app" data-module="week">
+
+<a class="at-skip" href="#at-content">Skip to content</a>
+<header class="at-header">
+ <div class="at-nav"><a class="at-brand" href="/demo/index.html" aria-label="Atlas, Today">Atlas<b>.</b></a><nav class="at-links" aria-label="Main navigation"><a href="/demo/index.html">Today</a><a href="/demo/week.html" aria-current="page">Week</a><a href="/demo/money.html">Money</a><a href="/demo/records.html">Records</a><a href="/demo/locked.html?from=admin">Admin</a></nav>
+ <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="/demo/scripts.html">Scripts</a><a href="/demo/locked.html?from=goals">Goals</a><a href="/demo/locked.html?from=companion-pack">Companion pack</a><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/how-it-works.html">How Atlas works</a></div></details></div>
+ <div class="at-heading"><div><div class="at-kicker">Week</div><h1>Make room for real life.</h1><p id="phase-context-text">Handovers, school runs and the days in between.</p></div><div class="at-heading-side"><a class="at-kids" id="at-kids-summary" href="#cycle" hidden></a><a class="at-phase-chip" href="/demo/index.html#at-phase"><span class="at-phase-chip-label">Phase</span> <strong data-phase-label>Stabilise</strong><span class="at-phase-chip-action">Change</span></a></div></div>
+</header>
+
+<main class="page-wrap" id="at-content"><div class="at-module-hint" id="at-week-setup" hidden><span><strong>Start here.</strong> Add your kids and set your custody cycle. The calendar and handover dates update as you go.</span><a href="#cycle">Set up →</a></div>
+  <div class="container">
+
+    <!-- HERO: the fortnight, full width. Calendar on the left, today / tomorrow / next handover on the right. -->
+    <section class="hero">
+      <div class="fortnight-panel">
+        <div class="fn-split">
+          <div class="fn-cal">
+          <div class="fortnight-panel-head">
+            <div class="fortnight-panel-title">The fortnight</div>
+            <div class="fortnight-panel-sub" id="fortnight-balance">14-day view</div>
+          </div>
+          <div class="fortnight-grid" id="fortnight-grid"></div>
+          <div class="fn-legend" aria-hidden="true"><span><b></b>With you</span><span><b class="solo"></b>Solo</span><span id="fn-legend-hol" hidden><b class="hol"></b>With you, school holidays</span><span><b class="hand"></b>Handover</span></div>
+          <div class="fortnight-status" id="fortnight-status">Loading…</div>
+          <div class="upcoming-line" id="upcoming-line" style="display:none;"></div>
+          </div>
+          <div class="fn-cards">
+          <div class="todays-run-card" id="todays-run-card" style="display:none;">
+            <div class="todays-run-head">
+              <span class="todays-run-label" id="todays-run-label">Today</span>
+              <span class="tomorrow-tag" id="todays-run-tag">—</span>
+            </div>
+            <ul class="tomorrow-events" id="todays-run-events"></ul>
+          </div>
+          <div class="tomorrow-card">
+            <div class="tomorrow-head">
+              <span class="tomorrow-label" id="tomorrow-label">Tomorrow</span>
+              <span class="tomorrow-tag" id="tomorrow-tag">—</span>
+            </div>
+            <div class="tomorrow-handover" id="tomorrow-handover" style="display:none;">
+              <div class="tomorrow-handover-label">
+                <span id="tomorrow-handover-title">—</span>
+                <span class="tomorrow-handover-progress" id="tomorrow-handover-progress"></span>
+              </div>
+              <ul class="tomorrow-handover-list" id="tomorrow-handover-list"></ul>
+            </div>
+            <ul class="tomorrow-events" id="tomorrow-events"></ul>
+          </div>
+          <div class="next-handover-card" id="next-handover-card" style="display:none;">
+            <div class="next-handover-head">
+              <span class="next-handover-label">Next handover</span>
+              <span class="next-handover-progress" id="next-handover-progress"></span>
+            </div>
+            <div class="next-handover-day" id="next-handover-day">—</div>
+            <div class="next-handover-dir" id="next-handover-dir"></div>
+            <ul class="next-handover-items" id="next-handover-items"></ul>
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINT ACTION ROW -->
+    <div class="print-action-row">
+      <a href="/demo/locked.html?from=week-print" class="print-snapshot-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print fridge sheet
+      </a>
+      <a href="/demo/locked.html?from=week-print" class="fridge-sheet-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Household plan <small>3 pages</small></a>
+      <a href="/demo/locked.html?from=year-print" class="fridge-sheet-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Year planner <small>1 page</small></a>
+      <span class="print-action-sub">Fridge sheet: this fortnight at a glance. Household plan: routines, rules and checklists for anyone minding the kids. Year planner: 12 months of custody and holidays.</span>
+    </div>
+
+    <!-- MONTH: custody, school holidays, key dates and events, a month at a time -->
+    <section class="month-card" id="month-card" aria-labelledby="month-title">
+      <div class="month-head">
+        <h2 class="month-title" id="month-title">Month</h2>
+        <div class="month-nav">
+          <button type="button" class="month-btn" onclick="shiftMonth(-1)" aria-label="Previous month">‹</button>
+          <button type="button" class="month-btn month-btn-today" onclick="shiftMonth(0)">This month</button>
+          <button type="button" class="month-btn" onclick="shiftMonth(1)" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <div class="month-dow" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div class="month-grid" id="month-grid"></div>
+      <div class="month-legend" aria-hidden="true"><span><i class="lg-kids"></i>With you</span><span><i class="lg-break"></i>School holidays</span><span><i class="lg-hand"></i>Handover</span><span><i class="lg-date"></i>Key date</span><span><i class="lg-swap">⇄</i>Changed from usual</span></div>
+      <div class="month-detail" id="month-detail" aria-live="polite"></div>
+    </section>
+
+    <!-- CALENDAR IMPORT PREVIEW -->
+    <div class="ics-overlay" id="ics-modal" hidden onclick="if(event.target===this)closeICSModal()">
+      <div class="ics-modal" role="dialog" aria-modal="true" aria-labelledby="ics-title">
+        <h2 class="ics-title" id="ics-title">Import calendar</h2>
+        <p class="ics-sub" id="ics-sub"></p>
+        <div class="ics-controls">
+          <label class="ics-all"><input type="checkbox" id="ics-all" checked onchange="toggleAllICS(this.checked)"> Select all</label>
+          <label class="ics-type">All-day dates as
+            <select id="ics-type"><option value="school">School event</option><option value="personal">Personal</option><option value="pupil-free">Pupil-free day</option></select>
+          </label>
+        </div>
+        <div class="ics-list" id="ics-list"></div>
+        <p class="ics-fine" id="ics-fine"></p>
+        <div class="ics-buttons">
+          <button type="button" class="ics-btn" onclick="closeICSModal()">Cancel</button>
+          <button type="button" class="ics-btn primary" id="ics-go" onclick="importICS()">Import</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MASTHEAD -->
+    <div class="masthead">
+      <div class="cards-col">
+
+        <!-- SCHEDULE -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('schedule')">
+            <div class="card-dot dot-purple"></div>
+            <div class="card-title">Schedule</div>
+            <div class="card-meta" id="schedule-meta">This week</div>
+            <svg class="card-chevron open" id="chev-schedule" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-schedule">
+            <p class="card-help">Things with a time: routines and one-off appointments. All-day dates go in Term &amp; key dates below.</p>
+            <div class="schedule-add-form">
+              <input type="time" id="ev-time" value="07:00">
+              <select id="ev-day" aria-label="Day of the week">
+                <option value="0">Mon</option><option value="1">Tue</option><option value="2">Wed</option>
+                <option value="3">Thu</option><option value="4">Fri</option><option value="5">Sat</option><option value="6">Sun</option>
+              </select>
+              <input type="date" id="ev-date" aria-label="Date" hidden>
+              <input type="text" id="ev-text" placeholder="What's happening?">
+              <select id="ev-who"><option value="both">Both</option></select>
+              <select id="ev-repeat" aria-label="Repeats" onchange="syncEventForm()">
+                <option value="weekly">Every week</option>
+                <option value="kids">On my kids days</option>
+                <option value="once">Once</option>
+              </select>
+              <button class="schedule-add-btn" onclick="addEvent()">+ Add</button>
+            </div>
+            <div id="day-schedule"></div>
+            <button class="schedule-add-btn" style="margin-top:12px;" onclick="exportScheduleToICS()">⤓ Export to calendar (.ics)</button>
+          </div>
+        </div>
+
+        <!-- IMPORTANT DATES -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('dates')">
+            <div class="card-dot dot-coral"></div>
+            <div class="card-title">Term &amp; key dates</div>
+            <div class="card-meta" id="dates-meta">All-day dates</div>
+            <svg class="card-chevron open" id="chev-dates" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-dates">
+            <p class="card-help">All-day dates: terms, holidays, pupil-free days, birthdays. Add the school calendar once a term.</p>
+            <div class="term-dates">
+              <label class="term-dates-label" for="term-state">School terms</label>
+              <select id="term-state" aria-label="State or territory for school term dates">
+                <option value="">Choose state</option>
+                <option value="NSW">NSW</option>
+                <option value="NSWW">NSW, Western Division</option>
+                <option value="VIC">VIC</option>
+                <option value="QLD">QLD</option>
+                <option value="SA">SA</option>
+                <option value="WA">WA</option>
+                <option value="TAS">TAS</option>
+                <option value="ACT">ACT</option>
+                <option value="NT">NT</option>
+              </select>
+              <button class="schedule-add-btn" type="button" id="term-apply" onclick="applyTermDates()">Add term dates</button>
+              <button class="term-dates-remove" type="button" id="term-remove" onclick="removeTermDates()" hidden>Remove</button>
+              <p class="term-dates-note" id="term-note">Government school terms and holidays to the end of 2027. Catholic and independent schools can differ, so check yours.</p>
+            </div>
+            <div class="ics-import">
+              <span class="term-dates-label">Import a calendar</span>
+              <label class="schedule-add-btn ics-pick" for="ics-file">Choose .ics file</label>
+              <input type="file" id="ics-file" accept=".ics,text/calendar" onchange="readICSFile(this)" hidden>
+              <p class="term-dates-note">From the school app, Google, Apple or Outlook. The file is read on this device and never uploaded. All-day dates come here, timed events go to Schedule.</p>
+            </div>
+            <div class="dates-add-form">
+              <input type="date" id="dt-date" aria-label="Date">
+              <input type="text" id="dt-label" placeholder="e.g. Term 4 ends, a birthday">
+              <select id="dt-type">
+                <option value="break-start">Term break starts</option>
+                <option value="break-end">Term break ends</option>
+                <option value="pupil-free">Pupil-free day</option>
+                <option value="school">School event</option>
+                <option value="personal">Personal</option>
+              </select>
+              <button class="schedule-add-btn" onclick="addImportantDate()">+ Add</button>
+            </div>
+            <div id="dates-list"></div>
+          </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('checklist')">
+            <div class="card-dot dot-green"></div>
+            <div class="card-title">Handover checklist</div>
+            <div class="card-meta" id="checklist-meta">0/0 complete</div>
+            <svg class="card-chevron open" id="chev-checklist" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-checklist">
+            <div class="checklist-summary">
+              <div class="checklist-pct-text" id="checklist-pct-text">0 / 0 done</div>
+              <button class="checklist-reset" onclick="resetChecklist()">↺ Reset all</button>
+            </div>
+            <div class="check-group">
+              <div class="check-group-title">Before <em>they arrive</em></div>
+              <div class="check-list" id="checklist-before"></div>
+              <div class="check-add">
+                <input type="text" id="inp-before" placeholder="Add another item…" onkeypress="if(event.key==='Enter')addCheckItem('before')">
+                <button onclick="addCheckItem('before')">Add</button>
+              </div>
+            </div>
+            <div class="check-group">
+              <div class="check-group-title">During <em>the run</em></div>
+              <div class="check-list" id="checklist-during"></div>
+              <div class="check-add">
+                <input type="text" id="inp-during" placeholder="Add another item…" onkeypress="if(event.key==='Enter')addCheckItem('during')">
+                <button onclick="addCheckItem('during')">Add</button>
+              </div>
+            </div>
+            <div class="check-group">
+              <div class="check-group-title">After <em>handover</em></div>
+              <div class="check-list" id="checklist-after"></div>
+              <div class="check-add">
+                <input type="text" id="inp-after" placeholder="Add another item…" onkeypress="if(event.key==='Enter')addCheckItem('after')">
+                <button onclick="addCheckItem('after')">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- DOSSIER -->
+      <aside class="dossier">
+        <div class="dossier-title">This week</div>
+        <div class="dossier-status" id="dossier-status">Loading…</div>
+        <div class="dossier-row">
+          <div class="dossier-row-label">Days until / left</div>
+          <div class="dossier-row-val" id="d-days-until">—</div>
+        </div>
+        <div class="dossier-row">
+          <div class="dossier-row-label">Next handover</div>
+          <div class="dossier-row-val" id="d-handover">—</div>
+        </div>
+        <div class="dossier-row">
+          <div class="dossier-row-label">Events scheduled</div>
+          <div class="dossier-row-val" id="d-events">—</div>
+        </div>
+        <div class="dossier-row">
+          <div class="dossier-row-label">Checklist progress</div>
+          <div class="dossier-row-val" id="d-checklist">—</div>
+        </div>
+        <div class="dossier-row">
+          <div class="dossier-row-label">Chores progress</div>
+          <div class="dossier-row-val" id="d-chores">—</div>
+        </div>
+        <hr class="dossier-divider">
+        <div class="flow-note" id="flow-note-text">Just keep the wheels on. Get them fed, rested, and to school.</div>
+        <div class="dossier-alert" id="dossier-missing" style="display:none;">
+          <div class="dossier-alert-label">Missing pieces</div>
+          <div class="dossier-alert-text" id="dossier-missing-text"></div>
+        </div>
+        <div class="dossier-alert warning" id="dossier-pressure" style="display:none;">
+          <div class="dossier-alert-label">Pressure warning</div>
+          <div class="dossier-alert-text" id="dossier-pressure-text"></div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- MORE: meals, rules, chores, notes — full width -->
+        <details class="at-more">
+      <summary><span>Meals, house rules, chores and notes<br><span class="at-more-hint">The rest of the household plan, when you need it.</span></span></summary>
+        <!-- MEALS -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('meals')">
+            <div class="card-dot dot-honey"></div>
+            <div class="card-title">Meals</div>
+            <div class="card-meta" id="meals-meta">This week</div>
+            <span class="save-indicator" id="meal-saved">✓ Saved</span>
+            <svg class="card-chevron open" id="chev-meals" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-meals">
+            <div class="meal-grid" id="meal-grid"></div>
+          </div>
+        </div>
+
+        <!-- HOUSE RULES -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('rules')">
+            <div class="card-dot dot-sage"></div>
+            <div class="card-title">House rules</div>
+            <div class="card-meta" id="rules-meta">Screens & bedtimes</div>
+            <span class="save-indicator" id="rules-saved">✓ Saved</span>
+            <svg class="card-chevron open" id="chev-rules" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-rules">
+            <div class="rules-grid" id="rules-grid"></div>
+          </div>
+        </div>
+
+        <!-- CHORES -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('chores')">
+            <div class="card-dot dot-coral"></div>
+            <div class="card-title">Chores</div>
+            <div class="card-meta" id="chores-meta">Small jobs for the week</div>
+            <span class="save-indicator" id="chores-saved">✓ Saved</span>
+            <svg class="card-chevron open" id="chev-chores" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-chores">
+            <div class="chores-summary">
+              <div class="chores-pct-text" id="chores-pct-text">0 / 0 done</div>
+              <button class="chores-reset" onclick="resetChores()">↺ Reset week</button>
+            </div>
+            <div class="chores-list" id="chores-list"></div>
+            <div class="chores-add-form">
+              <input type="text" id="chore-text" placeholder="Add a small job…" onkeypress="if(event.key==='Enter')addChore()">
+              <select id="chore-who">
+                <option value="both">Both</option>
+              </select>
+              <select id="chore-when">
+                <option value="Every kids day">Every kids day</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+                <option value="Weekend">Weekend</option>
+                <option value="Once this week">Once this week</option>
+              </select>
+              <button class="chores-add-btn" onclick="addChore()">+ Add job</button>
+            </div>
+            <div class="chores-suggestions" id="chores-suggestions"></div>
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="card">
+          <div class="card-header" onclick="toggleSection('notes')">
+            <div class="card-dot dot-ink"></div>
+            <div class="card-title">Week notes</div>
+            <div class="card-meta">For yourself, or co-parent handover</div>
+            <span class="save-indicator" id="notes-saved">✓ Saved</span>
+            <svg class="card-chevron open" id="chev-notes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="card-body open" id="body-notes">
+            <textarea class="notes-textarea" id="week-notes" placeholder="e.g. Project due Friday. Sports gear Tuesday. What worked this week, what didn't…" oninput="scheduleSaveNotes()"></textarea>
+          </div>
+        </div>
+
+    </details>
+
+    <!-- CYCLE SETTINGS -->
+    <section class="cycle-section" id="cycle">
+      <div class="cycle-section-head" onclick="toggleSection('cycle')">
+        <div class="card-dot dot-ink"></div>
+        <div class="card-title">Kids &amp; custody cycle</div>
+        <div class="card-meta">Who's in the family, and how the fortnight runs</div>
+        <svg class="card-chevron" id="chev-cycle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="cycle-section-body" id="body-cycle">
+        <div class="family-kids">
+          <div class="pattern-week-label">Your kids</div>
+          <div class="family-kids-row">
+            <div class="kids-chips-row" id="kids-chips-row"></div>
+            <button type="button" class="at-secondary family-edit" onclick="openKidsSetup()">Edit kids</button>
+          </div>
+        </div>
+        <div class="pattern-week-label">Custody cycle</div>
+        <div class="pattern-help">Click any day to switch between your place and co-parent. The anchor date marks day 1 of Week A.</div>
+        <div class="cycle-controls">
+          <div class="cycle-field">
+            <label>Preset</label>
+            <select id="cycle-preset" onchange="applyCyclePreset(this.value)">
+              <option value="five-two">5–2 (kids most of fortnight)</option>
+              <option value="week-about">Week about</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="cycle-field">
+            <label>Anchor date (start of Week A)</label>
+            <input type="date" id="next-kids-date" onchange="saveCycleSettings()">
+          </div>
+          <div class="cycle-field" style="justify-content: end;">
+            <label>&nbsp;</label>
+            <button class="cycle-update-btn" onclick="saveCycleSettings(); renderFortnight(); renderMeals();">Update calendar</button>
+          </div>
+        </div>
+        <div class="pattern-week-label">Week A</div>
+        <div class="pattern-grid" id="pattern-week-a"></div>
+        <div class="pattern-week-label">Week B</div>
+        <div class="pattern-grid" id="pattern-week-b"></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/terms.html">Privacy &amp; terms</a><a href="/how-it-works.html">How it works</a></nav></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const DAY_NAMES = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DAY_SHORT = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+const PRESET_PATTERNS = {
+  'week-about': [1,1,1,1,1,1,1,0,0,0,0,0,0,0],
+  'five-two': [1,1,0,0,1,1,1,1,1,0,0,0,0,0],
+};
+
+const DEFAULT_HERO_REMINDER = 'Day 5 is usually when your patience drops. Keep tonight lighter than usual: simpler dinner, earlier wind-down, less negotiating.';
+const DEFAULT_HOUSE_RULES = {
+  weekdayScreen: '45–60 min after school jobs/homework',
+  weekendScreen: '1.5–2 hours total, spaced out',
+  screenCutoff: 'No screens after 7:30pm',
+  bedtimes: ['8:00pm', '8:30pm'],
+};
+
+let state = { events: [], dates: [], checklist: { before: [], during: [], after: [] }, meals: {}, chores: [], notes: '', heroReminder: DEFAULT_HERO_REMINDER, houseRules: { ...DEFAULT_HOUSE_RULES }, cycle: { preset: 'five-two', pattern: PRESET_PATTERNS['five-two'].slice(), nextKidsDate: '' } };
+let openSections = new Set(['schedule','dates','checklist','meals','rules','chores','notes']);
+
+const CHECKLIST_SUGGESTIONS = {
+  before: [
+    'Uniforms washed and ready',
+    'Sports clothes and soccer gear packed',
+    'Lunchbox containers clean and ready',
+    'Kids sheets changed',
+    'Kids bathroom cleaned',
+  ],
+  during: [
+    'Lunches packed the night before',
+    'Uniform and sports gear reset for tomorrow',
+    'Permission slips / school notices checked',
+    'Library books back in school bags',
+    'Water bottles filled and in the fridge',
+  ],
+  after: [
+    'Dirty uniforms collected',
+    'Sports gear checked before handover',
+    'School bags packed for co-parent',
+    'Bedrooms reset for next time',
+    'Bathroom towels replaced',
+  ],
+};
+
+const DEFAULT_CHECKLIST = {
+  before: [
+    { id: 'b1', text: 'Beds made, fresh sheets on, and rooms ready', done: false },
+    { id: 'b2', text: 'Kids\' food in fridge and easy breakfast options sorted', done: false },
+    { id: 'b3', text: 'School uniforms checked, washed, and ready for the week', done: false },
+    { id: 'b4', text: 'Sports kit, soccer gear, hats, and special clothes packed', done: false },
+    { id: 'b5', text: 'School bags, homework, library books, and permission notes checked', done: false },
+    { id: 'b6', text: 'Lunchbox containers, drink bottles, and freezer snacks ready', done: false },
+    { id: 'b7', text: 'Kids bathroom cleaned and stocked with towels / toiletries', done: false },
+  ],
+  during: [
+    { id: 'd1', text: 'Homework checked each night', done: false },
+    { id: 'd2', text: 'Bedtime routine — adjust to your kids\' ages', done: false },
+    { id: 'd3', text: 'School notes / emails checked', done: false },
+    { id: 'd4', text: 'One quality 1:1 with each kid', done: false },
+    { id: 'd5', text: 'School lunches planned the night before', done: false },
+    { id: 'd6', text: 'Uniform / sports gear reset for the next day', done: false },
+  ],
+  after: [
+    { id: 'a1', text: 'Kids\' bags packed for co-parent', done: false },
+    { id: 'a2', text: 'Medication / special items sent back', done: false },
+    { id: 'a3', text: 'Note any issues for co-parent', done: false },
+    { id: 'a4', text: 'Dirty uniforms and sports gear identified before handover', done: false },
+    { id: 'a5', text: 'Beds stripped, sheets washed, and rooms reset for next time', done: false },
+  ],
+};
+
+const DEFAULT_CHORES = [
+  { id: 'ch1', text: 'Clear dinner plate', who: 'both', when: 'Every kids day', done: false },
+  { id: 'ch2', text: 'Put shoes and school bag away', who: 'both', when: 'Every kids day', done: false },
+  { id: 'ch3', text: 'Tidy bedroom', who: 'both', when: 'Sunday', done: false },
+  { id: 'ch4', text: 'Put dirty clothes in basket', who: 'both', when: 'Every kids day', done: false },
+];
+
+const CHORE_SUGGESTIONS = [
+  'Load dishwasher','Unpack dishwasher','Tidy bedroom','Put washing in basket',
+  'Pack school bag','Feed pet','Put shoes away','Clear dinner plate',
+  'Vacuum bedroom','Reset toy room',
+];
+
+/* Child keys: 'child1' / 'child2'. Older saves used other values; map them on load. */
+const LEGACY_CHILD_KEYS = {};
+function normaliseChildKeys(s) {
+  const fix = item => { if (item && LEGACY_CHILD_KEYS[item.who]) item.who = LEGACY_CHILD_KEYS[item.who]; };
+  (s.events || []).forEach(fix);
+  (s.chores || []).forEach(fix);
+  (s.dates || []).forEach(fix);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem('atlas_kidsweek') || localStorage.getItem('dad_kidsweek');
+    if (raw) state = { ...state, ...JSON.parse(raw) };
+  } catch(e) {}
+  if (!Array.isArray(state.events)) state.events = [];
+  normaliseChildKeys(state);
+  dateLegacyOneOffs(state);
+  if (!Array.isArray(state.dates)) state.dates = [];
+  if (!state.checklist || Object.keys(state.checklist).length === 0) state.checklist = JSON.parse(JSON.stringify(DEFAULT_CHECKLIST));
+  if (!state.meals) state.meals = {};
+  if (!Array.isArray(state.chores)) state.chores = [];
+  if (state.chores.length === 0) state.chores = JSON.parse(JSON.stringify(DEFAULT_CHORES));
+  if (typeof state.heroReminder !== 'string' || !state.heroReminder.trim()) state.heroReminder = DEFAULT_HERO_REMINDER;
+  if (!state.houseRules || typeof state.houseRules !== 'object') state.houseRules = { ...DEFAULT_HOUSE_RULES };
+  state.houseRules.weekdayScreen = state.houseRules.weekdayScreen || DEFAULT_HOUSE_RULES.weekdayScreen;
+  state.houseRules.weekendScreen = state.houseRules.weekendScreen || DEFAULT_HOUSE_RULES.weekendScreen;
+  state.houseRules.screenCutoff = state.houseRules.screenCutoff || DEFAULT_HOUSE_RULES.screenCutoff;
+  if (!Array.isArray(state.houseRules.bedtimes)) state.houseRules.bedtimes = DEFAULT_HOUSE_RULES.bedtimes.slice();
+  if (!state.cycle) state.cycle = { preset: 'five-two', pattern: PRESET_PATTERNS['five-two'].slice(), nextKidsDate: '' };
+  if (!Array.isArray(state.cycle.pattern) || state.cycle.pattern.length !== 14) {
+    const preset = state.cycle.preset && PRESET_PATTERNS[state.cycle.preset] ? state.cycle.preset : 'five-two';
+    state.cycle.pattern = PRESET_PATTERNS[preset].slice();
+  }
+  if (!state.cycle.preset) state.cycle.preset = 'custom';
+  if (!state.cycle.nextKidsDate) {
+    const today = new Date();
+    const daysUntilMonday = (8 - today.getDay()) % 7 || 7;
+    const nextMon = new Date(today);
+    nextMon.setDate(today.getDate() + daysUntilMonday);
+    state.cycle.nextKidsDate = nextMon.toISOString().slice(0,10);
+  }
+}
+function save() {
+  try {
+    const serialised = JSON.stringify(state);
+    localStorage.setItem('atlas_kidsweek', serialised);
+    localStorage.setItem('dad_kidsweek', serialised);
+  } catch(e) {}
+}
+
+function getCyclePattern() {
+  return Array.isArray(state.cycle.pattern) && state.cycle.pattern.length === 14 ? state.cycle.pattern : PRESET_PATTERNS['five-two'].slice();
+}
+
+/* EVENTS — weekly events repeat on their weekday (day: 0=Mon … 6=Sun); one-offs carry a date (YYYY-MM-DD).
+   repeat: 'kids' narrows a weekly event to the weekdays the custody cycle says the kids are with you. */
+function isWeeklyEvent(ev) {
+  return ev.recurring !== false && !ev.date;
+}
+
+function isKidsDaysEvent(ev) {
+  return isWeeklyEvent(ev) && ev.repeat === 'kids';
+}
+
+function eventOccursOn(ev, date) {
+  if (!ev) return false;
+  if (!isWeeklyEvent(ev)) return ev.date === ymd(date);
+  return ev.day === (date.getDay() + 6) % 7 && (!isKidsDaysEvent(ev) || isKidsDate(date));
+}
+
+// The next date (from `from`, inclusive, up to 8 weeks out) this event happens.
+function nextOccurrence(ev, from) {
+  const d = new Date(from);
+  d.setHours(12, 0, 0, 0);
+  for (let i = 0; i < 56; i++) {
+    if (eventOccursOn(ev, d)) return new Date(d);
+    d.setDate(d.getDate() + 1);
+  }
+  return null;
+}
+
+function eventsOn(date) {
+  return (state.events || [])
+    .filter(ev => eventOccursOn(ev, date))
+    .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+}
+
+// Older saves stored one-offs by weekday only. Pin each to that weekday in the week it's first seen.
+function dateLegacyOneOffs(s) {
+  const monday = new Date();
+  monday.setHours(12, 0, 0, 0);
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+  (s.events || []).forEach(ev => {
+    if (!ev || ev.recurring !== false || ev.date || !(ev.day >= 0 && ev.day < 7)) return;
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + ev.day);
+    ev.date = ymd(date);
+  });
+}
+
+function syncEventForm() {
+  const weekly = $('ev-repeat').value !== 'once';
+  $('ev-day').hidden = !weekly;
+  $('ev-date').hidden = weekly;
+  if (!weekly && !$('ev-date').value) $('ev-date').value = ymd(new Date());
+}
+
+// One-off swaps override the cycle for a single day: state.overrides['YYYY-MM-DD'] = { kids, note, recordId }.
+function dayOverride(date) {
+  return (state.overrides && state.overrides[ymd(date)]) || null;
+}
+
+function isKidsDate(date) {
+  const ov = dayOverride(date);
+  if (ov) return !!ov.kids;
+  return isCycleKidsDate(date);
+}
+
+function isCycleKidsDate(date) {
+  const cycleStart = state.cycle.nextKidsDate ? new Date(state.cycle.nextKidsDate + 'T12:00:00') : new Date();
+  cycleStart.setHours(12, 0, 0, 0);
+  const msPerDay = 86400000;
+  const diff = Math.round((date - cycleStart) / msPerDay);
+  const pattern = getCyclePattern();
+  const index = ((diff % pattern.length) + pattern.length) % pattern.length;
+  return pattern[index] === 1;
+}
+
+function getPatternIndex(date) {
+  const cycleStart = state.cycle.nextKidsDate ? new Date(state.cycle.nextKidsDate + 'T12:00:00') : new Date();
+  cycleStart.setHours(12, 0, 0, 0);
+  const msPerDay = 86400000;
+  const diff = Math.round((date - cycleStart) / msPerDay);
+  const pattern = getCyclePattern();
+  return ((diff % pattern.length) + pattern.length) % pattern.length;
+}
+
+function renderPatternEditor() {
+  const pattern = getCyclePattern();
+  const weekA = $('pattern-week-a');
+  const weekB = $('pattern-week-b');
+  const preset = $('cycle-preset');
+  if (preset) preset.value = state.cycle.preset || 'custom';
+  if (weekA) weekA.innerHTML = '';
+  if (weekB) weekB.innerHTML = '';
+  DAY_SHORT.forEach((day, idx) => {
+    [weekA, weekB].forEach((container, weekIdx) => {
+      if (!container) return;
+      const patternIdx = weekIdx * 7 + idx;
+      const mine = pattern[patternIdx] === 1;
+      const div = document.createElement('button');
+      div.type = 'button';
+      div.className = 'pattern-day ' + (mine ? 'mine' : 'co-parent');
+      div.innerHTML = `<div class="pattern-day-name">${day}</div><div class="pattern-day-owner">${mine ? 'You' : 'Co-parent'}</div>`;
+      div.onclick = () => {
+        state.cycle.pattern[patternIdx] = mine ? 0 : 1;
+        state.cycle.preset = 'custom';
+        save();
+        renderPatternEditor();
+        renderFortnight();
+        renderMeals();
+      };
+      container.appendChild(div);
+    });
+  });
+}
+
+function applyCyclePreset(preset) {
+  state.cycle.preset = preset;
+  if (PRESET_PATTERNS[preset]) state.cycle.pattern = PRESET_PATTERNS[preset].slice();
+  save();
+  renderPatternEditor();
+  renderFortnight();
+  renderMeals();
+}
+
+/* FORTNIGHT CALENDAR */
+/* CALENDAR IMPORT (.ics) — read on the device, nothing is uploaded.
+   Single events only: repeating events (RRULE) are counted and skipped, cancelled ones ignored. */
+function parseICS(text, today) {
+  const lines = String(text || '').replace(/\r\n?/g, '\n').replace(/\n[ \t]/g, '').split('\n');
+  const unescape = v => v.replace(/\\n/gi, ' ').replace(/\\([,;\\])/g, '$1').replace(/\s+/g, ' ').trim();
+  const pad = n => String(n).padStart(2, '0');
+  const isoOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const parseWhen = (params, value) => {
+    const m = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?(Z)?)?$/.exec(value.trim());
+    if (!m) return null;
+    const [, y, mo, d, h, mi, , z] = m;
+    if (h === undefined || /VALUE=DATE(?!-)/i.test(params)) return { date: `${y}-${mo}-${d}`, allDay: true };
+    if (z) { // UTC: show in this device's local time
+      const t = new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi));
+      return { date: isoOf(t), time: pad(t.getHours()) + ':' + pad(t.getMinutes()), allDay: false };
+    }
+    return { date: `${y}-${mo}-${d}`, time: `${h}:${mi}`, allDay: false }; // floating or TZID: wall-clock time
+  };
+  const from = new Date(today); from.setDate(from.getDate() - 30);
+  const to = new Date(today); to.setMonth(to.getMonth() + 18);
+  const fromStr = isoOf(from), toStr = isoOf(to);
+  const out = { events: [], recurring: 0, outOfRange: 0, total: 0 };
+  let cur = null;
+  for (const line of lines) {
+    if (line === 'BEGIN:VEVENT') { cur = {}; continue; }
+    if (line === 'END:VEVENT') {
+      if (cur) {
+        out.total++;
+        if (cur.rrule) out.recurring++;
+        else if (cur.start && !cur.cancelled) {
+          if (cur.start.date < fromStr || cur.start.date > toStr) out.outOfRange++;
+          else {
+            let endDate = null;
+            if (cur.start.allDay && cur.end && cur.end.allDay) {
+              const e = new Date(cur.end.date + 'T12:00:00'); e.setDate(e.getDate() - 1); // DTEND is exclusive for all-day
+              if (isoOf(e) > cur.start.date) endDate = isoOf(e);
+            }
+            out.events.push({ uid: cur.uid || (cur.start.date + '|' + (cur.title || '')), title: cur.title || 'Untitled', date: cur.start.date, time: cur.start.time || '', allDay: cur.start.allDay, endDate });
+          }
+        }
+      }
+      cur = null; continue;
+    }
+    if (!cur) continue;
+    const colon = line.indexOf(':');
+    if (colon < 0) continue;
+    const head = line.slice(0, colon), value = line.slice(colon + 1);
+    const name = head.split(';')[0].toUpperCase(), params = head.slice(name.length);
+    if (name === 'SUMMARY') cur.title = unescape(value);
+    else if (name === 'UID') cur.uid = value.trim();
+    else if (name === 'DTSTART') cur.start = parseWhen(params, value);
+    else if (name === 'DTEND') cur.end = parseWhen(params, value);
+    else if (name === 'RRULE') cur.rrule = true;
+    else if (name === 'STATUS' && /CANCELLED/i.test(value)) cur.cancelled = true;
+  }
+  out.events.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  return out;
+}
+
+let icsPending = null;
+
+function readICSFile(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const today = new Date(); today.setHours(12, 0, 0, 0);
+    const parsed = parseICS(reader.result, today);
+    if (!parsed.total) {
+      if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('That file has no calendar events in it. Check it is an .ics calendar file.');
+      return;
+    }
+    icsPending = parsed;
+    openICSModal(file.name);
+  };
+  reader.onerror = () => { if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('That file could not be read.'); };
+  reader.readAsText(file);
+}
+
+function icsExisting() {
+  const ids = new Set();
+  (state.dates || []).forEach(d => d.importUid && ids.add(d.importUid));
+  (state.events || []).forEach(e => e.importUid && ids.add(e.importUid));
+  return ids;
+}
+
+function openICSModal(fileName) {
+  const p = icsPending;
+  const existing = icsExisting();
+  const fmt = iso => parseDateLocal(iso).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  const allDay = p.events.filter(e => e.allDay), timed = p.events.filter(e => !e.allDay);
+  const row = (e, i) => `<label class="ics-row${existing.has(e.uid) ? ' dupe' : ''}"><input type="checkbox" data-ics="${i}" ${existing.has(e.uid) ? '' : 'checked'} onchange="syncICSCount()"><span class="when">${fmt(e.date)}${e.time ? '<br>' + e.time : ''}</span><span class="what">${escapeHtml(e.title)}${e.endDate ? ' <small>to ' + fmt(e.endDate) + '</small>' : ''}</span></label>`;
+  let html = '';
+  if (allDay.length) html += `<div class="ics-group">All-day · go to Term &amp; key dates (${allDay.length})</div>` + allDay.map(e => row(e, p.events.indexOf(e))).join('');
+  if (timed.length) html += `<div class="ics-group">Timed · go to Schedule as one-off events (${timed.length})</div>` + timed.map(e => row(e, p.events.indexOf(e))).join('');
+  if (!p.events.length) html = '<div class="ics-group">Nothing between last month and the next 18 months to import.</div>';
+  $('ics-list').innerHTML = html;
+  $('ics-sub').textContent = `${fileName}: ${p.events.length} event${p.events.length === 1 ? '' : 's'} from last month to 18 months ahead. Untick anything you don't want.`;
+  const notes = [];
+  if (p.recurring) notes.push(`${p.recurring} repeating event${p.recurring === 1 ? ' was' : 's were'} skipped. Add regular things like sport or pickups in Schedule, where they can follow your kids days.`);
+  if (p.outOfRange) notes.push(`${p.outOfRange} older or far-off event${p.outOfRange === 1 ? '' : 's'} left out.`);
+  notes.push('Importing again later updates what you brought in, without doubling up.');
+  $('ics-fine').textContent = notes.join(' ');
+  $('ics-all').checked = true;
+  $('ics-modal').hidden = false;
+  syncICSCount();
+  $('ics-go').focus();
+}
+
+function toggleAllICS(on) {
+  document.querySelectorAll('#ics-list input[data-ics]').forEach(cb => { cb.checked = on; });
+  syncICSCount();
+}
+
+function syncICSCount() {
+  const n = document.querySelectorAll('#ics-list input[data-ics]:checked').length;
+  const all = document.querySelectorAll('#ics-list input[data-ics]').length;
+  $('ics-all').checked = all > 0 && n === all;
+  $('ics-go').textContent = n ? 'Import ' + n : 'Import';
+  $('ics-go').disabled = !n;
+}
+
+function closeICSModal() {
+  $('ics-modal').hidden = true;
+  icsPending = null;
+}
+
+function importICS() {
+  if (!icsPending) return;
+  const type = $('ics-type').value || 'school';
+  const fmt = iso => parseDateLocal(iso).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  let added = 0, updated = 0;
+  document.querySelectorAll('#ics-list input[data-ics]:checked').forEach(cb => {
+    const e = icsPending.events[+cb.dataset.ics];
+    if (!e) return;
+    if (e.allDay) {
+      const label = e.title + (e.endDate ? ' (to ' + fmt(e.endDate) + ')' : '');
+      const hit = (state.dates || []).find(d => d.importUid === e.uid);
+      if (hit) { Object.assign(hit, { date: e.date, label }); updated++; }
+      else {
+        const t = /pupil.?free|student.?free|staff development|school development|professional learning day/i.test(e.title) ? 'pupil-free' : type;
+        state.dates.push({ id: 'ics' + Date.now() + '-' + added, date: e.date, label, type: t, importUid: e.uid }); added++;
+      }
+    } else {
+      const hit = (state.events || []).find(x => x.importUid === e.uid);
+      const fields = { date: e.date, day: (parseDateLocal(e.date).getDay() + 6) % 7, time: e.time, text: e.title };
+      if (hit) { Object.assign(hit, fields); updated++; }
+      else { state.events.push({ id: 'ics' + Date.now() + '-' + added, who: 'both', recurring: false, importUid: e.uid, ...fields }); added++; }
+    }
+  });
+  closeICSModal();
+  save();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify(`Imported ${added} new` + (updated ? `, updated ${updated}` : '') + '. They show on the month view and in Term & key dates or Schedule.');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('ics-modal') && !$('ics-modal').hidden) closeICSModal(); });
+
+/* MONTH VIEW */
+let monthOffset = 0;
+let monthSelected = null;
+
+function shiftMonth(step) {
+  monthOffset = step === 0 ? 0 : monthOffset + step;
+  if (step === 0) monthSelected = ymd(new Date());
+  renderMonth();
+}
+
+function monthDayInfo(d) {
+  const prev = new Date(d); prev.setDate(d.getDate() - 1);
+  const kids = isKidsDate(d);
+  const handover = kids !== isKidsDate(prev) ? (kids ? 'arrive' : 'leave') : null;
+  return { kids, handover, swapped: !!dayOverride(d), inBreak: !!getActiveTermBreak(d), dates: getDatesOn(ymd(d)), events: eventsOn(d) };
+}
+
+function renderMonth() {
+  const grid = $('month-grid');
+  if (!grid) return;
+  const now = new Date(); now.setHours(12, 0, 0, 0);
+  const first = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1, 12);
+  $('month-title').textContent = first.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+  const start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0, 12);
+  const cells = Math.ceil((((first.getDay() + 6) % 7) + last.getDate()) / 7) * 7;
+  if (!monthSelected || parseDateLocal(monthSelected).getMonth() !== first.getMonth() || parseDateLocal(monthSelected).getFullYear() !== first.getFullYear()) {
+    monthSelected = (monthOffset === 0) ? ymd(now) : null;
+  }
+  grid.innerHTML = '';
+  for (let i = 0; i < cells; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    const iso = ymd(d);
+    const info = monthDayInfo(d);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'm-day' + (info.kids ? ' kids' : '') + (info.inBreak ? ' in-break' : '') + (info.swapped ? ' swapped' : '')
+      + (d.getMonth() !== first.getMonth() ? ' out' : '') + (iso === ymd(now) ? ' today' : '');
+    btn.setAttribute('aria-pressed', iso === monthSelected ? 'true' : 'false');
+    const label = d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })
+      + (info.kids ? ', kids with you' : ', co-parent day')
+      + (info.handover ? ', handover' : '') + (info.swapped ? ', changed from usual' : '') + (info.inBreak ? ', school holidays' : '')
+      + (info.dates.length ? ', ' + info.dates.map(x => x.label).join(', ') : '')
+      + (info.events.length ? ', ' + info.events.length + ' event' + (info.events.length === 1 ? '' : 's') : '');
+    btn.setAttribute('aria-label', label);
+    const items = [
+      ...info.dates.map(x => `<span class="m-item date">${escapeHtml(x.label || '')}</span>`),
+      ...info.events.map(e => `<span class="m-item">${escapeHtml((e.time ? e.time + ' ' : '') + e.text)}</span>`),
+    ];
+    const shown = items.slice(0, 3).join('');
+    const more = items.length > 3 ? `<span class="m-more">+${items.length - 3} more</span>` : '';
+    const dots = (info.dates.length ? '<i class="date"></i>' : '') + (info.events.length ? '<i></i>' : '');
+    btn.innerHTML = `<span class="m-top"><span class="m-num">${d.getDate()}</span>${info.handover ? '<span class="m-hand"></span>' : ''}${info.swapped ? '<span class="m-swap" title="Changed from usual">⇄</span>' : ''}</span>${shown}${more}<span class="m-dots">${dots}</span>`;
+    btn.onclick = () => { monthSelected = iso; renderMonth(); };
+    grid.appendChild(btn);
+  }
+  renderMonthDetail();
+}
+
+function renderMonthDetail() {
+  const el = $('month-detail');
+  if (!el) return;
+  if (!monthSelected) { el.innerHTML = ''; return; }
+  const d = parseDateLocal(monthSelected);
+  const info = monthDayInfo(d);
+  const rows = [];
+  if (info.handover) rows.push(`<li><b>Handover</b>${info.handover === 'arrive' ? 'Kids arrive' : 'Kids go back'}</li>`);
+  if (info.inBreak) rows.push('<li><b>School</b>Holidays</li>');
+  info.dates.forEach(x => rows.push(`<li><b>Date</b>${escapeHtml(x.label || '')}</li>`));
+  info.events.forEach(e => rows.push(`<li><b>${escapeHtml(e.time || 'All day')}</b>${escapeHtml(e.text)}</li>`));
+  const ov = dayOverride(d);
+  const usual = isCycleKidsDate(d);
+  const swap = ov
+    ? `<div class="md-swap is-set"><p><b>Changed from usual.</b> Normally ${usual ? 'with you' : 'a co-parent day'}${ov.note ? ': ' + escapeHtml(ov.note.replace(/[.!]$/, '')) + '.' : '.'}${ov.recordId ? ' Logged in Records.' : ''}</p><button type="button" class="md-btn" onclick="undoSwap('${monthSelected}')">Undo change</button></div>`
+    : `<div class="md-swap"><p class="md-swap-q">Change this day</p>
+        <input type="text" id="swap-note" maxlength="120" placeholder="Reason (optional), e.g. swapped for her work trip" aria-label="Reason for the change">
+        <label class="md-log"><input type="checkbox" id="swap-log" checked> Log it in Records</label>
+        <button type="button" class="md-btn primary" onclick="applySwap('${monthSelected}', ${usual ? 'false' : 'true'})">${usual ? 'Kids not with me this day' : 'Kids with me this day'}</button></div>`;
+  el.innerHTML = `<div class="md-head"><span class="md-date">${d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })}</span>`
+    + `<span class="md-tag${info.kids ? ' kids' : ''}">${info.kids ? 'Kids with you' : 'Co-parent day'}</span></div>`
+    + (rows.length ? `<ul>${rows.join('')}</ul>` : '<p class="md-empty">Nothing planned.</p>')
+    + swap;
+}
+
+const SWAP_RECORDS_KEY = 'atlas_records';
+
+function applySwap(iso, kids) {
+  const note = ($('swap-note') && $('swap-note').value.trim()) || '';
+  const log = $('swap-log') ? $('swap-log').checked : false;
+  if (!state.overrides || typeof state.overrides !== 'object') state.overrides = {};
+  const entry = { kids: !!kids, note };
+  if (log) {
+    try {
+      const data = JSON.parse(localStorage.getItem(SWAP_RECORDS_KEY) || '{"entries":[]}');
+      if (!Array.isArray(data.entries)) data.entries = [];
+      const day = parseDateLocal(iso).toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
+      const rec = {
+        id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7), type: 'handover', date: iso,
+        title: (kids ? 'Kids with me on ' : 'Kids with their other parent on ') + day + ' (swap)',
+        amount: null, paidBy: null, kids: '', receipt: '', note, created: new Date().toISOString(),
+      };
+      data.entries.push(rec);
+      localStorage.setItem(SWAP_RECORDS_KEY, JSON.stringify(data));
+      entry.recordId = rec.id;
+    } catch (e) {}
+  }
+  state.overrides[iso] = entry;
+  save();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('Day changed' + (entry.recordId ? ' and logged in Records.' : '.') + ' Your usual cycle carries on after it.');
+}
+
+function undoSwap(iso) {
+  const ov = state.overrides && state.overrides[iso];
+  if (!ov) return;
+  let removedRecord = false;
+  if (ov.recordId) {
+    try {
+      const data = JSON.parse(localStorage.getItem(SWAP_RECORDS_KEY) || '{"entries":[]}');
+      const before = (data.entries || []).length;
+      data.entries = (data.entries || []).filter(e => e.id !== ov.recordId);
+      removedRecord = data.entries.length < before;
+      localStorage.setItem(SWAP_RECORDS_KEY, JSON.stringify(data));
+    } catch (e) {}
+  }
+  delete state.overrides[iso];
+  save();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify('Change undone' + (removedRecord ? ', and its Records entry removed.' : '.'));
+}
+
+function renderFortnight() {
+  renderMonth();
+  const el = $('fortnight-grid');
+  if (!el) return;
+  el.innerHTML = '';
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+
+  // Snap to the most recent Monday so the grid always reads Mon–Sun, Mon–Sun
+  const startDisplay = new Date(today);
+  const offsetToMonday = (today.getDay() + 6) % 7; // Mon=0 … Sun=6
+  startDisplay.setDate(today.getDate() - offsetToMonday);
+  const dayLetters = ['M','T','W','T','F','S','S'];
+
+  // Render 14-day grid + count days with kids in the visible window
+  let kidsDaysVisible = 0;
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(startDisplay);
+    d.setDate(startDisplay.getDate() + i);
+    const isToday = ymd(d) === ymd(today); // local dates (toISOString is UTC and flips before 10am in Sydney)
+    const kids = isKidsDate(d);
+    const prevDay = new Date(d); prevDay.setDate(d.getDate() - 1);
+    const handover = kids !== isKidsDate(prevDay);
+    if (kids) kidsDaysVisible++;
+    const dayOfWeek = (d.getDay() + 6) % 7;
+
+    // Term-break shading + per-day flags
+    const dayStr = ymd(d);
+    const flagsForDay = getDatesOn(dayStr);
+    const inBreak = !!getActiveTermBreak(d);
+
+    const div = document.createElement('div');
+    div.className = 'fort-day'
+      + (kids ? ' kids' : ' empty')
+      + (isToday ? ' today' : '')
+      + (handover ? ' handover' : '')
+      + (inBreak ? ' in-break' : '')
+      + (dayOverride(d) ? ' swapped' : '');
+    let flagsHtml = '';
+    if (flagsForDay.length) {
+      const dots = flagsForDay.slice(0, 3).map(f => {
+        const meta = DATE_TYPE_META[f.type] || { flagClass: 'personal' };
+        return '<span class="fort-day-flag ' + meta.flagClass + '"></span>';
+      }).join('');
+      flagsHtml = '<div class="fort-day-flags">' + dots + '</div>';
+    }
+    div.innerHTML = flagsHtml
+      + `<div class="fort-day-name">${dayLetters[dayOfWeek]}</div>`
+      + `<div class="fort-day-num">${d.getDate()}</div>`;
+    el.appendChild(div);
+  }
+
+  if ($('fn-legend-hol')) $('fn-legend-hol').hidden = !el.querySelector('.fort-day.in-break.kids');
+
+  // Tier 2 — balance chip in the head row
+  if ($('fortnight-balance')) {
+    const names = (Array.isArray(state.kids) ? state.kids : []).map(k => k && k.name).filter(Boolean);
+    const who = names.length ? (names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1]) : 'you';
+    $('fortnight-balance').textContent = kidsDaysVisible + ' / 14 with ' + who;
+  }
+
+  const kidsNow = isKidsDate(today);
+  const statusEl = $('fortnight-status');
+  // School-term context (used as a status addendum)
+  const activeBreak = getActiveTermBreak(today);
+  const upcomingBreak = activeBreak ? null : getNextTermBreakStart(today, 21);
+  let breakAddendum = '';
+  if (activeBreak) {
+    const endStr = activeBreak.endDate.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    if (activeBreak.daysUntilEnd === 0) breakAddendum = ' · School break ends today.';
+    else if (activeBreak.daysUntilEnd === 1) breakAddendum = ' · School break ends tomorrow.';
+    else breakAddendum = ' · School break · ' + activeBreak.daysUntilEnd + ' days left (back ' + endStr + ').';
+  } else if (upcomingBreak) {
+    const startStr = upcomingBreak.date.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const days = Math.round((upcomingBreak.date - today) / 86400000);
+    if (days === 1) breakAddendum = ' · School break starts tomorrow.';
+    else breakAddendum = ' · School break starts ' + startStr + ' (' + days + ' days).';
+  }
+
+  if (kidsNow) {
+    let daysLeft = 0;
+    for (let i = 1; i <= 14; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      if (!isKidsDate(d)) { daysLeft = i; break; }
+    }
+    const handover = new Date(today);
+    handover.setDate(today.getDate() + daysLeft);
+    const handoverDay = handover.toLocaleDateString('en-AU', { weekday: 'long' });
+    // Tier 1 — smart status with weekday name
+    if (statusEl) {
+      if (daysLeft === 1) {
+        statusEl.innerHTML = '<strong>Kids with you.</strong> Handover tomorrow · ' + handoverDay + '.' + breakAddendum;
+      } else {
+        statusEl.innerHTML = '<strong>Kids with you.</strong> Handover ' + handoverDay + ' · ' + daysLeft + ' days.' + breakAddendum;
+      }
+    }
+    if ($('dossier-status')) { $('dossier-status').textContent = 'Kids with you'; $('dossier-status').style.background = 'var(--cobalt)'; }
+    if ($('d-days-until')) $('d-days-until').textContent = 'Now (' + daysLeft + 'd left)';
+    if ($('d-handover')) $('d-handover').textContent = handover.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  } else {
+    let daysUntil = 0;
+    for (let i = 1; i <= 21; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      if (isKidsDate(d)) { daysUntil = i; break; }
+    }
+    const nextKids = new Date(today);
+    nextKids.setDate(today.getDate() + daysUntil);
+    const arrivalDay = nextKids.toLocaleDateString('en-AU', { weekday: 'long' });
+    // Tier 1 — smart status with weekday name
+    if (statusEl) {
+      if (daysUntil === 1) {
+        statusEl.innerHTML = '<strong>Solo week.</strong> Kids arrive tomorrow · ' + arrivalDay + '.' + breakAddendum;
+      } else {
+        statusEl.innerHTML = '<strong>Solo week.</strong> Kids arrive ' + arrivalDay + ' · ' + daysUntil + ' days.' + breakAddendum;
+      }
+    }
+    if ($('dossier-status')) { $('dossier-status').textContent = 'Solo week'; $('dossier-status').style.background = 'var(--green)'; }
+    if ($('d-days-until')) $('d-days-until').textContent = daysUntil + ' day' + (daysUntil !== 1 ? 's' : '');
+    if ($('d-handover')) $('d-handover').textContent = nextKids.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  }
+
+  // Tier 2.5 — "Coming up" line for next 7 days
+  renderUpcoming();
+
+  // Tier 3 — Today's run + Tomorrow tile + Next handover
+  renderTodaysRun();
+  renderTomorrow();
+  renderNextHandover();
+
+  // Dossier alerts
+  renderMissingPieces();
+  renderPressureWarning();
+}
+
+/* COMING UP — next 7 days from state.dates */
+function renderUpcoming() {
+  const el = $('upcoming-line');
+  if (!el) return;
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  const horizon = new Date(today);
+  horizon.setDate(today.getDate() + 7);
+  const upcoming = getSortedDates().filter(entry => {
+    const d = parseDateLocal(entry.date);
+    return d && d >= today && d <= horizon;
+  });
+  if (upcoming.length === 0) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  const visible = upcoming.slice(0, 3);
+  const parts = visible.map(entry => {
+    const d = parseDateLocal(entry.date);
+    const days = Math.round((d - today) / 86400000);
+    let when;
+    if (days === 0) when = 'today';
+    else if (days === 1) when = 'tomorrow';
+    else if (days <= 6) when = d.toLocaleDateString('en-AU', { weekday: 'short' });
+    else when = d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const safeLabel = (entry.label || '').replace(/</g, '&lt;');
+    return safeLabel + ' <span class="upcoming-when">' + when + '</span>';
+  });
+  const more = upcoming.length > visible.length ? ' <span class="upcoming-when">+ ' + (upcoming.length - visible.length) + ' more</span>' : '';
+  el.innerHTML = '<strong>Coming up</strong>' + parts.join(' · ') + more;
+  el.style.display = 'block';
+}
+
+/* TOMORROW TILE — auto-generated from schedule events */
+function renderTomorrow() {
+  const labelEl = $('tomorrow-label');
+  const tagEl = $('tomorrow-tag');
+  const eventsEl = $('tomorrow-events');
+  if (!eventsEl) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const isKidsTomorrow = isKidsDate(tomorrow);
+  const weekday = tomorrow.toLocaleDateString('en-AU', { weekday: 'long' });
+
+  if (labelEl) labelEl.textContent = 'Tomorrow · ' + weekday;
+  if (tagEl) {
+    tagEl.textContent = isKidsTomorrow ? 'Kids with you' : 'Solo day';
+    tagEl.className = 'tomorrow-tag ' + (isKidsTomorrow ? 'kids' : 'solo');
+  }
+
+  // Handover sub-banner — surfaces packing / returning checklist when transition is tomorrow
+  renderHandoverBanner(today, tomorrow, isKidsTomorrow);
+
+  // Pull tomorrow's events
+  const tomorrowEvents = eventsOn(tomorrow);
+
+  eventsEl.innerHTML = '';
+
+  if (tomorrowEvents.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'tomorrow-empty';
+    li.textContent = isKidsTomorrow
+      ? 'No scheduled events. Quiet day with the kids.'
+      : 'No scheduled events. Quiet solo day.';
+    eventsEl.appendChild(li);
+    return;
+  }
+
+  // Show top 3, with a "+N more" line if there are extras
+  const visible = tomorrowEvents.slice(0, 3);
+  visible.forEach(ev => {
+    const li = document.createElement('li');
+    li.className = 'tomorrow-event';
+    const time = (ev.time || '').replace(/^0/, '');
+    li.innerHTML = '<span class="tomorrow-event-time">' + time + '</span><span class="tomorrow-event-text">' + escapeHtml(ev.text || '') + '</span>';
+    eventsEl.appendChild(li);
+  });
+
+  if (tomorrowEvents.length > 3) {
+    const more = document.createElement('div');
+    more.className = 'tomorrow-more';
+    more.textContent = '+ ' + (tomorrowEvents.length - 3) + ' more in the schedule below';
+    eventsEl.appendChild(more);
+  }
+}
+
+/* HANDOVER BANNER — appears in Tomorrow tile when handover is happening tonight/tomorrow */
+function renderHandoverBanner(today, tomorrow, isKidsTomorrow) {
+  const wrap = $('tomorrow-handover');
+  const titleEl = $('tomorrow-handover-title');
+  const progressEl = $('tomorrow-handover-progress');
+  const listEl = $('tomorrow-handover-list');
+  if (!wrap || !listEl) return;
+
+  const isKidsToday = isKidsDate(today);
+  // Only show on transition days
+  if (isKidsToday === isKidsTomorrow) {
+    wrap.style.display = 'none';
+    listEl.innerHTML = '';
+    return;
+  }
+
+  // Determine direction
+  // kids-today + solo-tomorrow → RETURNING (use checklist.after)
+  // solo-today + kids-tomorrow → PACKING (use checklist.before)
+  const returning = isKidsToday && !isKidsTomorrow;
+  const group = returning ? 'after' : 'before';
+  const items = (state.checklist && state.checklist[group]) || [];
+  const total = items.length;
+  const done = items.filter(i => i.done).length;
+  const undone = items.filter(i => !i.done);
+
+  wrap.className = 'tomorrow-handover ' + (returning ? 'returning' : 'packing');
+  if (titleEl) titleEl.textContent = returning ? 'Returning tomorrow' : 'Packing up tonight';
+  if (progressEl) progressEl.textContent = total ? (done + ' / ' + total + ' done') : '';
+
+  listEl.innerHTML = '';
+  if (total === 0) {
+    const empty = document.createElement('li');
+    empty.className = 'tomorrow-handover-empty';
+    empty.textContent = returning
+      ? 'No return checklist set up yet. Add items in the Handover checklist card below.'
+      : 'No pre-arrival checklist set up yet. Add items in the Handover checklist card below.';
+    listEl.appendChild(empty);
+  } else if (undone.length === 0) {
+    const empty = document.createElement('li');
+    empty.className = 'tomorrow-handover-empty';
+    empty.textContent = '✓ Checklist complete. You\'re sorted.';
+    listEl.appendChild(empty);
+  } else {
+    undone.slice(0, 4).forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'tomorrow-handover-item';
+      li.textContent = item.text;
+      listEl.appendChild(li);
+    });
+    if (undone.length > 4) {
+      const more = document.createElement('li');
+      more.className = 'tomorrow-handover-empty';
+      more.textContent = '+ ' + (undone.length - 4) + ' more in the checklist below';
+      listEl.appendChild(more);
+    }
+  }
+  wrap.style.display = 'block';
+}
+
+/* TODAY'S RUN CARD */
+function renderTodaysRun() {
+  const card = $('todays-run-card');
+  const labelEl = $('todays-run-label');
+  const tagEl = $('todays-run-tag');
+  const eventsEl = $('todays-run-events');
+  if (!card || !eventsEl) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const isKidsToday = isKidsDate(today);
+  const weekday = today.toLocaleDateString('en-AU', { weekday: 'long' });
+
+  if (labelEl) labelEl.textContent = 'Today · ' + weekday;
+  if (tagEl) {
+    tagEl.textContent = isKidsToday ? 'Kids with you' : 'Solo day';
+    tagEl.className = 'tomorrow-tag ' + (isKidsToday ? 'kids' : 'solo');
+  }
+
+  const todaysEvents = eventsOn(today);
+
+  eventsEl.innerHTML = '';
+  if (todaysEvents.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'tomorrow-empty';
+    li.textContent = isKidsToday ? 'No scheduled events today.' : 'No scheduled events. Solo day.';
+    eventsEl.appendChild(li);
+  } else {
+    todaysEvents.slice(0, 3).forEach(ev => {
+      const li = document.createElement('li');
+      li.className = 'tomorrow-event';
+      const time = (ev.time || '').replace(/^0/, '');
+      li.innerHTML = '<span class="tomorrow-event-time">' + time + '</span><span class="tomorrow-event-text">' + escapeHtml(ev.text || '') + '</span>';
+      eventsEl.appendChild(li);
+    });
+    if (todaysEvents.length > 3) {
+      const more = document.createElement('div');
+      more.className = 'tomorrow-more';
+      more.textContent = '+ ' + (todaysEvents.length - 3) + ' more in the schedule below';
+      eventsEl.appendChild(more);
+    }
+  }
+
+  // Also surface dinner (meals keyed as 'day-0' … 'day-6')
+  const dayIdx = (today.getDay() + 6) % 7; // meals are stored by weekday, 0=Mon
+  const mealObj = state.meals && state.meals['day-' + dayIdx];
+  const dinner = mealObj && typeof mealObj === 'object' ? mealObj.dinner : (typeof mealObj === 'string' ? mealObj : null);
+  if (dinner) {
+    const li = document.createElement('li');
+    li.className = 'tomorrow-event';
+    li.innerHTML = '<span class="tomorrow-event-time">Dinner</span><span class="tomorrow-event-text">' + dinner + '</span>';
+    eventsEl.appendChild(li);
+  }
+
+  card.style.display = 'block';
+}
+
+/* NEXT HANDOVER CARD */
+function renderNextHandover() {
+  const card = $('next-handover-card');
+  const dayEl = $('next-handover-day');
+  const dirEl = $('next-handover-dir');
+  const progressEl = $('next-handover-progress');
+  const itemsEl = $('next-handover-items');
+  if (!card) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const isKidsToday = isKidsDate(today);
+
+  // Find next transition day (up to 14 days ahead)
+  let transitionDate = null;
+  for (let i = 1; i <= 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if (isKidsDate(d) !== isKidsToday) { transitionDate = d; break; }
+  }
+
+  if (!transitionDate) { card.style.display = 'none'; return; }
+
+  const daysAway = Math.round((transitionDate - today) / 86400000);
+  const returning = isKidsToday; // kids with you today → returning at next handover
+  const group = returning ? 'after' : 'before';
+  const items = (state.checklist && state.checklist[group]) || [];
+  const total = items.length;
+  const done = items.filter(i => i.done).length;
+  const undone = items.filter(i => !i.done);
+
+  const dateLabel = daysAway === 1 ? 'Tomorrow' : transitionDate.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'short' });
+  const daysLabel = daysAway === 1 ? '' : ' · ' + daysAway + ' days';
+  if (dayEl) dayEl.textContent = dateLabel + daysLabel;
+  if (dirEl) dirEl.textContent = returning ? 'Returning to other parent' : 'Kids arriving with you';
+  if (progressEl) progressEl.textContent = total ? (done + ' / ' + total + ' done') : '';
+
+  itemsEl.innerHTML = '';
+  if (total === 0) {
+    const li = document.createElement('li');
+    li.className = 'next-handover-empty';
+    li.textContent = 'No checklist set up yet.';
+    itemsEl.appendChild(li);
+  } else if (undone.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'next-handover-empty';
+    li.textContent = '✓ Checklist complete.';
+    itemsEl.appendChild(li);
+  } else {
+    undone.slice(0, 3).forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'next-handover-item';
+      li.textContent = item.text;
+      itemsEl.appendChild(li);
+    });
+    if (undone.length > 3) {
+      const li = document.createElement('li');
+      li.className = 'next-handover-empty';
+      li.textContent = '+ ' + (undone.length - 3) + ' more to do';
+      itemsEl.appendChild(li);
+    }
+  }
+
+  card.style.display = 'block';
+}
+
+/* MISSING PIECES ALERT */
+function renderMissingPieces() {
+  const alert = $('dossier-missing');
+  const text = $('dossier-missing-text');
+  if (!alert || !text) return;
+
+  const gaps = [];
+  const s = state;
+
+  if (!s.kids || s.kids.length === 0) gaps.push('No kids added yet');
+  if (!s.cycle || !s.cycle.nextKidsDate) gaps.push('No custody dates set');
+
+  const dayNames = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  const hasMeals = dayNames.some(d => s.meals && s.meals[d]);
+  if (!hasMeals) gaps.push('No dinners planned');
+
+  const hr = s.houseRules || {};
+  if (!hr.bedtimes || hr.bedtimes.length === 0) gaps.push('No bedtimes set');
+  if (!hr.screenCutoff) gaps.push('No screen cutoff set');
+
+  const checkItems = [...(s.checklist && s.checklist.before || []), ...(s.checklist && s.checklist.after || [])];
+  if (checkItems.length === 0) gaps.push('Handover checklist is empty');
+
+  if (gaps.length === 0) { alert.style.display = 'none'; return; }
+
+  text.textContent = gaps.slice(0, 3).join(' · ') + (gaps.length > 3 ? ' · +' + (gaps.length - 3) + ' more' : '');
+  alert.style.display = 'block';
+}
+
+/* PRESSURE WARNING ALERT */
+function renderPressureWarning() {
+  const alert = $('dossier-pressure');
+  const text = $('dossier-pressure-text');
+  if (!alert || !text) return;
+
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowIdx = (tomorrow.getDay() + 6) % 7;
+  const isKidsTomorrow = isKidsDate(tomorrow);
+  const isKidsToday = isKidsDate(today);
+
+  const tomorrowEvents = eventsOn(tomorrow);
+  const handoverTomorrow = isKidsToday !== isKidsTomorrow;
+
+  // Check for important date in next 48h
+  const horizon48 = new Date(today);
+  horizon48.setDate(today.getDate() + 2);
+  const urgentDate = getSortedDates().find(entry => {
+    const d = parseDateLocal(entry.date);
+    return d && d >= today && d <= horizon48;
+  });
+
+  const warnings = [];
+  if (handoverTomorrow && tomorrowEvents.length >= 2) warnings.push('Handover + ' + tomorrowEvents.length + ' events tomorrow');
+  else if (tomorrowEvents.length >= 3) warnings.push(tomorrowEvents.length + ' events scheduled tomorrow');
+  if (urgentDate) warnings.push((urgentDate.label || 'Important date') + ' coming up');
+
+  if (warnings.length === 0) { alert.style.display = 'none'; return; }
+
+  text.textContent = warnings.join(' · ');
+  alert.style.display = 'block';
+}
+
+/* SCHEDULE */
+function renderSchedule() {
+  const el = $('day-schedule');
+  if (!el) return;
+  el.innerHTML = '';
+
+  const today = new Date();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  monday.setHours(12, 0, 0, 0);
+
+  const eventsByDay = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    return eventsOn(date);
+  });
+
+  let totalEvents = 0;
+  DAY_NAMES.forEach((dayName, i) => {
+    const dayEvents = eventsByDay[i];
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    const keyDates = getDatesOn(ymd(date));
+    if (dayEvents.length === 0 && keyDates.length === 0) return;
+    totalEvents += dayEvents.length;
+    const kidsHere = isKidsDate(date);
+    const dateTags = keyDates.map(d => {
+      const meta = DATE_TYPE_META[d.type] || { chipClass: '' };
+      return `<span class="date-row-type ${meta.chipClass}">${escapeHtml(d.label || meta.short || '')}</span>`;
+    }).join('');
+
+    const block = document.createElement('div');
+    block.className = 'day-block ' + (kidsHere ? 'both' : 'away');
+    block.innerHTML = `<div class="day-head"><span class="day-title"><span class="day-name">${dayName}</span>${dateTags}</span><span class="day-tag ${kidsHere ? 'kids' : 'away'}">${kidsHere ? 'Kids with you' : 'Co-parent day'}</span></div><div class="day-events" id="events-${i}"></div>`;
+    el.appendChild(block);
+
+    const evEl = block.querySelector('.day-events');
+    dayEvents.forEach(ev => {
+      const row = document.createElement('div');
+      row.className = 'event-row';
+      row.innerHTML = `
+        <span class="event-time">${ev.time}</span>
+        <span class="event-text">${escapeHtml(ev.text)}${isKidsDaysEvent(ev) ? ' <span class="event-repeat" title="On your kids days">↻ kids days</span>' : isWeeklyEvent(ev) ? ' <span class="event-repeat" title="Every week">↻</span>' : ''}</span>
+        <span class="event-chip ${escapeHtml(ev.who)}">${escapeHtml(getEventWhoLabel(ev.who))}</span>
+        <button class="event-remove" onclick="removeEvent('${ev.id}')">×</button>`;
+      evEl.appendChild(row);
+    });
+  });
+
+  // Events that don't fall in this week (kids-day events on a solo week, future one-offs) stay visible and removable here.
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const later = (state.events || [])
+    .filter(ev => ev && (isKidsDaysEvent(ev) || !isWeeklyEvent(ev)))
+    .map(ev => ({ ev, next: nextOccurrence(ev, monday) || (!isWeeklyEvent(ev) ? parseDateLocal(ev.date) : null) }))
+    .filter(x => isKidsDaysEvent(x.ev) ? !eventsByDay.some(list => list.includes(x.ev)) : (x.next && x.next > sunday))
+    .sort((a, b) => (a.next ? a.next.getTime() : Infinity) - (b.next ? b.next.getTime() : Infinity));
+
+  if (!totalEvents) {
+    const empty = document.createElement('p');
+    empty.className = 'schedule-empty';
+    empty.textContent = el.children.length ? 'No timed events this week.' : later.length ? 'Nothing on this week.' : 'Nothing scheduled yet. Add school runs, activities and handovers above.';
+    el.appendChild(empty);
+  }
+
+  if (later.length) {
+    const label = d => d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const block = document.createElement('div');
+    block.className = 'day-block later';
+    block.innerHTML = '<div class="day-head"><span class="day-name">Later</span><span class="day-tag away">Not this week</span></div><div class="day-events"></div>';
+    const evEl = block.querySelector('.day-events');
+    later.slice(0, 6).forEach(({ ev, next }) => {
+      const when = next ? label(next) : DAY_NAMES[ev.day].slice(0, 3) + ', no kids days yet';
+      const row = document.createElement('div');
+      row.className = 'event-row';
+      row.innerHTML = `
+        <span class="event-time">${ev.time}</span>
+        <span class="event-text">${escapeHtml(ev.text)}${isKidsDaysEvent(ev) ? ' <span class="event-repeat" title="On your kids days">↻ kids days</span>' : ''} <span class="event-repeat">· ${escapeHtml(when)}</span></span>
+        <span class="event-chip ${escapeHtml(ev.who)}">${escapeHtml(getEventWhoLabel(ev.who))}</span>
+        <button class="event-remove" onclick="removeEvent('${ev.id}')" aria-label="Remove ${escapeHtml(ev.text)}">×</button>`;
+      evEl.appendChild(row);
+    });
+    if (later.length > 6) {
+      const more = document.createElement('p');
+      more.className = 'schedule-empty';
+      more.textContent = `+${later.length - 6} more later on. See them on the month view.`;
+      evEl.appendChild(more);
+    }
+    el.appendChild(block);
+  }
+  renderMonth();
+  if ($('d-events')) $('d-events').textContent = totalEvents;
+  if ($('schedule-meta')) $('schedule-meta').textContent = totalEvents + ' event' + (totalEvents !== 1 ? 's' : '');
+}
+
+function addEvent() {
+  const text = $('ev-text').value.trim();
+  if (!text) return;
+  const repeat = $('ev-repeat').value;
+  const weekly = repeat !== 'once';
+  const date = weekly ? null : parseDateLocal($('ev-date').value);
+  if (!weekly && !date) { $('ev-date').focus(); return; }
+  const ev = {
+    id: 'e' + Date.now(),
+    day: weekly ? parseInt($('ev-day').value, 10) : (date.getDay() + 6) % 7,
+    date: weekly ? undefined : ymd(date),
+    time: $('ev-time').value,
+    text,
+    who: $('ev-who').value,
+    recurring: weekly,
+  };
+  if (repeat === 'kids') ev.repeat = 'kids';
+  state.events.push(ev);
+  $('ev-text').value = '';
+  save();
+  renderSchedule();
+  renderTomorrow();
+  confirmEventAdded(ev);
+}
+
+// The schedule lists this week only, so say when an event lands outside it.
+function confirmEventAdded(ev) {
+  if (!window.AtlasApp || !AtlasApp.notify) return;
+  const now = new Date();
+  now.setHours(12, 0, 0, 0);
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const next = nextOccurrence(ev, monday);
+  const label = d => d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+  if (isKidsDaysEvent(ev)) {
+    const day = DAY_NAMES[ev.day];
+    if (!next) AtlasApp.notify('Added. Your custody cycle has no ' + day + 's with the kids, so it won’t show yet.');
+    else if (next > sunday) AtlasApp.notify('Added. It shows on ' + day + 's when the kids are with you. Next: ' + label(next) + '.');
+    else AtlasApp.notify('Added for ' + day + 's when the kids are with you.');
+  } else if (!isWeeklyEvent(ev) && next && next > sunday) {
+    AtlasApp.notify('Added for ' + label(next) + '. It’ll show here that week.');
+  }
+}
+
+function removeEvent(id) {
+  state.events = state.events.filter(e => e.id !== id);
+  save();
+  renderSchedule();
+  renderTomorrow();
+}
+
+/* CALENDAR EXPORT — build a .ics file from the weekly schedule + important dates */
+function icsEscape(s) {
+  return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+}
+
+function icsDateStamp(d) {
+  return d.getUTCFullYear() + String(d.getUTCMonth() + 1).padStart(2, '0') + String(d.getUTCDate()).padStart(2, '0')
+    + 'T' + String(d.getUTCHours()).padStart(2, '0') + String(d.getUTCMinutes()).padStart(2, '0') + String(d.getUTCSeconds()).padStart(2, '0') + 'Z';
+}
+
+function icsLocalDateTime(date, time) {
+  const [h, m] = (time || '00:00').split(':').map(Number);
+  const y = date.getFullYear();
+  const mo = String(date.getMonth() + 1).padStart(2, '0');
+  const da = String(date.getDate()).padStart(2, '0');
+  return y + mo + da + 'T' + String(h).padStart(2, '0') + String(m).padStart(2, '0') + '00';
+}
+
+function exportScheduleToICS() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  monday.setHours(12, 0, 0, 0);
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Atlas//Week//EN',
+    'CALSCALE:GREGORIAN',
+  ];
+
+  (state.events || []).forEach(ev => {
+    // Kids-day events follow the custody cycle, so export each date for the next 12 weeks.
+    if (isKidsDaysEvent(ev)) {
+      const d = new Date(monday);
+      for (let i = 0; i < 84; i++) {
+        if (eventOccursOn(ev, d)) {
+          lines.push('BEGIN:VEVENT');
+          lines.push('UID:' + ev.id + '-' + ymd(d) + '@atlas-kidsweek');
+          lines.push('DTSTAMP:' + icsDateStamp(now));
+          lines.push('DTSTART:' + icsLocalDateTime(d, ev.time));
+          lines.push('SUMMARY:' + icsEscape(ev.text));
+          lines.push('END:VEVENT');
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      return;
+    }
+    let date;
+    if (isWeeklyEvent(ev)) {
+      if (!(ev.day >= 0 && ev.day <= 6)) return;
+      date = new Date(monday);
+      date.setDate(monday.getDate() + ev.day);
+    } else {
+      date = parseDateLocal(ev.date);
+      if (!date) return;
+    }
+    const dtStart = icsLocalDateTime(date, ev.time);
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:' + ev.id + '@atlas-kidsweek');
+    lines.push('DTSTAMP:' + icsDateStamp(now));
+    lines.push('DTSTART:' + dtStart);
+    lines.push('SUMMARY:' + icsEscape(ev.text));
+    if (isWeeklyEvent(ev)) lines.push('RRULE:FREQ=WEEKLY;BYDAY=' + ['MO','TU','WE','TH','FR','SA','SU'][ev.day]);
+    lines.push('END:VEVENT');
+  });
+
+  // Reminder on an all-day event: -PT6H is 6pm the evening before; -P7D a week before.
+  const alarm = (trigger, text) => ['BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEscape(text), 'TRIGGER:' + trigger, 'END:VALARM'];
+  const dayAfter = d => { const n = new Date(d); n.setDate(n.getDate() + 1); return ymd(n).replace(/-/g, ''); };
+
+  (state.dates || []).forEach(d => {
+    const date = parseDateLocal(d.date);
+    if (!date) return;
+    const meta = DATE_TYPE_META[d.type] || { short: d.type };
+    const title = d.label || meta.short;
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:' + d.id + '@atlas-kidsweek');
+    lines.push('DTSTAMP:' + icsDateStamp(now));
+    lines.push('DTSTART;VALUE=DATE:' + ymd(date).replace(/-/g, ''));
+    lines.push('DTEND;VALUE=DATE:' + dayAfter(date));
+    lines.push('SUMMARY:' + icsEscape(title));
+    const weekAhead = d.type === 'pupil-free' || d.type === 'break-start';
+    lines.push(...alarm(weekAhead ? '-P7D' : '-PT6H', title + (weekAhead ? ' next week' : ' tomorrow')));
+    lines.push('END:VEVENT');
+  });
+
+  // Handovers for the next 12 weeks, swaps included, each with a reminder the evening before.
+  if (state.cycle && state.cycle.nextKidsDate) {
+    const d = new Date(monday);
+    for (let i = 0; i < 84; i++) {
+      const prev = new Date(d); prev.setDate(d.getDate() - 1);
+      const kids = isKidsDate(d);
+      if (kids !== isKidsDate(prev)) {
+        const title = kids ? 'Kids arrive' : 'Kids go back';
+        lines.push('BEGIN:VEVENT');
+        lines.push('UID:handover-' + ymd(d) + '@atlas-kidsweek');
+        lines.push('DTSTAMP:' + icsDateStamp(now));
+        lines.push('DTSTART;VALUE=DATE:' + ymd(d).replace(/-/g, ''));
+        lines.push('DTEND;VALUE=DATE:' + dayAfter(d));
+        lines.push('SUMMARY:' + icsEscape(title));
+        lines.push('TRANSP:TRANSPARENT');
+        lines.push(...alarm('-PT6H', title + ' tomorrow. Check the handover list.'));
+        lines.push('END:VEVENT');
+      }
+      d.setDate(d.getDate() + 1);
+    }
+  }
+
+  lines.push('END:VCALENDAR');
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'kids-week-schedule.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* IMPORTANT DATES — term breaks, pupil-free, school events, personal one-offs */
+const DATE_TYPE_META = {
+  'break-start': { label: 'Break starts', short: 'Term break starts', flagClass: 'break', chipClass: 'break' },
+  'break-end':   { label: 'Break ends',   short: 'Term break ends',   flagClass: 'break', chipClass: 'break' },
+  'pupil-free':  { label: 'Pupil-free',   short: 'Pupil-free day',    flagClass: 'pupil-free', chipClass: 'pupil-free' },
+  'school':      { label: 'School',       short: 'School event',      flagClass: 'school', chipClass: 'school' },
+  'personal':    { label: 'Personal',     short: 'Personal',          flagClass: 'personal', chipClass: 'personal' },
+};
+
+function parseDateLocal(s) {
+  // YYYY-MM-DD → local-noon Date so DST/timezone doesn't drift the day
+  if (!s || typeof s !== 'string') return null;
+  const parts = s.split('-');
+  if (parts.length !== 3) return null;
+  const d = new Date(+parts[0], +parts[1] - 1, +parts[2], 12, 0, 0, 0);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function ymd(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+function getSortedDates() {
+  return (state.dates || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+}
+
+function getDatesOn(dateStr) {
+  return (state.dates || []).filter(d => d.date === dateStr);
+}
+
+function getActiveTermBreak(date) {
+  // Returns { start, end, daysUntilEnd } if `date` is between the most recent break-start and matching break-end
+  const dates = getSortedDates();
+  let lastStart = null;
+  for (const d of dates) {
+    const dDate = parseDateLocal(d.date);
+    if (!dDate) continue;
+    if (dDate > date) break;
+    if (d.type === 'break-start') lastStart = d;
+    if (d.type === 'break-end' && lastStart) lastStart = null;
+  }
+  if (!lastStart) return null;
+  // Find the next break-end after lastStart
+  const startDate = parseDateLocal(lastStart.date);
+  const nextEnd = dates.find(d => d.type === 'break-end' && parseDateLocal(d.date) >= startDate);
+  if (!nextEnd) return null;
+  const endDate = parseDateLocal(nextEnd.date);
+  if (date > endDate) return null;
+  const msPerDay = 86400000;
+  const daysUntilEnd = Math.round((endDate - date) / msPerDay);
+  return { start: lastStart, end: nextEnd, startDate, endDate, daysUntilEnd };
+}
+
+function getNextTermBreakStart(fromDate, withinDays) {
+  const dates = getSortedDates();
+  const limit = new Date(fromDate);
+  limit.setDate(fromDate.getDate() + withinDays);
+  for (const d of dates) {
+    if (d.type !== 'break-start') continue;
+    const dDate = parseDateLocal(d.date);
+    if (!dDate) continue;
+    if (dDate > fromDate && dDate <= limit) return { entry: d, date: dDate };
+  }
+  return null;
+}
+
+/* SCHOOL TERM DATES — government schools, from each state's education department. Student days.
+   Checked Oct 2026: education.nsw.gov.au, vic.gov.au, education.qld.gov.au, education.sa.gov.au,
+   education.wa.edu.au, decyp.tas.gov.au, act.gov.au, nt.gov.au. Add the next year each spring. */
+const TERM_DATES_AS_AT = 'Oct 2026';
+const TERM_STATE_NAMES = { NSW: 'NSW', NSWW: 'NSW Western Division', VIC: 'VIC', QLD: 'QLD', SA: 'SA', WA: 'WA', TAS: 'TAS', ACT: 'ACT', NT: 'NT' };
+const TERM_DATES = {
+  NSW:  { 2026: [['02-02','04-02'],['04-22','07-03'],['07-21','09-25'],['10-13','12-17']], 2027: [['01-28','04-09'],['04-27','07-02'],['07-19','09-24'],['10-11','12-20']] },
+  NSWW: { 2026: [['02-09','04-02'],['04-22','07-03'],['07-21','09-25'],['10-13','12-17']], 2027: [['02-04','04-09'],['04-27','07-02'],['07-19','09-24'],['10-11','12-20']] },
+  VIC:  { 2026: [['01-28','04-02'],['04-20','06-26'],['07-13','09-18'],['10-05','12-18']], 2027: [['01-28','03-25'],['04-12','06-25'],['07-12','09-17'],['10-04','12-17']] },
+  QLD:  { 2026: [['01-27','04-02'],['04-20','06-26'],['07-13','09-18'],['10-06','12-11']], 2027: [['01-27','03-25'],['04-12','06-25'],['07-12','09-17'],['10-05','12-10']] },
+  SA:   { 2026: [['01-27','04-10'],['04-27','07-03'],['07-20','09-25'],['10-12','12-11']], 2027: [['01-27','04-09'],['04-26','07-02'],['07-19','09-24'],['10-11','12-10']] },
+  WA:   { 2026: [['02-02','04-02'],['04-20','07-03'],['07-20','09-25'],['10-12','12-17']], 2027: [['02-01','04-09'],['04-26','07-02'],['07-19','09-24'],['10-11','12-16']] },
+  TAS:  { 2026: [['02-05','04-17'],['05-04','07-10'],['07-27','10-02'],['10-19','12-18']], 2027: [['02-04','04-09'],['04-26','07-02'],['07-19','09-24'],['10-11','12-16']] },
+  ACT:  { 2026: [['02-02','04-02'],['04-21','07-03'],['07-21','09-25'],['10-13','12-18']], 2027: [['02-02','04-09'],['04-28','07-02'],['07-20','09-24'],['10-12','12-17']] },
+  NT:   { 2026: [['01-29','04-02'],['04-14','06-19'],['07-14','09-18'],['10-06','12-10']], 2027: [['01-27','04-02'],['04-13','06-18'],['07-13','09-17'],['10-05','12-09']] },
+};
+
+// Pure: holiday entries for a state. Each holiday is break-start (first day off) to break-end (first day back),
+// which is how getActiveTermBreak reads them. Keeps entries from a month ago onwards so a current holiday counts.
+function termDateEntries(code, today) {
+  const years = TERM_DATES[code];
+  if (!years) return [];
+  const terms = [];
+  Object.keys(years).sort().forEach(y => years[y].forEach(([a, b], i) => terms.push({ n: i + 1, start: y + '-' + a, end: y + '-' + b })));
+  const dayAfter = iso => { const d = parseDateLocal(iso); d.setDate(d.getDate() + 1); return ymd(d); };
+  const out = [];
+  terms.forEach((t, i) => {
+    out.push({ date: t.start, type: 'break-end', label: 'Term ' + t.n + ' starts' });
+    out.push({ date: dayAfter(t.end), type: 'break-start', label: t.n === 4 ? 'Summer holidays start' : 'Term ' + t.n + ' holidays start' });
+  });
+  const from = new Date(today); from.setDate(from.getDate() - 31);
+  const fromStr = ymd(from);
+  return out.filter(e => e.date >= fromStr).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function syncTermDatesUI() {
+  const code = state.termState || '';
+  if ($('term-state')) $('term-state').value = code;
+  if ($('term-apply')) $('term-apply').textContent = code ? 'Update' : 'Add term dates';
+  if ($('term-remove')) $('term-remove').hidden = !code;
+  if ($('term-note')) $('term-note').textContent = code
+    ? TERM_STATE_NAMES[code] + ' government school terms and holidays added to the end of 2027 (as at ' + TERM_DATES_AS_AT + '). Catholic and independent schools can differ.'
+    : 'Government school terms and holidays to the end of 2027. Catholic and independent schools can differ, so check yours.';
+}
+
+function applyTermDates() {
+  const code = $('term-state') ? $('term-state').value : '';
+  if (!code) { $('term-state').focus(); return; }
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  // Your edits to this state's dates survive an update; switching state starts fresh.
+  const kept = code === state.termState ? (state.dates || []).filter(d => d.source === 'term' && d.edited && d.termOrig) : [];
+  state.dates = (state.dates || []).filter(d => d.source !== 'term');
+  termDateEntries(code, today).forEach((e, i) => {
+    const edit = kept.find(k => k.termOrig === e.date && k.type === e.type);
+    state.dates.push(edit || { id: 'term-' + code + '-' + e.date + '-' + i, source: 'term', ...e });
+  });
+  state.termState = code;
+  save();
+  syncTermDatesUI();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+  if (window.AtlasApp && AtlasApp.notify) AtlasApp.notify(TERM_STATE_NAMES[code] + ' term dates added to the end of 2027.');
+}
+
+function removeTermDates() {
+  state.dates = (state.dates || []).filter(d => d.source !== 'term');
+  delete state.termState;
+  save();
+  syncTermDatesUI();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+}
+
+let showAllTermDates = false;
+let editingDateId = null;
+
+function editImportantDate(id) {
+  editingDateId = id;
+  renderImportantDates();
+  const input = $('dr-date');
+  if (input) input.focus();
+}
+
+function cancelEditDate() {
+  editingDateId = null;
+  renderImportantDates();
+}
+
+function nudgeEditDate(days) {
+  const input = $('dr-date');
+  const d = input && parseDateLocal(input.value);
+  if (!d) return;
+  d.setDate(d.getDate() + days);
+  input.value = ymd(d);
+}
+
+function saveEditDate(id) {
+  const entry = (state.dates || []).find(d => d.id === id);
+  const date = $('dr-date') ? $('dr-date').value : '';
+  const label = $('dr-label') ? $('dr-label').value.trim() : '';
+  if (!entry || !parseDateLocal(date)) return;
+  if (entry.date !== date || (label && label !== entry.label)) {
+    if (entry.source === 'term' && !entry.termOrig) entry.termOrig = entry.date;
+    entry.edited = true;
+  }
+  entry.date = date;
+  if (label) entry.label = label;
+  editingDateId = null;
+  save();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+}
+
+function renderImportantDates() {
+  const list = $('dates-list');
+  const meta = $('dates-meta');
+  if (!list) return;
+  list.innerHTML = '';
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  const todayStr = ymd(today);
+
+  const sorted = getSortedDates();
+  const upcoming = sorted.filter(d => (d.date || '') >= todayStr);
+  if (meta) {
+    meta.textContent = upcoming.length
+      ? upcoming.length + ' upcoming'
+      : (sorted.length ? 'No upcoming dates' : 'School and one-off events');
+  }
+
+  if (sorted.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'dates-empty';
+    empty.textContent = 'Add the school calendar once a term: term breaks and pupil-free days, plus birthdays and other all-day dates.';
+    list.appendChild(empty);
+    return;
+  }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'dates-list';
+  // Show upcoming first, then up to 3 most-recent past. Built-in term dates show the next two only.
+  let termShown = 0;
+  const upcomingShown = upcoming.filter(d => d.source !== 'term' || showAllTermDates || termShown++ < 2);
+  const termHidden = upcoming.length - upcomingShown.length;
+  const past = sorted.filter(d => (d.date || '') < todayStr && d.source !== 'term').slice(-3);
+  const display = [...upcomingShown, ...past];
+  display.forEach(entry => {
+    const dDate = parseDateLocal(entry.date);
+    const isPast = (entry.date || '') < todayStr;
+    const meta = DATE_TYPE_META[entry.type] || { label: 'Event', chipClass: '' };
+    const row = document.createElement('div');
+    row.className = 'date-row' + (isPast ? ' past' : '');
+    const dateStr = dDate
+      ? dDate.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })
+      : (entry.date || '—');
+    if (editingDateId === entry.id) {
+      row.className += ' editing';
+      row.innerHTML = `
+        <div class="dr-edit">
+          <div class="dr-edit-date">
+            <button type="button" class="dr-nudge" onclick="nudgeEditDate(-1)" aria-label="One day earlier">−1 day</button>
+            <input type="date" id="dr-date" value="${entry.date}" aria-label="Date">
+            <button type="button" class="dr-nudge" onclick="nudgeEditDate(1)" aria-label="One day later">+1 day</button>
+          </div>
+          <input type="text" id="dr-label" value="${escapeHtml(entry.label || '')}" maxlength="80" aria-label="Label">
+          <div class="dr-edit-actions">
+            <button type="button" class="dr-cancel" onclick="cancelEditDate()">Cancel</button>
+            <button type="button" class="dr-save" onclick="saveEditDate('${entry.id}')">Save</button>
+          </div>
+        </div>`;
+    } else {
+      row.innerHTML = `
+      <button type="button" class="date-row-date" onclick="editImportantDate('${entry.id}')" title="Edit this date">${dateStr}${entry.edited ? ' <small>edited</small>' : ''}</button>
+      <span class="date-row-label">${(entry.label || '').replace(/</g, '&lt;')}</span>
+      <span class="date-row-type ${meta.chipClass}">${entry.source === 'term' ? (entry.type === 'break-end' ? 'Term' : 'Holidays') : meta.label}</span>
+      <button class="date-row-remove" onclick="removeImportantDate('${entry.id}')" aria-label="Remove">×</button>`;
+    }
+    wrap.appendChild(row);
+  });
+  list.appendChild(wrap);
+  if (termHidden > 0 || showAllTermDates) {
+    const more = document.createElement('button');
+    more.type = 'button';
+    more.className = 'dates-more';
+    more.textContent = showAllTermDates ? 'Show fewer term dates' : 'Show all ' + (termHidden + 2) + ' term dates to edit them';
+    more.onclick = () => { showAllTermDates = !showAllTermDates; renderImportantDates(); };
+    list.appendChild(more);
+  }
+}
+
+function addImportantDate() {
+  const dateEl = $('dt-date');
+  const labelEl = $('dt-label');
+  const typeEl = $('dt-type');
+  if (!dateEl || !labelEl || !typeEl) return;
+  const date = (dateEl.value || '').trim();
+  const label = (labelEl.value || '').trim();
+  const type = typeEl.value || 'personal';
+  if (!date || !label) return;
+  state.dates.push({ id: 'dt' + Date.now(), date, label, type });
+  labelEl.value = '';
+  save();
+  renderImportantDates();
+  renderFortnight(); // re-render to update flags + status + upcoming
+  renderSchedule();
+}
+
+function removeImportantDate(id) {
+  state.dates = (state.dates || []).filter(d => d.id !== id);
+  save();
+  renderImportantDates();
+  renderFortnight();
+  renderSchedule();
+}
+
+/* CHECKLIST */
+function renderChecklist() {
+  ['before','during','after'].forEach(group => {
+    const el = $(group === 'before' ? 'checklist-before' : group === 'during' ? 'checklist-during' : 'checklist-after');
+    if (!el) return;
+    el.innerHTML = '';
+    const items = state.checklist[group] || [];
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'check-item';
+      const box = document.createElement('div');
+      box.className = 'check-box' + (item.done ? ' done' : '');
+      box.textContent = '✓';
+      box.onclick = () => { item.done = !item.done; save(); renderChecklist(); };
+      const text = document.createElement('div');
+      text.className = 'check-text' + (item.done ? ' done' : '');
+      text.textContent = item.text;
+      const rem = document.createElement('button');
+      rem.className = 'check-remove';
+      rem.innerHTML = '×';
+      rem.onclick = () => { state.checklist[group] = state.checklist[group].filter(i => i.id !== item.id); save(); renderChecklist(); };
+      row.appendChild(box); row.appendChild(text); row.appendChild(rem);
+      el.appendChild(row);
+    });
+
+    const suggestions = (CHECKLIST_SUGGESTIONS[group] || []).filter(suggestion =>
+      !(state.checklist[group] || []).some(item => item.text.toLowerCase() === suggestion.toLowerCase())
+    );
+    if (suggestions.length) {
+      const suggestionsRow = document.createElement('div');
+      suggestionsRow.className = 'check-suggestions';
+      suggestions.forEach(suggestion => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'check-suggestion-btn';
+        btn.textContent = '+ ' + suggestion;
+        btn.onclick = () => addSuggestedCheckItem(group, suggestion);
+        suggestionsRow.appendChild(btn);
+      });
+      el.appendChild(suggestionsRow);
+    }
+  });
+
+  const allItems = [...(state.checklist.before||[]), ...(state.checklist.during||[]), ...(state.checklist.after||[])];
+  const done = allItems.filter(i => i.done).length;
+  const total = allItems.length;
+  if ($('checklist-pct-text')) $('checklist-pct-text').textContent = done + ' / ' + total + ' done';
+  if ($('checklist-meta')) $('checklist-meta').textContent = done + '/' + total + ' complete';
+  if ($('d-checklist')) $('d-checklist').textContent = done + '/' + total;
+
+  // Keep the handover sub-banner inside Tomorrow tile in sync with checklist state
+  if (typeof renderTomorrow === 'function' && document.getElementById('tomorrow-handover')) renderTomorrow();
+}
+
+function addSuggestedCheckItem(group, text) {
+  if (!state.checklist[group]) state.checklist[group] = [];
+  if (state.checklist[group].some(item => item.text.toLowerCase() === text.toLowerCase())) return;
+  state.checklist[group].push({ id: 'c' + Date.now(), text, done: false });
+  save();
+  renderChecklist();
+}
+
+function addCheckItem(group) {
+  const inp = $('inp-' + group);
+  const text = inp.value.trim();
+  if (!text) return;
+  if (!state.checklist[group]) state.checklist[group] = [];
+  state.checklist[group].push({ id: 'c' + Date.now(), text, done: false });
+  inp.value = '';
+  save();
+  renderChecklist();
+}
+
+function resetChecklist() {
+  ['before','during','after'].forEach(g => { (state.checklist[g]||[]).forEach(i => i.done = false); });
+  save();
+  renderChecklist();
+}
+
+/* MEALS */
+function renderMeals() {
+  const el = $('meal-grid');
+  if (!el) return;
+  el.innerHTML = '';
+  const today = new Date();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  monday.setHours(12, 0, 0, 0);
+  const kidsDays = [];
+  DAY_NAMES.forEach((day, i) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    if (isKidsDate(date)) kidsDays.push({ label: day, idx: i });
+  });
+  const daysToRender = kidsDays.length ? kidsDays : DAY_NAMES.map((day, i) => ({ label: day, idx: i }));
+  if ($('meals-meta')) $('meals-meta').textContent = kidsDays.length ? kidsDays.length + ' kids day' + (kidsDays.length !== 1 ? 's' : '') : 'Current week';
+  daysToRender.forEach(({ label, idx }) => {
+    const key = 'day-' + idx;
+    const saved = state.meals[key] || { breakfast: '', lunch: '', dinner: '' };
+    const div = document.createElement('div');
+    div.className = 'meal-day';
+    div.innerHTML = `
+      <div class="meal-day-name">${label}</div>
+      <div class="meal-label">Breakfast</div>
+      <input class="meal-input" value="${saved.breakfast || ''}" placeholder="e.g. Eggs & toast" oninput="saveMeal('${key}','breakfast',this.value)">
+      <div class="meal-label">School lunch</div>
+      <input class="meal-input" value="${saved.lunch || ''}" placeholder="e.g. Sandwich, fruit, muesli bar" oninput="saveMeal('${key}','lunch',this.value)">
+      <div class="meal-label">Dinner</div>
+      <input class="meal-input" value="${saved.dinner || ''}" placeholder="e.g. Spaghetti bol" oninput="saveMeal('${key}','dinner',this.value)">`;
+    el.appendChild(div);
+  });
+}
+
+function saveMeal(key, type, val) {
+  if (!state.meals[key]) state.meals[key] = {};
+  state.meals[key][type] = val;
+  scheduleSave();
+  const ind = $('meal-saved');
+  if (ind) {
+    ind.classList.add('show');
+    clearTimeout(ind._timer);
+    ind._timer = setTimeout(() => ind.classList.remove('show'), 1500);
+  }
+}
+
+/* HOUSE RULES */
+function getKidsForRules() {
+  return state.kids && state.kids.length ? state.kids : [{ name: 'First child' }, { name: 'Second child' }];
+}
+
+function renderHouseRules() {
+  const el = $('rules-grid');
+  if (!el) return;
+  const kids = getKidsForRules();
+  const bedtimes = Array.isArray(state.houseRules?.bedtimes) ? state.houseRules.bedtimes : [];
+  el.innerHTML = `
+    <div class="rule-card">
+      <div class="rule-card-title">Screen time</div>
+      <div class="rule-field">
+        <label class="rule-label" for="screen-weekday">School days</label>
+        <input class="rule-input" id="screen-weekday" value="${state.houseRules.weekdayScreen || ''}" placeholder="e.g. 45–60 min after homework" oninput="scheduleSaveHouseRules()">
+      </div>
+      <div class="rule-field">
+        <label class="rule-label" for="screen-weekend">Weekend</label>
+        <input class="rule-input" id="screen-weekend" value="${state.houseRules.weekendScreen || ''}" placeholder="e.g. 1.5–2 hours total" oninput="scheduleSaveHouseRules()">
+      </div>
+      <div class="rule-field">
+        <label class="rule-label" for="screen-cutoff">Screen cutoff</label>
+        <input class="rule-input" id="screen-cutoff" value="${state.houseRules.screenCutoff || ''}" placeholder="e.g. No screens after 7:30pm" oninput="scheduleSaveHouseRules()">
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card-title">Bedtimes</div>
+      ${kids.map((kid, idx) => `
+        <div class="rule-field">
+          <label class="rule-label" for="bedtime-${idx}">${kid.name || 'Child ' + (idx + 1)}</label>
+          <input class="rule-input" id="bedtime-${idx}" value="${bedtimes[idx] || ''}" placeholder="e.g. 8:00pm" oninput="scheduleSaveHouseRules()">
+        </div>
+      `).join('')}
+    </div>`;
+  if ($('rules-meta')) $('rules-meta').textContent = kids.length + ' bedtime' + (kids.length !== 1 ? 's' : '') + ' set';
+}
+
+let houseRulesTimer;
+function scheduleSaveHouseRules() {
+  clearTimeout(houseRulesTimer);
+  houseRulesTimer = setTimeout(saveHouseRules, 500);
+}
+
+function saveHouseRules() {
+  if (!state.houseRules) state.houseRules = { ...DEFAULT_HOUSE_RULES };
+  state.houseRules.weekdayScreen = $('screen-weekday')?.value || '';
+  state.houseRules.weekendScreen = $('screen-weekend')?.value || '';
+  state.houseRules.screenCutoff = $('screen-cutoff')?.value || '';
+  const kids = getKidsForRules();
+  state.houseRules.bedtimes = kids.map((_, idx) => $('bedtime-' + idx)?.value || '');
+  save();
+  const ind = $('rules-saved');
+  if (ind) {
+    ind.classList.add('show');
+    clearTimeout(ind._timer);
+    ind._timer = setTimeout(() => ind.classList.remove('show'), 1600);
+  }
+}
+
+/* CHORES */
+function syncChoreWhoOptions() {
+  const select = $('chore-who');
+  if (!select) return;
+  const kids = state.kids && state.kids.length ? state.kids : [{ name: 'First child' }, { name: 'Second child' }];
+  const childOne = kids[0]?.name || 'First child';
+  const childTwo = kids[1]?.name || 'Second child';
+  select.innerHTML = `<option value="both">Both</option><option value="child1">${childOne}</option><option value="child2">${childTwo}</option>`;
+}
+
+function renderChores() {
+  const list = $('chores-list');
+  const suggestionsEl = $('chores-suggestions');
+  if (!list) return;
+  syncChoreWhoOptions();
+  list.innerHTML = '';
+  const chores = Array.isArray(state.chores) ? state.chores : [];
+  if (chores.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'chores-empty';
+    empty.textContent = 'Add a few small jobs that help the week reset without a negotiation every night.';
+    list.appendChild(empty);
+  }
+  chores.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'chore-item';
+    const box = document.createElement('div');
+    box.className = 'chore-box' + (item.done ? ' done' : '');
+    box.textContent = '✓';
+    box.onclick = () => { item.done = !item.done; save(); renderChores(); renderMissingPieces(); };
+    const main = document.createElement('div');
+    main.className = 'chore-main';
+    main.innerHTML = `<div class="chore-text${item.done ? ' done' : ''}">${(item.text || '').replace(/</g,'&lt;')}</div><div class="chore-sub">${item.when || 'This week'}</div>`;
+    const chip = document.createElement('span');
+    chip.className = 'chore-chip ' + (item.who || 'both');
+    chip.textContent = getEventWhoLabel(item.who || 'both');
+    const remove = document.createElement('button');
+    remove.className = 'chore-remove';
+    remove.innerHTML = '×';
+    remove.onclick = () => removeChore(item.id);
+    row.appendChild(box); row.appendChild(main); row.appendChild(chip); row.appendChild(remove);
+    list.appendChild(row);
+  });
+  const done = chores.filter(i => i.done).length;
+  const total = chores.length;
+  if ($('chores-pct-text')) $('chores-pct-text').textContent = done + ' / ' + total + ' done';
+  if ($('chores-meta')) $('chores-meta').textContent = total ? done + '/' + total + ' done' : 'Small jobs for the week';
+  if ($('d-chores')) $('d-chores').textContent = total ? done + '/' + total : '—';
+  if (suggestionsEl) {
+    suggestionsEl.innerHTML = '';
+    const existing = chores.map(c => (c.text || '').toLowerCase());
+    CHORE_SUGGESTIONS.filter(s => !existing.includes(s.toLowerCase())).slice(0, 8).forEach(s => {
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'chore-suggestion-btn';
+      btn.textContent = '+ ' + s;
+      btn.onclick = () => addSuggestedChore(s);
+      suggestionsEl.appendChild(btn);
+    });
+  }
+}
+
+function addChore() {
+  const text = $('chore-text')?.value.trim();
+  if (!text) return;
+  if (!Array.isArray(state.chores)) state.chores = [];
+  state.chores.push({ id: 'ch' + Date.now(), text, who: $('chore-who')?.value || 'both', when: $('chore-when')?.value || 'Every kids day', done: false });
+  $('chore-text').value = '';
+  save(); showChoresSaved(); renderChores();
+}
+
+function addSuggestedChore(text) {
+  if (!Array.isArray(state.chores)) state.chores = [];
+  if (state.chores.some(i => (i.text || '').toLowerCase() === text.toLowerCase())) return;
+  state.chores.push({ id: 'ch' + Date.now(), text, who: 'both', when: 'Every kids day', done: false });
+  save(); showChoresSaved(); renderChores();
+}
+
+function removeChore(id) {
+  state.chores = (state.chores || []).filter(i => i.id !== id);
+  save(); showChoresSaved(); renderChores();
+}
+
+function resetChores() {
+  (state.chores || []).forEach(i => i.done = false);
+  save(); showChoresSaved(); renderChores();
+}
+
+function showChoresSaved() {
+  const ind = $('chores-saved');
+  if (ind) { ind.classList.add('show'); clearTimeout(ind._timer); ind._timer = setTimeout(() => ind.classList.remove('show'), 1600); }
+}
+
+/* NOTES */
+function loadNotes() { if ($('week-notes') && state.notes) $('week-notes').value = state.notes; }
+let notesTimer;
+window.addEventListener('pagehide', () => { if(notesTimer) {clearTimeout(notesTimer);saveNotes();} });
+function scheduleSaveNotes() { clearTimeout(notesTimer); notesTimer = setTimeout(saveNotes, 1200); }
+function saveNotes() {
+  state.notes = $('week-notes')?.value || '';
+  save();
+  const ind = $('notes-saved');
+  if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 2000); }
+}
+
+let heroReminderTimer;
+function loadHeroReminder() {
+  if ($('hero-reminder')) $('hero-reminder').value = state.heroReminder || DEFAULT_HERO_REMINDER;
+}
+window.addEventListener('pagehide', () => { if(heroReminderTimer) {clearTimeout(heroReminderTimer);saveHeroReminder();} });
+function scheduleSaveHeroReminder() {
+  clearTimeout(heroReminderTimer);
+  heroReminderTimer = setTimeout(saveHeroReminder, 500);
+}
+function saveHeroReminder() {
+  state.heroReminder = $('hero-reminder')?.value || DEFAULT_HERO_REMINDER;
+  save();
+}
+
+/* CYCLE SETTINGS */
+function loadCycleSettings() {
+  const c = state.cycle;
+  if ($('cycle-preset')) $('cycle-preset').value = c.preset || 'custom';
+  if ($('next-kids-date')) $('next-kids-date').value = c.nextKidsDate;
+  renderPatternEditor();
+}
+function saveCycleSettings() {
+  state.cycle.nextKidsDate = $('next-kids-date').value;
+  save();
+}
+
+let saveTimer;
+window.addEventListener('pagehide', () => { if(saveTimer) {clearTimeout(saveTimer);save();} });
+function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(save, 800); }
+
+function toggleSection(id) {
+  const body = $('body-' + id);
+  const chev = $('chev-' + id);
+  if (!body) return;
+  if (openSections.has(id)) { openSections.delete(id); body.classList.remove('open'); if (chev) chev.classList.remove('open'); }
+  else { openSections.add(id); body.classList.add('open'); if (chev) chev.classList.add('open'); }
+}
+
+/* PHASE — synced with the rest of Atlas */
+const phaseData = {
+  'waiting-room': {
+    label: 'Waiting Room',
+    note: 'You\'re still in the thick of it. Keep things calm and consistent for the kids. Even simple routines help them feel secure right now.',
+    heroText: 'You\'re still in the thick of it. Keep things calm and consistent. Simple, repeatable routines are what the kids need most right now.',
+  },
+  survive: {
+    label: 'Survive',
+    note: 'Just keep the wheels on. Get them fed, rested, and to school. Don\'t try to be perfect — you don\'t need to be right now.',
+    heroText: 'Just keep the wheels on. Get them fed, rested, and to school. Don\'t try to be perfect — you don\'t need to be right now.',
+  },
+  stabilise: {
+    label: 'Stabilise',
+    note: 'A workable rhythm is forming. Lock in handover routines, school logistics, and the bedtime / screen rules that hold each week steady.',
+    heroText: 'A workable rhythm is forming. Lock in the routines that take decisions off the table — handovers, bedtimes, lunches, and screens.',
+  },
+  rebuild: {
+    label: 'Rebuild',
+    note: 'The weeks run themselves. Now invest in quality time — one-on-ones, weekend rituals, the small traditions they\'ll remember.',
+    heroText: 'Routines hold. Add the connection moments — 1:1 time, weekend rituals, the small traditions they\'ll remember.',
+  },
+  'new-chapter': {
+    label: 'New Chapter',
+    note: 'Co-parenting is calm and predictable. Use the structure here to keep the rhythm sustainable as the kids grow and life expands.',
+    heroText: 'You\'re past survival. Use this to keep the rhythm sustainable as the kids grow.',
+  }
+};
+let currentPhase = 'survive';
+function normalisePhase(phase) {
+  return phase === 'crisis' ? 'survive' : phase;
+}
+
+function setPhase(phase) {
+  phase = normalisePhase(phase);
+  if (!phaseData[phase]) return;
+  currentPhase = phase;
+  document.querySelectorAll('.phase-pill').forEach(p => p.classList.toggle('active', p.dataset.phase === phase));
+  const data = phaseData[phase];
+  if ($('phase-context-text')) $('phase-context-text').textContent = data.heroText;
+  if ($('flow-note-text')) $('flow-note-text').textContent = data.note;
+  try {
+    localStorage.setItem('atlas_phase', phase);
+    localStorage.setItem('dad_atlas_phase', phase);
+  } catch(e) {}
+}
+window.addEventListener('storage', e => {
+  const nextPhase = normalisePhase(e.newValue);
+  if ((e.key === 'atlas_phase' || e.key === 'dad_atlas_phase') && nextPhase && nextPhase !== currentPhase && phaseData[nextPhase]) {
+    setPhase(nextPhase);
+  }
+});
+
+// ── KIDS SETUP ──
+// Bento kid colours: a solid avatar colour (ink initial on top) and a soft tint for that child's events.
+const KID_COLORS = [
+  { label: 'Lime', avatar: '#d4f062', tint: '#eef8c6' },
+  { label: 'Coral', avatar: '#ff8a6b', tint: '#ffe3da' },
+  { label: 'Lilac', avatar: '#cdbdff', tint: '#ece6ff' },
+  { label: 'Blue', avatar: '#a9b8ff', tint: '#dfe4ff' },
+];
+const kidColour = (kid, i) => KID_COLORS[(kid && Number.isInteger(kid.colorIdx) ? kid.colorIdx : i) % KID_COLORS.length];
+
+function getEventWhoLabel(who) {
+  if (who === 'both') return 'Both';
+  const kids = state.kids && state.kids.length ? state.kids : [{ name: 'First child' }, { name: 'Second child' }];
+  if (who === 'child1') return kids[0]?.name || 'First child';
+  if (who === 'child2') return kids[1]?.name || 'Second child';
+  return who || 'Child';
+}
+
+function syncEventWhoOptions() {
+  const select = $('ev-who');
+  if (!select) return;
+  const kids = state.kids && state.kids.length ? state.kids : [{ name: 'First child' }, { name: 'Second child' }];
+  const childOne = kids[0]?.name || 'First child';
+  const childTwo = kids[1]?.name || 'Second child';
+  select.innerHTML = `
+    <option value="both">Both</option>
+    <option value="child1">${childOne}</option>
+    <option value="child2">${childTwo}</option>
+  `;
+}
+
+function renderKidsChips() {
+  const el = $('kids-chips-row');
+  if (!el) return;
+  el.innerHTML = '';
+  const kids = Array.isArray(state.kids) ? state.kids : [];
+  if (!kids.length) {
+    const hint = document.createElement('p');
+    hint.className = 'kids-empty';
+    hint.textContent = 'Add your kids so the week, chores and bedtimes use their names.';
+    el.appendChild(hint);
+  }
+  kids.forEach((kid, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'kid-chip';
+    chip.innerHTML = `
+      <div class="kid-chip-avatar" style="background:${kidColour(kid, i).avatar}">${escapeHtml(kid.name.charAt(0).toUpperCase())}</div>
+      <div class="kid-chip-info"><div class="kid-chip-name">${escapeHtml(kid.name)}</div><div class="kid-chip-age">${kid.age ? kid.age + ' years old' : 'Add age'}</div></div>`;
+    el.appendChild(chip);
+  });
+  const editBtn = document.querySelector('.family-edit');
+  if (editBtn) editBtn.textContent = kids.length ? 'Edit kids' : 'Add your kids';
+  // Page heading: the kids as a quiet identity line, linking to the setup section.
+  const summary = $('at-kids-summary');
+  if (summary) {
+    summary.hidden = !kids.length;
+    summary.innerHTML = kids.map((kid, i) => `<span class="at-kid"><b style="background:${kidColour(kid, i).avatar}">${escapeHtml(kid.name.charAt(0).toUpperCase())}</b>${escapeHtml(kid.name)}${kid.age ? ` <small>${escapeHtml(kid.age)}</small>` : ''}</span>`).join('');
+    summary.setAttribute('aria-label', 'Kids: ' + kids.map(k => k.name + (k.age ? ', ' + k.age : '')).join('; ') + '. Edit in Kids and custody cycle.');
+  }
+  // Child event colours follow the kids' colours.
+  document.body.style.setProperty('--child1-tint', kidColour(kids[0], 0).tint);
+  document.body.style.setProperty('--child2-tint', kidColour(kids[1], 1).tint);
+  syncEventWhoOptions();
+  syncChoreWhoOptions();
+  if (typeof renderFortnight === 'function' && $('fortnight-grid')?.children.length) renderFortnight();
+}
+
+function openKidsSetup() {
+  const kids = Array.isArray(state.kids) && state.kids.length ? state.kids : [{ name: '', age: '', colorIdx: 0 }];
+  const overlay = document.createElement('div');
+  overlay.id = 'kids-modal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,0.45);z-index:200;display:flex;align-items:center;justify-content:center;font-family: var(--font-body)';
+  overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+
+  let rows = kids.map((kid, i) => `
+    <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:10px">
+      <input id="kid-name-${i}" value="${escapeHtml(kid.name)}" placeholder="Child's name"
+        style="padding:9px 12px;border:1px solid #e7e7e4;border-radius:10px;font-family: var(--font-body);font-size:14px;color:#111111;background:#f7f7f5;outline:none">
+      <input id="kid-age-${i}" value="${escapeHtml(kid.age)}" placeholder="Age" type="number" min="0" max="25"
+        style="width:70px;padding:9px 12px;border:1px solid #e7e7e4;border-radius:10px;font-family: var(--font-body);font-size:14px;color:#111111;background:#f7f7f5;outline:none">
+      <button type="button" data-remove-kid="${i}" style="background:none;border:none;cursor:pointer;color:#9a9aa0;font-size:1.2rem;padding:0 6px">×</button>
+    </div>`).join('');
+
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:24px;padding:32px;width:440px;max-width:92vw;box-shadow:0 20px 60px rgba(17,17,17,0.18)">
+      <h3 style="font-family: var(--font-display);font-weight:700;font-size:1.6rem;color:#111111;margin-bottom:6px;letter-spacing:-0.02em">Your children</h3>
+      <p style="font-size:13px;color:#62626a;margin-bottom:22px;line-height:1.5">Add each child's name and age. These appear throughout Week.</p>
+      <div id="kids-rows">${rows}</div>
+      <button id="add-kid-button" type="button" style="font-size:12px;font-weight:600;color:#111111;background:#eef8c6;border:none;padding:8px 16px;border-radius:999px;cursor:pointer;margin-bottom:22px">+ Add child</button>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button id="cancel-kids-button" type="button" style="padding:10px 20px;border-radius:999px;border:1px solid #e7e7e4;background:transparent;font-size:13px;font-weight:600;color:#62626a;cursor:pointer;font-family: var(--font-body)">Cancel</button>
+        <button id="save-kids-button" type="button" style="padding:10px 22px;border-radius:999px;border:none;background:#111111;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family: var(--font-body)">Save</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => {
+    const removeIndex = e.target.getAttribute('data-remove-kid');
+    if (removeIndex !== null) removeKid(parseInt(removeIndex, 10));
+  });
+  $('add-kid-button').onclick = addKidRow;
+  $('cancel-kids-button').onclick = () => document.getElementById('kids-modal')?.remove();
+  $('save-kids-button').onclick = saveKids;
+}
+
+function addKidRow() {
+  const container = document.getElementById('kids-rows');
+  if (!container) return;
+  const i = container.children.length;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:10px';
+  div.innerHTML = `
+    <input id="kid-name-${i}" placeholder="Child's name"
+      style="padding:9px 12px;border:1px solid #e7e7e4;border-radius:10px;font-family: var(--font-body);font-size:14px;color:#111111;background:#f7f7f5;outline:none">
+    <input id="kid-age-${i}" placeholder="Age" type="number" min="0" max="25"
+      style="width:70px;padding:9px 12px;border:1px solid #e7e7e4;border-radius:10px;font-family: var(--font-body);font-size:14px;color:#111111;background:#f7f7f5;outline:none">
+    <button type="button" data-remove-kid="${i}" style="background:none;border:none;cursor:pointer;color:#9a9aa0;font-size:1.2rem;padding:0 6px">×</button>`;
+  container.appendChild(div);
+}
+
+function removeKid(i) {
+  const container = document.getElementById('kids-rows');
+  if (container && container.children[i]) container.children[i].remove();
+}
+
+function saveKids() {
+  const container = document.getElementById('kids-rows');
+  if (!container) return;
+  const kids = [];
+  for (let i = 0; i < 10; i++) {
+    const nameEl = document.getElementById('kid-name-' + i);
+    if (!nameEl) continue;
+    const name = nameEl.value.trim();
+    if (!name) continue;
+    const age = document.getElementById('kid-age-' + i)?.value || '';
+    kids.push({ name, age: parseInt(age) || '', colorIdx: i % KID_COLORS.length });
+  }
+  if (kids.length > 0) state.kids = kids;
+  save();
+  document.getElementById('kids-modal')?.remove();
+  renderKidsChips();
+  renderHouseRules();
+  renderChores();
+}
+
+(function init() {
+  load();
+  loadCycleSettings();
+  renderKidsChips();
+  renderFortnight();
+  renderSchedule();
+  renderImportantDates();
+  syncTermDatesUI();
+  if ($('dt-date') && !$('dt-date').value) $('dt-date').value = ymd(new Date());
+  renderChecklist();
+  renderMeals();
+  renderHouseRules();
+  renderChores();
+  loadNotes();
+  loadHeroReminder();
+  // restore phase
+  try {
+    const savedPhase = normalisePhase(localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase'));
+    if (savedPhase && phaseData[savedPhase]) setPhase(savedPhase);
+    else setPhase('stabilise');
+  } catch(e) { setPhase('stabilise'); }
+})();
+</script>
+<script>
+// Kids & custody cycle is a set-once section at the bottom of the page.
+// Until the kids and the cycle are both set, it moves to the top and opens, with the Start here prompt.
+(function () {
+  const setUp = Array.isArray(state.kids) && state.kids.length > 0 && !!(state.cycle && state.cycle.nextKidsDate);
+  const section = document.getElementById('cycle');
+  document.getElementById('at-week-setup').hidden = setUp;
+  if (!setUp && section) {
+    const container = document.querySelector('main .container');
+    container.insertBefore(section, container.firstElementChild);
+    section.classList.add('is-first-run');
+  }
+  const openSetup = () => { if (!openSections.has('cycle')) toggleSection('cycle'); };
+  if (!setUp || location.hash === '#cycle') openSetup();
+  window.addEventListener('hashchange', () => { if (location.hash === '#cycle') openSetup(); });
+  document.getElementById('at-kids-summary')?.addEventListener('click', (e) => { e.preventDefault(); openSetup(); history.replaceState(null, '', '#cycle'); section?.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+})();
+</script>
+<script src="/demo/assets/app/app.js"></script>
+<script src="/demo/demo-banner.js" defer></script>
+</body>
+</html>

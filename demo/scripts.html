@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="/demo/demo-shim.js"></script>
+<script src="/demo/demo-seed.js"></script>
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Demo · Scripts · Atlas</title>
+<link rel="stylesheet" href="/demo/assets/atlas-tokens.css">
+<link rel="stylesheet" href="/demo/assets/atlas-shell.css">
+<script src="/demo/demo-scripts-data.js"></script>
+<style>
+  .page-wrap { padding: 0 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .hero { padding: 64px 0 40px; }
+  
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    margin-bottom: 18px;
+    max-width: 11ch;
+  }
+  .hero h1 .soft {
+    background: linear-gradient(180deg, transparent 72%, var(--amber) 72%);
+    padding: 0 6px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .content-tabs {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 28px;
+    padding: 6px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    background: var(--paper-card);
+  }
+  .content-tab {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .content-tab:hover { background: var(--paper-warm); }
+  .content-tab.active {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .content-panel { display: none; }
+  .content-panel.active { display: block; }
+
+  .articles-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .phase-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .phase-pill {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper-card);
+    transition: all 0.18s ease;
+  }
+  .phase-pill:hover { background: var(--paper-warm); border-color: var(--ink-faded); }
+  .phase-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .phase-pill[data-phase="survive"].active { background: var(--coral); border-color: var(--coral); }
+  .phase-pill[data-phase="stabilise"].active { background: var(--honey); border-color: var(--honey); color: var(--ink); }
+  .phase-pill[data-phase="rebuild"].active { background: var(--green); border-color: var(--green); }
+  .phase-pill[data-phase="new-chapter"].active { background: var(--sage); border-color: var(--sage); color: var(--ink); }
+
+  .cat-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat-btn {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid var(--paper-edge);
+    color: var(--ink-soft);
+    background: var(--paper);
+    transition: all 0.15s ease;
+  }
+  .cat-btn:hover { background: var(--paper-warm); }
+  .cat-btn.active {
+    background: var(--paper-warm);
+    border-color: var(--ink-faded);
+    color: var(--ink);
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 80px;
+  }
+  .guide-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .guide-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .guide-card-img { height: 180px; overflow: hidden; background: var(--paper-warm); }
+  .guide-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .guide-card-body {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .guide-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .guide-phase-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .guide-tool-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    border: 1px solid var(--sage);
+    padding: 3px 10px;
+    border-radius: 999px;
+    transition: background 0.15s ease;
+  }
+  .guide-tool-tag:hover { background: var(--sage); }
+  .guide-card-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .guide-card-excerpt {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .guide-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    margin-top: 8px;
+    transition: gap 0.15s ease;
+  }
+  .guide-card-link:hover { gap: 10px; }
+  .guide-empty {
+    color: var(--ink-muted);
+    font-size: 15px;
+    padding: 40px 0;
+    text-align: center;
+    grid-column: 1 / -1;
+  }
+
+  .phase-guide-section {
+    border-top: 1px solid var(--paper-edge);
+    padding-top: 64px;
+    margin-bottom: 64px;
+  }
+  .phase-guide-section h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .phase-guide-section > p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin-bottom: 36px;
+  }
+  .phase-guide-panels { display: flex; flex-direction: column; gap: 10px; }
+  .phase-guide-panel { border: 1px solid var(--paper-edge); border-radius: var(--radius); overflow: hidden; }
+  .phase-guide-panel summary {
+    padding: 18px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--paper-card);
+    transition: background 0.15s ease;
+  }
+  .phase-guide-panel summary::-webkit-details-marker { display: none; }
+  .phase-guide-panel summary::after {
+    content: '›';
+    font-size: 16px;
+    color: var(--ink-muted);
+    transition: transform 0.2s ease;
+  }
+  .phase-guide-panel[open] summary::after { transform: rotate(90deg); }
+  .phase-guide-panel summary:hover { background: var(--paper-warm); }
+  .phase-guide-body {
+    padding: 24px 28px 28px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .phase-guide-body p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .phase-guide-body p:last-child { margin-bottom: 0; }
+
+  .conv-panel {
+    padding-bottom: 64px;
+  }
+  .conv-hero {
+    margin-bottom: 28px;
+    max-width: 720px;
+  }
+  .conv-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: .01em; 
+    margin-bottom: 14px;
+  }
+  .conv-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .conv-sub {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  .scripts-search-wrap {
+    position: relative;
+    max-width: 640px;
+    margin-bottom: 16px;
+  }
+  .scripts-search {
+    width: 100%;
+    border: 1px solid var(--paper-edge);
+    border-radius: 999px;
+    background: var(--paper-card);
+    color: var(--ink);
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.4;
+    padding: 16px 20px 16px 48px;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .scripts-search:focus {
+    border-color: var(--ink);
+    background: var(--paper);
+  }
+  .scripts-search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
+  .scripts-meta {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    min-height: 20px;
+  }
+
+  .script-results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .script-result-card {
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    background: var(--paper-card);
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 14px;
+    align-items: start;
+  }
+  .script-result-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+  .script-result-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; grid-column: 1; }
+  .script-result-cat {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+  }
+  .script-result-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+  }
+  .script-result-title {
+    grid-column: 1;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    line-height: 1.15;
+    color: var(--ink); font-weight: 700; letter-spacing: -.025em}
+  .script-result-situation {
+    grid-column: 1;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .script-result-arrow {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+    font-size: 18px;
+    color: var(--green);
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .cat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 28px 28px 24px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 44px rgba(17,17,17,0.10);
+  }
+  .cat-card.active {
+    border-color: var(--green);
+    background: var(--paper);
+  }
+  .cat-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+  .cat-card-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 10px; font-weight: 700; letter-spacing: -.025em}
+  .cat-card-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    margin-bottom: 18px;
+    min-height: 4.65em;
+  }
+  .cat-card-meta {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+  }
+  .cat-card-arrow {
+    position: absolute;
+    right: 22px;
+    bottom: 20px;
+    color: var(--amber);
+    font-size: 18px;
+  }
+
+  .cat-accordion-wrap {
+    display: none;
+    background: var(--paper-warm);
+    border: 1px solid var(--paper-edge);
+    border-radius: var(--radius-lg);
+    padding: 32px 32px 40px;
+    margin: 32px 0;
+  }
+  .cat-acc-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 18px;
+    margin-bottom: 24px;
+  }
+  .cat-acc-kicker {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: .01em; 
+  }
+  .cat-acc-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .cat-acc-desc {
+    grid-column: 1;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 56ch;
+  }
+  .cat-acc-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    align-self: start;
+  }
+  .cat-acc-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green);
+    color: var(--paper);
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .cat-acc-print:hover { background: var(--green-deep); }
+  .cat-acc-close {
+    border: none;
+    background: none;
+    color: var(--ink-muted);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .cat-acc-close:hover { color: var(--ink); }
+  .cat-acc-scripts { display: flex; flex-direction: column; gap: 8px; }
+
+  .script-acc-item {
+    background: var(--paper);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .script-acc-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    border: none;
+    background: transparent;
+    padding: 18px 22px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .script-acc-header:hover { background: rgba(255,255,255,0.45); }
+  .script-acc-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faded);
+  }
+  .script-acc-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    line-height: 1.2; font-weight: 700; letter-spacing: -.025em}
+  .script-acc-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .script-acc-open,
+  .script-acc-full-link {
+    color: var(--green);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .script-acc-open:hover,
+  .script-acc-full-link:hover { text-decoration: underline; }
+  .script-acc-chevron {
+    color: var(--ink-faded);
+    font-size: 16px;
+    transition: transform 0.15s ease;
+  }
+  .script-acc-body {
+    display: none;
+    padding: 0 22px 22px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-acc-item.open .script-acc-body { display: block; }
+  .script-acc-item.open .script-acc-chevron { transform: rotate(90deg); }
+  .script-acc-situation {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    padding-top: 16px;
+  }
+  .script-acc-opening-label,
+  .script-opening-alt-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .script-acc-opening {
+    margin: 0 0 16px;
+    border-left: 3px solid var(--amber);
+    padding: 12px 16px;
+    background: var(--paper-warm);
+    border-radius: 0 8px 8px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .script-detail-section {
+    display: none;
+    margin-top: 40px;
+    padding-top: 48px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-breadcrumb {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+  }
+  .script-breadcrumb a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .script-breadcrumb a:hover { color: var(--ink); }
+  .script-hero {
+    max-width: 800px;
+    margin-bottom: 36px;
+  }
+  .script-hero-meta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .script-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+  }
+  .script-num {
+    font-size: 13px;
+    color: var(--ink-faded);
+  }
+  .script-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .script-situation {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    max-width: 640px;
+  }
+  .script-body {
+    max-width: 720px;
+  }
+  .script-section {
+    padding: 22px 0 26px;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .01em; 
+    color: var(--ink-muted);
+    margin-bottom: 14px;
+  }
+  .script-before-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .script-before-list li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .script-before-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--amber);
+    font-weight: 700;
+  }
+  .script-opening-quote {
+    border-left: 4px solid var(--amber);
+    background: var(--paper-warm);
+    padding: 20px 24px;
+    border-radius: 0 12px 12px 0;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 16px; font-weight: 700; letter-spacing: -.025em}
+  .script-cover-items,
+  .script-sideways-items {
+    display: flex;
+    flex-direction: column;
+  }
+  .script-cover-item {
+    padding: 16px 0;
+    border-top: 1px solid var(--paper-edge);
+  }
+  .script-cover-item:first-child { padding-top: 0; border-top: none; }
+  .script-cover-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .script-cover-example {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+    padding-left: 14px;
+    border-left: 2px solid var(--paper-edge);
+  }
+  .script-sideways-wrap {
+    background: var(--paper-warm);
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+  .script-sideways-items { gap: 16px; }
+  .script-sideways-trigger {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .script-sideways-response {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .script-close-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .script-nav-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 34px;
+  }
+  .script-nav-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 22px;
+    background: var(--paper-card);
+    border: 1px solid var(--paper-edge);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .script-nav-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+  .script-nav-dir {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted); 
+    letter-spacing: .01em;
+  }
+  .script-nav-label {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    line-height: 1.2;
+    color: var(--ink); font-weight: 700; letter-spacing: -.025em}
+  .script-back-wrap {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .script-back-link,
+  .script-close-link {
+    border: none;
+    background: none;
+    padding: 0;
+    color: var(--green);
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .script-back-link:hover,
+  .script-close-link:hover { text-decoration: underline; }
+
+  @media (max-width: 1024px) {
+    .guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  
+  @media (max-width: 760px) {
+    .page-wrap { padding: 0 16px; }
+    .hero { padding: 48px 0 32px; }
+    .script-results-grid,
+    .guide-grid,
+    .category-grid,
+    .script-nav-row { grid-template-columns: 1fr; }
+    .script-acc-header {
+      grid-template-columns: 28px 1fr;
+      align-items: start;
+    }
+    .script-acc-actions {
+      grid-column: 2;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .cat-acc-header {
+      grid-template-columns: 1fr;
+    }
+    
+  }
+  @media (max-width: 480px) {
+    
+    .content-tabs { width: 100%; justify-content: space-between; }
+    .content-tab { flex: 1; }
+  }
+</style>
+<link rel="stylesheet" href="/demo/assets/app/interface.css">
+<link rel="stylesheet" href="/demo/assets/app/bento.css">
+<style>
+  /* Scripts colour (Bento): peach Start here for your phase, cards tinted by who you're talking to. */
+  .start-here { background: #ffe1d6; border-radius: 26px; padding: 22px; margin: 0 0 14px; display: grid; gap: 12px; }
+  .start-here-head { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 12px; flex-wrap: wrap; }
+  .start-here-head h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.03em; }
+  .start-here-head span { font-size: 13px; color: #3a3a40; }
+  .start-here ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 8px; }
+  .start-here button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; text-align: left; background: #fff; border: 0; border-radius: 18px; padding: 14px 16px; font: inherit; color: #111; cursor: pointer; }
+  .start-here button:hover { background: #fff7f3; }
+  .start-here b { display: block; font-size: 15px; font-weight: 650; letter-spacing: -.01em; }
+  .start-here small { display: block; margin-top: 2px; font-size: 12px; color: #62626a; }
+  .start-here i, .cat-card-arrow { flex: none; width: 34px; height: 34px; border-radius: 999px; background: #111; color: #fff; display: grid; place-items: center; font-style: normal; font-size: 15px; line-height: 1; padding-bottom: 2px; }
+  .circle-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 12px; font-size: 12.5px; color: #3a3a40; }
+  .circle-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .circle-legend i { width: 12px; height: 12px; border-radius: 4px; box-shadow: inset 0 0 0 1px #0000001a; }
+  .cat-card { border: 0; box-shadow: none; }
+  .cat-card:hover { box-shadow: 0 10px 28px rgba(17,17,17,.08); }
+  .cat-card:focus-visible { outline: 3px solid #2743ff; outline-offset: 3px; }
+  .cat-card .cat-card-label { font-size: 11.5px; color: #4a4a52; }
+  .cat-card .cat-card-desc, .cat-card .cat-card-meta { color: #4a4a52; }
+  .cat-card .cat-card-meta { color: #3a3a40; }
+  .cat-card-arrow { right: 20px; bottom: 18px; }
+  .cat-card.circle-sep, .circle-legend .circle-sep { background: #e6ddff; }
+  .cat-card.circle-kids, .circle-legend .circle-kids { background: #dfe4ff; }
+  .cat-card.circle-work, .circle-legend .circle-work { background: #eef8c6; }
+  .cat-card.circle-you, .circle-legend .circle-you { background: #e2f5ec; }
+  .cat-card.circle-high, .circle-legend .circle-high { background: #ffe1d6; }
+  .cat-card.active { box-shadow: inset 0 0 0 2px #111; }
+  @media print { .start-here, .circle-legend { display: none; } }
+</style>
+</head>
+<body class="atlas-app" data-module="scripts">
+
+<a class="at-skip" href="#at-content">Skip to content</a>
+<header class="at-header">
+ <div class="at-nav"><a class="at-brand" href="/demo/index.html" aria-label="Atlas, Today">Atlas<b>.</b></a><nav class="at-links" aria-label="Main navigation"><a href="/demo/index.html">Today</a><a href="/demo/week.html">Week</a><a href="/demo/money.html">Money</a><a href="/demo/records.html">Records</a><a href="/demo/locked.html?from=admin">Admin</a></nav>
+ <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="/demo/scripts.html" aria-current="page">Scripts</a><a href="/demo/locked.html?from=goals">Goals</a><a href="/demo/locked.html?from=companion-pack">Companion pack</a><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/how-it-works.html">How Atlas works</a></div></details></div>
+ <div class="at-heading"><div><div class="at-kicker">Scripts</div><h1>Find the words.</h1><p>68 scripts for the conversations you need to have and don&rsquo;t know how to start. The opening is close to verbatim. The rest is yours.</p></div><a class="at-phase-chip" href="/demo/index.html#at-phase"><span class="at-phase-chip-label">Phase</span> <strong data-phase-label>Stabilise</strong><span class="at-phase-chip-action">Change</span></a></div>
+</header>
+
+<main class="page-wrap" id="at-content">
+<div class="container">
+
+  <section class="hero">
+
+    <div class="content-tabs" role="tablist" aria-label="Scripts and reading">
+      <button class="content-tab active" id="tab-conversations" type="button" role="tab" aria-selected="true" onclick="setActiveTab('conversations')">Scripts</button>
+      <button class="content-tab" id="tab-articles" type="button" role="tab" aria-selected="false" onclick="setActiveTab('articles')" hidden style="display:none">Reading</button>
+    </div>
+  </section>
+
+  <div class="container" style="max-width:860px;margin-left:0;padding:0;">
+    
+    </div>
+
+  <section id="articles-panel" class="content-panel" aria-labelledby="tab-articles">
+    <div class="articles-toolbar">
+      <div class="phase-row">
+        <button class="phase-pill active" data-phase="all" onclick="filterGuides('all')">All</button>
+        <button class="phase-pill" data-phase="waiting-room" onclick="filterGuides('waiting-room')">Waiting Room</button>
+        <button class="phase-pill" data-phase="survive" onclick="filterGuides('survive')">Survive</button>
+        <button class="phase-pill" data-phase="stabilise" onclick="filterGuides('stabilise')">Stabilise</button>
+        <button class="phase-pill" data-phase="rebuild" onclick="filterGuides('rebuild')">Rebuild</button>
+        <button class="phase-pill" data-phase="new-chapter" onclick="filterGuides('new-chapter')">New Chapter</button>
+      </div>
+
+      <div class="cat-row">
+        <button class="cat-btn active" data-cat="all" onclick="filterCategory('all')">All</button>
+        <button class="cat-btn" data-cat="getting-started" onclick="filterCategory('getting-started')">Getting Started</button>
+        <button class="cat-btn" data-cat="money" onclick="filterCategory('money')">Money</button>
+        <button class="cat-btn" data-cat="the-kids" onclick="filterCategory('the-kids')">The Kids</button>
+        <button class="cat-btn" data-cat="admin-legal" onclick="filterCategory('admin-legal')">Admin &amp; Legal</button>
+        <button class="cat-btn" data-cat="you" onclick="filterCategory('you')">You</button>
+      </div>
+    </div>
+
+    <div class="guide-grid" id="guide-grid"></div>
+
+    <section class="phase-guide-section">
+      <h2>Understanding your phase</h2>
+      <p>The phase model is Atlas's core framework. Here's what each phase means — and what it demands of you.</p>
+      <div class="phase-guide-panels">
+
+        <details class="phase-guide-panel">
+          <summary>Waiting Room — Before the decision</summary>
+          <div class="phase-guide-body">
+            <p>You're not separated yet, but you can see it coming. This phase is defined by uncertainty — and the temptation to either ignore the situation or overreact to it. Neither helps.</p>
+            <p>What you can do now: gather your documents, understand your financial position, and get a clear picture of what the legal process actually involves. Information is not commitment. Getting informed is not giving up.</p>
+            <p>What to avoid: making major financial decisions under emotional pressure, or assuming the worst before the process has started. Stay practical.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>Survive — 0 to 6 months</summary>
+          <div class="phase-guide-body">
+            <p>Separation is official. The immediate priority is stability: somewhere to live, legal basics understood, kids seeing both parents regularly. That's it. Don't try to optimise — just survive.</p>
+            <p>Money decisions made in the Survive phase often look terrible in hindsight. The financial fog is real. If you can avoid major commitments for the first few months, do it. The one exception: get your budget mapped. You need to know what's actually coming in and going out.</p>
+            <p>This phase is harder than people expect and shorter than it feels. The fog lifts. Focus on keeping the wheels on.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>Stabilise — 6 to 18 months</summary>
+          <div class="phase-guide-body">
+            <p>Two households are running. The immediate chaos has passed. Now the job is to get your foundations right — budget mapped properly, routines established, legal documents sorted, admin caught up.</p>
+            <p>This is when most of the practical work happens. Bank accounts, super, insurance, tax — all the things you put off during the Survive phase. Work through them systematically. The admin checklist in Atlas covers most of it.</p>
+            <p>Stability also means building small habits: consistent kids week routines, a savings buffer, regular time for yourself. These compound. Don't underestimate them.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>Rebuild — 1 to 3 years</summary>
+          <div class="phase-guide-body">
+            <p>The hard stuff is largely behind you. Two households are running, the kids have a routine, and you have a clearer picture of your financial position. Now you build — deliberately.</p>
+            <p>Rebuild is when goals start to matter. Not vague aspirations — concrete targets. Savings goals. Fitness. Career. Identity. You've survived; now you decide what you're building toward.</p>
+            <p>This phase can stall if you're still in survival mode mentally. Watch for it. The circumstances have stabilised. The question is whether your thinking has caught up.</p>
+          </div>
+        </details>
+
+        <details class="phase-guide-panel">
+          <summary>New Chapter — 3 years and beyond</summary>
+          <div class="phase-guide-body">
+            <p>You've rebuilt. The post-separation identity crisis is resolved. You know who you are, what matters to you, and how your finances work. The kids are settled. The legal machinery is behind you.</p>
+            <p>This phase is about extension and optimisation — not starting over, but compounding what you've built. Super contributions, investment thinking, the next significant financial goals, deeper relationships with your kids as they grow.</p>
+            <p>It looks different for everyone. Some people arrive here in two years; others take five. What matters is that you get here — and Atlas is built to help you track the progress.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+  </section>
+
+  <section id="conversations-panel" class="content-panel conv-panel active" aria-labelledby="tab-conversations">
+    <div class="scripts-search-wrap">
+      <input
+        type="text"
+        id="scripts-search"
+        class="scripts-search"
+        placeholder="Search scripts — try 'employer', 'school', 'ex about money'…"
+        oninput="handleScriptsSearch(this.value)"
+        autocomplete="off"
+      >
+      <span class="scripts-search-icon">⌕</span>
+    </div>
+    <div class="scripts-meta" id="scripts-meta"></div>
+
+    <div class="script-results-grid" id="scripts-results-grid"></div>
+    <section class="start-here" id="start-here" aria-labelledby="start-here-title"></section>
+    <div class="circle-legend" id="circle-legend" aria-hidden="true"></div>
+    <div class="category-grid" id="category-grid"></div>
+    <div class="cat-accordion-wrap" id="cat-accordion-wrap" data-open=""></div>
+    <section class="script-detail-section" id="script-detail-section"></section>
+  </section>
+
+</div>
+</main>
+
+<footer class="at-footer"><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/terms.html">Privacy &amp; terms</a><a href="/how-it-works.html">How it works</a></nav></footer>
+
+<script>
+const articles = [
+  {
+    id: 'article-00',
+    title: 'The Waiting Room: Preparing before separation',
+    excerpt: "You're not there yet — but the decisions you make now will shape everything that comes after.",
+    image: './images/Atlas the watiing room.webp',
+    phases: ['waiting-room'],
+    category: 'getting-started',
+    url: 'https://get-atlas.com.au/the-waiting-room'
+  },
+  {
+    id: 'article-01',
+    title: 'The first 30 days after separation: what to actually do',
+    excerpt: "The practical steps most people miss when everything feels like it's on fire.",
+    image: './images/Atlas Article 1B.webp',
+    phases: ['survive'],
+    category: 'getting-started',
+    url: 'https://get-atlas.com.au/the-first-30-days-after-separation-what-to-actually-do'
+  },
+  {
+    id: 'article-02',
+    title: 'Seven things you forget about money when you separate',
+    excerpt: 'The financial blindspots that catch most people off guard.',
+    image: './images/Atlas Article 2B.webp',
+    phases: ['survive', 'stabilise'],
+    category: 'money',
+    url: 'https://get-atlas.com.au/seven-things-you-forget-about-money-when-you-separate',
+    toolLink: './money.html',
+    toolLabel: 'Open Money'
+  },
+  {
+    id: 'article-03',
+    title: 'Kids week on, kids week off: the logistics nobody warns you about',
+    excerpt: 'Making the custody rhythm actually work week to week.',
+    image: './images/Atlas article 3B.webp',
+    phases: ['survive', 'stabilise'],
+    category: 'the-kids',
+    url: 'https://get-atlas.com.au/kids-week-on-kids-week-off-the-logistics-nobody-warns-you-about',
+    toolLink: './week.html',
+    toolLabel: 'Open Week'
+  },
+  {
+    id: 'article-04',
+    title: "You don't need a routine. You need a structure.",
+    excerpt: 'Why routines fail separated dads — and what to build instead.',
+    image: './images/Atlas Article 4B.webp',
+    phases: ['stabilise', 'rebuild'],
+    category: 'you',
+    url: 'https://get-atlas.com.au/you-dont-need-a-routine-you-need-a-structure'
+  },
+  {
+    id: 'article-05',
+    title: 'The four phases of rebuilding after separation',
+    excerpt: 'Survive, Stabilise, Rebuild, New Chapter — and how to know where you actually are.',
+    image: './images/Atlas article 5B.webp',
+    phases: ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'],
+    category: 'getting-started',
+    url: 'https://get-atlas.com.au/the-four-phases-of-rebuilding-after-separation'
+  },
+  {
+    id: 'article-06',
+    title: 'What child support actually costs you — and how the formula works',
+    excerpt: 'The CSA formula explained plainly, with what it means for your budget.',
+    image: './images/Atlas Article 6B.webp',
+    phases: ['survive', 'stabilise'],
+    category: 'admin-legal',
+    url: 'https://get-atlas.com.au/what-child-support-actually-costs-you-and-how-the-formula-works',
+    toolLink: './money.html',
+    toolLabel: 'Use Calculator'
+  },
+  {
+    id: 'article-07',
+    title: 'Your social life after separation: what disappears and why no one warns you',
+    excerpt: 'The social costs of separation nobody prepares you for.',
+    image: './images/Atlas Article 7B.webp',
+    phases: ['survive', 'stabilise'],
+    category: 'you',
+    url: 'https://get-atlas.com.au/your-social-life-after-separation-what-disappears-and-why-no-one-warns-you'
+  },
+  {
+    id: 'article-08',
+    title: 'Setting up your place: how to make a rental work for you and the kids',
+    excerpt: 'Practical setup for a rental that feels like home for you and the kids.',
+    image: './images/Atlas Article 8B.webp',
+    phases: ['survive', 'stabilise'],
+    category: 'the-kids',
+    url: 'https://get-atlas.com.au/setting-up-your-place-how-to-make-a-rental-work-for-you-and-the-kids',
+    toolLink: './money.html',
+    toolLabel: 'Open Money'
+  },
+  {
+    id: 'article-09',
+    title: "Who are you now? The identity question nobody prepares you for",
+    excerpt: 'Rebuilding a sense of self after everything that defined you has changed.',
+    image: './images/Atlas Article 9B.webp',
+    phases: ['stabilise', 'rebuild'],
+    category: 'you',
+    url: 'https://get-atlas.com.au/who-are-you-now-the-identity-question-nobody-prepares-you-for'
+  },
+  {
+    id: 'article-10',
+    title: 'The 2025 family law changes: what separated parents actually need to know',
+    excerpt: 'What changed in Australian family law and what it means for your situation.',
+    image: './images/Atlas Article 10B.webp',
+    phases: ['waiting-room', 'survive', 'stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/the-2025-family-law-changes-what-separated-parents-actually-need-to-know/'
+  },
+  {
+    id: 'article-12',
+    title: 'What happens to the family home when you separate',
+    excerpt: 'The practical and legal reality of the family home — and what your options actually are.',
+    image: './images/Atlas What happens to the family home.webp',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/what-happens-to-the-family-home-when-you-separate/'
+  },
+  {
+    id: 'article-13',
+    title: "Separation vs divorce in Australia: what's the difference and when does it actually matter",
+    excerpt: "They're not the same thing. Here's when the distinction actually changes what you need to do.",
+    image: './images/Atlas separation-vs-divorce.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/separation-vs-divorce-in-australia-whats-the-difference-and-when-does-it-actually-matter/'
+  },
+  {
+    id: 'article-14',
+    title: 'Property settlement after separation: the four steps most people get wrong',
+    excerpt: 'Most property settlements stall at the same four points. Here is what they are and how to move through them.',
+    image: './images/Atlas Property Settlement.webp',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/property-settlement-after-separation-the-four-steps-most-people-get-wrong/'
+  },
+  {
+    id: 'article-15',
+    title: 'Superannuation splitting after separation: what it is and whether you need to do it',
+    excerpt: 'Super splitting is optional, not automatic. This is what it involves and when it is worth pursuing.',
+    image: './images/Atlas Super Splitting.webp',
+    phases: ['stabilise'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/superannuation-splitting-after-separation-what-it-is-and-whether-you-need-to-do-it/'
+  },
+  {
+    id: 'article-16',
+    title: 'How to tell the kids when you separate: what to say and what not to',
+    excerpt: 'What to say, what to avoid, and how to handle the questions that follow.',
+    image: './images/Atlas telling-the-kids.webp',
+    phases: ['survive'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/how-to-tell-the-kids-what-to-say-and-what-not-to/'
+  },
+  {
+    id: 'article-17',
+    title: 'Parenting plans: what to actually include and what breaks them',
+    excerpt: 'A parenting plan is only useful if it covers the right things. Most do not.',
+    image: './images/Atlas Parenting plans.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/parenting-plans-what-to-actually-include-and-what-breaks-them/'
+  },
+  {
+    id: 'article-18',
+    title: 'Mediation vs lawyers: when to use which and what each actually costs',
+    excerpt: 'The real cost difference — and the situations where one clearly beats the other.',
+    image: './images/Atlas mediation-vs-lawyers.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/mediation-vs-lawyers-when-to-use-which-and-what-each-actually-costs/'
+  },
+  {
+    id: 'article-19',
+    title: "Co-parenting when you don't trust your ex",
+    excerpt: 'How to keep the kids out of it when the relationship between you is genuinely broken.',
+    image: './images/Atlas coparenting-low-trust.webp',
+    phases: ['survive'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/co-parenting-when-you-dont-trust-your-ex/'
+  },
+  {
+    id: 'article-20',
+    title: 'Building your finances back after separation: the actual order of operations',
+    excerpt: 'There is a sequence that works. Most people get it backwards.',
+    image: './images/Atlas rebuilding-finances.webp',
+    phases: ['rebuild'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/building-your-finances-back-after-separation-the-actual-order-of-operations/',
+    toolLink: './money.html',
+    toolLabel: 'Open Money'
+  },
+  {
+    id: 'article-21',
+    title: 'Dating after separation: what nobody says out loud',
+    excerpt: 'The practical and emotional reality of re-entering the dating pool — with kids.',
+    image: './images/Atlas dating-after-separation.webp',
+    phases: ['rebuild'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/dating-after-separation-what-nobody-says-out-loud/'
+  },
+  {
+    id: 'article-22',
+    title: 'The plain-English glossary of separation terms',
+    excerpt: "If you don't know what a consent order is, you're not alone. Plain definitions for everything you'll encounter.",
+    image: './images/Atlas Glossary.webp',
+    phases: ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'],
+    category: 'getting-started',
+    url: 'https://www.get-atlas.com.au/the-plain-english-glossary-of-separation-terms/'
+  },
+  {
+    id: 'article-101',
+    title: 'What matters now: the Atlas separation roadmap',
+    excerpt: 'A phase-by-phase map of what actually matters at each stage — and what can wait.',
+    image: './images/article-101-what-matters-now-the-atlas-separation-roadmap.webp',
+    phases: ['waiting-room', 'survive', 'stabilise', 'rebuild', 'new-chapter'],
+    category: 'getting-started',
+    url: 'https://www.get-atlas.com.au/what-matters-now-the-atlas-separation-roadmap/'
+  },
+  {
+    id: 'article-102',
+    title: 'Family Tax Benefit, Centrelink and parenting payment: what you can actually access',
+    excerpt: 'The payments most separated parents are entitled to — and how to actually claim them.',
+    image: './images/article-102-family-tax-benefit-centrelink-and-parenting-payment-what-you-can-actually-access.webp',
+    phases: ['survive'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/family-tax-benefit-centrelink-and-parenting-payment-what-you-can-actually-access/'
+  },
+  {
+    id: 'article-103',
+    title: 'The mortgage after separation: who pays while property settlement drags on',
+    excerpt: 'Property settlement takes time. The mortgage does not wait. Here is how to handle the gap.',
+    image: './images/article-103-the-mortgage-after-separation-who-pays-while-property-settlement-drags-on.webp',
+    phases: ['stabilise'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/the-mortgage-after-separation-who-pays-while-property-settlement-drags-on/'
+  },
+  {
+    id: 'article-104',
+    title: 'The GP appointment after separation: what they can actually help you with',
+    excerpt: 'Most people walk past their GP during the worst of it. They should not.',
+    image: './images/article-104-the-gp-appointment-after-separation-what-they-can-actually-help-you-with.webp',
+    phases: ['survive'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/the-gp-appointment-after-separation-what-they-can-actually-help-you-with/'
+  },
+  {
+    id: 'article-105',
+    title: "The first lawyer appointment: how to use it without burning $600 an hour",
+    excerpt: 'What to prepare, what to ask, and how to leave with answers instead of billable hours.',
+    image: './images/article-105-the-first-lawyer-appointment-how-to-use-it-without-burning-600-an-hour.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/the-first-lawyer-appointment-how-to-use-it-without-burning-600-an-hour/'
+  },
+  {
+    id: 'article-106',
+    title: 'The first solo week with the kids: how to actually run the house alone',
+    excerpt: 'The logistics of feeding, schooling, and managing kids solo for the first time.',
+    image: './images/article-106-the-first-solo-week-with-the-kids-how-to-actually-run-the-house-alone.webp',
+    phases: ['stabilise'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/the-first-solo-week-with-the-kids-how-to-actually-run-the-house-alone/',
+    toolLink: './week.html',
+    toolLabel: 'Open Week'
+  },
+  {
+    id: 'article-107',
+    title: 'Going to family court for the first time: what will actually happen',
+    excerpt: 'Family court is not what most people expect. Here is the reality.',
+    image: './images/article-107-going-to-family-court-for-the-first-time-what-will-actually-happen.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/going-to-family-court-for-the-first-time-what-will-actually-happen/'
+  },
+  {
+    id: 'article-108',
+    title: "The 'I can't afford rent' problem after separation",
+    excerpt: 'What to do when your income does not cover the basics after splitting one household into two.',
+    image: './images/article-108-the-i-cant-afford-rent-problem-after-separation.webp',
+    phases: ['survive'],
+    category: 'money',
+    url: 'https://www.get-atlas.com.au/the-i-cant-afford-rent-problem-after-separation/'
+  },
+  {
+    id: 'article-201',
+    title: 'Separated under one roof: the legal and practical reality',
+    excerpt: 'Living together while legally separated is more common than people admit. Here is how it works.',
+    image: './images/article-201-separated-under-one-roof-the-legal-and-practical-reality.webp',
+    phases: ['waiting-room', 'survive'],
+    category: 'getting-started',
+    url: 'https://www.get-atlas.com.au/separated-under-one-roof-the-legal-and-practical-reality/'
+  },
+  {
+    id: 'article-202',
+    title: 'Communication with a difficult ex: how to use the BIFF method',
+    excerpt: 'Brief, informative, friendly, firm. A communication framework that actually holds up under pressure.',
+    image: './images/article-202-communication-with-a-difficult-ex-how-to-use-the-biff-method.webp',
+    phases: ['stabilise'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/communication-with-a-difficult-ex-how-to-use-the-biff-method/'
+  },
+  {
+    id: 'article-203',
+    title: 'Mediation failed. Now what?',
+    excerpt: 'When mediation breaks down, the next steps are not what most people expect.',
+    image: './images/article-203-mediation-failed-now-what.md.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/mediation-failed-now-what/'
+  },
+  {
+    id: 'article-204',
+    title: "What to do when you can't get a psychologist: the interim system",
+    excerpt: 'Psychology waitlists are long. Here is what to put in place while you wait.',
+    image: './images/article-204-what-to-do-when-you-cant-get-a-psychologist-the-interim-system.webp',
+    phases: ['survive'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/what-to-do-when-you-cant-get-a-psychologist-the-interim-system/'
+  },
+  {
+    id: 'article-205',
+    title: 'What to write down after separation: what to document and what is overkill',
+    excerpt: 'Some things are worth documenting. Most things are not. Here is the distinction.',
+    image: './images/article-205-what-to-write-down-after-separation-what-to-document-and-whats-overkill.webp',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/what-to-write-down-after-separation-what-to-document-and-whats-overkill/'
+  },
+  {
+    id: 'article-206',
+    title: 'The separation admin nobody warns you about: accounts, utilities, subscriptions and access',
+    excerpt: 'The unglamorous list of things that need to be untangled — and how to work through it.',
+    image: './images/article-206-the-separation-admin-nobody-warns-you-about-accounts-utilities-subscriptions-and-access.webp',
+    phases: ['stabilise'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/the-separation-admin-nobody-warns-you-about-accounts-utilities-subscriptions-and-access/',
+    toolLink: './admin.html',
+    toolLabel: 'Open Admin'
+  },
+  {
+    id: 'article-207',
+    title: 'How to prepare for mediation: what to organise in the week before',
+    excerpt: 'What to bring, what to know, and how to walk in without being caught off guard.',
+    image: './images/article-207-how-to-prepare-for-mediation-what-to-organise-in-the-week-before.webp',
+    phases: ['survive'],
+    category: 'admin-legal',
+    url: 'https://www.get-atlas.com.au/how-to-prepare-for-mediation-what-to-organise-in-the-week-before/'
+  },
+  {
+    id: 'article-208',
+    title: 'How to explain separation to your workplace',
+    excerpt: 'What to say, how much to share, and how to protect yourself without lying.',
+    image: './images/article-208-how-to-explain-separation-to-your-workplace.webp',
+    phases: ['stabilise'],
+    category: 'you',
+    url: 'https://www.get-atlas.com.au/how-to-explain-separation-to-your-workplace/'
+  },
+  {
+    id: 'article-209',
+    title: 'What to do if your ex cuts off communication entirely',
+    excerpt: 'Silence from a co-parent is a specific problem. Here is how to handle it practically.',
+    image: './images/article-209-what-to-do-if-your-ex-cuts-off-communication-entirely.webp',
+    phases: ['stabilise'],
+    category: 'the-kids',
+    url: 'https://www.get-atlas.com.au/what-to-do-if-your-ex-cuts-off-communication-entirely/'
+  }
+];
+
+const articleCategoryLabels = {
+  'getting-started': 'Getting Started',
+  'money': 'Money',
+  'the-kids': 'The Kids',
+  'admin-legal': 'Admin & Legal',
+  'you': 'You'
+};
+
+const categoryById = Object.fromEntries((window.ATLAS_CATEGORIES || []).map(category => [category.id, category]));
+const allScripts = (window.ATLAS_SCRIPTS || []).slice().sort((a, b) => a.number - b.number);
+
+let activeTab = 'conversations';
+let activePhase = 'all';
+let activeCategory = 'all';
+let scriptsSearchQuery = '';
+let openCategoryId = '';
+let openPreviewId = '';
+let activeScriptId = '';
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function firstSentence(text) {
+  const clean = String(text || '').trim();
+  const match = clean.match(/^.*?[.!?](?=\s|$)/);
+  return match ? match[0].trim() : clean;
+}
+
+function truncate(text, maxLength) {
+  const clean = String(text || '').trim();
+  if (clean.length <= maxLength) return clean;
+  return clean.slice(0, maxLength - 1).trimEnd() + '…';
+}
+
+function getCategoryLabel(categoryId) {
+  return categoryById[categoryId]?.label || categoryId;
+}
+
+function getScriptById(scriptId) {
+  return allScripts.find(script => script.id === scriptId) || null;
+}
+
+function syncGuidesUrl() {
+  const params = new URLSearchParams();
+  if (activeTab === 'conversations') {
+    params.set('tab', 'conversations');
+    if (openCategoryId) params.set('cat', openCategoryId);
+    if (activeScriptId) params.set('script', activeScriptId);
+  } else {
+    if (activePhase !== 'all') params.set('phase', activePhase);
+    if (activeCategory !== 'all') params.set('category', activeCategory);
+  }
+  const next = params.toString() ? `?${params.toString()}` : './scripts.html';
+  history.replaceState(null, '', next);
+}
+
+function setActiveTab(tab, options = {}) {
+  activeTab = 'conversations'; // demo: Reading is not shipped
+  document.getElementById('articles-panel').classList.toggle('active', activeTab === 'articles');
+  document.getElementById('conversations-panel').classList.toggle('active', activeTab === 'conversations');
+  document.getElementById('tab-articles').classList.toggle('active', activeTab === 'articles');
+  document.getElementById('tab-conversations').classList.toggle('active', activeTab === 'conversations');
+  document.getElementById('tab-articles').setAttribute('aria-selected', String(activeTab === 'articles'));
+  document.getElementById('tab-conversations').setAttribute('aria-selected', String(activeTab === 'conversations'));
+  if (!options.skipUrl) syncGuidesUrl();
+}
+
+function filterGuides(phase) {
+  activePhase = phase;
+  document.querySelectorAll('.phase-pill').forEach(button => {
+    button.classList.toggle('active', button.dataset.phase === phase);
+  });
+  renderGuides();
+  syncGuidesUrl();
+}
+
+function filterCategory(category) {
+  activeCategory = category;
+  document.querySelectorAll('.cat-btn').forEach(button => {
+    button.classList.toggle('active', button.dataset.cat === category);
+  });
+  renderGuides();
+  syncGuidesUrl();
+}
+
+function renderGuides() {
+  const grid = document.getElementById('guide-grid');
+  const filtered = articles.filter(article => {
+    const phaseMatch = activePhase === 'all' || article.phases.includes(activePhase);
+    const categoryMatch = activeCategory === 'all' || article.category === activeCategory;
+    return phaseMatch && categoryMatch;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = '<p class="guide-empty">Nothing to read matches these filters.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(article => `
+    <div class="guide-card">
+      <div class="guide-card-img" style="${article.image ? '' : 'background:var(--paper-warm);display:flex;align-items:center;justify-content:center;'}">
+        ${article.image
+          ? `<img src="${escapeHtml(article.image)}" alt="" loading="lazy" onerror="this.parentElement.style.cssText='height:180px;overflow:hidden;background:var(--paper-warm)';">`
+          : `<span style="font-family: var(--font-display);font-size:2.5rem;color:var(--paper-edge);user-select:none; font-weight: 700; letter-spacing: -.025em">~</span>`
+        }
+      </div>
+      <div class="guide-card-body">
+        <div class="guide-card-meta">
+          <span class="guide-phase-tag">${escapeHtml(articleCategoryLabels[article.category] || article.category)}</span>
+          ${article.toolLink ? `<a href="${escapeHtml(article.toolLink)}" class="guide-tool-tag">${escapeHtml(article.toolLabel)} ›</a>` : ''}
+        </div>
+        <div class="guide-card-title">${escapeHtml(article.title)}</div>
+        <div class="guide-card-excerpt">${escapeHtml(article.excerpt)}</div>
+        <a href="${escapeHtml(article.url)}" class="guide-card-link" target="_blank" rel="noopener">Read →</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function handleScriptsSearch(value) {
+  scriptsSearchQuery = value.trim();
+  if (scriptsSearchQuery.length >= 2) {
+    openCategoryId = '';
+    openPreviewId = '';
+  }
+  renderConversationIndex();
+  syncGuidesUrl();
+}
+
+function searchScripts() {
+  const query = scriptsSearchQuery.trim().toLowerCase();
+  if (query.length < 2) return [];
+  return allScripts.filter(script => {
+    const haystack = [
+      script.title,
+      getCategoryLabel(script.category),
+      script.situation,
+      ...script.cover.map(item => item.heading)
+    ].join(' ').toLowerCase();
+    return haystack.includes(query);
+  });
+}
+
+// Category cards are tinted by who you're talking to. Higher-Stakes is peach: attention now.
+const CATEGORY_CIRCLE = {
+  family: 'sep', 'your-ex': 'sep', 'finances-legal': 'sep',
+  'kids-world': 'kids', 'new-relationships': 'kids',
+  work: 'work', admin: 'work',
+  'social-friends': 'you', wellbeing: 'you',
+  'high-stakes': 'high',
+};
+const CIRCLE_NAMES = { sep: 'The separation', kids: 'The kids', work: 'Work and admin', you: 'You and your people', high: 'Higher stakes' };
+
+function renderCategoryCards() {
+  const grid = document.getElementById('category-grid');
+  grid.innerHTML = window.ATLAS_CATEGORIES.map(category => {
+    const circle = CATEGORY_CIRCLE[category.id] || 'you';
+    return `
+    <div class="cat-card circle-${circle}${openCategoryId === category.id ? ' active' : ''}" role="button" tabindex="0" aria-expanded="${openCategoryId === category.id}" onclick="showCategory('${escapeHtml(category.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showCategory('${escapeHtml(category.id)}')}" id="cat-card-${escapeHtml(category.id)}">
+      <div class="cat-card-label">${escapeHtml(CIRCLE_NAMES[circle])}</div>
+      <div class="cat-card-title">${escapeHtml(category.label)}</div>
+      <div class="cat-card-desc">${escapeHtml(category.description)}</div>
+      <div class="cat-card-meta">${escapeHtml(String(category.count))} scripts${allScripts.some(s => s.category === category.id) ? ' · some open in the demo' : ' · in the full toolkit'}</div>
+      <span class="cat-card-arrow" aria-hidden="true">→</span>
+    </div>`;
+  }).join('');
+  document.getElementById('circle-legend').innerHTML = Object.entries(CIRCLE_NAMES)
+    .map(([key, name]) => `<span><i class="circle-${key}"></i>${escapeHtml(name)}</span>`).join('');
+}
+
+// Start here: the three scripts for your phase. Same picks as Today (keep in step with PHASE_SCRIPTS in assets/app/today.js).
+const PHASE_SCRIPTS = {
+  'waiting-room': ['first-conversation-with-a-lawyer', 'how-to-tell-the-kids-agreeing-together', 'telling-close-friends'],
+  survive: ['the-first-logistics-conversation', 'telling-your-manager', 'asking-for-help'],
+  stabilise: ['asking-to-change-the-schedule-temporarily', 'handling-a-schedule-dispute-without-escalating', 'talking-to-your-childs-teacher'],
+  rebuild: ['renegotiating-an-arrangement-that-isnt-working', 'setting-communication-boundaries', 'talking-to-a-mortgage-broker'],
+  'new-chapter': ['telling-your-kids-youre-seeing-someone', 'introducing-a-new-partner-to-your-kids', 'navigating-a-promotion-conversation'],
+};
+const PHASE_NAMES = { 'waiting-room': 'Waiting Room', survive: 'Survive', stabilise: 'Stabilise', rebuild: 'Rebuild', 'new-chapter': 'New Chapter' };
+function currentAppPhase() {
+  try {
+    const raw = localStorage.getItem('atlas_phase') || localStorage.getItem('dad_atlas_phase');
+    const value = raw === 'crisis' ? 'survive' : raw;
+    return PHASE_SCRIPTS[value] ? value : 'stabilise';
+  } catch (_) { return 'stabilise'; }
+}
+function renderStartHere() {
+  const box = document.getElementById('start-here');
+  if (!box) return;
+  const phase = currentAppPhase();
+  const own = PHASE_SCRIPTS[phase].map(getScriptById).filter(Boolean); const picks = own.length ? own : allScripts.slice(); const startNote = own.length ? `${picks.length} scripts for ${PHASE_NAMES[phase]} · changes with your phase` : `The ${PHASE_NAMES[phase]} picks are in the full toolkit. These ${picks.length} are open in the demo.`;
+  box.innerHTML = `<div class="start-here-head"><h2 id="start-here-title">Start here</h2><span>${escapeHtml(startNote)}</span></div>
+    <ul>${picks.map(script => `<li><button type="button" onclick="openScript('${escapeHtml(script.id)}')"><span><b>${escapeHtml(script.title)}</b><small>${escapeHtml(categoryById[script.category]?.label || '')}</small></span><i aria-hidden="true">→</i></button></li>`).join('')}</ul>`;
+}
+document.addEventListener('atlas:phase', renderStartHere);
+
+function renderSearchResults(results) {
+  const grid = document.getElementById('scripts-results-grid');
+  if (!results.length) {
+    grid.innerHTML = '<div class="guide-empty">No scripts match that. Try a different word.</div>';
+    return;
+  }
+
+  grid.innerHTML = results.map(script => `
+    <div class="script-result-card" onclick="openScript('${escapeHtml(script.id)}')">
+      <div class="script-result-meta">
+        <span class="script-result-cat">${escapeHtml(getCategoryLabel(script.category))}</span>
+        <span class="script-result-num">${escapeHtml(String(script.number).padStart(2, '0'))}</span>
+      </div>
+      <div class="script-result-title">${escapeHtml(script.title)}</div>
+      <div class="script-result-situation">${escapeHtml(truncate(firstSentence(script.situation), 100))}</div>
+      <span class="script-result-arrow">→</span>
+    </div>
+  `).join('');
+}
+
+function renderScriptAccordion(script) {
+  const isOpen = openPreviewId === script.id;
+  return `
+    <div class="script-acc-item${isOpen ? ' open' : ''}" id="acc-${escapeHtml(script.id)}">
+      <button class="script-acc-header" type="button" onclick="toggleScriptPreview('${escapeHtml(script.id)}')">
+        <span class="script-acc-num">${escapeHtml(String(script.number).padStart(2, '0'))}</span>
+        <span class="script-acc-title">${escapeHtml(script.title)}</span>
+        <div class="script-acc-actions">
+          <a href="/demo/scripts.html?tab=conversations&cat=${escapeHtml(script.category)}&script=${escapeHtml(script.id)}" class="script-acc-open" onclick="event.stopPropagation(); openScript('${escapeHtml(script.id)}'); return false;">Open full script →</a>
+          <span class="script-acc-chevron">›</span>
+        </div>
+      </button>
+      <div class="script-acc-body">
+        <p class="script-acc-situation">${escapeHtml(script.situation)}</p>
+        <div class="script-acc-opening-label">How to open</div>
+        <blockquote class="script-acc-opening">&ldquo;${escapeHtml(script.opening)}&rdquo;</blockquote>
+        ${script.openingAlt ? `
+          <div class="script-opening-alt-label">${escapeHtml(script.openingAltLabel || 'Alternative opening')}</div>
+          <blockquote class="script-acc-opening">&ldquo;${escapeHtml(script.openingAlt)}&rdquo;</blockquote>
+        ` : ''}
+        <a href="/demo/scripts.html?tab=conversations&cat=${escapeHtml(script.category)}&script=${escapeHtml(script.id)}" class="script-acc-full-link" onclick="openScript('${escapeHtml(script.id)}'); return false;">Read full script →</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderOpenCategory() {
+  const wrap = document.getElementById('cat-accordion-wrap');
+  if (!openCategoryId) {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    wrap.dataset.open = '';
+    return;
+  }
+
+  const category = categoryById[openCategoryId];
+  const scripts = allScripts.filter(script => script.category === openCategoryId);
+  wrap.dataset.open = openCategoryId;
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="cat-acc-header">
+      <div class="cat-acc-kicker">Category</div>
+      <h2 class="cat-acc-title">${escapeHtml(category.label)}</h2>
+      <div class="cat-acc-actions">
+        <a href="/demo/locked.html?from=scripts-print" class="cat-acc-print" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </a>
+        <button class="cat-acc-close" type="button" onclick="closeCategory()">Close ×</button>
+      </div>
+      <p class="cat-acc-desc">${escapeHtml(category.description)}</p>
+    </div>
+    <div class="cat-acc-scripts">
+      ${scripts.map(renderScriptAccordion).join('')}${scripts.length < category.count ? '<div class="guide-empty">' + (category.count - scripts.length) + ' more in this category are in the full toolkit. <a href="/buy/demo">Get Atlas</a></div>' : ''}
+    </div>
+  `;
+}
+
+function renderConversationIndex() {
+  const meta = document.getElementById('scripts-meta');
+  const resultsGrid = document.getElementById('scripts-results-grid');
+  const categoryGrid = document.getElementById('category-grid');
+  const results = searchScripts();
+
+  if (scriptsSearchQuery.trim().length >= 2) {
+    meta.textContent = results.length
+      ? `${results.length} ${results.length === 1 ? 'script matches' : 'scripts match'} "${scriptsSearchQuery}".`
+      : 'No scripts match that. Try a different word.';
+    resultsGrid.style.display = 'grid';
+    categoryGrid.style.display = 'none';
+    document.getElementById('start-here').hidden = true;
+    document.getElementById('circle-legend').hidden = true;
+    document.getElementById('cat-accordion-wrap').style.display = 'none';
+    renderSearchResults(results);
+    return;
+  }
+
+  meta.textContent = `${allScripts.length} of ${window.ATLAS_DEMO_TOTAL} scripts are open in the demo. The full toolkit has all ${window.ATLAS_DEMO_TOTAL}.`;
+  resultsGrid.style.display = 'none';
+  resultsGrid.innerHTML = '';
+  categoryGrid.style.display = 'grid';
+  document.getElementById('start-here').hidden = false;
+  document.getElementById('circle-legend').hidden = false;
+  renderStartHere();
+  renderCategoryCards();
+  renderOpenCategory();
+}
+
+function showCategory(categoryId) {
+  setActiveTab('conversations', { skipUrl: true });
+  openCategoryId = openCategoryId === categoryId ? '' : categoryId;
+  openPreviewId = '';
+  renderConversationIndex();
+  syncGuidesUrl();
+  if (openCategoryId) {
+    requestAnimationFrame(() => {
+      document.getElementById('cat-accordion-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+}
+
+function closeCategory() {
+  openCategoryId = '';
+  openPreviewId = '';
+  renderConversationIndex();
+  syncGuidesUrl();
+}
+
+function toggleScriptPreview(scriptId) {
+  openPreviewId = openPreviewId === scriptId ? '' : scriptId;
+  renderOpenCategory();
+}
+
+function buildNavCard(script, direction) {
+  if (!script) return '';
+  return `
+    <a href="/demo/scripts.html?tab=conversations&cat=${escapeHtml(script.category)}&script=${escapeHtml(script.id)}" class="script-nav-card" onclick="openScript('${escapeHtml(script.id)}'); return false;">
+      <span class="script-nav-dir">${escapeHtml(direction)}</span>
+      <span class="script-nav-label">${escapeHtml(script.title)}</span>
+    </a>
+  `;
+}
+
+function renderScriptDetail(script) {
+  const section = document.getElementById('script-detail-section');
+  const index = allScripts.findIndex(item => item.id === script.id);
+  const prev = index > 0 ? allScripts[index - 1] : null;
+  const next = index < allScripts.length - 1 ? allScripts[index + 1] : null;
+
+  section.style.display = 'block';
+  section.innerHTML = `
+    <nav class="script-breadcrumb">
+      <a href="/demo/scripts.html?tab=conversations" onclick="setActiveTab('conversations'); closeScriptDetail(); return false;">Conversations</a>
+      <span>›</span>
+      <a href="/demo/scripts.html?tab=conversations&cat=${escapeHtml(script.category)}" onclick="openCategoryId='${escapeHtml(script.category)}'; activeScriptId=''; renderConversationIndex(); closeScriptDetail(false); syncGuidesUrl(); return false;">${escapeHtml(getCategoryLabel(script.category))}</a>
+      <span>›</span>
+      <span>${escapeHtml(script.title)}</span>
+    </nav>
+
+    <div class="script-hero">
+      <div class="script-hero-meta">
+        <span class="script-kicker">${escapeHtml(getCategoryLabel(script.category))}</span>
+        <span class="script-num">Script ${escapeHtml(String(script.number).padStart(2, '0'))} of ${escapeHtml(String(window.ATLAS_DEMO_TOTAL))}</span>
+      </div>
+      <h2 class="script-title">${escapeHtml(script.title)}</h2>
+      <p class="script-situation">${escapeHtml(script.situation)}</p>
+    </div>
+
+    <div class="script-body">
+      <section class="script-section">
+        <div class="script-section-label">Before you start</div>
+        <ul class="script-before-list">
+          ${script.before.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+        </ul>
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">How to open</div>
+        <blockquote class="script-opening-quote">&ldquo;${escapeHtml(script.opening)}&rdquo;</blockquote>
+        ${script.openingAlt ? `
+          <div class="script-opening-alt-label">${escapeHtml(script.openingAltLabel || 'Alternative opening')}</div>
+          <blockquote class="script-opening-quote">&ldquo;${escapeHtml(script.openingAlt)}&rdquo;</blockquote>
+        ` : ''}
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">What to cover</div>
+        <div class="script-cover-items">
+          ${script.cover.map(item => `
+            <div class="script-cover-item">
+              <div class="script-cover-heading">${escapeHtml(item.heading)}</div>
+              <div class="script-cover-example">&ldquo;${escapeHtml(item.example)}&rdquo;</div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">If it goes sideways</div>
+        <div class="script-sideways-wrap">
+          <div class="script-sideways-items">
+            ${script.sideways.map(item => `
+              <div class="script-sideways-item">
+                <div class="script-sideways-trigger">If ${escapeHtml(item.trigger)}:</div>
+                <div class="script-sideways-response">&ldquo;${escapeHtml(item.response)}&rdquo;</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+
+      <section class="script-section">
+        <div class="script-section-label">How to close</div>
+        <p class="script-close-text">${escapeHtml(script.close)}</p>
+      </section>
+
+      ${(prev || next) ? `
+        <div class="script-nav-row">
+          ${buildNavCard(prev, '← Previous')}
+          ${buildNavCard(next, 'Next →')}
+        </div>
+      ` : ''}
+
+      <div class="script-back-wrap">
+        <button type="button" class="script-back-link" onclick="openCategoryId='${escapeHtml(script.category)}'; activeScriptId=''; renderConversationIndex(); closeScriptDetail(false); syncGuidesUrl();">← Back to ${escapeHtml(getCategoryLabel(script.category))}</button>
+        <button type="button" class="script-close-link" onclick="closeScriptDetail()">Close script</button>
+      </div>
+    </div>
+  `;
+}
+
+function openScript(scriptId, options = {}) {
+  const script = getScriptById(scriptId);
+  if (!script) return;
+  setActiveTab('conversations', { skipUrl: true });
+  openCategoryId = script.category;
+  activeScriptId = script.id;
+  renderConversationIndex();
+  renderScriptDetail(script);
+  if (!options.skipUrl) syncGuidesUrl();
+  if (!options.skipScroll) {
+    requestAnimationFrame(() => {
+      document.getElementById('script-detail-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+}
+
+function closeScriptDetail(updateUrl = true) {
+  activeScriptId = '';
+  const section = document.getElementById('script-detail-section');
+  section.style.display = 'none';
+  section.innerHTML = '';
+  if (updateUrl) syncGuidesUrl();
+}
+
+renderGuides();
+renderConversationIndex();
+
+const params = new URLSearchParams(window.location.search);
+const requestedTab = params.get('tab');
+const requestedCategory = params.get('cat');
+const requestedScript = params.get('script');
+const requestedPhaseFilter = params.get('phase') === 'crisis' ? 'survive' : params.get('phase');
+const requestedArticleCategory = params.get('category');
+
+if (requestedPhaseFilter && document.querySelector(`.phase-pill[data-phase="${requestedPhaseFilter}"]`)) {
+  activePhase = requestedPhaseFilter;
+  document.querySelectorAll('.phase-pill').forEach(button => {
+    button.classList.toggle('active', button.dataset.phase === activePhase);
+  });
+}
+
+if (requestedArticleCategory && document.querySelector(`.cat-btn[data-cat="${requestedArticleCategory}"]`)) {
+  activeCategory = requestedArticleCategory;
+  document.querySelectorAll('.cat-btn').forEach(button => {
+    button.classList.toggle('active', button.dataset.cat === activeCategory);
+  });
+}
+
+if (requestedPhaseFilter || requestedArticleCategory) {
+  renderGuides();
+}
+
+if (requestedTab === 'conversations' || requestedCategory || requestedScript) {
+  setActiveTab('conversations', { skipUrl: true });
+}
+
+if (requestedCategory && categoryById[requestedCategory]) {
+  openCategoryId = requestedCategory;
+  renderConversationIndex();
+}
+
+if (requestedScript && getScriptById(requestedScript)) {
+  openScript(requestedScript, { skipUrl: true, skipScroll: true });
+}
+</script>
+<script src="/demo/assets/app/app.js"></script>
+<script src="/demo/demo-banner.js" defer></script>
+</body>
+</html>

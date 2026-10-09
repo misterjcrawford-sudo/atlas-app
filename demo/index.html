@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<script src="/demo/demo-shim.js"></script>
+<script src="/demo/demo-seed.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f2f2f0">
+<title>Demo · Today · Atlas</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/demo/assets/app/today-bento.css">
+</head>
+<body class="atlas-app" data-module="today">
+<a class="skip" href="#at-content">Skip to content</a>
+<div class="wrap">
+ <header class="top">
+  <a class="brand" href="/demo/index.html" aria-label="Atlas, Today">Atlas<b>.</b></a>
+  <nav class="at-links" aria-label="Main navigation"><a href="/demo/index.html" aria-current="page">Today</a><a href="/demo/week.html">Week</a><a href="/demo/money.html">Money</a><a href="/demo/records.html">Records</a><a href="/demo/locked.html?from=admin">Admin</a></nav>
+  <details class="at-tools"><summary>More</summary><div class="at-tools-menu"><a href="/demo/scripts.html">Scripts</a><a href="/demo/locked.html?from=goals">Goals</a><a href="/demo/locked.html?from=companion-pack">Companion pack</a><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/how-it-works.html">How Atlas works</a></div></details>
+ </header>
+
+ <main id="at-content">
+  <div id="at-storage-warning" class="notice" role="alert" hidden>This browser can&rsquo;t save your changes. Use a regular window with local storage turned on.</div>
+
+  <div class="bento">
+   <section class="tile welcome s12" id="at-welcome" aria-labelledby="at-welcome-title" hidden>
+    <div class="eyebrow">One household is enough</div>
+    <h2 id="at-welcome-title">Start with two things.</h2>
+    <p>Add your numbers, then set your custody cycle. Atlas organises your side only. There&rsquo;s no invitation to your ex, and nothing leaves this device.</p>
+    <a class="btn" href="/demo/money.html">Add your numbers →</a><a class="btn" href="/demo/week.html#cycle">Set your week →</a>
+    <p class="small">Moving from the current Atlas app? <a href="/demo/locked.html?from=admin">Import your backup →</a></p>
+    <button type="button" class="at-icon-button" id="at-dismiss-welcome" aria-label="Dismiss">×</button>
+   </section>
+
+   <!-- 1. Where things stand -->
+   <section class="tile status s8" aria-labelledby="at-status">
+    <div>
+     <div class="eyebrow" id="at-date">Today</div>
+     <h1 id="at-status">Here&rsquo;s your week.</h1>
+     <p id="at-status-detail">Set your custody cycle to see who&rsquo;s where this week.</p>
+    </div>
+    <label class="phase" for="at-phase">Phase <select id="at-phase"><option value="waiting-room">Waiting Room</option><option value="survive">Survive</option><option value="stabilise" selected>Stabilise</option><option value="rebuild">Rebuild</option><option value="new-chapter">New Chapter</option></select></label>
+   </section>
+
+   <section class="tile count s4" id="count" aria-labelledby="count-label">
+    <span class="eyebrow" id="count-label">Next handover</span>
+    <div class="count-head"><span class="count-number">–</span></div>
+    <div class="count-fill"></div>
+    <a href="/demo/week.html#cycle">Set your custody cycle to start the countdown →</a>
+   </section>
+
+   <!-- 2. What needs you, and a fast way to log -->
+   <section class="tile needs s7" aria-labelledby="needs-title">
+    <div class="tile-head"><h2 id="needs-title">Needs you</h2><span id="at-needs-count"></span></div>
+    <ul class="at-needs" id="at-needs"></ul>
+   </section>
+
+   <section class="tile s5 at-capture" aria-labelledby="log-title">
+    <div class="tile-head"><h2 id="log-title">Log something</h2><a href="/demo/records.html">Records →</a></div>
+    <div class="log-grid" role="group" aria-label="What happened">
+     <button type="button" data-capture="cost" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v18M17 7.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2.2 2.7 5 3.2 5 1.4 5 3.3-2.2 3.2-5 3.2-5-1.2-5-3.2"/></svg>Payment</button>
+     <button type="button" data-capture="incident" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 4 2.5 20h19L12 4z"/><path d="M12 10v4M12 17.2v.1"/></svg>Incident</button>
+     <button type="button" data-capture="communication" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/></svg>Message</button>
+     <button type="button" data-capture="handover" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>Change</button>
+    </div>
+    <form class="at-capture-form" id="at-capture-form" hidden>
+     <div class="fields">
+      <label class="field wide"><span id="at-capture-title-label">What happened</span><input class="input" id="at-capture-text" maxlength="200" required></label>
+      <label class="field"><span>Date</span><input class="input" type="date" id="at-capture-date" required></label>
+      <label class="field" data-cost-only><span>Amount</span><input class="input" type="number" id="at-capture-amount" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+      <label class="field wide" data-cost-only><span>Who paid</span><select class="input" id="at-capture-paid"><option value="me">I paid</option><option value="them">They paid</option><option value="split">Split at the time</option></select></label>
+     </div>
+     <div class="row"><button type="submit" class="btn blue">Save to Records</button><button type="button" class="link" id="at-capture-cancel">Cancel</button><span class="small">Stays on this device.</span></div>
+    </form>
+   </section>
+
+   <!-- 3. The week ahead -->
+   <section class="tile at-days s12" aria-labelledby="days-title">
+    <div class="tile-head"><h2 id="days-title">Next 7 days</h2><a href="/demo/week.html">Open Week →</a></div>
+    <ol class="at-day-strip" id="at-day-strip"></ol>
+    <p class="at-days-legend" id="at-days-legend" hidden><span class="at-legend-swatch" aria-hidden="true"></span>Kids with you</p>
+   </section>
+
+   <!-- 4. Numbers and your list -->
+   <a class="tile num-tile lime s4" id="money-tile" href="/demo/money.html"><span class="num-head"><span class="eyebrow">Money this month</span><span class="go">Open Money →</span></span><span class="at-number" id="at-money-value">Start with your numbers</span><span class="small" id="at-money-detail">Add income and costs to see your monthly picture.</span></a>
+   <a class="tile num-tile lilac s4" id="at-second-card" href="/demo/records.html"><span class="num-head"><span class="eyebrow" id="at-second-kicker">Your record</span><span class="go" id="at-second-action">Open Records →</span></span><span class="at-number" id="at-second-value">No entries yet</span><span class="small" id="at-second-detail">Payments, incidents and agreements, dated.</span></a>
+
+   <section class="tile s4" aria-labelledby="list-title">
+    <div class="tile-head"><h2 id="list-title">Your list</h2><span id="at-task-count"></span></div>
+    <ul class="at-tasks" id="at-task-list"></ul>
+    <form class="add" id="at-add-task"><input class="input" id="at-new-task" aria-label="New task" placeholder="Add something…" maxlength="160" required><button class="btn" type="submit" aria-label="Add">+</button></form>
+    <div class="row" id="at-task-tools" hidden style="margin-top:6px"><button class="link" id="at-clear-done" type="button">Clear completed</button></div>
+    <p id="at-undo" class="small" hidden><span id="at-undo-message"></span> <button type="button" class="link" id="at-undo-button">Undo</button></p>
+   </section>
+
+   <!-- 5. Words, support, backup -->
+   <section class="tile s5" aria-labelledby="scripts-title">
+    <div class="tile-head"><h2 id="scripts-title">Find the words</h2><a href="/demo/scripts.html?tab=conversations">All 68 →</a></div>
+    <p class="small" id="at-scripts-reason" style="margin:-6px 0 10px">Openings for the conversations that are hardest to start.</p>
+    <ul class="at-script-list" id="at-script-list"></ul>
+   </section>
+
+   <section class="tile support s4" aria-labelledby="support-title">
+    <div class="tile-head"><h2 id="support-title">Rough night?</h2><span>Any hour</span></div>
+    <ul>
+     <li><a href="tel:131114"><b>Lifeline<small>Crisis support, anyone</small></b><span>13 11 14</span></a></li>
+     <li><a href="tel:1300224636"><b>Beyond Blue<small>Talk it through, anyone</small></b><span>1300 22 4636</span></a></li>
+     <li><a href="tel:1300789978"><b>MensLine<small>Support for men</small></b><span>1300 78 99 78</span></a></li>
+     <li><a href="tel:1800737732"><b>1800RESPECT<small>Violence or abuse</small></b><span>1800 737 732</span></a></li>
+     <li><a href="tel:000"><b>Emergency<small>Danger right now</small></b><span>000</span></a></li>
+    </ul>
+   </section>
+
+   <section class="tile backup s3" aria-label="Backup">
+    <div class="eyebrow">Backup</div>
+    <strong id="at-backup-status">Your data stays on this device.</strong>
+    <span class="small" id="at-backup-detail">Save a backup before you change browsers or clear browsing data.</span><br>
+    <button type="button" class="btn" id="at-backup-now">Back up now</button>
+   </section>
+  </div>
+ </main>
+
+ <footer><span>Atlas © <span data-current-year>2026</span> · Life after separation</span><nav class="at-footer-links" aria-label="Support links"><a href="/demo/locked.html?from=admin">Back up / import data</a><a href="/terms.html">Privacy &amp; terms</a><a href="/how-it-works.html">How it works</a></nav></footer>
+</div>
+
+<script src="/demo/assets/app/app.js"></script>
+<script src="/demo/assets/app/data.js"></script>
+<script src="/demo/assets/app/today.js"></script>
+<script src="/demo/assets/app/today-bento.js"></script>
+<script src="/demo/demo-banner.js" defer></script>
+</body>
+</html>
