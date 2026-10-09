@@ -23,7 +23,9 @@ export default async function handler(req, res) {
     } catch (e) { ok = false; console.error('activate: Stripe request failed:', e.message); }
 
     // Any paid AUD session in this Stripe account is a buyer (promo codes allowed, so no amount check).
-    if (!ok || s.payment_status !== 'paid' || s.currency !== 'aud') {
+    // 'no_payment_required' = a 100%-off promo code (beta users, practitioner comps).
+    const settled = s.payment_status === 'paid' || s.payment_status === 'no_payment_required';
+    if (!ok || !settled || s.status !== 'complete' || s.currency !== 'aud') {
       // Diagnostic only: Stripe's own error text (it masks keys) or the session status. No personal data.
       console.error('activate: not verified', JSON.stringify({
         httpOk: ok, stripeError: s?.error?.message, status: s?.payment_status, currency: s?.currency,
