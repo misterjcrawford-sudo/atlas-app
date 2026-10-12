@@ -75,7 +75,7 @@
         <button class="btn btn-quiet" type="button" id="download-key">Download</button>
       </div>
       <a class="btn btn-primary" id="open-atlas" href="./index.html">Open Atlas →</a>
-      <p class="small">It’s saved on this device too, and in every Atlas backup you make.</p>
+      <p class="small">We’ve emailed you a copy too. It’s also saved on this device and in every Atlas backup you make.</p>
     </div>
   </section>
 
@@ -131,6 +131,26 @@
   function save(key) { try { localStorage.setItem(STORE, key); } catch (_) {} }
   function forget() { try { localStorage.removeItem(STORE); } catch (_) {} }
 
+  // Anonymous random ID for this browser, used only to count devices per key (limit 5).
+  function deviceId() {
+    var id = null;
+    try { id = localStorage.getItem('atlas_device'); } catch (_) {}
+    if (!id || !/^[A-Za-z0-9-]{8,64}$/.test(id)) {
+      var b = new Uint8Array(12); (window.crypto || window.msCrypto).getRandomValues(b);
+      id = Array.prototype.map.call(b, function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+      try { localStorage.setItem('atlas_device', id); } catch (_) {}
+    }
+    return id;
+  }
+
+  var MESSAGES = {
+    401: 'That key doesn’t match. Check for typos, or check the “Your Atlas key” email we sent when you bought Atlas.',
+    403: 'This key has been cancelled (for example after a refund). If that’s a mistake, email hello@get-atlas.com.au.',
+    429: 'This key is already in use on 5 devices, which is the limit. Email hello@get-atlas.com.au and we’ll sort it out.',
+    0:   'Couldn’t reach Atlas just now. Check your connection and try again.'
+  };
+  function message(status) { return MESSAGES[status] || MESSAGES[0]; }
+
   // Only send people back to an Atlas page on this site.
   function destination() {
     var next = params.get('next') || '';
@@ -146,7 +166,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify({ key: key })
+      body: JSON.stringify({ key: key, device: deviceId() })
     }).then(function (r) { return r.status; }).catch(function () { return 0; });
   }
 
@@ -195,6 +215,7 @@
   // 3. Unlock form.
   $('msg-locked').hidden = !params.has('locked');
   $('msg-payment').hidden = params.get('error') !== 'payment';
+  if (params.has('revoked')) { forget(); $('unlock-error').textContent = message(403); $('unlock-error').hidden = false; }
   $('unlock-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var key = $('key-input').value.trim();
@@ -205,20 +226,19 @@
     unlock(key).then(function (status) {
       if (status === 200) { save(key.toUpperCase()); location.replace(destination()); return; }
       btn.disabled = false; btn.textContent = 'Unlock';
-      $('unlock-error').textContent = status === 401
-        ? 'That key doesn’t match. Check for typos, or reply to your Stripe receipt and we’ll sort it.'
-        : 'Couldn’t reach Atlas just now. Check your connection and try again.';
+      $('unlock-error').textContent = message(status);
       $('unlock-error').hidden = false;
     });
   });
 
   // 4. Same device, access expired: re-unlock quietly with the saved key.
   var savedKey = getSaved();
-  if (savedKey && !params.has('locked') && !params.has('error')) {
+  if (savedKey && !params.has('locked') && !params.has('error') && !params.has('revoked')) {
     show('s-opening');
     unlock(savedKey).then(function (status) {
       if (status === 200) { location.replace(destination()); return; }
-      if (status === 401) forget();          // key no longer valid; offline keeps it for next time
+      if (status === 401 || status === 403) forget();   // key no longer valid; offline keeps it for next time
+      if (status === 403 || status === 429) { $('unlock-error').textContent = message(status); $('unlock-error').hidden = false; }
       show('s-unlock');
     });
     return;

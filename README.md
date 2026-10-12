@@ -32,3 +32,12 @@ Paid access, no accounts and no database. Plan: `05 Strategy & plans/atlas-paywa
 - `assets/app/` shared JavaScript and styles · `assets/fonts/` self-hosted fonts · `assets/*.pdf` companion pack · `images/` Reading tab images
 
 Source and working notes live in the Atlas Reimagined folder, not in this repo.
+
+### Key list, key email and refunds (added 12 Oct 2026)
+
+- `api/stripe-webhook.js` (Stripe → Developers → Webhooks, events `checkout.session.completed` + `charge.refunded`): emails the buyer their key via Resend (`lib/mail.js`, subject "Your Atlas key"), and a **full** refund cancels that key everywhere.
+- `lib/store.js`: Upstash Redis key list (no personal data): `key:<ID>` status, `dev:<ID>` anonymous device IDs (limit 5), `pi:<id>` refund lookup.
+- **Cancel a key by hand:** Upstash console → Data Browser → `key:<ID>` → set `status` to `revoked`. The ID is the first 8 characters after `ATLAS-` (ATLAS-B8BF-184F-… → `B8BF184F`). Set it back to `active` to restore.
+- **Reset a device limit:** delete `dev:<ID>` in the Data Browser.
+- Env vars: `KV_REST_API_URL`, `KV_REST_API_TOKEN` (added by the Upstash integration), `RESEND_API_KEY`, `STRIPE_WEBHOOK_SECRET`. Optional: `MAIL_FROM`, `MAIL_REPLY_TO`.
+- Everything fails open: if the key list or email is down, paying customers still get in.

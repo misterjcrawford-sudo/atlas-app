@@ -1,8 +1,13 @@
-// GET  /api/activate?session_id=cs_...  -> returning from Stripe checkout: verify paid, set cookie, show key
-// POST /api/activate {key}              -> unlocking with a saved Atlas key: verify HMAC, set cookie
-import { keyFromSession, verifyKey, makeCookie } from '../lib/tokens.js';
+// GET  /api/activate?session_id=cs_...      -> back from Stripe checkout: verify paid, set cookie, show key
+// POST /api/activate {key, device}          -> unlocking with a saved Atlas key
+//
+// With the key list configured (lib/store.js): revoked keys are refused and each key
+// works on up to DEVICE_LIMIT devices (counted by an anonymous random device ID).
+import { keyFromSession, verifyKey, keyId, makeCookie } from '../lib/tokens.js';
+import { storeReady, redis, getStatus, registerKey, claimDevice } from '../lib/store.js';
 
 const cookie = v => `atlas_access=${v}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`;
+const DEVICE_RE = /^[A-Za-z0-9-]{8,64}$/;
 
 export default async function handler(req, res) {
   // .trim() guards against a stray space or line break pasted into the Vercel env var.
@@ -26,26 +31,49 @@ export default async function handler(req, res) {
     // 'no_payment_required' = a 100%-off promo code (beta users, practitioner comps).
     const settled = s.payment_status === 'paid' || s.payment_status === 'no_payment_required';
     if (!ok || !settled || s.status !== 'complete' || s.currency !== 'aud') {
-      // Diagnostic only: Stripe's own error text (it masks keys) or the session status. No personal data.
       console.error('activate: not verified', JSON.stringify({
         httpOk: ok, stripeError: s?.error?.message, status: s?.payment_status, currency: s?.currency,
         keyType: stripeKey.slice(0, 8),
       }));
       return res.redirect(302, '/activate.html?error=payment');
     }
-    res.setHeader('Set-Cookie', cookie(await makeCookie(secret)));
+
+    const key = await keyFromSession(id, secret);
+    const kid = keyId(key);
+    if (storeReady()) {
+      try {
+        await registerKey(kid, { session: id });
+        if (s.payment_intent) await redis('SET', 'pi:' + s.payment_intent, kid);
+        if (await getStatus(kid) === 'revoked') return res.redirect(302, '/activate.html?revoked=1');
+      } catch (e) { console.error('activate: store unavailable', e.message); }
+    }
+    res.setHeader('Set-Cookie', cookie(await makeCookie(secret, kid)));
     // The key travels in the URL fragment, which never reaches server logs.
-    return res.redirect(302, `/activate.html#key=${await keyFromSession(id, secret)}`);
+    return res.redirect(302, `/activate.html#key=${key}`);
   }
 
   if (req.method === 'POST') {
     let body = req.body;
     if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
-    if (await verifyKey(body?.key, secret)) {
-      res.setHeader('Set-Cookie', cookie(await makeCookie(secret)));
-      return res.status(200).json({ ok: true });
+    const key = body?.key;
+    if (!(await verifyKey(key, secret))) return res.status(401).json({ ok: false, reason: 'invalid' });
+    const kid = keyId(key);
+
+    if (storeReady()) {
+      try {
+        await registerKey(kid);
+        if (await getStatus(kid) === 'revoked') return res.status(403).json({ ok: false, reason: 'revoked' });
+        const device = String(body?.device || '');
+        if (DEVICE_RE.test(device) && await claimDevice(kid, device) === 'limit') {
+          return res.status(429).json({ ok: false, reason: 'limit' });
+        }
+      } catch (e) {
+        // Store down: let paying customers in rather than lock them out.
+        console.error('activate: store unavailable', e.message);
+      }
     }
-    return res.status(401).json({ ok: false });
+    res.setHeader('Set-Cookie', cookie(await makeCookie(secret, kid)));
+    return res.status(200).json({ ok: true });
   }
 
   return res.redirect(302, '/activate.html');
