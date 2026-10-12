@@ -2,7 +2,8 @@
 // No valid atlas_access cookie -> redirect to /activate.html. Non-payers never receive app
 // pages, scripts-data.js or the companion pack PDFs.
 import { next } from '@vercel/functions';
-import { verifyCookie } from './lib/tokens.js';
+import { readCookie } from './lib/tokens.js';
+import { storeReady, getStatus } from './lib/store.js';
 
 // Public: the front door, referral pages, and the shared shell they need to render.
 const PUBLIC = new Set([
@@ -28,9 +29,30 @@ export default async function middleware(request) {
   if (!climbs && (PUBLIC.has(path) || PUBLIC_PREFIX.some(p => path.startsWith(p)))) return next();
 
   const cookie = /(?:^|;\s*)atlas_access=([^;]+)/.exec(request.headers.get('cookie') || '')?.[1];
+  let access = { ok: false, id: null };
   try {
-    if (cookie && await verifyCookie(cookie, (process.env.SESSION_SECRET || '').trim())) return next();
+    if (cookie) access = await readCookie(cookie, (process.env.SESSION_SECRET || '').trim());
   } catch (_) { /* missing secret: fail closed */ }
+
+  if (access.ok) {
+    // Revoked keys (refunds, leaks) are locked out on every device. Checked on page loads only,
+    // so assets stay fast. If the key list is unreachable, let paying customers through.
+    const isPage = path === '/' || path.endsWith('.html');
+    if (access.id && isPage && storeReady()) {
+      try {
+        if (await getStatus(access.id) === 'revoked') {
+          return new Response(null, {
+            status: 302,
+            headers: {
+              Location: new URL('/activate.html?revoked=1', url).toString(),
+              'Set-Cookie': 'atlas_access=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax',
+            },
+          });
+        }
+      } catch (_) { /* fail open */ }
+    }
+    return next();
+  }
 
   const gate = new URL('/activate.html', url);
   // Send people back to the page they asked for once they're in (HTML pages only).
