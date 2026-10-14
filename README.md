@@ -41,3 +41,10 @@ Source and working notes live in the Atlas Reimagined folder, not in this repo.
 - **Reset a device limit:** delete `dev:<ID>` in the Data Browser.
 - Env vars: `KV_REST_API_URL`, `KV_REST_API_TOKEN` (added by the Upstash integration), `RESEND_API_KEY`, `STRIPE_WEBHOOK_SECRET`. Optional: `MAIL_FROM`, `MAIL_REPLY_TO`.
 - Everything fails open: if the key list or email is down, paying customers still get in.
+
+### Supporter door and gifting (added 14 Oct 2026)
+
+- `/buy/gift` (vercel.json) → same Stripe Payment Link with `client_reference_id=gift`, so gift sales show separately in Stripe. Same checkout, same key email to the buyer, who passes the key on.
+- `/supporter-guide` → `assets/Atlas - Supporter guide.pdf` (free, public). `/gift-card` → `assets/Atlas - Gift card.pdf` (printable A4, four A6 cards). All three are in the middleware PUBLIC list.
+- terms.html: the payment section is now live (it was still commented out), plus a gift clause: the buyer owns the refund, and a full refund cancels the key. Same change in Atlas Reimagined/terms.html.
+- Ghost page `/give/` (draft) links to all of the above.

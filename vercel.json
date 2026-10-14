@@ -43,6 +43,21 @@
       "permanent": false
     },
     {
+      "source": "/buy/gift",
+      "destination": "https://buy.stripe.com/bJebJ02BF5mB2ff8RF6EU00?client_reference_id=gift",
+      "permanent": false
+    },
+    {
+      "source": "/supporter-guide",
+      "destination": "/assets/Atlas%20-%20Supporter%20guide.pdf",
+      "permanent": false
+    },
+    {
+      "source": "/gift-card",
+      "destination": "/assets/Atlas%20-%20Gift%20card.pdf",
+      "permanent": false
+    },
+    {
       "source": "/user-guide",
       "destination": "/assets/Atlas%20-%20User%20guide.pdf",
       "permanent": false
