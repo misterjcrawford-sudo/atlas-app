@@ -694,6 +694,8 @@
 
       <section class="sb-tile" id="sb-gaps-tile"><h3>Gaps</h3><div id="sb-gaps">${gapsHTML() || '<p class="sb-muted">Gaps show here as you add items.</p>'}</div></section>
 
+      ${state.items.length ? bridgeHTML('money') : ''}
+
       <aside class="sb-tile sb-wrong">
         <h3>What people get wrong about the pool</h3>
         <ul>
@@ -908,6 +910,8 @@
         </div>
         ${fld('Note', kText('contrib.since.note', 'e.g. I’ve paid the full mortgage, $3,100 a month, since March 2025', 240))}
       </section>
+
+      ${bridgeHTML('records')}
 
       <section class="sb-tile sb-fv">
         <h3>Family violence</h3>
@@ -1358,7 +1362,82 @@
         <button type="button" class="sb-btn sb-btn-ghost" id="sb-save-2">Save file to keep working later</button>
         <p class="sb-muted">Printing happens on your device. Nothing is uploaded.</p>
       </section>
-      ${briefHTML()}`;
+      ${briefHTML()}
+      ${bridgeHTML('main')}`;
+  }
+
+  // ---------- Links back to Atlas and the blog ----------
+  const BLOG = 'https://www.get-atlas.com.au/';
+  const RELATED = {
+    start: [
+      ['separation-vs-divorce-in-australia-whats-the-difference-and-when-does-it-actually-matter/', 'Separation vs divorce: when it actually matters'],
+      ['divorce-date-calculator/', 'Divorce date calculator'],
+      ['separated-under-one-roof-the-legal-and-practical-reality/', 'Separated under one roof'],
+    ],
+    pool: [
+      ['superannuation-splitting-after-separation-what-it-is-and-whether-you-need-to-do-it/', 'Super splitting after separation'],
+      ['what-happens-to-the-family-home-when-you-separate/', 'What happens to the family home'],
+      ['seven-things-you-forget-about-money-when-you-separate/', 'Seven things you forget about money'],
+    ],
+    contrib: [
+      ['what-to-write-down-after-separation-what-to-document-and-whats-overkill/', 'What to write down after separation'],
+      ['the-mortgage-after-separation-who-pays-while-property-settlement-drags-on/', 'Who pays the mortgage while it drags on'],
+    ],
+    circ: [
+      ['what-child-support-actually-costs-you-and-how-the-formula-works/', 'How the child support formula works'],
+      ['shared-care-arrangements-australia-week-on-week-off-5-2-percentages/', 'Shared care and what the percentages mean'],
+    ],
+    before: [
+      ['how-to-prepare-for-mediation-what-to-organise-in-the-week-before/', 'How to prepare for mediation'],
+      ['mediation-vs-lawyers-when-to-use-which-and-what-each-actually-costs/', 'Mediation vs lawyers: what each costs'],
+      ['the-first-lawyer-appointment-how-to-use-it-without-burning-600-an-hour/', 'Using a first lawyer appointment well'],
+    ],
+    brief: [
+      ['how-property-settlement-works-in-australia/', 'How property settlement works in Australia'],
+      ['the-2025-family-law-changes-what-separated-parents-actually-need-to-know/', 'The 2025 family law changes'],
+    ],
+  };
+
+  function relatedHTML(step) {
+    const links = RELATED[step];
+    if (!links) return '';
+    return `<nav class="sb-related" aria-label="Related reading"><span>Related reading</span>${links.map(([slug, l]) => `<a href="${BLOG}${slug}" target="_blank" rel="noopener">${l} ↗</a>`).join('')}</nav>`;
+  }
+
+  // Shown only where the tool’s job ends and Atlas’s begins. Never mid-task.
+  function bridgeHTML(kind) {
+    if (kind === 'money') return `
+      <aside class="sb-bridge">
+        <div><p class="sb-bridge-kicker">Atlas · Money</p>
+          <h3>Your pool is one number. The next two years run on cash flow.</h3>
+          <p>Atlas budgets for two households: rent or mortgage, child support, the kids’ costs and the one-off bills of separating. Private, on your device.</p></div>
+        <div class="sb-bridge-cta"><a class="sb-btn sb-btn-ghost" href="../demo/money.html">See Money in the demo</a></div>
+      </aside>`;
+    if (kind === 'records') return `
+      <aside class="sb-bridge">
+        <div><p class="sb-bridge-kicker">Atlas · Records</p>
+          <h3>Keep the record as it happens.</h3>
+          <p>Who paid what, and when. Handovers that went wrong. Atlas Records is a dated log of shared costs and incidents that you can print for your lawyer or mediator.</p></div>
+        <div class="sb-bridge-cta"><a class="sb-btn sb-btn-ghost" href="../demo/records.html">See Records in the demo</a></div>
+      </aside>`;
+    if (kind === 'main') return `
+      <aside class="sb-bridge sb-bridge-main">
+        <div><p class="sb-bridge-kicker">What comes next</p>
+          <h3>You’ve organised the settlement. Atlas organises everything around it.</h3>
+          <p>Settlement takes months. Atlas is the private toolkit for living through them: a budget for two households, the kids’ week, a record of costs and incidents, the admin checklist, and scripts for the hard conversations. No account. Your data stays on your device.</p>
+          <p class="sb-bridge-fine">$79 once · 30-day refund, no questions asked</p></div>
+        <div class="sb-bridge-cta">
+          <a class="sb-btn sb-btn-primary" href="../buy/property">Get Atlas · $79</a>
+          <a class="sb-btn sb-btn-ghost" href="../demo/">Try the demo first</a>
+          <a class="sb-text-link" href="${BLOG}">What’s inside Atlas ↗</a>
+        </div>
+      </aside>
+      <aside class="sb-tile sb-email">
+        <h3>Not ready for that? Start with the free emails.</h3>
+        <p>One practical step at a time, matched to where you’re at. Free, and you can unsubscribe whenever you like.</p>
+        <a class="sb-btn sb-btn-ghost" href="${BLOG}newsletter/">Get the free email series ↗</a>
+      </aside>`;
+    return '';
   }
 
   // ---------- Completion (drives the step list ticks) ----------
@@ -1388,13 +1467,14 @@
     return `<div class="sb-nav">
       ${prev ? `<button type="button" class="sb-btn sb-btn-ghost" data-step="${prev.id}">← ${prev.label}</button>` : '<span></span>'}
       ${next ? `<button type="button" class="sb-btn sb-btn-primary" data-step="${next.id}">Next: ${next.label} →</button>` : ''}
-    </div>`;
+    </div>
+    ${next ? `<p class="sb-leave">Need to stop? Use <button type="button" class="sb-linklike" data-save-inline>Save file</button> to pick up later. And if you’d like help in the meantime, <a href="${BLOG}newsletter/">get one practical step at a time by email, free ↗</a></p>` : ''}`;
   }
 
   function render() {
     const main = $('#sb-main');
     const views = { start: viewStart, pool: viewPool, contrib: viewContrib, circ: viewCirc, before: viewBefore, brief: viewBrief };
-    main.innerHTML = (views[current] ? views[current]() : viewComing(current)) + navHTML();
+    main.innerHTML = (views[current] ? views[current]() : viewComing(current)) + relatedHTML(current) + navHTML();
     renderStepList();
     renderStorage();
   }
@@ -1608,7 +1688,7 @@
       rerender();
       return;
     }
-    if (e.target.id === 'sb-save' || e.target.id === 'sb-save-2') return saveFile();
+    if (e.target.id === 'sb-save' || e.target.id === 'sb-save-2' || e.target.closest('[data-save-inline]')) return saveFile();
     if (e.target.id === 'sb-print') {
       state.before.printed = true;
       persist();

@@ -299,6 +299,72 @@
   .sb-doc-grid { grid-template-columns: 1fr; }
 }
 
+
+/* ---------- Ways back to Atlas ---------- */
+.sb-buy {
+  margin-left: auto; flex: none; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: #fff;
+  font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.sb-buy:hover { background: var(--cobalt); }
+.sb-buy span { font-weight: 500; opacity: .75; }
+.sb .at-nav { display: flex; align-items: center; }
+
+.sb-related { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; padding: 4px 4px 0; font-size: 14px; }
+.sb-related span { font-weight: 600; color: var(--ink-muted); font-size: 13px; }
+.sb-related a { color: var(--cobalt-ink); text-decoration: none; }
+.sb-related a:hover { text-decoration: underline; }
+
+.sb-leave { margin: 4px 4px 0; font-size: 13px; color: var(--ink-muted); text-align: right; }
+.sb-leave a { color: var(--ink-muted); }
+.sb-linklike { border: 0; background: none; padding: 0; font: inherit; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+.sb-bridge {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 28px; align-items: center;
+  background: var(--ink); color: #fff; border-radius: var(--radius); padding: 24px 26px;
+}
+.sb-bridge h3 { margin: 0 0 8px; font-size: 20px; letter-spacing: -.02em; line-height: 1.15; color: #fff; }
+.sb-bridge p { margin: 0; color: #d6d6da; font-size: 15px; line-height: 1.5; max-width: 620px; }
+.sb-bridge-kicker { font-size: 12px !important; font-weight: 600; color: var(--lime) !important; margin-bottom: 8px !important; }
+.sb-bridge-fine { margin-top: 10px !important; font-size: 13px !important; color: #b8b8bf !important; }
+.sb-bridge-cta { display: flex; flex-direction: column; gap: 8px; align-items: stretch; min-width: 210px; }
+.sb-bridge .sb-btn { text-align: center; text-decoration: none; display: inline-flex; justify-content: center; align-items: center; }
+.sb-bridge .sb-btn-ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px #ffffff55; }
+.sb-bridge .sb-btn-ghost:hover { background: #ffffff1a; }
+.sb-bridge .sb-btn-primary { background: var(--lime); color: var(--ink); }
+.sb-bridge .sb-btn-primary:hover { background: #fff; }
+.sb-bridge-main { background: var(--cobalt); }
+.sb-bridge-main p { color: #e6e9ff; }
+.sb-bridge-main .sb-bridge-fine { color: #cfd5ff !important; }
+.sb-text-link { color: #fff; font-size: 14px; text-align: center; }
+.sb-email p { margin: 0 0 12px; color: var(--ink-muted); }
+.sb-email .sb-btn { text-decoration: none; display: inline-flex; align-items: center; }
+
+.sb-footer-full { max-width: 1180px; margin: 24px auto 0; padding: 32px 28px 40px; border-top: 1px solid var(--paper-edge); font-size: 14px; }
+.sb-foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; }
+.sb-foot-grid nav { display: flex; flex-direction: column; gap: 8px; }
+.sb-foot-grid h2 { font-size: 13px; font-weight: 600; color: var(--ink-muted); margin: 0 0 4px; }
+.sb-foot-grid nav a { color: var(--ink); text-decoration: none; }
+.sb-foot-grid nav a:hover { text-decoration: underline; }
+.sb-foot-logo { font-weight: 700; font-size: 22px; letter-spacing: -.03em; color: var(--ink); text-decoration: none; }
+.sb-foot-logo b { color: var(--cobalt); }
+.sb-foot-brand p { color: var(--ink-muted); margin: 10px 0 0; max-width: 340px; }
+.sb-foot-brand .sb-btn { text-decoration: none; display: inline-flex; align-items: center; margin: 4px 6px 0 0; }
+.sb-foot-legal { margin: 28px 0 0; color: var(--ink-muted); font-size: 12.5px; max-width: 760px; }
+
+@media (max-width: 860px) {
+  .sb-bridge { grid-template-columns: 1fr; padding: 20px; }
+  .sb-bridge-cta { min-width: 0; }
+  .sb-foot-grid { grid-template-columns: 1fr 1fr; }
+  .sb-foot-brand { grid-column: 1 / -1; }
+  .sb-footer-full { padding: 24px 16px 32px; }
+  .sb-leave { text-align: left; }
+}
+@media (max-width: 520px) {
+  .sb-buy span { display: none; }
+  .sb-buy { padding: 9px 14px; }
+}
+@media print { .sb-footer-full, .sb-related, .sb-leave, .sb-bridge, .sb-email, .sb-buy { display: none !important; } }
+
 /* Phone */
 @media (max-width: 860px) {
   .sb-layout { grid-template-columns: minmax(0, 1fr); padding: 0 16px 40px; }

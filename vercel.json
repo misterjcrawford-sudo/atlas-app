@@ -38,6 +38,11 @@
       "permanent": false
     },
     {
+      "source": "/buy/property",
+      "destination": "https://buy.stripe.com/bJebJ02BF5mB2ff8RF6EU00?client_reference_id=property",
+      "permanent": false
+    },
+    {
       "source": "/demo",
       "destination": "/demo/",
       "permanent": false

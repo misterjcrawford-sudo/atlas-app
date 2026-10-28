@@ -7,7 +7,7 @@ import { storeReady, getStatus } from './lib/store.js';
 
 // Public: the front door, referral pages, and the shared shell they need to render.
 const PUBLIC = new Set([
-  '/activate', '/activate.html', '/buy', '/buy/demo', '/buy/gift',
+  '/activate', '/activate.html', '/buy', '/buy/demo', '/buy/gift', '/buy/property',
   '/demo',
   '/property', // Settlement Brief: free property settlement organiser (28 Oct 2026)
   '/terms', '/terms.html',
