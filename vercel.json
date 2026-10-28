@@ -61,6 +61,11 @@
       "source": "/user-guide",
       "destination": "/assets/Atlas%20-%20User%20guide.pdf",
       "permanent": false
+    },
+    {
+      "source": "/property",
+      "destination": "/property/",
+      "permanent": false
     }
   ]
 }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Settlement Brief · Atlas</title>
+<meta name="description" content="A free, private tool that organises your side of an Australian property settlement into a brief for your mediator or lawyer.">
+<link rel="icon" href="../favicon.svg">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="stylesheet" href="../assets/app/interface.css">
+<link rel="stylesheet" href="../assets/app/bento.css">
+<link rel="stylesheet" href="./property.css">
+</head>
+<body class="atlas-app sb">
+<a class="at-skip" href="#sb-main">Skip to the tool</a>
+
+<header class="at-header">
+  <div class="at-nav">
+    <a class="at-brand" href="./" aria-label="Settlement Brief, start">Atlas<b>.</b>&nbsp;<span class="sb-sub">Settlement Brief</span></a>
+    <nav class="at-links" aria-label="Settlement Brief links">
+      <a href="https://www.get-atlas.com.au/how-property-settlement-works-in-australia/">How settlement works</a>
+      <a href="../how-it-works.html">What is Atlas</a>
+    </nav>
+  </div>
+  <div class="at-heading">
+    <div>
+      <div class="at-kicker">Free tool · Property settlement · Australia</div>
+      <h1>Get your side organised.</h1>
+      <p>Work through the four things the court looks at and walk into mediation or a lawyer’s office with a clear brief. It won’t tell you what you’ll get. Nothing can, honestly. It shows what’s on the table and what still needs answering.</p>
+    </div>
+  </div>
+</header>
+
+<section class="sb-storage" aria-label="Where your answers are kept">
+  <div class="sb-storage-text">
+    <strong id="sb-store-title">Nothing is saved yet.</strong>
+    <span id="sb-store-note">Your answers stay in this browser tab and disappear when you close it. Nothing is sent anywhere.</span>
+  </div>
+  <div class="sb-storage-actions">
+    <label class="sb-toggle"><input type="checkbox" id="sb-keep"> <span>Keep my progress on this device</span></label>
+    <button type="button" class="sb-btn sb-btn-ghost" id="sb-save">Save file</button>
+    <button type="button" class="sb-btn sb-btn-ghost" id="sb-open">Open file</button>
+    <input type="file" id="sb-file" accept="application/json,.json" hidden>
+    <button type="button" class="sb-btn sb-btn-quiet" id="sb-forget">Forget everything</button>
+  </div>
+</section>
+
+<div class="sb-layout">
+  <nav class="sb-steps" aria-label="Steps">
+    <ol id="sb-step-list"></ol>
+  </nav>
+  <main id="sb-main" class="sb-main" tabindex="-1"></main>
+</div>
+
+<footer class="at-footer sb-footer">
+  <span>Atlas. Settlement Brief is practical organisation, not legal or financial advice. Your figures are your own estimates. For advice on your situation, talk to a family lawyer or an accredited Family Dispute Resolution practitioner.</span>
+  <nav class="at-footer-links" aria-label="Support links">
+    <a href="../terms.html">Privacy &amp; terms</a>
+    <a href="https://www.get-atlas.com.au/">get-atlas.com.au</a>
+  </nav>
+</footer>
+
+<div id="sb-toast" class="sb-toast" role="status" hidden></div>
+<script src="./property.js"></script>
+</body>
+</html>
